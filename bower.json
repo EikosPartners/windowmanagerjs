@@ -1,0 +1,21 @@
+{
+  "name": "scalejs.windowfactory",
+  "version": "0.0.0",
+  "homepage": "",
+  "authors": [
+  ],
+  "description": "",
+  "main": [
+    "dist/scalejs.windowfactory.min.js"
+  ],
+  "ignore": [
+    "*", "!dist/*.js"
+  ],
+  "dependencies": {
+    "scalejs": "lisovin/scalejs"
+  },
+  "devDependencies": {
+    "requirejs": "latest"
+  }
+}
+
