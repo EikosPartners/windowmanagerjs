@@ -1,21 +1,23 @@
 lint:
     - 'jshint:extension'
+    - 'jsdoc'
 
 compile:
     - 'lint'
 
 config:
-    - 'bower'
+    - 'bowerRequirejs'
 
 build:
     - 'compile'
     - 'config'
     - 'requirejs'
     - 'uglify'
+    - 'copy:build'
 
 release:
     - 'build'
-    - 'copy'
+    - 'copy:release'
 
 test:
     - 'build'

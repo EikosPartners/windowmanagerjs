@@ -1,0 +1,33 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "Eikos Partners - Hello World",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron --debug=5858 main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dillonu/scalejs.windowfactory.git"
+  },
+  "keywords": [
+    "scalejs",
+    "electron",
+    "openfin",
+    "windowfactory"
+  ],
+  "author": "Eikos Partners",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/Dillonu/scalejs.windowfactory/issues"
+  },
+  "homepage": "https://github.com/Dillonu/scalejs.windowfactory#readme",
+  "devDependencies": {
+    "devtron": "^1.2.0",
+    "electron-prebuilt": "^1.2.3",
+    "electron-rebuild": "^1.1.5"
+  },
+  "dependencies": {
+    "electron-debug": "^1.0.0"
+  }
+}

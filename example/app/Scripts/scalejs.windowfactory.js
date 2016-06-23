@@ -1,15 +1,25 @@
 
-if (typeof define !== 'undefined' && define) {
+"use strict";
+/**
+ * This module handles various geometric shapes used in calculations for windowfactory.
+ * @module geometry
+ */
+if (typeof define !== "undefined" && define) {
     define('scalejs.windowfactory/geometry',[
     ], function (
     ) {
-        "use strict";
-
+        /**
+         * A Vector object.
+         * @memberof module:geometry
+         * @constructor
+         * @param {number} left - The position of the vector's x-axis.
+         * @param {number} top - The position of the vector's y-axis.
+         */
         function Vector(left, top) {
-            if (!(this instanceof Vector)) return new Vector(left, top);
+            if (!(this instanceof Vector)) { return new Vector(left, top); }
 
             var obj = left;
-            if (obj != null && obj.constructor !== Number) {
+            if (obj && obj.constructor !== Number) {
                 //new Vector(obj)
                 this.left = obj.left;
                 this.top = obj.top;
@@ -19,22 +29,50 @@ if (typeof define !== 'undefined' && define) {
                 this.top = top;
             }
         }
+
+        /**
+         * Clone the current vector to a new object.
+         * @method
+         * @returns {module:geometry.Vector} A clone of this instance
+         */
         Vector.prototype.clone = function () {
             return new Vector(this);
         };
+
+        /**
+         * Resolve this object down to a {@link module:geometry.Vector|Vector} instance.
+         * Since this instance is already a vector, it returns itself.
+         * @method
+         * @returns {module:geometry.Vector} self
+         */
         Vector.prototype.getVector = function () {
             // We have this method, so any prototype in this script will return their position, and if they are one it will return itself.
             // This simplifies code, and prevents having to do a ton of checks.
             return this;
         }
+
+        /**
+         * Returns a BoundingBox instance version of this vector similar to:
+         * new BoundingBox(Vector.left, Vector.top, Vector.left, Vector.top)
+         * @method
+         * @returns {module:geometry.BoundingBox}
+         */
         Vector.prototype.getBoundingBox = function () {
             // We have this method, so any prototype in this script will return their position, and if they are one it will return itself.
             // This simplifies code, and prevents having to do a ton of checks.
             return new BoundingBox(this.left, this.top, this.left, this.top);
         }
+
+        /**
+         * Returns a CollisionMesh instance version of this vector similar to:
+         * new CollisionMesh(Vector.getBoundingBox())
+         * @method
+         * @returns {module:geometry.CollisionMesh}
+         */
         Vector.prototype.getCollisionMesh = function () {
             return new CollisionMesh(this.getBoundingBox());
         };
+
         Vector.prototype.distanceSquared = function (left, top) {
             var other = new Vector(left, top);
             var diff = other.subtract(this);
@@ -45,18 +83,18 @@ if (typeof define !== 'undefined' && define) {
             return Math.sqrt(this.distanceSquared(left, top));
         }
         Vector.prototype.set = function (other) {
-            if (other == null) throw "set requires argument 'other'";
+            if (!other) { throw "set requires argument 'other'"; }
             other = other.getVector();
-            if (other.constructor !== Vector) throw "set requires argument 'other' to resolve to type Vector";
+            if (other.constructor !== Vector) { throw "set requires argument 'other' to resolve to type Vector"; }
 
             this.left = other.left;
             this.top = other.top;
             return this;
         };
         Vector.prototype.add = function (other) {
-            if (other == null) throw "add requires argument 'other'";
+            if (!other) { throw "add requires argument 'other'"; }
             other = other.getVector();
-            if (other.constructor !== Vector) throw "add requires argument 'other' to resolve to type Vector";
+            if (other.constructor !== Vector) { throw "add requires argument 'other' to resolve to type Vector"; }
 
             this.left += other.left;
             this.top += other.top;
@@ -66,27 +104,36 @@ if (typeof define !== 'undefined' && define) {
             return a.clone().add(b);
         };*/
         Vector.prototype.subtract = function (other) {
-            if (other == null) throw "subtract requires argument 'other'";
+            if (!other) { throw "subtract requires argument 'other'"; }
             other = other.getVector();
-            if (other.constructor !== Vector) throw "subtract requires argument 'other' to resolve to type Vector";
+            if (other.constructor !== Vector) { throw "subtract requires argument 'other' to resolve to type Vector"; }
 
             this.left -= other.left;
             this.top -= other.top;
             return this;
         };
         Vector.prototype.moveTo = function (left, top) {
-            if (left != null && left.constructor === Number) this.left = left;
-            if (top != null && top.constructor === Number) this.top = top;
+            if (left && left.constructor === Number) { this.left = left; }
+            if (top && top.constructor === Number) { this.top = top; }
             return this;
         };
 
 
+        /**
+         * A BoundingBox object.
+         * @memberof module:geometry
+         * @constructor
+         * @param {number} left - The left position of the vector's x-axis.
+         * @param {number} top - The top position of the vector's y-axis.
+         * @param {number} right - The right position of the vector's x-axis.
+         * @param {number} bottom - The bottom position of the vector's y-axis.
+         */
         function BoundingBox(left, top, right, bottom) {
-            if (!(this instanceof BoundingBox)) return new BoundingBox(left, top, right, bottom);
+            if (!(this instanceof BoundingBox)) { return new BoundingBox(left, top, right, bottom); }
 
             var obj = left;
-            if (obj != null && obj.constructor !== Number) {
-                if (obj.getBoundingBox != null) obj = obj.getBoundingBox();
+            if (obj && obj.constructor !== Number) {
+                if (obj.getBoundingBox) { obj = obj.getBoundingBox(); }
                 //new BoundingBox(obj)
                 this.left = obj.left;
                 this.top = obj.top;
@@ -133,23 +180,23 @@ if (typeof define !== 'undefined' && define) {
             return new Vector(this.left + this.getWidth() / 2, this.top + this.getHeight() / 2);
         };
         BoundingBox.prototype.difference = function (other) {
-            if (other == null) throw "difference requires argument 'other'";
+            if (!other) { throw "difference requires argument 'other'"; }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) throw "difference requires argument 'other' to resolve to type BoundingBox";
+            if (other.constructor !== BoundingBox) { throw "difference requires argument 'other' to resolve to type BoundingBox"; }
 
-            return BoundingBox(this.left - other.left, this.top - other.top, this.right - other.right, this.bottom - other.bottom);
+            return new BoundingBox(this.left - other.left, this.top - other.top, this.right - other.right, this.bottom - other.bottom);
         };
         BoundingBox.prototype.getCenteredOnPosition = function (other) {
-            if (other == null) throw "getCenteredOnPosition requires argument 'other'";
+            if (!other) { throw "getCenteredOnPosition requires argument 'other'"; }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) throw "getCenteredOnPosition requires argument 'other' to resolve to type BoundingBox";
+            if (other.constructor !== BoundingBox) { throw "getCenteredOnPosition requires argument 'other' to resolve to type BoundingBox"; }
 
             return other.getCenterPosition().subtract(this.getCenterPosition().subtract(this.getPosition()));
         };
         BoundingBox.prototype.getIntersection = function (other) {
-            if (other == null) throw "getIntersection requires argument 'other'";
+            if (!other) { throw "getIntersection requires argument 'other'"; }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) throw "getIntersection requires argument 'other' to resolve to type BoundingBox";
+            if (other.constructor !== BoundingBox) { throw "getIntersection requires argument 'other' to resolve to type BoundingBox"; }
 
             var left = Math.max(this.left, other.left),
                 top = Math.max(this.top, other.top),
@@ -175,34 +222,26 @@ if (typeof define !== 'undefined' && define) {
         };
         BoundingBox.prototype.set = function (left, top, right, bottom) {
             var newBounds = new BoundingBox(left, top, right, bottom);
-            if (newBounds.left != null) this.left = newBounds.left;
-            if (newBounds.top != null) this.top = newBounds.top;
-            if (newBounds.right != null) this.right = newBounds.right;
-            if (newBounds.bottom != null) this.bottom = newBounds.bottom;
+            this.left = newBounds.left;
+            this.top = newBounds.top;
+            this.right = newBounds.right;
+            this.bottom = newBounds.bottom;
             return this;
         };
         BoundingBox.prototype.moveTo = function (left, top) {
             var newPosition = new Vector(left, top);
-            if (newPosition.left != null) {
-                this.right = newPosition.left + (this.right - this.left);
-                this.left = newPosition.left;
-            }
-            if (newPosition.top != null) {
-                this.bottom = newPosition.top + (this.bottom - this.top);
-                this.top = newPosition.top;
-            }
+            this.right = newPosition.left + (this.right - this.left);
+            this.left = newPosition.left;
+            this.bottom = newPosition.top + (this.bottom - this.top);
+            this.top = newPosition.top;
             return this;
         };
         BoundingBox.prototype.moveBy = function (left, top) {
             var newPosition = new Vector(left, top);
-            if (newPosition.left != null) {
-                this.left += newPosition.left;
-                this.right += newPosition.left;
-            }
-            if (newPosition.top != null) {
-                this.top += newPosition.top;
-                this.bottom += newPosition.top;
-            }
+            this.left += newPosition.left;
+            this.right += newPosition.left;
+            this.top += newPosition.top;
+            this.bottom += newPosition.top;
             return this;
         };
         BoundingBox.prototype.resizeTo = function (width, height, anchor) {
@@ -211,11 +250,11 @@ if (typeof define !== 'undefined' && define) {
             var curSize = this.getSize();
             var newSize = new Vector(width || curSize.left, height || curSize.top);
             anchor = anchor || "top-left";
-            if (typeof anchor === 'string' || anchor instanceof String) {
+            if (typeof anchor === "string" || anchor instanceof String) {
                 var anchorStr = anchor;
                 anchor = this.getPosition();
-                if (anchorStr.indexOf("right") >= 0) anchor.left += curSize.left;
-                if (anchorStr.indexOf("bottom") >= 0) anchor.top += curSize.top;
+                if (anchorStr.indexOf("right") >= 0) { anchor.left += curSize.left; }
+                if (anchorStr.indexOf("bottom") >= 0) { anchor.top += curSize.top; }
             }
 
             this.left += (anchor.left - this.left) * (curSize.left - newSize.left) / curSize.left;
@@ -229,65 +268,65 @@ if (typeof define !== 'undefined' && define) {
             return this;
         };
         BoundingBox.prototype.isContains = function (other) {
-            if (other == null) throw "isContains requires argument 'other'";
+            if (!other) { throw "isContains requires argument 'other'"; }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) throw "isContains requires argument 'other' to resolve to type BoundingBox";
+            if (other.constructor !== BoundingBox) { throw "isContains requires argument 'other' to resolve to type BoundingBox"; }
 
             return other.left >= this.left && other.right <= this.right && other.top >= this.top && other.bottom <= this.bottom;
         };
         BoundingBox.prototype.someContains = function (others) {
-            if (others == null) throw "someContains requires argument 'others'";
-            if (others.constructor !== Array) throw "someContains requires argument 'others' of type Array";
+            if (!others) { throw "someContains requires argument 'others'"; }
+            if (others.constructor !== Array) { throw "someContains requires argument 'others' of type Array"; }
 
             for (var index = 0; index < others.length; index += 1) {
-                if (this.isContains(others[index])) return true;
+                if (this.isContains(others[index])) { return true; }
             }
             return false;
         };
         BoundingBox.prototype.isTouching = function (other) {
-            if (other == null) throw "isTouching requires argument 'other'";
+            if (!other) { throw "isTouching requires argument 'other'"; }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) throw "isTouching requires argument 'other' to resolve to type BoundingBox";
+            if (other.constructor !== BoundingBox) { throw "isTouching requires argument 'other' to resolve to type BoundingBox"; }
 
             return ((this.top <= other.bottom && this.bottom >= other.top) && (this.left === other.right || this.right === other.left)) ||
                 ((this.left <= other.right && this.right >= other.left) && (this.top === other.bottom || this.bottom === other.top));
         };
         BoundingBox.prototype.getEdgeTouching = function (others) {
-            if (others == null) throw "getEdgeTouching requires argument 'others'";
-            if (others.constructor !== Array) others = [others];
+            if (!others) { throw "getEdgeTouching requires argument 'others'"; }
+            if (others.constructor !== Array) { others = [others]; }
 
             for (var index = 0; index < others.length; index += 1) {
                 var other = others[index].getBoundingBox();
                 if (this.top <= other.bottom && this.bottom >= other.top) {
-                    if (this.left === other.right) return "left";
-                    if (this.right === other.left) return "right";
+                    if (this.left === other.right) { return "left"; }
+                    if (this.right === other.left) { return "right"; }
                 }
                 if (this.left <= other.right && this.right >= other.left) {
-                    if (this.top === other.bottom) return "top";
-                    if (this.bottom === other.top) return "bottom";
+                    if (this.top === other.bottom) { return "top"; }
+                    if (this.bottom === other.top) { return "bottom"; }
                 }
             }
         };
         BoundingBox.prototype.getOtherEdgeTouching = function (others) {
-            if (others == null) throw "getOtherEdgeTouching requires argument 'others'";
-            if (others.constructor !== Array) others = [others];
+            if (!others) { throw "getOtherEdgeTouching requires argument 'others'"; }
+            if (others.constructor !== Array) { others = [others]; }
 
             for (var index = 0; index < others.length; index += 1) {
                 var other = others[index].getBoundingBox();
                 if (this.top <= other.bottom && this.bottom >= other.top) {
-                    if (this.left === other.right) return "right";
-                    if (this.right === other.left) return "left";
+                    if (this.left === other.right) { return "right"; }
+                    if (this.right === other.left) { return "left"; }
                 }
                 if (this.left <= other.right && this.right >= other.left) {
-                    if (this.top === other.bottom) return "bottom";
-                    if (this.bottom === other.top) return "top";
+                    if (this.top === other.bottom) { return "bottom"; }
+                    if (this.bottom === other.top) { return "top"; }
                 }
             }
         };
         BoundingBox.prototype.getEdgeClosestOrder = function (other) {
-            if (other == null) throw "getEdgeClosest requires argument 'other'";
+            if (!other) { throw "getEdgeClosest requires argument 'other'"; }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) throw "getEdgeClosest requires argument 'other' to resolve to type BoundingBox";
+            if (other.constructor !== BoundingBox) { throw "getEdgeClosest requires argument 'other' to resolve to type BoundingBox"; }
 
             var centerPos = this.getCenterPosition();
             var dis = [];
@@ -318,48 +357,48 @@ if (typeof define !== 'undefined' && define) {
             return edges[0];
         };
         BoundingBox.prototype.someTouching = function (others) {
-            if (others == null) throw "someTouching requires argument 'others'";
-            if (others.constructor !== Array) throw "someTouching requires argument 'others' of type Array";
+            if (!others) { throw "someTouching requires argument 'others'"; }
+            if (others.constructor !== Array) { throw "someTouching requires argument 'others' of type Array"; }
 
             for (var index = 0; index < others.length; index += 1) {
-                if (this.isTouching(others[index])) return true;
+                if (this.isTouching(others[index])) { return true; }
             }
             return false;
         };
         BoundingBox.prototype.isColliding = function (other) {
-            if (other == null) throw "isColliding requires argument 'other'";
+            if (!other) { throw "isColliding requires argument 'other'"; }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) throw "isColliding requires argument 'other' to resolve to type BoundingBox";
+            if (other.constructor !== BoundingBox) { throw "isColliding requires argument 'other' to resolve to type BoundingBox"; }
 
             return this.left < other.right && this.right > other.left && this.top < other.bottom && this.bottom > other.top;
         };
         BoundingBox.prototype.someColliding = function (others) {
-            if (others == null) throw "someColliding requires argument 'others'";
-            if (others.constructor !== Array) throw "someColliding requires argument 'others' of type Array";
+            if (!others) { throw "someColliding requires argument 'others'"; }
+            if (others.constructor !== Array) { throw "someColliding requires argument 'others' of type Array"; }
 
             for (var index = 0; index < others.length; index += 1) {
-                if (this.isColliding(others[index])) return true;
+                if (this.isColliding(others[index])) { return true; }
             }
             return false;
         };
         BoundingBox.prototype.getColliding = function (others) {
-            if (others == null) throw "getColliding requires argument 'others'";
-            if (others.constructor !== Array) throw "getColliding requires argument 'others' of type Array";
+            if (!others) { throw "getColliding requires argument 'others'"; }
+            if (others.constructor !== Array) { throw "getColliding requires argument 'others' of type Array"; }
 
             for (var index = 0; index < others.length; index += 1) {
-                if (this.isColliding(others[index])) return others[index];
+                if (this.isColliding(others[index])) { return others[index]; }
             }
         };
         BoundingBox.prototype.isTouchingEdge = function (other) {
-            if (other == null) throw "isTouchingEdge requires argument 'other'";
+            if (!other) { throw "isTouchingEdge requires argument 'other'"; }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) throw "isTouchingEdge requires argument 'other' to resolve to type BoundingBox";
+            if (other.constructor !== BoundingBox) { throw "isTouchingEdge requires argument 'other' to resolve to type BoundingBox"; }
 
             return this.left === other.right || this.right === other.left || this.top === other.bottom || this.bottom === other.top;
         };
         /*BoundingBox.prototype.getXEdgeDistance = function (other) {
-            if (others == null) throw "getColliding requires argument 'others'";
-            if (others.constructor !== Array) throw "getColliding requires argument 'others' of type Array";
+            if (!others) { throw "getColliding requires argument 'others'"; }
+            if (others.constructor !== Array) { throw "getColliding requires argument 'others' of type Array"; }
 
             var distance = 1000000; // Arbitrary distance
             for (var index = 0; index < this.boxes.length; index += 1) {
@@ -370,12 +409,18 @@ if (typeof define !== 'undefined' && define) {
             return distance;
         };*/
 
+        /**
+         * A CollisionMesh object.
+         * @memberof module:geometry
+         * @constructor
+         * @param {module:geometry.BoundingBox[]} boxes - An array of objects thatg resolve to BoundingBox.
+         */
         function CollisionMesh(boxes, opts) {
-            if (!(this instanceof CollisionMesh)) return new CollisionMesh(boxes);
+            if (!(this instanceof CollisionMesh)) { return new CollisionMesh(boxes); }
             opts = opts || {};
 
-            if (boxes == null) throw "CollisionMesh constructor requires argument 'boxes'";
-            if (boxes.constructor !== Array) boxes = [boxes];
+            if (!boxes) { throw "CollisionMesh constructor requires argument 'boxes'"; }
+            if (boxes.constructor !== Array) { boxes = [boxes]; }
             this.boxes = [];
             for (var index = 0; index < boxes.length; index += 1) {
                 if (boxes[index].constructor === BoundingBox) {
@@ -395,7 +440,7 @@ if (typeof define !== 'undefined' && define) {
             return new CollisionMesh(boxes);
         };
         CollisionMesh.prototype.getWidth = function () {
-            if (this.boxes.length === 0) return 0;
+            if (this.boxes.length === 0) { return 0; }
 
             var left = this.boxes[0].left,
                 right = this.boxes[0].right;
@@ -409,7 +454,7 @@ if (typeof define !== 'undefined' && define) {
             return right - left;
         };
         CollisionMesh.prototype.getHeight = function () {
-            if (this.boxes.length === 0) return 0;
+            if (this.boxes.length === 0) { return 0; }
 
             var top = this.boxes[0].top,
                 bottom = this.boxes[0].bottom;
@@ -429,7 +474,7 @@ if (typeof define !== 'undefined' && define) {
             return new Vector(this.getBoundingBox());
         };
         CollisionMesh.prototype.getBoundingBox = function () {
-            if (this.boxes.length === 0) return 0;
+            if (this.boxes.length === 0) { return 0; }
 
             var left = this.boxes[0].left,
                 top = this.boxes[0].top,
@@ -462,79 +507,79 @@ if (typeof define !== 'undefined' && define) {
         };
         CollisionMesh.prototype.isContains = function (other) {
             // TODO: Needs to check that all of other's boxes are contained by this's boxes. NOT check if only one is!
-            if (other == null) throw "isContains requires argument 'other'";
+            if (!other) { throw "isContains requires argument 'other'"; }
             other = (other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh());
-            if (other.constructor !== CollisionMesh) throw "isContains requires argument 'other' to resolve to type CollisionMesh";
+            if (other.constructor !== CollisionMesh) { throw "isContains requires argument 'other' to resolve to type CollisionMesh"; }
 
             for (var index = 0; index < this.boxes.length; index += 1) {
-                if (this.boxes[index].someContains(other.boxes)) return true;
+                if (this.boxes[index].someContains(other.boxes)) { return true; }
             }
             return false;
         };
         CollisionMesh.prototype.someContains = function (other) {
-            if (other == null) throw "someContains requires argument 'other'";
+            if (!other) { throw "someContains requires argument 'other'"; }
             other = (other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh());
-            if (other.constructor !== CollisionMesh) throw "someContains requires argument 'other' to resolve to type CollisionMesh";
+            if (other.constructor !== CollisionMesh) { throw "someContains requires argument 'other' to resolve to type CollisionMesh"; }
 
             for (var index = 0; index < this.boxes.length; index += 1) {
-                if (this.boxes[index].someContains(other.boxes)) return true;
+                if (this.boxes[index].someContains(other.boxes)) { return true; }
             }
             return false;
         };
         CollisionMesh.prototype.isTouching = function (other) {
-            if (other == null) throw "isTouching requires argument 'other'";
+            if (!other) { throw "isTouching requires argument 'other'"; }
             other = (other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh());
-            if (other.constructor !== CollisionMesh) throw "isTouching requires argument 'other' to resolve to type CollisionMesh";
+            if (other.constructor !== CollisionMesh) { throw "isTouching requires argument 'other' to resolve to type CollisionMesh"; }
 
             for (var index = 0; index < this.boxes.length; index += 1) {
-                if (this.boxes[index].someTouching(other.boxes)) return true;
+                if (this.boxes[index].someTouching(other.boxes)) { return true; }
             }
             return false;
         };
         CollisionMesh.prototype.someTouching = function (others) {
-            if (others == null) throw "someTouching requires argument 'others'";
-            if (others.constructor !== Array) throw "someTouching requires argument 'others' to resolve to type Array";
+            if (!others) { throw "someTouching requires argument 'others'"; }
+            if (others.constructor !== Array) { throw "someTouching requires argument 'others' to resolve to type Array"; }
 
             for (var index = 0; index < others.length; index += 1) {
-                if (this.isTouching(others[index])) return true;
+                if (this.isTouching(others[index])) { return true; }
             }
             return false;
         };
         CollisionMesh.prototype.isColliding = function (other) {
-            if (other == null) throw "isColliding requires argument 'other'";
+            if (!other) { throw "isColliding requires argument 'other'"; }
             other = (other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh());
-            if (other.constructor !== CollisionMesh) throw "isColliding requires argument 'other' to resolve to type CollisionMesh";
+            if (other.constructor !== CollisionMesh) { throw "isColliding requires argument 'other' to resolve to type CollisionMesh"; }
 
             for (var index = 0; index < this.boxes.length; index += 1) {
-                if (this.boxes[index].someColliding(other.boxes)) return true;
+                if (this.boxes[index].someColliding(other.boxes)) { return true; }
             }
             return false;
         };
         CollisionMesh.prototype.someColliding = function (others) {
-            if (others == null) throw "someColliding requires argument 'others'";
-            if (others.constructor !== Array) throw "someColliding requires argument 'others' to resolve to type Array";
+            if (!others) { throw "someColliding requires argument 'others'"; }
+            if (others.constructor !== Array) { throw "someColliding requires argument 'others' to resolve to type Array"; }
 
             for (var i = 0; i < others.length; i += 1) {
                 for (var j = 0; j < this.boxes.length; j += 1) {
-                    if (this.boxes[j].isColliding(others[i])) return true;
+                    if (this.boxes[j].isColliding(others[i])) { return true; }
                 }
             }
             return false;
         };
         CollisionMesh.prototype.getColliding = function (other) {
-            if (other == null) throw "getColliding requires argument 'other'";
+            if (!other) { throw "getColliding requires argument 'other'"; }
             other = (other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh());
-            if (other.constructor !== CollisionMesh) throw "getColliding requires argument 'other' to resolve to type CollisionMesh";
+            if (other.constructor !== CollisionMesh) { throw "getColliding requires argument 'other' to resolve to type CollisionMesh"; }
 
             for (var index = 0; index < this.boxes.length; index += 1) {
                 var collided = this.boxes[index].getColliding(other.boxes);
-                if (collided) return collided;
+                if (collided) { return collided; }
             }
         };
         /*CollisionMesh.prototype.getXEdgeDistance = function (other) {
-            if (other == null) throw "isTouching requires argument 'other'";
+            if (!other) { throw "isTouching requires argument 'other'"; }
             other = (other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh());
-            if (other.constructor !== CollisionMesh) throw "isTouching requires argument 'other' to resolve to type CollisionMesh";
+            if (other.constructor !== CollisionMesh) { throw "isTouching requires argument 'other' to resolve to type CollisionMesh"; }
 
             var distance = 1000000; // Arbitrary distance
             for (var index = 0; index < this.boxes.length; index += 1) {
@@ -547,29 +592,46 @@ if (typeof define !== 'undefined' && define) {
 
         return {
             Vector: Vector,
+            /**
+             * A Position object.
+             * @memberof module:geometry
+             * @constructor
+             * @param {number} left - The position of the vector's x-axis.
+             * @param {number} top - The position of the vector's y-axis.
+             * @see {@link module:geometry.Vector|Vector} for further information.
+             */
             Position: Vector,
+            /**
+             * A Size object.
+             * @memberof module:geometry
+             * @constructor
+             * @param {number} left - The position of the vector's x-axis.
+             * @param {number} top - The position of the vector's y-axis.
+             * @see {@link module:geometry.Vector|Vector} for further information.
+             */
             Size: Vector,
             BoundingBox: BoundingBox,
             CollisionMesh: CollisionMesh
         };
     });
 };
-if (typeof define !== 'undefined' && define) {
+
+/*global nodeRequire*/
+if (typeof define !== "undefined" && define) {
 	define('scalejs.windowfactory/electron/Window',[
 		"../geometry"
 	], function (
 		geometry
 	) {
-		"use strict";
-        if (!(typeof nodeRequire !== 'undefined' && nodeRequire && nodeRequire.electron)) return;
+        if (!(typeof nodeRequire !== "undefined" && nodeRequire && nodeRequire.electron)) { return; }
 
-		const Vector = geometry.Vector,
+		var Vector = geometry.Vector,
 			Position = geometry.Position,
 			Size = geometry.Size,
 			BoundingBox = geometry.BoundingBox;
-		const remote = nodeRequire("electron").remote;
-		const BrowseWindow = remote.BrowseWindow;
-		const defaultConfig = {
+		var remote = nodeRequire("electron").remote;
+		var BrowseWindow = remote.BrowseWindow;
+		var defaultConfig = {
 			width: 600,
 			height: 600,
 			frame: false,
@@ -579,15 +641,23 @@ if (typeof define !== 'undefined' && define) {
 		};
 		defaultConfig.__proto__ = null;
 
+		/**
+		 * Wraps a window object.
+		 * @constructor
+		 * @alias Window
+		 * @param {object} config - Configuration
+		 */
 		function Window(config) {
-			if (!(this instanceof Window)) return new Window(config);
+			if (!(this instanceof Window)) { return new Window(config); }
 
-			if (config == null) config = {}; // If no arguments are passed, assume we are creating a default blank window
-			var isArgConfig = (config.webContents == null);
+			config = config || {}; // If no arguments are passed, assume we are creating a default blank window
+			var isArgConfig = (config.webContents === undefined);
 
 			if (isArgConfig) {
 				for (var prop in defaultConfig) {
-					if (config[prop] == null) config[prop] = defaultConfig[prop];
+					if (defaultConfig.hasOwnProperty(prop)) {
+						config[prop] = config[prop] || defaultConfig[prop];
+					}
 				}
 
 				this._window = new BrowseWindow(config);
@@ -598,30 +668,50 @@ if (typeof define !== 'undefined' && define) {
 			}
 		}
 
+        /**
+         * @method
+         * @returns {module:geometry.Vector}
+         */
 		Window.prototype.getPosition = function () {
 			var pos = this._window.getPosition();
 
 			return new Position(pos[0], pos[1]);
 		};
 
+        /**
+         * @method
+         * @returns {number}
+         */
 		Window.prototype.getWidth = function () {
 			var size = this._window.getSize();
 
 			return size[0];
 		};
 
+        /**
+         * @method
+         * @returns {number}
+         */
 		Window.prototype.getHeight = function () {
 			var size = this._window.getSize();
 
 			return size[1];
 		};
 
+        /**
+         * @method
+         * @returns {module:geometry.Position}
+         */
 		Window.prototype.getSize = function () {
 			var size = this._window.getSize();
 
 			return new Position(size[0], size[1]);
 		};
 
+        /**
+         * @method
+         * @returns {module:geometry.BoundingBox}
+         */
 		Window.prototype.getBounds = function () {
 			var bounds = this._window.getBounds();
 
@@ -630,89 +720,163 @@ if (typeof define !== 'undefined' && define) {
 
 
 
+		/**
+		 * @callback callback
+		 * @param  {string|null} error - String on error, or null if no error
+		 */
 
+        /**
+		 * Closes the window instance.
+         * @method
+		 * @param {callback=}
+         */
 		Window.prototype.close = function (callback) {
 			this._window.close();
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
-		Window.prototype.minimize = function () {
-			if (!this._ready) throw "minimize can't be called on an unready window";
+        /**
+		 * Minimizes the window instance.
+         * @method
+		 * @param {callback=}
+         */
+		Window.prototype.minimize = function (callback) {
+			if (!this._ready) { throw "minimize can't be called on an unready window"; }
 
 			this._window.minimize();
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
-		Window.prototype.maximize = function () {
-			if (!this._ready) throw "maximize can't be called on an unready window";
+        /**
+		 * Maximizes the window instance.
+         * @method
+		 * @param {callback=}
+         */
+		Window.prototype.maximize = function (callback) {
+			if (!this._ready) { throw "maximize can't be called on an unready window"; }
 
 			this._window.maximize();
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
-		Window.prototype.show = function () {
-			if (!this._ready) throw "show can't be called on an unready window";
+        /**
+		 * Unhides the window instance.
+         * @method
+		 * @param {callback=}
+         */
+		Window.prototype.show = function (callback) {
+			if (!this._ready) { throw "show can't be called on an unready window"; }
 
 			this._window.show();
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
-		Window.prototype.hide = function () {
-			if (!this._ready) throw "hide can't be called on an unready window";
+        /**
+		 * Hides the window instance.
+         * @method
+		 * @param {callback=}
+         */
+		Window.prototype.hide = function (callback) {
+			if (!this._ready) { throw "hide can't be called on an unready window"; }
 
 			this._window.hide();
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
-		Window.prototype.restore = function () {
-			if (!this._ready) throw "restore can't be called on an unready window";
+        /**
+		 * Restores the window instance from the minimized or maximized states.
+         * @method
+		 * @param {callback=}
+         */
+		Window.prototype.restore = function (callback) {
+			if (!this._ready) { throw "restore can't be called on an unready window"; }
 
 			this._window.restore();
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
-		Window.prototype.bringToFront = function () {
-			if (!this._ready) throw "bringToFront can't be called on an unready window";
+        /**
+		 * Brings the window instance to the front of all windows.
+         * @method
+		 * @param {callback=}
+         */
+		Window.prototype.bringToFront = function (callback) {
+			if (!this._ready) { throw "bringToFront can't be called on an unready window"; }
 
 			this._window.setAlwaysOnTop(true);
 			this._window.setAlwaysOnTop(false);
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
-		Window.prototype.focus = function () {
-			if (!this._ready) throw "focus can't be called on an unready window";
+        /**
+		 * Sets focus to the window instance.
+         * @method
+		 * @param {callback=}
+         */
+		Window.prototype.focus = function (callback) {
+			if (!this._ready) { throw "focus can't be called on an unready window"; }
 
 			this._window.focus();
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
+        /**
+		 * Resizes the window instance.
+         * @method
+		 * @param {number} width
+		 * @param {number} height
+		 * @param {callback=}
+         */
 		Window.prototype.resizeTo = function (width, height, callback) {
-			if (!this._ready) throw "resizeTo can't be called on an unready window";
+			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
 			var size = new Position(width, height);
 
 			this._window.setSize(size.left, size.top);
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
+        /**
+		 * Moves the window instance.
+         * @method
+		 * @param {number} left
+		 * @param {number} top
+		 * @param {callback=}
+         */
 		Window.prototype.moveTo = function (left, top, callback) {
-			if (!this._ready) throw "moveTo can't be called on an unready window";
+			if (!this._ready) { throw "moveTo can't be called on an unready window"; }
 			var pos = new Position(left, top);
 
 			this._window.setPosition(left, top);
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
+        /**
+		 * Moves the window instance relative to its current position.
+         * @method
+		 * @param {number} deltaLeft
+		 * @param {number} deltaTop
+		 * @param {callback=}
+         */
 		Window.prototype.moveBy = function (deltaLeft, deltaTop, callback) {
-			if (!this._ready) throw "moveBy can't be called on an unready window";
+			if (!this._ready) { throw "moveBy can't be called on an unready window"; }
 			var bounds = this.getBounds();
 			var deltaPos = new Position(deltaLeft, deltaTop);
 
 			this._window.setPosition(bounds.left + deltaPos.left, bounds.top + deltaPos.top);
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
+        /**
+		 * Sets the bounds of the window instance.
+         * @method
+		 * @param {number} left
+		 * @param {number} top
+		 * @param {number} right
+		 * @param {number} bottom
+		 * @param {callback=}
+         */
 		Window.prototype.setBounds = function (left, top, right, bottom, callback) {
-			if (!this._ready) throw "resizeTo can't be called on an unready window";
+			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
 			var bounds = new BoundingBox(left, top, right, bottom);
 
 			this._window.setSize({
@@ -721,26 +885,42 @@ if (typeof define !== 'undefined' && define) {
 				width: right - left,
 				height: bottom - top
 			});
-			if (callback) callback();
+			if (callback) { callback(); }
 		};
 
 		return Window;
 	});
 };
-if (typeof define !== 'undefined' && define) {
+
+/*global nodeRequire*/
+if (typeof define !== "undefined" && define) {
     define('scalejs.windowfactory/electron/windowfactory',[
         "./Window"
     ], function (
         Window
     ) {
-        "use strict";
-        if (!(typeof nodeRequire !== 'undefined' && nodeRequire && nodeRequire.electron)) return;
+        if (!(typeof nodeRequire !== "undefined" && nodeRequire && nodeRequire.electron)) { return; }
 
-        const remote = nodeRequire("electron").remote;
+        var remote = nodeRequire("electron").remote;
+        var readyCallbacks = [];
+        var isReady = true;
         var currentWindow = new Window(remote.getCurrentWindow());
 
         // TODO: Window Manager, so instances are saved and returned, rather than making copies.
         // TODO: Make use the remote.getGlobal to share between renderers.
+
+        function onReady(callback) {
+            // Check if callback is not a function:
+            if (!(callback && callback.constructor && callback.call && callback.apply)) { throw "onReady expects a function passed as the callback argument!"; }
+
+            // Check if already ready:
+            if (isReady) { callback(); }
+
+            // Check to see if callback is already in readyCallbacks:
+            if (readyCallbacks.indexOf(callback) >= 0) { return; }
+
+            readyCallbacks.push(callback);
+        }
 
         function getCurrentWindow() {
             return currentWindow;
@@ -775,19 +955,22 @@ if (typeof define !== 'undefined' && define) {
         return {
             Window: Window,
             getCurrentWindow: getCurrentWindow,
+            onReady: onReady,
+            isReady: function () { return isReady; },
             runtime: "Electron",
             runtimeVersion: nodeRequire.electron
         };
     });
 };
-if (typeof define !== 'undefined' && define) {
+
+/*global fin*/
+if (typeof define !== "undefined" && define) {
 	define('scalejs.windowfactory/openfin/Window',[
 		"../geometry"
 	], function (
 		geometry
 	) {
-		"use strict";
-        if (!(typeof fin !== 'undefined' && fin && fin.desktop && fin.desktop.getVersion())) return;
+        if (!(typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.getVersion())) { return; }
 
 		var Vector = geometry.Vector,
 			Position = geometry.Position,
@@ -825,19 +1008,21 @@ if (typeof define !== 'undefined' && define) {
 		}
 
 		function Window(config) {
-			if (!(this instanceof Window)) return new Window(config);
+			if (!(this instanceof Window)) { return new Window(config); }
 
-			if (config == null) config = {}; // If no arguments are passed, assume we are creating a default blank window
-			var isArgConfig = (config.app_uuid == null);
+			config = config || {}; // If no arguments are passed, assume we are creating a default blank window
+			var isArgConfig = (config["app_uuid"] === undefined);
 
 			this._bounds = new BoundingBox();
 
 			if (isArgConfig) {
 				for (var prop in defaultConfig) {
-					if (config[prop] == null) config[prop] = defaultConfig[prop];
+					if (defaultConfig.hasOwnProperty(prop)) {
+						config[prop] = config[prop] || defaultConfig[prop];
+					}
 				}
-				for (var prop in config) {
-					if (configMap[prop] !== undefined) {
+				for (prop in config) {
+					if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
 						config[configMap[prop]] = config[prop];
 						delete config[prop];
 					}
@@ -880,71 +1065,70 @@ if (typeof define !== 'undefined' && define) {
 		};
 
 		Window.prototype.minimize = function (callback) {
-			if (!this._ready) throw "minimize can't be called on an unready window";
+			if (!this._ready) { throw "minimize can't be called on an unready window"; }
 
 			this._window.minimize(callback);
 		};
 
 		Window.prototype.maximize = function (callback) {
-			if (!this._ready) throw "maximize can't be called on an unready window";
+			if (!this._ready) { throw "maximize can't be called on an unready window"; }
 
 			this._window.maximize(callback);
 		};
 
 		Window.prototype.show = function (callback) {
-			if (!this._ready) throw "show can't be called on an unready window";
+			if (!this._ready) { throw "show can't be called on an unready window"; }
 
 			this._window.show(callback);
 		};
 
 		Window.prototype.hide = function (callback) {
-			if (!this._ready) throw "hide can't be called on an unready window";
+			if (!this._ready) { throw "hide can't be called on an unready window"; }
 
 			this._window.hide(callback);
 		};
 
 		Window.prototype.restore = function (callback) {
-			if (!this._ready) throw "restore can't be called on an unready window";
+			if (!this._ready) { throw "restore can't be called on an unready window"; }
 
 			this._window.restore(callback);
 		};
 
 		Window.prototype.bringToFront = function (callback) {
-			if (!this._ready) throw "bringToFront can't be called on an unready window";
+			if (!this._ready) { throw "bringToFront can't be called on an unready window"; }
 
 			this._window.bringToFront(callback);
 		};
 
 		Window.prototype.focus = function (callback) {
-			if (!this._ready) throw "focus can't be called on an unready window";
+			if (!this._ready) { throw "focus can't be called on an unready window"; }
 
 			this._window.focus(callback);
 		};
 
 		Window.prototype.resizeTo = function (width, height, callback) {
-			if (!this._ready) throw "resizeTo can't be called on an unready window";
+			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
 			var size = new Position(width, height);
 
 			this._window.resizeTo(size.left, size.top, "top-left", callback);
 		};
 
 		Window.prototype.moveTo = function (left, top, callback) {
-			if (!this._ready) throw "moveTo can't be called on an unready window";
+			if (!this._ready) { throw "moveTo can't be called on an unready window"; }
 			var pos = new Position(left, top);
 
-			this._window.setPosition(pos.left, pos.top, callback);
+			this._window.moveTo(pos.left, pos.top, callback);
 		};
 
 		Window.prototype.moveBy = function (deltaLeft, deltaTop, callback) {
-			if (!this._ready) throw "moveBy can't be called on an unready window";
-			var bounds = this.getBounds();
+			if (!this._ready) { throw "moveBy can't be called on an unready window"; }
 			var deltaPos = new Position(deltaLeft, deltaTop);
 
-			this._window.setPosition(bounds.left + deltaPos.left, bounds.top + deltaPos.top, callback);
+			this._window.moveBy(deltaPos.left, deltaPos.top, callback);
 		};
 
 		Window.prototype.setBounds = function (left, top, right, bottom, callback) {
-			if (!this._ready) throw "resizeTo can't be called on an unready window";
+			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
 			var bounds = new BoundingBox(left, top, right, bottom);
 
 			this._window.setBounds(bounds.left, bounds.top, bounds.right, bounds.bottom, callback);
@@ -953,86 +1137,118 @@ if (typeof define !== 'undefined' && define) {
 		return Window;
 	});
 };
-if (typeof define !== 'undefined' && define) {
+
+/*global fin*/
+if (typeof define !== "undefined" && define) {
     define('scalejs.windowfactory/openfin/windowfactory',[
         "./Window"
     ], function (
         Window
     ) {
-        "use strict";
-        if (!(typeof fin !== 'undefined' && fin && fin.desktop && fin.desktop.getVersion())) return;
+        if (!(typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.getVersion())) { return; }
 
-        var currentWindow = new Window(fin.desktop.Window.getCurrent());
+        var readyCallbacks = [];
+        var isReady = false;
+        var currentWindow;
 
-        function getCurrentWindow() {
-            return currentWindow;
+        function onReady(callback) {
+            // Check if callback is not a function:
+            if (!(callback && callback.constructor && callback.call && callback.apply)) { throw "onReady expects a function passed as the callback argument!"; }
+
+            // Check if already ready:
+            if (isReady) { callback(); }
+
+            // Check to see if callback is already in readyCallbacks:
+            if (readyCallbacks.indexOf(callback) >= 0) { return; }
+
+            readyCallbacks.push(callback);
         }
 
-		// Setup handlers on this window:
-		(function () {
-            var wX = 0;
-            var wY = 0;
-            var dragging = false;
-            //var titlebarEl = document.querySelector("titlebar");
 
-            window.addEventListener("mousedown", function (e) {
-                if (e.target.classList.contains("window-drag")) {
-                    dragging = true;
-                    wX = e.pageX;
-                    wY = e.pageY;
-                }
-            });
+        fin.desktop.main(function () {
+            currentWindow = new Window(fin.desktop.Window.getCurrent());
 
-            window.addEventListener("mousemove", function (e) {
-                if (dragging) {
-                    currentWindow.moveTo(e.screenX - wX, e.screenY - wY);
-                }
-            });
+            // Setup handlers on this window:
+            (function () {
+                var wX = 0;
+                var wY = 0;
+                var dragging = false;
+                //var titlebarEl = document.querySelector("titlebar");
 
-            window.addEventListener("mouseup", function () {
-                dragging = false;
-            });
-		})();
+                window.addEventListener("mousedown", function (e) {
+                    if (e.target.classList.contains("window-drag")) {
+                        dragging = true;
+                        wX = e.pageX;
+                        wY = e.pageY;
+                    }
+                });
+
+                window.addEventListener("mousemove", function (e) {
+                    if (dragging) {
+                        currentWindow.moveTo(e.screenX - wX, e.screenY - wY);
+                    }
+                });
+
+                window.addEventListener("mouseup", function () {
+                    dragging = false;
+                });
+            })();
+
+            isReady = true;
+            for (var index = 0; index < readyCallbacks.length; index += 1) {
+                readyCallbacks[index]();
+            }
+            readyCallbacks = [];
+        });
 
         return {
-            getCurrentWindow: getCurrentWindow,
+            Window: Window,
+            getCurrentWindow: function () {
+                return currentWindow;
+            },
+            onReady: onReady,
+            isReady: function () {
+                return isReady;
+            },
             runtime: "OpenFin",
             runtimeVersion: fin.desktop.getVersion()
         };
     });
 };
 
-/*global define*/
-if (typeof define !== 'undefined' && define) {
-    define('scalejs.windowfactory',[
-        'scalejs!core',
-        './scalejs.windowfactory/electron/windowfactory',
-        './scalejs.windowfactory/openfin/windowfactory'
+if (typeof define !== "undefined" && define) {
+    define("scalejs.windowfactory",[
+        "scalejs!core",
+        "./scalejs.windowfactory/geometry",
+        "./scalejs.windowfactory/electron/windowfactory",
+        "./scalejs.windowfactory/openfin/windowfactory"
     ], function (
         core,
+        geometry,
         electron,
         openfin
     ) {
-        'use strict';
         var windowfactory = electron || openfin;
+
+        windowfactory.geometry = geometry;
 
         core.registerExtension({
             windowfactory: windowfactory
         });
 
-        if (typeof window !== 'undefined' && window) window.windowfactory = windowfactory;
-        if (typeof global !== 'undefined' && global) global.windowfactory = windowfactory;
-        //if (typeof GLOBAL !== 'undefined' && GLOBAL) GLOBAL.windowfactory = windowfactory;
+        if (typeof window !== "undefined" && window) { window.windowfactory = windowfactory; }
+        if (typeof global !== "undefined" && global) { global.windowfactory = windowfactory; }
+        //if (typeof GLOBAL !== "undefined" && GLOBAL) GLOBAL.windowfactory = windowfactory;
 
         return windowfactory;
     });
 } else {
-    if (typeof process !== 'undefined' && process) {
+    if (typeof process !== "undefined" && process) {
         require.electron = process.versions.electron;
-        const _require = require;
-        process.once('loaded', function () {
+        var _require = require;
+        process.once("loaded", function () {
             global.nodeRequire = _require;
         });
     }
-};
-
+}
+;

@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Electron Example",
+            "type": "node",
+            "program": "${workspaceRoot}/example/app/main.js", // this is important
+            "stopOnEntry": false,
+            "args": [],
+            "cwd": "${workspaceRoot}/example/app",
+            // as you have noted, this is also important:
+            "runtimeExecutable": "${workspaceRoot}/example/app/node_modules/electron-prebuilt/dist/electron.exe",
+            "runtimeArgs": [],
+            "env": { },
+            "sourceMaps": false
+        },
+        {
+            "name": "Launch OpenFin Server",
+            "type": "node",
+            "program": "${workspaceRoot}/example/openfinBackend/app.js", // this is important
+            "stopOnEntry": false,
+            "args": [],
+            "cwd": "${workspaceRoot}/example/openfinBackend",
+            // as you have noted, this is also important:
+            "runtimeExecutable": null,
+            "runtimeArgs": [],
+            "env": { },
+            "sourceMaps": false
+        }
+    ]
+}

@@ -1,0 +1,7 @@
+### OpenFin Runtime
+apps/
+cache/
+logs/
+runtime/
+cache.dat
+Local State

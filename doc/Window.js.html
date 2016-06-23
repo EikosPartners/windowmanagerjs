@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Window.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Window.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+/*global nodeRequire*/
+if (typeof define !== "undefined" &amp;&amp; define) {
+	define([
+		"../geometry"
+	], function (
+		geometry
+	) {
+        if (!(typeof nodeRequire !== "undefined" &amp;&amp; nodeRequire &amp;&amp; nodeRequire.electron)) { return; }
+
+		var Vector = geometry.Vector,
+			Position = geometry.Position,
+			Size = geometry.Size,
+			BoundingBox = geometry.BoundingBox;
+		var remote = nodeRequire("electron").remote;
+		var BrowseWindow = remote.BrowseWindow;
+		var defaultConfig = {
+			width: 600,
+			height: 600,
+			frame: false,
+			resizable: false,
+			hasShadow: false
+			//transparent: true
+		};
+		defaultConfig.__proto__ = null;
+
+		/**
+		 * Wraps a window object.
+		 * @constructor
+		 * @alias Window
+		 * @param {object} config - Configuration
+		 */
+		function Window(config) {
+			if (!(this instanceof Window)) { return new Window(config); }
+
+			config = config || {}; // If no arguments are passed, assume we are creating a default blank window
+			var isArgConfig = (config.webContents === undefined);
+
+			if (isArgConfig) {
+				for (var prop in defaultConfig) {
+					if (defaultConfig.hasOwnProperty(prop)) {
+						config[prop] = config[prop] || defaultConfig[prop];
+					}
+				}
+
+				this._window = new BrowseWindow(config);
+				this._ready = true;
+			} else {
+				this._window = config;
+				this._ready = true;
+			}
+		}
+
+		Window.prototype.getPosition = function () {
+			var pos = this._window.getPosition();
+
+			return new Position(pos[0], pos[1]);
+		};
+
+		Window.prototype.getWidth = function () {
+			var size = this._window.getSize();
+
+			return size[0];
+		};
+
+		Window.prototype.getHeight = function () {
+			var size = this._window.getSize();
+
+			return size[1];
+		};
+
+		Window.prototype.getSize = function () {
+			var size = this._window.getSize();
+
+			return new Position(size[0], size[1]);
+		};
+
+		Window.prototype.getBounds = function () {
+			var bounds = this._window.getBounds();
+
+			return new BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
+		};
+
+
+
+
+		Window.prototype.close = function (callback) {
+			this._window.close();
+			if (callback) { callback(); }
+		};
+
+		Window.prototype.minimize = function (callback) {
+			if (!this._ready) { throw "minimize can't be called on an unready window"; }
+
+			this._window.minimize();
+			if (callback) { callback(); }
+		};
+
+		Window.prototype.maximize = function (callback) {
+			if (!this._ready) { throw "maximize can't be called on an unready window"; }
+
+			this._window.maximize();
+			if (callback) { callback(); }
+		};
+
+		Window.prototype.show = function (callback) {
+			if (!this._ready) { throw "show can't be called on an unready window"; }
+
+			this._window.show();
+			if (callback) { callback(); }
+		};
+
+		Window.prototype.hide = function (callback) {
+			if (!this._ready) { throw "hide can't be called on an unready window"; }
+
+			this._window.hide();
+			if (callback) { callback(); }
+		};
+
+		Window.prototype.restore = function (callback) {
+			if (!this._ready) { throw "restore can't be called on an unready window"; }
+
+			this._window.restore();
+			if (callback) { callback(); }
+		};
+
+		Window.prototype.bringToFront = function (callback) {
+			if (!this._ready) { throw "bringToFront can't be called on an unready window"; }
+
+			this._window.setAlwaysOnTop(true);
+			this._window.setAlwaysOnTop(false);
+			if (callback) { callback(); }
+		};
+
+		Window.prototype.focus = function (callback) {
+			if (!this._ready) { throw "focus can't be called on an unready window"; }
+
+			this._window.focus();
+			if (callback) { callback(); }
+		};
+
+		Window.prototype.resizeTo = function (width, height, callback) {
+			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
+			var size = new Position(width, height);
+
+			this._window.setSize(size.left, size.top);
+			if (callback) { callback(); }
+		};
+
+		Window.prototype.moveTo = function (left, top, callback) {
+			if (!this._ready) { throw "moveTo can't be called on an unready window"; }
+			var pos = new Position(left, top);
+
+			this._window.setPosition(left, top);
+			if (callback) { callback(); }
+		};
+
+		Window.prototype.moveBy = function (deltaLeft, deltaTop, callback) {
+			if (!this._ready) { throw "moveBy can't be called on an unready window"; }
+			var bounds = this.getBounds();
+			var deltaPos = new Position(deltaLeft, deltaTop);
+
+			this._window.setPosition(bounds.left + deltaPos.left, bounds.top + deltaPos.top);
+			if (callback) { callback(); }
+		};
+
+		Window.prototype.setBounds = function (left, top, right, bottom, callback) {
+			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
+			var bounds = new BoundingBox(left, top, right, bottom);
+
+			this._window.setSize({
+				x: left,
+				y: top,
+				width: right - left,
+				height: bottom - top
+			});
+			if (callback) { callback(); }
+		};
+
+		return Window;
+	});
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Window.html">Window</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jun 23 2016 15:18:30 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

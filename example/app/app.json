@@ -1,0 +1,26 @@
+{
+    "startup_app": {
+        "name": "Eikos Partners - Hello World",
+        "url": "http://localhost:3000/index.html",
+        "uuid": "mainwindow",
+        "applicationIcon": "http://cdn2.hubspot.net/hubfs/486348/img/Favicon.jpg?t=1466605364966",
+        "autoShow": true,
+        "defaultWidth": 600,
+        "defaultHeight": 600,
+        "defaultCentered": true,
+        "alwaysOnTop": false,
+        "resizable": true,
+        "frame": false,
+        "saveWindowState": false
+    },
+    "runtime": {
+        "arguments": "--ignore-certificate-errors",
+        "version": "5.44.12.12"
+    },
+    "shortcut": {
+        "company": "Eikos Partners",
+        "description": "Eikos Partners - Hello World",
+        "icon": "http://cdn2.hubspot.net/hubfs/486348/img/Favicon.jpg?t=1466605364966",
+        "name": "Eikos Partners - Hello World"
+    }
+}
