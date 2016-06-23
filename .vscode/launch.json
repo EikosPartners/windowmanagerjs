@@ -4,6 +4,7 @@
         {
             "name": "Launch Electron Example",
             "type": "node",
+            "request": "launch",
             "program": "${workspaceRoot}/example/app/main.js", // this is important
             "stopOnEntry": false,
             "args": [],
@@ -17,6 +18,7 @@
         {
             "name": "Launch OpenFin Server",
             "type": "node",
+            "request": "launch",
             "program": "${workspaceRoot}/example/openfinBackend/app.js", // this is important
             "stopOnEntry": false,
             "args": [],
