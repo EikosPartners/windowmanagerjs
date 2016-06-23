@@ -933,23 +933,59 @@ if (typeof define !== "undefined" && define) {
             var dragging = false;
             //var titlebarEl = document.querySelector("titlebar");
 
-            window.addEventListener("mousedown", function (e) {
-                if (e.target.classList.contains("window-drag")) {
+            window.addEventListener("mousedown", function (event) {
+                if (event.target.classList.contains("window-drag")) {
                     dragging = true;
-                    wX = e.pageX;
-                    wY = e.pageY;
+                    wX = event.pageX;
+                    wY = event.pageY;
                 }
             });
 
-            window.addEventListener("mousemove", function (e) {
+            window.addEventListener("mousemove", function (event) {
                 if (dragging) {
-                    currentWindow.moveTo(e.screenX - wX, e.screenY - wY);
+                    currentWindow.moveTo(event.screenX - wX, event.screenY - wY);
                 }
             });
 
             window.addEventListener("mouseup", function () {
                 dragging = false;
             });
+
+            // Add context menu:
+            var Menu = remote.Menu;
+            var MenuItem = remote.MenuItem;
+
+            var rightClickPosition = null;
+
+            var menu = new Menu();
+            menu.append(new MenuItem({
+                label: "Reload",
+                accelerator: "CmdOrCtrl+R",
+                click: function () {
+                    remote.getCurrentWindow().reload()
+                }
+            }));
+            menu.append(new MenuItem({
+                label: "Reload app and restart children",
+                click: function () {
+                    remote.app.relaunch();
+                    remote.app.exit(0);
+                }
+            }));
+            menu.append(new MenuItem({ type: "separator" }));
+            menu.append(new MenuItem({
+                label: "Inspect Element",
+                accelerator: "CmdOrCtrl+Shift+I",
+                click: function () {
+                    remote.getCurrentWindow().inspectElement(rightClickPosition.x, rightClickPosition.y)
+                }
+            }));
+
+            window.addEventListener("contextmenu", function (event) {
+                event.preventDefault();
+                rightClickPosition = {x: event.x, y: event.y};
+                menu.popup(remote.getCurrentWindow());
+            }, false);
 		})();
 
         return {
