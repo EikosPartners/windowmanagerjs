@@ -1,9 +1,12 @@
 # scalejs.windowfactory
 An extension for scalejs to manage multiple dockable HTML windows.  
 This extension is designed to support multiple different different encapsulation runtimes.  
+
+
 Runtimes supported:  
 * [OpenFin](https://openfin.co/)  
 * [Electron](http://electron.atom.io/)  
+
 Future runtimes:  
 * [NW.js](http://nwjs.io/)  
 * Web Browsers (Chrome, Firefox, IE, Edge, ect.)  
