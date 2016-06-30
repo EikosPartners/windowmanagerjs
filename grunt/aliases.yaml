@@ -11,7 +11,8 @@ config:
 build:
     - 'compile'
     - 'config'
-    - 'requirejs'
+    - 'concat'
+    - 'babel'
     - 'uglify'
     - 'copy:build'
 

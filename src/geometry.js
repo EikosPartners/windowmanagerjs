@@ -1,32 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: geometry.js</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-
-    <h1 class="page-title">Source: geometry.js</h1>
-
-    
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
+/**
  * This module handles various geometric shapes used in calculations for windowfactory.
  * @module geometry
  */
@@ -47,7 +19,7 @@ windowfactory.geometry = (function () {
         if (!(this instanceof Vector)) { return new Vector(left, top); }
 
         let obj = left;
-        if (obj &amp;&amp; obj.constructor !== Number) {
+        if (obj && obj.constructor !== Number) {
             //new Vector(obj)
             this.left = obj.left;
             this.top = obj.top;
@@ -126,8 +98,8 @@ windowfactory.geometry = (function () {
         other = other.getVector();
         if (other.constructor !== Vector) { throw "setMin requires argument 'other' to resolve to type Vector"; }
 
-        if (!other.left &amp;&amp; Math.abs(other.left) &lt; Math.abs(this.left)) { this.left = other.left; }
-        if (!other.top &amp;&amp; Math.abs(other.top) &lt; Math.abs(this.top)) { this.top = other.top; }
+        if (!other.left && Math.abs(other.left) < Math.abs(this.left)) { this.left = other.left; }
+        if (!other.top && Math.abs(other.top) < Math.abs(this.top)) { this.top = other.top; }
     };
     Vector.prototype.add = function (other) {
         if (!other) { throw "add requires argument 'other'"; }
@@ -151,8 +123,8 @@ windowfactory.geometry = (function () {
         return this;
     };
     Vector.prototype.moveTo = function (left, top) {
-        if (left &amp;&amp; left.constructor === Number) { this.left = left; }
-        if (top &amp;&amp; top.constructor === Number) { this.top = top; }
+        if (left && left.constructor === Number) { this.left = left; }
+        if (top && top.constructor === Number) { this.top = top; }
         return this;
     };
 
@@ -170,7 +142,7 @@ windowfactory.geometry = (function () {
         if (!(this instanceof BoundingBox)) { return new BoundingBox(left, top, right, bottom); }
 
         let obj = left;
-        if (obj &amp;&amp; obj.constructor !== Number) {
+        if (obj && obj.constructor !== Number) {
             if (obj.getBoundingBox) { obj = obj.getBoundingBox(); }
             //new BoundingBox(obj)
             this.left = obj.left;
@@ -249,16 +221,16 @@ windowfactory.geometry = (function () {
             right = Math.min(this.right, other.right),
             bottom = Math.min(this.bottom, other.bottom);
 
-        if ((left &lt; right &amp;&amp; top &lt; bottom) || (left === right &amp;&amp; top &lt; bottom) || (top === bottom &amp;&amp; left &lt; right)) {
+        if ((left < right && top < bottom) || (left === right && top < bottom) || (top === bottom && left < right)) {
             return new BoundingBox(left, top, right, bottom);
-        } else if (left === right &amp;&amp; top === bottom) {
+        } else if (left === right && top === bottom) {
             return new Vector(left, top);
         }
     };
     BoundingBox.prototype.getDistanceSquaredToPoint = function (left, top) {
         let other = new Vector(left, top);
-        let cLeft = (other.left &lt;= this.left ? this.left : (other.left >= this.right ? this.right : other.left));
-        let cTop = (other.top &lt;= this.top ? this.top : (other.top >= this.bottom ? this.bottom : other.top));
+        let cLeft = (other.left <= this.left ? this.left : (other.left >= this.right ? this.right : other.left));
+        let cTop = (other.top <= this.top ? this.top : (other.top >= this.bottom ? this.bottom : other.top));
         let cPos = new Vector(cLeft, cTop);
 
         return cPos.distanceSquared(other);
@@ -321,13 +293,13 @@ windowfactory.geometry = (function () {
             throw "isContains requires argument 'other' to resolve to type BoundingBox";
         }
 
-        return other.left >= this.left &amp;&amp; other.right &lt;= this.right &amp;&amp; other.top >= this.top &amp;&amp; other.bottom &lt;= this.bottom;
+        return other.left >= this.left && other.right <= this.right && other.top >= this.top && other.bottom <= this.bottom;
     };
     BoundingBox.prototype.someContains = function (others) {
         if (!others) { throw "someContains requires argument 'others'"; }
         if (others.constructor !== Array) { throw "someContains requires argument 'others' of type Array"; }
 
-        for (let index = 0; index &lt; others.length; index += 1) {
+        for (let index = 0; index < others.length; index += 1) {
             if (this.isContains(others[index])) { return true; }
         }
         return false;
@@ -339,22 +311,22 @@ windowfactory.geometry = (function () {
             throw "isTouching requires argument 'other' to resolve to type BoundingBox";
         }
 
-        return ((this.top &lt;= other.bottom &amp;&amp; this.bottom >= other.top)
-                &amp;&amp; (this.left === other.right || this.right === other.left)) ||
-                ((this.left &lt;= other.right &amp;&amp; this.right >= other.left)
-                &amp;&amp; (this.top === other.bottom || this.bottom === other.top));
+        return ((this.top <= other.bottom && this.bottom >= other.top)
+                && (this.left === other.right || this.right === other.left)) ||
+                ((this.left <= other.right && this.right >= other.left)
+                && (this.top === other.bottom || this.bottom === other.top));
     };
     BoundingBox.prototype.getEdgeTouching = function (others) {
         if (!others) { throw "getEdgeTouching requires argument 'others'"; }
         if (others.constructor !== Array) { others = [others]; }
 
-        for (let index = 0; index &lt; others.length; index += 1) {
+        for (let index = 0; index < others.length; index += 1) {
             let other = others[index].getBoundingBox();
-            if (this.top &lt;= other.bottom &amp;&amp; this.bottom >= other.top) {
+            if (this.top <= other.bottom && this.bottom >= other.top) {
                 if (this.left === other.right) { return "left"; }
                 if (this.right === other.left) { return "right"; }
             }
-            if (this.left &lt;= other.right &amp;&amp; this.right >= other.left) {
+            if (this.left <= other.right && this.right >= other.left) {
                 if (this.top === other.bottom) { return "top"; }
                 if (this.bottom === other.top) { return "bottom"; }
             }
@@ -364,13 +336,13 @@ windowfactory.geometry = (function () {
         if (!others) { throw "getOtherEdgeTouching requires argument 'others'"; }
         if (others.constructor !== Array) { others = [others]; }
 
-        for (let index = 0; index &lt; others.length; index += 1) {
+        for (let index = 0; index < others.length; index += 1) {
             let other = others[index].getBoundingBox();
-            if (this.top &lt;= other.bottom &amp;&amp; this.bottom >= other.top) {
+            if (this.top <= other.bottom && this.bottom >= other.top) {
                 if (this.left === other.right) { return "right"; }
                 if (this.right === other.left) { return "left"; }
             }
-            if (this.left &lt;= other.right &amp;&amp; this.right >= other.left) {
+            if (this.left <= other.right && this.right >= other.left) {
                 if (this.top === other.bottom) { return "bottom"; }
                 if (this.bottom === other.top) { return "top"; }
             }
@@ -421,27 +393,27 @@ windowfactory.geometry = (function () {
 
         let snapDelta = new Vector(NaN, NaN);
 
-        if (this.top &lt;= other.bottom &amp;&amp; this.bottom >= other.top) {
+        if (this.top <= other.bottom && this.bottom >= other.top) {
             // Handle x-snap:
             const leftRightDis = Math.min(other.left - this.right, other.right - this.left);
-            if (Math.abs(leftRightDis) &lt;= snapDistance) { // this.LeftRightSnapTo(other)
+            if (Math.abs(leftRightDis) <= snapDistance) { // this.LeftRightSnapTo(other)
                 snapDelta.left = leftRightDis;
 
                 // Handle y-subsnap:
                 const topBottomDis = Math.min(other.top - this.top, other.bottom - this.bottom);
-                if (Math.abs(topBottomDis) &lt;= snapDistance) { // this.TopBottomSubSnapTo(other)
+                if (Math.abs(topBottomDis) <= snapDistance) { // this.TopBottomSubSnapTo(other)
                     snapDelta.top = topBottomDis;
                 }
             }
-        } else if (this.left &lt;= other.right &amp;&amp; this.right >= other.left) {
+        } else if (this.left <= other.right && this.right >= other.left) {
             // Handle y-snap:
             const topBottomDis = Math.min(other.top - this.bottom, other.bottom - this.top);
-            if (Math.abs(topBottomDis) &lt;= snapDistance) { // this.TopBottomSnapTo(other)
+            if (Math.abs(topBottomDis) <= snapDistance) { // this.TopBottomSnapTo(other)
                 snapDelta.left = topBottomDis;
 
                 // Handle x-subsnap:
                 const leftRightDis = Math.min(other.left - this.left, other.right - this.right);
-                if (Math.abs(leftRightDis) &lt;= snapDistance) { // this.LeftRightSubSnapTo(other)
+                if (Math.abs(leftRightDis) <= snapDistance) { // this.LeftRightSubSnapTo(other)
                     snapDelta.top = leftRightDis;
                 }
             }
@@ -453,7 +425,7 @@ windowfactory.geometry = (function () {
         if (!others) { throw "someTouching requires argument 'others'"; }
         if (others.constructor !== Array) { throw "someTouching requires argument 'others' of type Array"; }
 
-        for (let index = 0; index &lt; others.length; index += 1) {
+        for (let index = 0; index < others.length; index += 1) {
             if (this.isTouching(others[index])) { return true; }
         }
         return false;
@@ -465,13 +437,13 @@ windowfactory.geometry = (function () {
             throw "isColliding requires argument 'other' to resolve to type BoundingBox";
         }
 
-        return this.left &lt; other.right &amp;&amp; this.right > other.left &amp;&amp; this.top &lt; other.bottom &amp;&amp; this.bottom > other.top;
+        return this.left < other.right && this.right > other.left && this.top < other.bottom && this.bottom > other.top;
     };
     BoundingBox.prototype.someColliding = function (others) {
         if (!others) { throw "someColliding requires argument 'others'"; }
         if (others.constructor !== Array) { throw "someColliding requires argument 'others' of type Array"; }
 
-        for (let index = 0; index &lt; others.length; index += 1) {
+        for (let index = 0; index < others.length; index += 1) {
             if (this.isColliding(others[index])) { return true; }
         }
         return false;
@@ -480,7 +452,7 @@ windowfactory.geometry = (function () {
         if (!others) { throw "getColliding requires argument 'others'"; }
         if (others.constructor !== Array) { throw "getColliding requires argument 'others' of type Array"; }
 
-        for (let index = 0; index &lt; others.length; index += 1) {
+        for (let index = 0; index < others.length; index += 1) {
             if (this.isColliding(others[index])) { return others[index]; }
         }
     };
@@ -499,8 +471,8 @@ windowfactory.geometry = (function () {
         if (others.constructor !== Array) { throw "getColliding requires argument 'others' of type Array"; }
 
         let distance = 1000000; // Arbitrary distance
-        for (let index = 0; index &lt; this.boxes.length; index += 1) {
-            for (let j = 0; j &lt; other.boxes.length; j += 1) {
+        for (let index = 0; index < this.boxes.length; index += 1) {
+            for (let j = 0; j < other.boxes.length; j += 1) {
                 distance = Math.min(distance, this.boxes[index].getXEdgeDistance(other.boxes[j]));
             }
         }
@@ -520,7 +492,7 @@ windowfactory.geometry = (function () {
         if (!boxes) { throw "CollisionMesh constructor requires argument 'boxes'"; }
         if (boxes.constructor !== Array) { boxes = [boxes]; }
         this.boxes = [];
-        for (let index = 0; index &lt; boxes.length; index += 1) {
+        for (let index = 0; index < boxes.length; index += 1) {
             if (boxes[index].constructor === BoundingBox) {
                 this.boxes.push(boxes[index]);
             } else if (boxes[index].constructor === CollisionMesh) {
@@ -532,7 +504,7 @@ windowfactory.geometry = (function () {
     }
     CollisionMesh.prototype.clone = function () {
         let boxes = [];
-        for (let index = 0; index &lt; this.boxes; index += 1) {
+        for (let index = 0; index < this.boxes; index += 1) {
             boxes[index] = this.boxes[index].clone();
         }
         return new CollisionMesh(boxes);
@@ -543,7 +515,7 @@ windowfactory.geometry = (function () {
         let left = this.boxes[0].left,
             right = this.boxes[0].right;
 
-        for (let index = 1; index &lt; this.boxes.length; index += 1) {
+        for (let index = 1; index < this.boxes.length; index += 1) {
             // This assumes left is least, and right is most in terms of value:
             left = Math.min(left, this.boxes[index].left);
             right = Math.max(right, this.boxes[index].right);
@@ -557,7 +529,7 @@ windowfactory.geometry = (function () {
         let top = this.boxes[0].top,
             bottom = this.boxes[0].bottom;
 
-        for (let index = 1; index &lt; this.boxes.length; index += 1) {
+        for (let index = 1; index < this.boxes.length; index += 1) {
             // This assumes top is least, and bottom is most in terms of value:
             top = Math.min(top, this.boxes[index].top);
             bottom = Math.max(bottom, this.boxes[index].bottom);
@@ -579,7 +551,7 @@ windowfactory.geometry = (function () {
             right = this.boxes[0].right,
             bottom = this.boxes[0].bottom;
 
-        for (let index = 1; index &lt; this.boxes.length; index += 1) {
+        for (let index = 1; index < this.boxes.length; index += 1) {
             left = Math.min(left, this.boxes[index].left);
             top = Math.min(top, this.boxes[index].top);
             right = Math.max(right, this.boxes[index].right);
@@ -598,7 +570,7 @@ windowfactory.geometry = (function () {
     };
     CollisionMesh.prototype.moveBy = function (left, top) {
         let newPosition = new Vector(left || 0, top || 0);
-        for (let index = 0; index &lt; this.boxes.length; index += 1) {
+        for (let index = 0; index < this.boxes.length; index += 1) {
             this.boxes[index].moveBy(newPosition);
         }
         return this;
@@ -611,7 +583,7 @@ windowfactory.geometry = (function () {
             throw "isContains requires argument 'other' to resolve to type CollisionMesh";
         }
 
-        for (let index = 0; index &lt; this.boxes.length; index += 1) {
+        for (let index = 0; index < this.boxes.length; index += 1) {
             if (this.boxes[index].someContains(other.boxes)) { return true; }
         }
         return false;
@@ -623,7 +595,7 @@ windowfactory.geometry = (function () {
             throw "someContains requires argument 'other' to resolve to type CollisionMesh";
         }
 
-        for (let index = 0; index &lt; this.boxes.length; index += 1) {
+        for (let index = 0; index < this.boxes.length; index += 1) {
             if (this.boxes[index].someContains(other.boxes)) { return true; }
         }
         return false;
@@ -635,7 +607,7 @@ windowfactory.geometry = (function () {
             throw "isTouching requires argument 'other' to resolve to type CollisionMesh";
         }
 
-        for (let index = 0; index &lt; this.boxes.length; index += 1) {
+        for (let index = 0; index < this.boxes.length; index += 1) {
             if (this.boxes[index].someTouching(other.boxes)) { return true; }
         }
         return false;
@@ -644,7 +616,7 @@ windowfactory.geometry = (function () {
         if (!others) { throw "someTouching requires argument 'others'"; }
         if (others.constructor !== Array) { throw "someTouching requires argument 'others' to resolve to type Array"; }
 
-        for (let index = 0; index &lt; others.length; index += 1) {
+        for (let index = 0; index < others.length; index += 1) {
             if (this.isTouching(others[index])) { return true; }
         }
         return false;
@@ -656,7 +628,7 @@ windowfactory.geometry = (function () {
             throw "isColliding requires argument 'other' to resolve to type CollisionMesh";
         }
 
-        for (let index = 0; index &lt; this.boxes.length; index += 1) {
+        for (let index = 0; index < this.boxes.length; index += 1) {
             if (this.boxes[index].someColliding(other.boxes)) { return true; }
         }
         return false;
@@ -665,8 +637,8 @@ windowfactory.geometry = (function () {
         if (!others) { throw "someColliding requires argument 'others'"; }
         if (others.constructor !== Array) { throw "someColliding requires argument 'others' to resolve to type Array"; }
 
-        for (let i = 0; i &lt; others.length; i += 1) {
-            for (let j = 0; j &lt; this.boxes.length; j += 1) {
+        for (let i = 0; i < others.length; i += 1) {
+            for (let j = 0; j < this.boxes.length; j += 1) {
                 if (this.boxes[j].isColliding(others[i])) { return true; }
             }
         }
@@ -679,7 +651,7 @@ windowfactory.geometry = (function () {
             throw "getColliding requires argument 'other' to resolve to type CollisionMesh";
         }
 
-        for (let index = 0; index &lt; this.boxes.length; index += 1) {
+        for (let index = 0; index < this.boxes.length; index += 1) {
             let collided = this.boxes[index].getColliding(other.boxes);
             if (collided) { return collided; }
         }
@@ -692,8 +664,8 @@ windowfactory.geometry = (function () {
         }
 
         let distance = 1000000; // Arbitrary distance
-        for (let index = 0; index &lt; this.boxes.length; index += 1) {
-            for (let j = 0; j &lt; other.boxes.length; j += 1) {
+        for (let index = 0; index < this.boxes.length; index += 1) {
+            for (let j = 0; j < other.boxes.length; j += 1) {
                 distance = Math.min(distance, this.boxes[index].getXEdgeDistance(other.boxes[j]));
             }
         }
@@ -723,26 +695,4 @@ windowfactory.geometry = (function () {
         BoundingBox: BoundingBox,
         CollisionMesh: CollisionMesh
     };
-})();</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-geometry.html">geometry</a></li></ul><h3>Classes</h3><ul><li><a href="module-geometry.BoundingBox.html">BoundingBox</a></li><li><a href="module-geometry.CollisionMesh.html">CollisionMesh</a></li><li><a href="module-geometry.Position.html">Position</a></li><li><a href="module-geometry.Size.html">Size</a></li><li><a href="module-geometry.Vector.html">Vector</a></li><li><a href="Window.html">Window</a></li></ul><h3><a href="global.html">Global</a></h3>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jun 30 2016 17:22:52 GMT-0400 (Eastern Daylight Time)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
-</html>
+})();

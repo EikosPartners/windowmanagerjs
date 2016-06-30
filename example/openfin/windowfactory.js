@@ -1,4 +1,3 @@
-"use strict";
 /*global fin*/
 if (typeof define !== "undefined" && define) {
     define([
@@ -8,13 +7,15 @@ if (typeof define !== "undefined" && define) {
     ) {
         if (!(typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.getVersion())) { return; }
 
-        var readyCallbacks = [];
-        var isReady = false;
-        var currentWindow;
+        let readyCallbacks = [];
+        let isReady = false;
+        let currentWindow;
 
         function onReady(callback) {
             // Check if callback is not a function:
-            if (!(callback && callback.constructor && callback.call && callback.apply)) { throw "onReady expects a function passed as the callback argument!"; }
+            if (!(callback && callback.constructor && callback.call && callback.apply)) {
+                throw "onReady expects a function passed as the callback argument!";
+            }
 
             // Check if already ready:
             if (isReady) { callback(); }
@@ -31,10 +32,10 @@ if (typeof define !== "undefined" && define) {
 
             // Setup handlers on this window:
             (function () {
-                var wX = 0;
-                var wY = 0;
-                var dragging = false;
-                //var titlebarEl = document.querySelector("titlebar");
+                let wX = 0;
+                let wY = 0;
+                let dragging = false;
+                //let titlebarEl = document.querySelector("titlebar");
 
                 window.addEventListener("mousedown", function (e) {
                     if (e.target.classList.contains("window-drag")) {
@@ -56,7 +57,7 @@ if (typeof define !== "undefined" && define) {
             })();
 
             isReady = true;
-            for (var index = 0; index < readyCallbacks.length; index += 1) {
+            for (let index = 0; index < readyCallbacks.length; index += 1) {
                 readyCallbacks[index]();
             }
             readyCallbacks = [];

@@ -11,7 +11,8 @@ define([ //array of strings or prequisites to execute function
             observable = sandbox.mvvm.observable,
             observableArray = sandbox.mvvm.observableArray,
             computed = sandbox.mvvm.computed,
-            curWin = windowfactory.getCurrentWindow();
+            curWin = windowfactory.Window.getCurrent(),
+            childWin;
 
         return {
             moveRandom: function () {
@@ -25,6 +26,28 @@ define([ //array of strings or prequisites to execute function
             },
             close: function () {
                 curWin.close();
+            },
+            hideShow: function () {
+                curWin.hide();
+
+                setTimeout(function () {
+                    curWin.show();
+                }, 1000);
+            },
+            openChild: function () {
+                if (childWin && !childWin.isClosed()) {
+                    childWin.focus();
+                } else {
+                    var mainWindowPosition = curWin.getBounds();
+                    childWin = new windowfactory.Window({
+                        url: "/index.html?child",
+                        left: mainWindowPosition.left - 300,
+                        top: mainWindowPosition.top,
+                        width: 300,
+                        height: 300
+                    });
+                    curWin.dock(childWin);
+                }
             }
         };
     };

@@ -1,4 +1,3 @@
-"use strict";
 /*global fin*/
 if (typeof define !== "undefined" && define) {
 	define([
@@ -8,26 +7,54 @@ if (typeof define !== "undefined" && define) {
 	) {
         if (!(typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.getVersion())) { return; }
 
-		var Vector = geometry.Vector,
+		let Vector = geometry.Vector,
 			Position = geometry.Position,
 			Size = geometry.Size,
 			BoundingBox = geometry.BoundingBox;
-		var defaultConfig = {
+		let defaultConfig = {
 			width: 600,
 			height: 600,
 			frame: false,
 			resizable: false,
 			saveWindowState: false
 		};
-		defaultConfig.__proto__ = null;
-		var configMap = {
+		let configMap = {
 			width: "defaultWidth",
 			height: "defaultHeight"
 		};
-		configMap.__proto__ = null;
 
-		function setupDOM() {
-			var thisWindow = this;
+		function Window(config) {
+			if (!(this instanceof Window)) { return new Window(config); }
+
+			config = config || {}; // If no arguments are passed, assume we are creating a default blank window
+			const isArgConfig = (config["app_uuid"] === undefined);
+
+			this._bounds = new BoundingBox();
+
+			if (isArgConfig) {
+				for (const prop in defaultConfig) {
+					if (defaultConfig.hasOwnProperty(prop)) {
+						config[prop] = config[prop] || defaultConfig[prop];
+					}
+				}
+				for (const prop in config) {
+					if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
+						config[configMap[prop]] = config[prop];
+						delete config[prop];
+					}
+				}
+
+				this._window = new fin.desktop.Window(config, this._setupDOM.bind(this), function (err) {
+					console.error(err, config);
+				});
+			} else {
+				this._window = config;
+				this._setupDOM();
+			}
+		}
+
+		Window.prototype._setupDOM = function () {
+			let thisWindow = this;
 
 			this._window.getBounds(function (bounds) {
 				thisWindow._bounds.set(bounds.left, bounds.top, bounds.left + bounds.width, bounds.top + bounds.height);
@@ -41,36 +68,6 @@ if (typeof define !== "undefined" && define) {
 
 			this._ready = true;
 			// Notify Subscribers
-		}
-
-		function Window(config) {
-			if (!(this instanceof Window)) { return new Window(config); }
-
-			config = config || {}; // If no arguments are passed, assume we are creating a default blank window
-			var isArgConfig = (config["app_uuid"] === undefined);
-
-			this._bounds = new BoundingBox();
-
-			if (isArgConfig) {
-				for (var prop in defaultConfig) {
-					if (defaultConfig.hasOwnProperty(prop)) {
-						config[prop] = config[prop] || defaultConfig[prop];
-					}
-				}
-				for (prop in config) {
-					if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
-						config[configMap[prop]] = config[prop];
-						delete config[prop];
-					}
-				}
-
-				this._window = new fin.desktop.Window(config, setupDOM.bind(this), function (err) {
-					console.error(err, config);
-				});
-			} else {
-				this._window = config;
-				setupDOM.call(this);
-			}
 		}
 
 		Window.prototype.getPosition = function () {
@@ -144,28 +141,28 @@ if (typeof define !== "undefined" && define) {
 
 		Window.prototype.resizeTo = function (width, height, callback) {
 			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
-			var size = new Position(width, height);
+			let size = new Position(width, height);
 
 			this._window.resizeTo(size.left, size.top, "top-left", callback);
 		};
 
 		Window.prototype.moveTo = function (left, top, callback) {
 			if (!this._ready) { throw "moveTo can't be called on an unready window"; }
-			var pos = new Position(left, top);
+			let pos = new Position(left, top);
 
 			this._window.moveTo(pos.left, pos.top, callback);
 		};
 
 		Window.prototype.moveBy = function (deltaLeft, deltaTop, callback) {
 			if (!this._ready) { throw "moveBy can't be called on an unready window"; }
-			var deltaPos = new Position(deltaLeft, deltaTop);
+			let deltaPos = new Position(deltaLeft, deltaTop);
 
 			this._window.moveBy(deltaPos.left, deltaPos.top, callback);
 		};
 
 		Window.prototype.setBounds = function (left, top, right, bottom, callback) {
 			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
-			var bounds = new BoundingBox(left, top, right, bottom);
+			let bounds = new BoundingBox(left, top, right, bottom);
 
 			this._window.setBounds(bounds.left, bounds.top, bounds.right, bounds.bottom, callback);
 		};
