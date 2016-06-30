@@ -18,9 +18,10 @@ Future runtimes:
 `bower install https://github.com/Dillonu/scalejs.windowfactory.git`
 
 ## Installing in Script Folder
-1. Download either one of the following scripts:
+1. Download either one of the following scripts from the dist folder (which contains the latest stable version):
   * [scalejs.windowfactory](https://raw.githubusercontent.com/Dillonu/scalejs.windowfactory/master/dist/scalejs.windowfactory.js)
   * [scalejs.windowfactory.min](https://raw.githubusercontent.com/Dillonu/scalejs.windowfactory/master/dist/scalejs.windowfactory.min.js)
+  * Or one of the scripts in the build folder. The build folder contains nightlies of the repository and may often be broken.
 2. Add the script to the `/Scripts/` folder in your scalejs application.
 3. [Optional] Add the script to your `config.js` paths to shorten the define. Example:  
 `"scalejs.windowfactory": "Scripts/scalejs.windowfactory",`
