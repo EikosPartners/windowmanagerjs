@@ -25,6 +25,9 @@ define([ //array of strings or prequisites to execute function
             },
             close: function () {
                 curWin.close();
+            },
+            undock: function () {
+                curWin.undock();
             }
         };
     };

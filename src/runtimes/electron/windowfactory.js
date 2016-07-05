@@ -1,6 +1,6 @@
 /*global windowfactory,nodeRequire*/
 (function () {
-    if (!windowfactory.isRenderer) { return; }
+    if (!windowfactory.isRenderer || !windowfactory.electronVersion) { return; }
 
     const Window = windowfactory.Window;
     const remote = nodeRequire("electron").remote;
@@ -139,7 +139,7 @@
         onReady: onReady,
         isReady: function () { return isReady; },
         runtime: "Electron",
-        runtimeVersion: nodeRequire.electronVersion
+        runtimeVersion: windowfactory.electronVersion
     });
 })();
 // TODO: Make scalejs.windowfactory the main.js script for Electron. Load the config.json

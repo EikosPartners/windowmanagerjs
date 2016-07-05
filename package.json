@@ -1,6 +1,6 @@
 {
   "name": "scalejs.windowfactory",
-  "version": "0.1.0",
+  "version": "0.1.0alpha",
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-umd": "^6.8.0",
     "babel-plugin-transform-object-assign": "^6.8.0",
@@ -23,6 +23,7 @@
     "grunt-if-missing": "^1.0.1",
     "grunt-jsdoc": "^2.1.0",
     "grunt-newer": "~1.2.0",
+    "grunt-version": "^1.1.1",
     "jshint-stylish": "^2.2.0",
     "load-grunt-config": "~0.19.2",
     "rjs-build-analysis": "0.0.3",

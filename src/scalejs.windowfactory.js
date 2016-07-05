@@ -5,8 +5,6 @@
 
 /*global windowfactory*/
 export default windowfactory;
-if (typeof global !== "undefined" && global) { global.windowfactory = windowfactory; }
-if (typeof window !== "undefined" && window) { window.windowfactory = windowfactory; }
 
 if (typeof define !== "undefined" && define && define.amd) {
     require([

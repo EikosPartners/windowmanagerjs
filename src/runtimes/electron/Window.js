@@ -1,6 +1,6 @@
 /*global windowfactory,nodeRequire*/
 (function () {
-    if (windowfactory.isRenderer) {
+    if (windowfactory.isRenderer && windowfactory.electronVersion) {
         const geometry = windowfactory.geometry;
         const Vector = geometry.Vector,
             Position = geometry.Position,
@@ -41,15 +41,15 @@
             const isArgConfig = (config.webContents === undefined); // TODO: Improve checking of arguments.
 
             if (isArgConfig) {
-                for (const prop in defaultConfig) {
-                    if (defaultConfig.hasOwnProperty(prop)) {
-                        config[prop] = config[prop] || defaultConfig[prop];
-                    }
-                }
                 for (const prop in config) {
                     if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
                         config[configMap[prop]] = config[prop];
                         delete config[prop];
+                    }
+                }
+                for (const prop in defaultConfig) {
+                    if (defaultConfig.hasOwnProperty(prop)) {
+                        config[prop] = config[prop] || defaultConfig[prop];
                     }
                 }
                 const url = config.url;
@@ -58,7 +58,6 @@
                 this._window = new BrowserWindow(config);
                 this._window.loadURL(url[0] !== "/" ? url : path.join(remote.getGlobal("workingDir"), url));
                 this._ready = true;
-                this._window.webContents.openDevTools();
             } else {
                 this._window = config;
                 this._ready = true;
@@ -73,6 +72,7 @@
             }
 
             // Setup _window event listeners:
+            // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.
             const thisWindow = this;
             function _onmove() {
                 thisWindow.emit("move"); // TODO: Pass what position it is at.
@@ -444,7 +444,7 @@
 
 
         // Handle current window in this context:
-        Window.current = new Window(remote.getCurrentWindow());
+        Window.current = new Window(currentWin);
 
         Object.assign(windowfactory, {
             Window: Window
@@ -474,9 +474,7 @@
 
 
                     this.on("restore", function () {
-                        for (let index = 0; index < this._dockedGroup.length; index += 1) {
-                            const other = this._dockedGroup[index];
-
+                        for (let other of this._dockedGroup) {
                             if (other !== this) {
                                 other.restore();
                             }
@@ -522,13 +520,12 @@
 
                 // Make sure docked group exists:
                 other._ensureDockSystem();
-                const otherGroup = other._dockedGroup;
 
                 // Loop through all windows in otherGroup and add them to this's group:
-                for (let index = 0; index < otherGroup.length; index += 1) {
-                    this._dockedGroup.push(otherGroup[index]);
+                for (let other of other._dockedGroup) {
+                    this._dockedGroup.push(other);
                     // Sharing the array between window objects makes it easier to manage:
-                    otherGroup[index]._dockedGroup = this._dockedGroup;
+                    other._dockedGroup = this._dockedGroup;
                 }
 
                 //console.log("dock", this._dockedGroup);
@@ -550,9 +547,11 @@
             BrowserWindow.prototype._dockFocus = function () {
                 this._ensureDockSystem();
 
-                for (let index = 0; index < this._dockedGroup.length; index += 1) {
-                    this._dockedGroup[index].setAlwaysOnTop(true);
-                    this._dockedGroup[index].setAlwaysOnTop(false);
+                for (let window of this._dockedGroup) {
+                    if (window !== this) {
+                        window.setAlwaysOnTop(true);
+                        window.setAlwaysOnTop(false);
+                    }
                 }
                 this.setAlwaysOnTop(true);
                 this.setAlwaysOnTop(false);
@@ -560,8 +559,8 @@
             BrowserWindow.prototype._dragStart = function () {
                 this._ensureDockSystem();
 
-                for (let index = 0; index < this._dockedGroup.length; index += 1) {
-                    this._dockedGroup[index]._dragStartPos = this._dockedGroup[index].getPosition();
+                for (let window of this._dockedGroup) {
+                    window._dragStartPos = window.getPosition();
                 }
             };
             BrowserWindow.prototype._getBounds = function () {
@@ -583,8 +582,7 @@
                 deltaLeft += snapDelta.left || 0;
                 deltaTop += snapDelta.top || 0;
 
-                for (let index = 0; index < this._dockedGroup.length; index += 1) {
-                    const other = this._dockedGroup[index];
+			    for (let other of this._dockedGroup) {
                     let pos = other._dragStartPos;
 
                     // If other doesn't have a drag position, start it:
@@ -608,8 +606,8 @@
                     }
                 }
 
-                for (let index = 0; index < this._dockedGroup.length; index += 1) {
-                    delete this._dockedGroup[index]._dragStartPos;
+                for (let window of this._dockedGroup) {
+                    delete window._dragStartPos;
                 }
             };
             BrowserWindow.prototype._dockMoveTo = function (left, top) {
@@ -619,8 +617,7 @@
                 const deltaLeft = left - oldPos[0];
                 const deltaTop = top - oldPos[1];
 
-                for (let index = 0; index < this._dockedGroup.length; index += 1) {
-                    const other = this._dockedGroup[index];
+                for (let other of this._dockedGroup) {
                     const pos = other.getPosition();
 
                     other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
@@ -629,22 +626,22 @@
             BrowserWindow.prototype._dockMinimize = function (left, top) {
                 this._ensureDockSystem();
 
-                for (let index = 0; index < this._dockedGroup.length; index += 1) {
-                    this._dockedGroup[index].minimize();
+                for (let window of this._dockedGroup) {
+                    window.minimize();
                 }
             };
             BrowserWindow.prototype._dockHide = function (left, top) {
                 this._ensureDockSystem();
 
-                for (let index = 0; index < this._dockedGroup.length; index += 1) {
-                    this._dockedGroup[index].hide();
+                for (let window of this._dockedGroup) {
+                    window.hide();
                 }
             };
             BrowserWindow.prototype._dockShow = function (left, top) {
                 this._ensureDockSystem();
 
-                for (let index = 0; index < this._dockedGroup.length; index += 1) {
-                    this._dockedGroup[index].show();
+                for (let window of this._dockedGroup) {
+                    window.show();
                 }
             };
         }
