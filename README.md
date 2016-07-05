@@ -12,7 +12,7 @@ Future runtimes:
 * Web Browsers (Chrome, Firefox, IE, Edge, ect.)  
 
 ## Running the Example Demo
-[TODO]
+See example/README.md
 
 ## Installing via Bower Install
 `bower install https://github.com/Dillonu/scalejs.windowfactory.git`
