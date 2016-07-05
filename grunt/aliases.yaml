@@ -1,5 +1,6 @@
 lint:
     - 'jshint:extension'
+    - 'version'
     - 'jsdoc'
 
 compile:
@@ -11,7 +12,8 @@ config:
 build:
     - 'compile'
     - 'config'
-    - 'requirejs'
+    - 'concat'
+    - 'babel'
     - 'uglify'
     - 'copy:build'
 

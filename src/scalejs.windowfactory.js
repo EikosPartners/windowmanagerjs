@@ -1,36 +1,19 @@
-"use strict";
-if (typeof define !== "undefined" && define) {
-    define("scalejs.windowfactory",[
-        "scalejs!core",
-        "./scalejs.windowfactory/geometry",
-        "./scalejs.windowfactory/electron/windowfactory",
-        "./scalejs.windowfactory/openfin/windowfactory"
+// TODO: Support UMD (CommonJS, AMD), Nodejs, and ES6 module loading.
+//       Do this by stitching all scripts together, and wrap it in a define or something else.
+//       Maybe after stitching, make it export windowfactory, and use babel-umd to compile to UMD?
+// TODO: Offer a compilation output without ScaleJS. (To support non-ScaleJS applications)
+
+/*global windowfactory*/
+export default windowfactory;
+
+if (typeof define !== "undefined" && define && define.amd) {
+    require([
+        "scalejs!core"
     ], function (
-        core,
-        geometry,
-        electron,
-        openfin
+        core
     ) {
-        var windowfactory = electron || openfin;
-
-        windowfactory.geometry = geometry;
-
         core.registerExtension({
             windowfactory: windowfactory
         });
-
-        if (typeof window !== "undefined" && window) { window.windowfactory = windowfactory; }
-        if (typeof global !== "undefined" && global) { global.windowfactory = windowfactory; }
-        //if (typeof GLOBAL !== "undefined" && GLOBAL) GLOBAL.windowfactory = windowfactory;
-
-        return windowfactory;
     });
-} else {
-    if (typeof process !== "undefined" && process) {
-        require.electron = process.versions.electron;
-        var _require = require;
-        process.once("loaded", function () {
-            global.nodeRequire = _require;
-        });
-    }
 }

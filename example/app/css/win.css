@@ -9,6 +9,7 @@ html, body {
     padding: 0;
     font-size: 16px;
     overflow: hidden;
+    -webkit-user-select: none;
 }
 
 body, content {
@@ -32,4 +33,13 @@ titlebar {
     /*-webkit-app-region: drag;*/
     -webkit-user-select: none;
     cursor: default;
+}
+
+.notselectable {
+    -webkit-user-select: none;
+    cursor: default;
+}
+
+.selectable {
+    -webkit-user-select: auto;
 }

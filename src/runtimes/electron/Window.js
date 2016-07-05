@@ -1,40 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: electron/Window.js</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-
-    <h1 class="page-title">Source: electron/Window.js</h1>
-
-    
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/*global nodeRequire*/
-if (typeof define !== "undefined" &amp;&amp; define) {
-    define([
-        "../geometry"
-    ], function (
-        geometry
-    ) {
-        if (!(typeof nodeRequire !== "undefined" &amp;&amp; nodeRequire &amp;&amp; nodeRequire.electron)) { return; }
-
+/*global windowfactory,nodeRequire*/
+(function () {
+    if (windowfactory.isRenderer && windowfactory.electronVersion) {
+        const geometry = windowfactory.geometry;
         const Vector = geometry.Vector,
             Position = geometry.Position,
             Size = geometry.Size,
@@ -67,22 +34,22 @@ if (typeof define !== "undefined" &amp;&amp; define) {
          * @alias Window
          * @param {object} config - Configuration
          */
-        function Window(config) {
+        const Window = function (config) {
             if (!(this instanceof Window)) { return new Window(config); }
 
             config = config || {}; // If no arguments are passed, assume we are creating a default blank window
             const isArgConfig = (config.webContents === undefined); // TODO: Improve checking of arguments.
 
             if (isArgConfig) {
+                for (const prop in config) {
+                    if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
+                        config[configMap[prop]] = config[prop];
+                        delete config[prop];
+                    }
+                }
                 for (const prop in defaultConfig) {
                     if (defaultConfig.hasOwnProperty(prop)) {
                         config[prop] = config[prop] || defaultConfig[prop];
-                    }
-                }
-                for (const prop in config) {
-                    if (config.hasOwnProperty(prop) &amp;&amp; configMap[prop] !== undefined) {
-                        config[configMap[prop]] = config[prop];
-                        delete config[prop];
                     }
                 }
                 const url = config.url;
@@ -91,7 +58,6 @@ if (typeof define !== "undefined" &amp;&amp; define) {
                 this._window = new BrowserWindow(config);
                 this._window.loadURL(url[0] !== "/" ? url : path.join(remote.getGlobal("workingDir"), url));
                 this._ready = true;
-                this._window.webContents.openDevTools();
             } else {
                 this._window = config;
                 this._ready = true;
@@ -101,11 +67,12 @@ if (typeof define !== "undefined" &amp;&amp; define) {
             // Setup handlers:
             // TODO: Look into making these special properties that can't be deleted?
             this._eventListeners = {};
-            for (let index = 0; index &lt; acceptedEventHandlers.length; index += 1) {
+            for (let index = 0; index < acceptedEventHandlers.length; index += 1) {
                 this._eventListeners[acceptedEventHandlers[index]] = [];
             }
 
             // Setup _window event listeners:
+            // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.
             const thisWindow = this;
             function _onmove() {
                 thisWindow.emit("move"); // TODO: Pass what position it is at.
@@ -218,11 +185,11 @@ if (typeof define !== "undefined" &amp;&amp; define) {
 
             // Get arguments:
             let args = new Array(arguments.length - 1);
-            for (let index = 1; index &lt; arguments.length; index += 1) {
+            for (let index = 1; index < arguments.length; index += 1) {
                 args[index - 1] = arguments[index];
             }
 
-            for (let index = 0; index &lt; this._eventListeners[eventName].length; index += 1) {
+            for (let index = 0; index < this._eventListeners[eventName].length; index += 1) {
                 // Call listener with the 'this' context as the current window:
                 this._eventListeners[eventName][index].apply(this, args);
             }
@@ -477,218 +444,206 @@ if (typeof define !== "undefined" &amp;&amp; define) {
 
 
         // Handle current window in this context:
-        Window.current = new Window(remote.getCurrentWindow());
+        Window.current = new Window(currentWin);
 
-        return Window;
-    });
-} else if (typeof process !== "undefined" &amp;&amp; process.versions &amp;&amp; process.versions.node) {
-    // This is Electron's main process:
-    const {BrowserWindow} = require("electron");
+        Object.assign(windowfactory, {
+            Window: Window
+        });
+    } else if (windowfactory.isBackend) {
+        // This is Electron's main process:
+        const {BrowserWindow} = global.nodeRequire("electron");
 
-    if (BrowserWindow) {
-        const {Vector, BoundingBox} = global.geometry;
-        BrowserWindow.prototype._ensureDockSystem = function () {
-            // Make sure docked group exists:
-            if (this._dockedGroup === undefined) {
-                this._dockedGroup = [this];
+        if (BrowserWindow) {
+            const {Vector, BoundingBox} = windowfactory.geometry;
+            BrowserWindow.prototype._ensureDockSystem = function () {
+                // Make sure docked group exists:
+                if (this._dockedGroup === undefined) {
+                    this._dockedGroup = [this];
 
-                this.on("closed", function () {
-                    // Clean up the dock system when this window closes:
-                    this.undock();
-                });
-
-                this.on("maximize", function () {
-                    this.undock();
-                });
-                this.on("minimize", function () {
-                    this._dockMinimize();
-                });
-
-
-                this.on("restore", function () {
-                    for (let index = 0; index &lt; this._dockedGroup.length; index += 1) {
-                        const other = this._dockedGroup[index];
-
-                        if (other !== this) {
-                            other.restore();
-                        }
-                    }
-                });
-
-                let lastBounds = this.getBounds();
-                this.on("move", function () {
-                    const newBounds = this.getBounds();
-                    //this._dockMoveTo(newBounds.x, newBounds.y, [lastBounds.x, lastBounds.y]);
-                    lastBounds = newBounds;
-                });
-                this.on("resize", function () {
-                    const newBounds = this.getBounds();
-
-                    if (newBounds.width !== lastBounds.width || newBounds.height !== lastBounds.height) {
+                    this.on("closed", function () {
+                        // Clean up the dock system when this window closes:
                         this.undock();
-                    }
-                    // TODO: Handle resize positions of other docked windows
-                    //       This requires reworking how windows are docked/connected
-                    //       (they must be docked to edges of windows, not the windows themselves)
-                    /*for (let index = 0; index &lt; this._dockedGroup.length; index += 1) {
-                        const other = this._dockedGroup[index];
+                    });
 
-                        if (other !== this) {
-                            other.setPosition()
+                    this.on("maximize", function () {
+                        this.undock();
+                    });
+                    this.on("minimize", function () {
+                        this._dockMinimize();
+                    });
+
+
+                    this.on("restore", function () {
+                        for (let other of this._dockedGroup) {
+                            if (other !== this) {
+                                other.restore();
+                            }
                         }
-                    }*/
+                    });
 
-                    lastBounds = newBounds;
-                });
-            }
-        };
-        BrowserWindow.prototype.dock = function (otherID) {
-            this._ensureDockSystem();
+                    let lastBounds = this.getBounds();
+                    this.on("move", function () {
+                        const newBounds = this.getBounds();
+                        //this._dockMoveTo(newBounds.x, newBounds.y, [lastBounds.x, lastBounds.y]);
+                        lastBounds = newBounds;
+                    });
+                    this.on("resize", function () {
+                        const newBounds = this.getBounds();
 
-            // Resolve otherID, and fail if otherID doesn't exist.
-            const other = BrowserWindow.fromId(otherID);
-            if (other === undefined) { return; } // Failed to find other. TODO: Return error
+                        if (newBounds.width !== lastBounds.width || newBounds.height !== lastBounds.height) {
+                            this.undock();
+                        }
+                        // TODO: Handle resize positions of other docked windows
+                        //       This requires reworking how windows are docked/connected
+                        //       (they must be docked to edges of windows, not the windows themselves)
+                        /*for (let index = 0; index < this._dockedGroup.length; index += 1) {
+                            const other = this._dockedGroup[index];
 
-            // If other is already in the group, return:
-            if (this._dockedGroup.indexOf(other) >= 0) { return; }
+                            if (other !== this) {
+                                other.setPosition()
+                            }
+                        }*/
 
-            // Make sure docked group exists:
-            other._ensureDockSystem();
-            const otherGroup = other._dockedGroup;
+                        lastBounds = newBounds;
+                    });
+                }
+            };
+            BrowserWindow.prototype.dock = function (otherID) {
+                this._ensureDockSystem();
 
-            // Loop through all windows in otherGroup and add them to this's group:
-            for (let index = 0; index &lt; otherGroup.length; index += 1) {
-                this._dockedGroup.push(otherGroup[index]);
-                // Sharing the array between window objects makes it easier to manage:
-                otherGroup[index]._dockedGroup = this._dockedGroup;
-            }
+                // Resolve otherID, and fail if otherID doesn't exist.
+                const other = BrowserWindow.fromId(otherID);
+                if (other === undefined) { return; } // Failed to find other. TODO: Return error
 
-            //console.log("dock", this._dockedGroup);
-            // TODO: Check if otherGroup is touching
-        };
-        BrowserWindow.prototype.undock = function () {
-            this._ensureDockSystem();
+                // If other is already in the group, return:
+                if (this._dockedGroup.indexOf(other) >= 0) { return; }
 
-            // Check to see if window is already undocked:
-            if (this._dockedGroup.length === 1) { return; }
+                // Make sure docked group exists:
+                other._ensureDockSystem();
 
-            // Undock this:
-            this._dockedGroup.splice(this._dockedGroup.indexOf(this), 1);
-            this._dockedGroup = [this];
-
-            //console.log("undock", this._dockedGroup);
-            // TODO: Redock those still touching, EXCEPT 'this'.
-        };
-        BrowserWindow.prototype._dockFocus = function () {
-            this._ensureDockSystem();
-
-            for (let index = 0; index &lt; this._dockedGroup.length; index += 1) {
-                this._dockedGroup[index].setAlwaysOnTop(true);
-                this._dockedGroup[index].setAlwaysOnTop(false);
-            }
-            this.setAlwaysOnTop(true);
-            this.setAlwaysOnTop(false);
-        };
-        BrowserWindow.prototype._dragStart = function () {
-            this._ensureDockSystem();
-
-            for (let index = 0; index &lt; this._dockedGroup.length; index += 1) {
-                this._dockedGroup[index]._dragStartPos = this._dockedGroup[index].getPosition();
-            }
-        };
-        BrowserWindow.prototype._getBounds = function () {
-            const bounds = this.getBounds();
-            return new BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
-        };
-        BrowserWindow.prototype._dragBy = function (deltaLeft, deltaTop) {
-            this._ensureDockSystem();
-
-            // Perform Snap:
-            const thisBounds = this._getBounds();
-            let snapDelta = new Vector(NaN, NaN);
-            for (let other of BrowserWindow.getAllWindows()) {
-                snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
-            }
-            deltaLeft += snapDelta.left || 0;
-            deltaTop += snapDelta.top || 0;
-
-            for (let index = 0; index &lt; this._dockedGroup.length; index += 1) {
-                const other = this._dockedGroup[index];
-                let pos = other._dragStartPos;
-
-                // If other doesn't have a drag position, start it:
-                if (pos === undefined) {
-                    pos = other._dragStartPos = other.getPosition();
-                    pos[0] -= deltaLeft;
-                    pos[1] -= deltaTop;
+                // Loop through all windows in otherGroup and add them to this's group:
+                for (let other of other._dockedGroup) {
+                    this._dockedGroup.push(other);
+                    // Sharing the array between window objects makes it easier to manage:
+                    other._dockedGroup = this._dockedGroup;
                 }
 
-                other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
-            }
-        };
-        BrowserWindow.prototype._dragStop = function () {
-            this._ensureDockSystem();
+                //console.log("dock", this._dockedGroup);
+                // TODO: Check if otherGroup is touching
+            };
+            BrowserWindow.prototype.undock = function () {
+                this._ensureDockSystem();
 
-            for (let index = 0; index &lt; this._dockedGroup.length; index += 1) {
-                delete this._dockedGroup[index]._dragStartPos;
-            }
-        };
-        BrowserWindow.prototype._dockMoveTo = function (left, top) {
-            this._ensureDockSystem();
+                // Check to see if window is already undocked:
+                if (this._dockedGroup.length === 1) { return; }
 
-            const oldPos = this.getPosition();
-            const deltaLeft = left - oldPos[0];
-            const deltaTop = top - oldPos[1];
+                // Undock this:
+                this._dockedGroup.splice(this._dockedGroup.indexOf(this), 1);
+                this._dockedGroup = [this];
 
-            for (let index = 0; index &lt; this._dockedGroup.length; index += 1) {
-                const other = this._dockedGroup[index];
-                const pos = other.getPosition();
+                //console.log("undock", this._dockedGroup);
+                // TODO: Redock those still touching, EXCEPT 'this'.
+            };
+            BrowserWindow.prototype._dockFocus = function () {
+                this._ensureDockSystem();
 
-                other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
-            }
-        };
-        BrowserWindow.prototype._dockMinimize = function (left, top) {
-            this._ensureDockSystem();
+                for (let window of this._dockedGroup) {
+                    if (window !== this) {
+                        window.setAlwaysOnTop(true);
+                        window.setAlwaysOnTop(false);
+                    }
+                }
+                this.setAlwaysOnTop(true);
+                this.setAlwaysOnTop(false);
+            };
+            BrowserWindow.prototype._dragStart = function () {
+                this._ensureDockSystem();
 
-            for (let index = 0; index &lt; this._dockedGroup.length; index += 1) {
-                this._dockedGroup[index].minimize();
-            }
-        };
-        BrowserWindow.prototype._dockHide = function (left, top) {
-            this._ensureDockSystem();
+                for (let window of this._dockedGroup) {
+                    window._dragStartPos = window.getPosition();
+                }
+            };
+            BrowserWindow.prototype._getBounds = function () {
+                const bounds = this.getBounds();
+                return new BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
+            };
+            BrowserWindow.prototype._dragBy = function (deltaLeft, deltaTop) {
+                this._ensureDockSystem();
 
-            for (let index = 0; index &lt; this._dockedGroup.length; index += 1) {
-                this._dockedGroup[index].hide();
-            }
-        };
-        BrowserWindow.prototype._dockShow = function (left, top) {
-            this._ensureDockSystem();
+                // Perform Snap:
+                const thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft,
+                                                            this._dragStartPos[1] + deltaTop);
+                let snapDelta = new Vector(NaN, NaN);
+                for (let other of BrowserWindow.getAllWindows()) {
+                    if (other._dockedGroup !== this._dockedGroup) {
+                        snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
+                    }
+                }
+                deltaLeft += snapDelta.left || 0;
+                deltaTop += snapDelta.top || 0;
 
-            for (let index = 0; index &lt; this._dockedGroup.length; index += 1) {
-                this._dockedGroup[index].show();
-            }
-        };
+			    for (let other of this._dockedGroup) {
+                    let pos = other._dragStartPos;
+
+                    // If other doesn't have a drag position, start it:
+                    if (pos === undefined) {
+                        pos = other._dragStartPos = other.getPosition();
+                        pos[0] -= deltaLeft;
+                        pos[1] -= deltaTop;
+                    }
+
+                    other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
+                }
+            };
+            BrowserWindow.prototype._dragStop = function () {
+                this._ensureDockSystem();
+
+                // Dock to those it snapped to:
+                const thisBounds = this._getBounds();
+                for (let other of BrowserWindow.getAllWindows()) {
+                    if (thisBounds.isTouching(other._getBounds())) {
+                        this.dock(other.id);
+                    }
+                }
+
+                for (let window of this._dockedGroup) {
+                    delete window._dragStartPos;
+                }
+            };
+            BrowserWindow.prototype._dockMoveTo = function (left, top) {
+                this._ensureDockSystem();
+
+                const oldPos = this.getPosition();
+                const deltaLeft = left - oldPos[0];
+                const deltaTop = top - oldPos[1];
+
+                for (let other of this._dockedGroup) {
+                    const pos = other.getPosition();
+
+                    other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
+                }
+            };
+            BrowserWindow.prototype._dockMinimize = function (left, top) {
+                this._ensureDockSystem();
+
+                for (let window of this._dockedGroup) {
+                    window.minimize();
+                }
+            };
+            BrowserWindow.prototype._dockHide = function (left, top) {
+                this._ensureDockSystem();
+
+                for (let window of this._dockedGroup) {
+                    window.hide();
+                }
+            };
+            BrowserWindow.prototype._dockShow = function (left, top) {
+                this._ensureDockSystem();
+
+                for (let window of this._dockedGroup) {
+                    window.show();
+                }
+            };
+        }
     }
-}</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-geometry.html">geometry</a></li></ul><h3>Classes</h3><ul><li><a href="module-geometry.BoundingBox.html">BoundingBox</a></li><li><a href="module-geometry.CollisionMesh.html">CollisionMesh</a></li><li><a href="module-geometry.Position.html">Position</a></li><li><a href="module-geometry.Size.html">Size</a></li><li><a href="module-geometry.Vector.html">Vector</a></li><li><a href="Window.html">Window</a></li></ul><h3><a href="global.html">Global</a></h3>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jun 30 2016 15:28:52 GMT-0400 (Eastern Daylight Time)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
-</html>
+})();
