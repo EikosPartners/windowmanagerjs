@@ -572,10 +572,13 @@
                 this._ensureDockSystem();
 
                 // Perform Snap:
-                const thisBounds = this._getBounds();
+                const thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft,
+                                                            this._dragStartPos[1] + deltaTop);
                 let snapDelta = new Vector(NaN, NaN);
                 for (let other of BrowserWindow.getAllWindows()) {
-                    snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
+                    if (other._dockedGroup !== this._dockedGroup) {
+                        snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
+                    }
                 }
                 deltaLeft += snapDelta.left || 0;
                 deltaTop += snapDelta.top || 0;
@@ -596,6 +599,14 @@
             };
             BrowserWindow.prototype._dragStop = function () {
                 this._ensureDockSystem();
+
+                // Dock to those it snapped to:
+                const thisBounds = this._getBounds();
+                for (let other of BrowserWindow.getAllWindows()) {
+                    if (thisBounds.isTouching(other._getBounds())) {
+                        this.dock(other.id);
+                    }
+                }
 
                 for (let index = 0; index < this._dockedGroup.length; index += 1) {
                     delete this._dockedGroup[index]._dragStartPos;

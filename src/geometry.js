@@ -8,6 +8,25 @@
 
 /*global windowfactory*/
 windowfactory.geometry = (function () {
+    // Utility functions:
+    function minAbs() {
+        let min = arguments[0];
+        let minAbs = Math.abs(min);
+
+        for (let index = 1; index < arguments.length; index += 1) {
+            let argAbs = Math.abs(arguments[index]);
+            if (argAbs < minAbs) {
+                min = arguments[index];
+                minAbs = argAbs;
+            }
+        }
+
+        return {
+            min: min,
+            abs: minAbs
+        };
+    }
+
     /**
      * A Vector object.
      * @memberof module:geometry
@@ -98,8 +117,8 @@ windowfactory.geometry = (function () {
         other = other.getVector();
         if (other.constructor !== Vector) { throw "setMin requires argument 'other' to resolve to type Vector"; }
 
-        if (!other.left && Math.abs(other.left) < Math.abs(this.left)) { this.left = other.left; }
-        if (!other.top && Math.abs(other.top) < Math.abs(this.top)) { this.top = other.top; }
+        if (Math.abs(other.left) < Math.abs(this.left) || isNaN(this.left)) { this.left = other.left; }
+        if (Math.abs(other.top) < Math.abs(this.top) || isNaN(this.top)) { this.top = other.top; }
     };
     Vector.prototype.add = function (other) {
         if (!other) { throw "add requires argument 'other'"; }
@@ -395,26 +414,26 @@ windowfactory.geometry = (function () {
 
         if (this.top <= other.bottom && this.bottom >= other.top) {
             // Handle x-snap:
-            const leftRightDis = Math.min(other.left - this.right, other.right - this.left);
-            if (Math.abs(leftRightDis) <= snapDistance) { // this.LeftRightSnapTo(other)
-                snapDelta.left = leftRightDis;
+            const leftRightDis = minAbs(other.left - this.right, other.right - this.left);
+            if (leftRightDis.abs <= snapDistance) { // this.LeftRightSnapTo(other)
+                snapDelta.left = leftRightDis.min;
 
                 // Handle y-subsnap:
-                const topBottomDis = Math.min(other.top - this.top, other.bottom - this.bottom);
-                if (Math.abs(topBottomDis) <= snapDistance) { // this.TopBottomSubSnapTo(other)
-                    snapDelta.top = topBottomDis;
+                const topBottomDis = minAbs(other.top - this.top, other.bottom - this.bottom);
+                if (topBottomDis.abs <= snapDistance) { // this.TopBottomSubSnapTo(other)
+                    snapDelta.top = topBottomDis.min;
                 }
             }
         } else if (this.left <= other.right && this.right >= other.left) {
             // Handle y-snap:
-            const topBottomDis = Math.min(other.top - this.bottom, other.bottom - this.top);
-            if (Math.abs(topBottomDis) <= snapDistance) { // this.TopBottomSnapTo(other)
-                snapDelta.left = topBottomDis;
+            const topBottomDis = minAbs(other.top - this.bottom, other.bottom - this.top);
+            if (topBottomDis.abs <= snapDistance) { // this.TopBottomSnapTo(other)
+                snapDelta.top = topBottomDis.min;
 
                 // Handle x-subsnap:
-                const leftRightDis = Math.min(other.left - this.left, other.right - this.right);
-                if (Math.abs(leftRightDis) <= snapDistance) { // this.LeftRightSubSnapTo(other)
-                    snapDelta.top = leftRightDis;
+                const leftRightDis = minAbs(other.left - this.left, other.right - this.right);
+                if (leftRightDis.abs <= snapDistance) { // this.LeftRightSubSnapTo(other)
+                    snapDelta.left = leftRightDis.min;
                 }
             }
         }

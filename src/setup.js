@@ -20,6 +20,6 @@ if (typeof window !== "undefined" && window) {
     windowfactory.isRenderer = true;
 }
 if (typeof process !== "undefined" && process && process.versions) {
-    windowfactory.electronVersion = global.process.versions.electron;
-    windowfactory.nodeVersion = global.process.versions.node;
+    global.nodeRequire.electronVersion = windowfactory.electronVersion = global.process.versions.electron;
+    global.nodeRequire.nodeVersion = windowfactory.nodeVersion = global.process.versions.node;
 }

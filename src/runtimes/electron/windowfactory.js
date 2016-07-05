@@ -139,7 +139,7 @@
         onReady: onReady,
         isReady: function () { return isReady; },
         runtime: "Electron",
-        runtimeVersion: nodeRequire.electron
+        runtimeVersion: nodeRequire.electronVersion
     });
 })();
 // TODO: Make scalejs.windowfactory the main.js script for Electron. Load the config.json

@@ -53,8 +53,8 @@
         windowfactory.isRenderer = true;
     }
     if (typeof process !== "undefined" && process && process.versions) {
-        windowfactory.electronVersion = global.process.versions.electron;
-        windowfactory.nodeVersion = global.process.versions.node;
+        global.nodeRequire.electronVersion = windowfactory.electronVersion = global.process.versions.electron;
+        global.nodeRequire.nodeVersion = windowfactory.nodeVersion = global.process.versions.node;
     }
 
     /**
@@ -67,6 +67,25 @@
 
     /*global windowfactory*/
     windowfactory.geometry = function () {
+        // Utility functions:
+        function minAbs() {
+            var min = arguments[0];
+            var minAbs = Math.abs(min);
+
+            for (var index = 1; index < arguments.length; index += 1) {
+                var argAbs = Math.abs(arguments[index]);
+                if (argAbs < minAbs) {
+                    min = arguments[index];
+                    minAbs = argAbs;
+                }
+            }
+
+            return {
+                min: min,
+                abs: minAbs
+            };
+        }
+
         /**
          * A Vector object.
          * @memberof module:geometry
@@ -167,10 +186,10 @@
                 throw "setMin requires argument 'other' to resolve to type Vector";
             }
 
-            if (!other.left && Math.abs(other.left) < Math.abs(this.left)) {
+            if (Math.abs(other.left) < Math.abs(this.left) || isNaN(this.left)) {
                 this.left = other.left;
             }
-            if (!other.top && Math.abs(other.top) < Math.abs(this.top)) {
+            if (Math.abs(other.top) < Math.abs(this.top) || isNaN(this.top)) {
                 this.top = other.top;
             }
         };
@@ -529,30 +548,30 @@
 
             if (this.top <= other.bottom && this.bottom >= other.top) {
                 // Handle x-snap:
-                var leftRightDis = Math.min(other.left - this.right, other.right - this.left);
-                if (Math.abs(leftRightDis) <= snapDistance) {
+                var leftRightDis = minAbs(other.left - this.right, other.right - this.left);
+                if (leftRightDis.abs <= snapDistance) {
                     // this.LeftRightSnapTo(other)
-                    snapDelta.left = leftRightDis;
+                    snapDelta.left = leftRightDis.min;
 
                     // Handle y-subsnap:
-                    var topBottomDis = Math.min(other.top - this.top, other.bottom - this.bottom);
-                    if (Math.abs(topBottomDis) <= snapDistance) {
+                    var topBottomDis = minAbs(other.top - this.top, other.bottom - this.bottom);
+                    if (topBottomDis.abs <= snapDistance) {
                         // this.TopBottomSubSnapTo(other)
-                        snapDelta.top = topBottomDis;
+                        snapDelta.top = topBottomDis.min;
                     }
                 }
             } else if (this.left <= other.right && this.right >= other.left) {
                 // Handle y-snap:
-                var _topBottomDis = Math.min(other.top - this.bottom, other.bottom - this.top);
-                if (Math.abs(_topBottomDis) <= snapDistance) {
+                var _topBottomDis = minAbs(other.top - this.bottom, other.bottom - this.top);
+                if (_topBottomDis.abs <= snapDistance) {
                     // this.TopBottomSnapTo(other)
-                    snapDelta.left = _topBottomDis;
+                    snapDelta.top = _topBottomDis.min;
 
                     // Handle x-subsnap:
-                    var _leftRightDis = Math.min(other.left - this.left, other.right - this.right);
-                    if (Math.abs(_leftRightDis) <= snapDistance) {
+                    var _leftRightDis = minAbs(other.left - this.left, other.right - this.right);
+                    if (_leftRightDis.abs <= snapDistance) {
                         // this.LeftRightSubSnapTo(other)
-                        snapDelta.top = _leftRightDis;
+                        snapDelta.left = _leftRightDis.min;
                     }
                 }
             }
@@ -1545,7 +1564,7 @@
                             this._ensureDockSystem();
 
                             // Perform Snap:
-                            var thisBounds = this._getBounds();
+                            var thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft, this._dragStartPos[1] + deltaTop);
                             var snapDelta = new Vector(NaN, NaN);
                             var _iteratorNormalCompletion = true;
                             var _didIteratorError = false;
@@ -1555,7 +1574,9 @@
                                 for (var _iterator = BrowserWindow.getAllWindows()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                                     var _other = _step.value;
 
-                                    snapDelta.setMin(thisBounds.getSnapDelta(_other._getBounds()));
+                                    if (_other._dockedGroup !== this._dockedGroup) {
+                                        snapDelta.setMin(thisBounds.getSnapDelta(_other._getBounds()));
+                                    }
                                 }
                             } catch (err) {
                                 _didIteratorError = true;
@@ -1591,6 +1612,35 @@
                         };
                         BrowserWindow.prototype._dragStop = function () {
                             this._ensureDockSystem();
+
+                            // Dock to those it snapped to:
+                            var thisBounds = this._getBounds();
+                            var _iteratorNormalCompletion2 = true;
+                            var _didIteratorError2 = false;
+                            var _iteratorError2 = undefined;
+
+                            try {
+                                for (var _iterator2 = BrowserWindow.getAllWindows()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                                    var other = _step2.value;
+
+                                    if (thisBounds.isTouching(other._getBounds())) {
+                                        this.dock(other.id);
+                                    }
+                                }
+                            } catch (err) {
+                                _didIteratorError2 = true;
+                                _iteratorError2 = err;
+                            } finally {
+                                try {
+                                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                        _iterator2.return();
+                                    }
+                                } finally {
+                                    if (_didIteratorError2) {
+                                        throw _iteratorError2;
+                                    }
+                                }
+                            }
 
                             for (var index = 0; index < this._dockedGroup.length; index += 1) {
                                 delete this._dockedGroup[index]._dragStartPos;
@@ -1784,7 +1834,7 @@
                 return _isReady;
             },
             runtime: "Electron",
-            runtimeVersion: nodeRequire.electron
+            runtimeVersion: nodeRequire.electronVersion
         });
     })();
     // TODO: Make scalejs.windowfactory the main.js script for Electron. Load the config.json
