@@ -4,7 +4,7 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Clone this repository
-git clone https://github.com/Dillonu/scalejs.windowfactory
+git clone https://github.com/EikosPartners/scalejs.windowfactory
 # Go into the repository
 cd scalejs.windowfactory/example/app
 # Install dependencies and run the app
@@ -17,7 +17,7 @@ To clone and run this repository you'll need [Git](https://git-scm.com), [Node.j
 
 ```bash
 # Clone this repository
-git clone https://github.com/Dillonu/scalejs.windowfactory
+git clone https://github.com/EikosPartners/scalejs.windowfactory
 
 # To run the openfin webserver, go into the repository
 cd scalejs.windowfactory/example/openfinBackend
