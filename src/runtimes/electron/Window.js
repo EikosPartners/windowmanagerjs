@@ -1,6 +1,7 @@
 /*global windowfactory,nodeRequire*/
 (function () {
-    if (windowfactory.isRenderer && windowfactory.electronVersion) {
+    if (!windowfactory.electronVersion) { return; }
+    if (windowfactory.isRenderer) {
         const geometry = windowfactory.geometry;
         const Vector = geometry.Vector,
             Position = geometry.Position,
@@ -16,6 +17,7 @@
             frame: false,
             resizable: true,
             hasShadow: false,
+            icon: "favicon.ico",
             webPreferences: {
                 nodeIntegration: false,
                 preload: nodeRequire.windowfactoryPath

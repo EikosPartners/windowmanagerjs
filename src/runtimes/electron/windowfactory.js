@@ -1,6 +1,6 @@
 /*global windowfactory,nodeRequire*/
 (function () {
-    if (!windowfactory.isRenderer || !windowfactory.electronVersion) { return; }
+    if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.electronVersion) { return; }
 
     const Window = windowfactory.Window;
     const remote = nodeRequire("electron").remote;
@@ -68,72 +68,70 @@
     }
 
     // Setup handlers on this window:
-    (function () {
-        let wX = 0;
-        let wY = 0;
-        let dragging = false;
+    let wX = 0;
+    let wY = 0;
+    let dragging = false;
 
-        Window.current._window.on("focus", function () {
-            Window.current._window._dockFocus();
-        });
+    Window.current._window.on("focus", function () {
+        Window.current._window._dockFocus();
+    });
 
-        window.addEventListener("mousedown", function (event) {
-            if (event.target.classList.contains("window-drag")) {
-                dragging = true;
-                wX = event.screenX;
-                wY = event.screenY;
-                Window.current._window._dragStart();
-            }
-        });
+    window.addEventListener("mousedown", function (event) {
+        if (event.target.classList.contains("window-drag")) {
+            dragging = true;
+            wX = event.screenX;
+            wY = event.screenY;
+            Window.current._window._dragStart();
+        }
+    });
 
-        window.addEventListener("mousemove", function (event) {
-            if (dragging) {
-                //Window.current.moveTo(event.screenX - wX, event.screenY - wY);
-                Window.current._window._dragBy(event.screenX - wX, event.screenY - wY);
-            }
-        });
+    window.addEventListener("mousemove", function (event) {
+        if (dragging) {
+            //Window.current.moveTo(event.screenX - wX, event.screenY - wY);
+            Window.current._window._dragBy(event.screenX - wX, event.screenY - wY);
+        }
+    });
 
-        window.addEventListener("mouseup", function () {
-            dragging = false;
-            Window.current._window._dragStop();
-        });
+    window.addEventListener("mouseup", function () {
+        dragging = false;
+        Window.current._window._dragStop();
+    });
 
-        // Add context menu:
-        let Menu = remote.Menu;
-        let MenuItem = remote.MenuItem;
+    // Add context menu:
+    let Menu = remote.Menu;
+    let MenuItem = remote.MenuItem;
 
-        let rightClickPosition = null;
+    let rightClickPosition = null;
 
-        let menu = new Menu();
-        menu.append(new MenuItem({
-            label: "Reload",
-            accelerator: "CmdOrCtrl+R",
-            click: function () {
-                Window.current._window.reload()
-            }
-        }));
-        menu.append(new MenuItem({
-            label: "Reload app and restart children",
-            click: function () {
-                remote.app.relaunch();
-                remote.app.exit(0);
-            }
-        }));
-        menu.append(new MenuItem({ type: "separator" }));
-        menu.append(new MenuItem({
-            label: "Inspect Element",
-            accelerator: "CmdOrCtrl+Shift+I",
-            click: function () {
-                Window.current._window.inspectElement(rightClickPosition.x, rightClickPosition.y)
-            }
-        }));
+    let menu = new Menu();
+    menu.append(new MenuItem({
+        label: "Reload",
+        accelerator: "CmdOrCtrl+R",
+        click: function () {
+            Window.current._window.reload()
+        }
+    }));
+    menu.append(new MenuItem({
+        label: "Reload app and restart children",
+        click: function () {
+            remote.app.relaunch();
+            remote.app.exit(0);
+        }
+    }));
+    menu.append(new MenuItem({ type: "separator" }));
+    menu.append(new MenuItem({
+        label: "Inspect Element",
+        accelerator: "CmdOrCtrl+Shift+I",
+        click: function () {
+            Window.current._window.inspectElement(rightClickPosition.x, rightClickPosition.y)
+        }
+    }));
 
-        window.addEventListener("contextmenu", function (event) {
-            event.preventDefault();
-            rightClickPosition = {x: event.x, y: event.y};
-            menu.popup(Window.current._window);
-        }, false);
-    })();
+    window.addEventListener("contextmenu", function (event) {
+        event.preventDefault();
+        rightClickPosition = {x: event.x, y: event.y};
+        menu.popup(Window.current._window);
+    }, false);
 
     Object.assign(windowfactory, {
         onReady: onReady,

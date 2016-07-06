@@ -3,7 +3,7 @@
         "name": "Eikos Partners - Hello World",
         "url": "http://localhost:3000/index.html",
         "uuid": "mainwindow",
-        "applicationIcon": "http://cdn2.hubspot.net/hubfs/486348/img/Favicon.jpg?t=1466605364966",
+        "applicationIcon": "http://localhost:3000/favicon.ico",
         "autoShow": true,
         "defaultWidth": 600,
         "defaultHeight": 600,
@@ -20,7 +20,7 @@
     "shortcut": {
         "company": "Eikos Partners",
         "description": "Eikos Partners - Hello World",
-        "icon": "http://cdn2.hubspot.net/hubfs/486348/img/Favicon.jpg?t=1466605364966",
+        "icon": "http://localhost:3000/favicon.ico",
         "name": "Eikos Partners - Hello World"
     }
 }

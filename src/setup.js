@@ -2,7 +2,7 @@
 let windowfactory = {
     isRenderer: false,
     isBackend: false,
-    version: "0.1.0alpha"
+    version: "0.2.1alpha"
 };
 
 if (typeof global !== "undefined" && global) {
