@@ -1,7 +1,7 @@
 /*global windowfactory,fin,SyncCallback*/
 /*jshint bitwise: false*/
 (function () {
-    if (windowfactory.isRenderer && windowfactory.openfinVersion) {
+    if (windowfactory.isRenderer && !windowfactory.isBackend && windowfactory.openfinVersion) {
         const geometry = windowfactory.geometry;
 		const Vector = geometry.Vector;
 		const Position = geometry.Position;
@@ -15,7 +15,8 @@
 			frame: false,
 			resizable: true,
 			saveWindowState: false,
-			autoShow: true
+			autoShow: true,
+			icon: "http://localhost:3000/favicon.ico"
 		};
 		const configMap = {
 			left: "defaultLeft",

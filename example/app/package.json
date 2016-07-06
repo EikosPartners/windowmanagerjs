@@ -23,12 +23,8 @@
   },
   "homepage": "https://github.com/Dillonu/scalejs.windowfactory#readme",
   "devDependencies": {
-    "debug-menu": "^0.4.0",
     "devtron": "^1.2.0",
     "electron-prebuilt": "^1.2.3",
     "electron-rebuild": "^1.1.5"
-  },
-  "dependencies": {
-    "electron-debug": "^1.0.0"
   }
 }

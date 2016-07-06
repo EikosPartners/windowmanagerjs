@@ -1,6 +1,6 @@
 /*global windowfactory,fin*/
 (function () {
-    if (!windowfactory.isRenderer || !windowfactory.openfinVersion) { return; }
+    if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.openfinVersion) { return; }
 
     const Window = windowfactory.Window;
     let readyCallbacks = [];

@@ -35,7 +35,7 @@
     var windowfactory = {
         isRenderer: false,
         isBackend: false,
-        version: "0.1.0alpha"
+        version: "0.2.1alpha"
     };
 
     if (typeof global !== "undefined" && global) {
@@ -966,7 +966,10 @@
 
     /*global windowfactory,nodeRequire*/
     (function () {
-        if (windowfactory.isRenderer && windowfactory.electronVersion) {
+        if (!windowfactory.electronVersion) {
+            return;
+        }
+        if (windowfactory.isRenderer) {
             (function () {
                 var geometry = windowfactory.geometry;
                 var Vector = geometry.Vector,
@@ -983,6 +986,7 @@
                     frame: false,
                     resizable: true,
                     hasShadow: false,
+                    icon: "favicon.ico",
                     webPreferences: {
                         nodeIntegration: false,
                         preload: nodeRequire.windowfactoryPath
@@ -1943,7 +1947,7 @@
     })();
     /*global windowfactory,nodeRequire*/
     (function () {
-        if (!windowfactory.isRenderer || !windowfactory.electronVersion) {
+        if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.electronVersion) {
             return;
         }
 
@@ -2016,72 +2020,70 @@
         }
 
         // Setup handlers on this window:
-        (function () {
-            var wX = 0;
-            var wY = 0;
-            var dragging = false;
+        var wX = 0;
+        var wY = 0;
+        var dragging = false;
 
-            Window.current._window.on("focus", function () {
-                Window.current._window._dockFocus();
-            });
+        Window.current._window.on("focus", function () {
+            Window.current._window._dockFocus();
+        });
 
-            window.addEventListener("mousedown", function (event) {
-                if (event.target.classList.contains("window-drag")) {
-                    dragging = true;
-                    wX = event.screenX;
-                    wY = event.screenY;
-                    Window.current._window._dragStart();
-                }
-            });
+        window.addEventListener("mousedown", function (event) {
+            if (event.target.classList.contains("window-drag")) {
+                dragging = true;
+                wX = event.screenX;
+                wY = event.screenY;
+                Window.current._window._dragStart();
+            }
+        });
 
-            window.addEventListener("mousemove", function (event) {
-                if (dragging) {
-                    //Window.current.moveTo(event.screenX - wX, event.screenY - wY);
-                    Window.current._window._dragBy(event.screenX - wX, event.screenY - wY);
-                }
-            });
+        window.addEventListener("mousemove", function (event) {
+            if (dragging) {
+                //Window.current.moveTo(event.screenX - wX, event.screenY - wY);
+                Window.current._window._dragBy(event.screenX - wX, event.screenY - wY);
+            }
+        });
 
-            window.addEventListener("mouseup", function () {
-                dragging = false;
-                Window.current._window._dragStop();
-            });
+        window.addEventListener("mouseup", function () {
+            dragging = false;
+            Window.current._window._dragStop();
+        });
 
-            // Add context menu:
-            var Menu = remote.Menu;
-            var MenuItem = remote.MenuItem;
+        // Add context menu:
+        var Menu = remote.Menu;
+        var MenuItem = remote.MenuItem;
 
-            var rightClickPosition = null;
+        var rightClickPosition = null;
 
-            var menu = new Menu();
-            menu.append(new MenuItem({
-                label: "Reload",
-                accelerator: "CmdOrCtrl+R",
-                click: function click() {
-                    Window.current._window.reload();
-                }
-            }));
-            menu.append(new MenuItem({
-                label: "Reload app and restart children",
-                click: function click() {
-                    remote.app.relaunch();
-                    remote.app.exit(0);
-                }
-            }));
-            menu.append(new MenuItem({ type: "separator" }));
-            menu.append(new MenuItem({
-                label: "Inspect Element",
-                accelerator: "CmdOrCtrl+Shift+I",
-                click: function click() {
-                    Window.current._window.inspectElement(rightClickPosition.x, rightClickPosition.y);
-                }
-            }));
+        var menu = new Menu();
+        menu.append(new MenuItem({
+            label: "Reload",
+            accelerator: "CmdOrCtrl+R",
+            click: function click() {
+                Window.current._window.reload();
+            }
+        }));
+        menu.append(new MenuItem({
+            label: "Reload app and restart children",
+            click: function click() {
+                remote.app.relaunch();
+                remote.app.exit(0);
+            }
+        }));
+        menu.append(new MenuItem({ type: "separator" }));
+        menu.append(new MenuItem({
+            label: "Inspect Element",
+            accelerator: "CmdOrCtrl+Shift+I",
+            click: function click() {
+                Window.current._window.inspectElement(rightClickPosition.x, rightClickPosition.y);
+            }
+        }));
 
-            window.addEventListener("contextmenu", function (event) {
-                event.preventDefault();
-                rightClickPosition = { x: event.x, y: event.y };
-                menu.popup(Window.current._window);
-            }, false);
-        })();
+        window.addEventListener("contextmenu", function (event) {
+            event.preventDefault();
+            rightClickPosition = { x: event.x, y: event.y };
+            menu.popup(Window.current._window);
+        }, false);
 
         _extends(windowfactory, {
             onReady: onReady,
@@ -2097,7 +2099,7 @@
     /*global windowfactory,fin,SyncCallback*/
     /*jshint bitwise: false*/
     (function () {
-        if (windowfactory.isRenderer && windowfactory.openfinVersion) {
+        if (windowfactory.isRenderer && !windowfactory.isBackend && windowfactory.openfinVersion) {
             (function () {
                 var geometry = windowfactory.geometry;
                 var Vector = geometry.Vector;
@@ -2112,7 +2114,8 @@
                     frame: false,
                     resizable: true,
                     saveWindowState: false,
-                    autoShow: true
+                    autoShow: true,
+                    icon: "http://localhost:3000/favicon.ico"
                 };
                 var configMap = {
                     left: "defaultLeft",
@@ -2832,7 +2835,7 @@
     })();
     /*global windowfactory,fin*/
     (function () {
-        if (!windowfactory.isRenderer || !windowfactory.openfinVersion) {
+        if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.openfinVersion) {
             return;
         }
 
