@@ -5,7 +5,6 @@
     const Window = windowfactory.Window;
     let readyCallbacks = [];
     let isReady = false;
-    let currentWindow;
 
     function onReady(callback) {
         // Check if callback is not a function:

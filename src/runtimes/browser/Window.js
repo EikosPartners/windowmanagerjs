@@ -1,55 +1,36 @@
 /*global windowfactory,fin,SyncCallback*/
 /*jshint bitwise: false*/
 (function () {
-    if (windowfactory.isRenderer && !windowfactory.isBackend && windowfactory.openfinVersion) {
+    if (windowfactory.isRenderer && !windowfactory.isBackend && windowfactory.browserVersion) {
         const geometry = windowfactory.geometry;
 		const Vector = geometry.Vector;
 		const Position = geometry.Position;
 		const Size = geometry.Size;
 		const BoundingBox = geometry.BoundingBox;
-		const currentWin = fin.desktop.Window.getCurrent();
+		const currentWin = window;
 		const defaultConfig = {
-			defaultWidth: 600,
-			defaultHeight: 600,
+			width: 600,
+			height: 600,
 			frame: false,
 			resizable: true,
 			saveWindowState: false,
 			autoShow: true,
-			icon: location.href + "favicon.ico"
+			icon: location.href + "favicon.ico",
+			url: "."
 		};
 		const configMap = {
-			left: "defaultLeft",
-			top: "defaultTop",
-			width: "defaultWidth",
-			height: "defaultHeight"
 		};
         const acceptedEventHandlers = ["move", "close"];
-
-		let lut = [];
-		for (let i = 0; i < 256; i += 1) { lut[i] = (i < 16 ? "0" : "") + (i).toString(16); }
-		const genUIDE7 = function () {
-			let d0 = Math.random()*0xffffffff|0;
-			let d1 = Math.random()*0xffffffff|0;
-			let d2 = Math.random()*0xffffffff|0;
-			let d3 = Math.random()*0xffffffff|0;
-			return lut[d0&0xff]+lut[d0>>8&0xff]+lut[d0>>16&0xff]+lut[d0>>24&0xff]+"-"+
-			lut[d1&0xff]+lut[d1>>8&0xff]+"-"+lut[d1>>16&0x0f|0x40]+lut[d1>>24&0xff]+"-"+
-			lut[d2&0x3f|0x80]+lut[d2>>8&0xff]+"-"+lut[d2>>16&0xff]+lut[d2>>24&0xff]+
-			lut[d3&0xff]+lut[d3>>8&0xff]+lut[d3>>16&0xff]+lut[d3>>24&0xff];
-		}
-		const getUniqueWindowName = function () {
-			return "window" + genUIDE7() + (new Date()).getTime();
-		}
 
 		const Window = function (config) {
 			if (!(this instanceof Window)) { return new Window(config); }
 
 			config = config || {}; // If no arguments are passed, assume we are creating a default blank window
-			const isArgConfig = (config["app_uuid"] === undefined);
+			const isArgConfig = !(config instanceof window.Window);
 
-			this._bounds = new BoundingBox();
             this._ready = false;
             this._isClosed = false;
+			this._isMaximized = false;
 			this._dockedGroup = [this];
             // Setup handlers:
             // TODO: Look into making these special properties that can't be deleted?
@@ -70,22 +51,34 @@
 						config[prop] = config[prop] || defaultConfig[prop];
 					}
 				}
-				config.name = getUniqueWindowName();
 
-				windowfactory._windows[config.name] = this;
-				this._window = new fin.desktop.Window(config, this._setupDOM.bind(this), function (err) {
-					console.error(err, config);
-				});
+				let newWindow = windowfactory._launcher.document.createElement("iframe");
+				newWindow.src = config.url;
+				newWindow.style.position = "absolute";
+				newWindow.style.left = (config.left || ((windowfactory._launcher.innerWidth - config.width)/2)) + "px";
+				newWindow.style.top = (config.top || ((windowfactory._launcher.innerHeight - config.height)/2)) + "px";
+				newWindow.style.width = config.width + "px";
+				newWindow.style.height = config.height + "px";
+				newWindow.style.margin = 0;
+				newWindow.style.padding = 0;
+				newWindow.style.border = 0;
+				windowfactory._launcher.document.body.appendChild(newWindow);
+
+				this._window = newWindow;
+				this._ready = true;
+				this.bringToFront();
+				this.focus();
 			} else {
 				this._window = config;
-				windowfactory._windows[this._window.name] = this;
-				this._setupDOM();
+				this._ready = true;
+				//this._setupDOM();
 			}
+			windowfactory._windows.push(this);
 
 			// TODO: Ensure docking system
 		}
 
-		Window.prototype._setupDOM = function () {
+		/*Window.prototype._setupDOM = function () {
 			let thisWindow = this;
 			// TODO: Rewrite to remove setTimeout for the following:
 			function setWindows() {
@@ -126,13 +119,13 @@
             this._window.addEventListener("closed", onClose);
 			this._ready = true;
 			// Notify Subscribers
-		}
+		}*/
 
         Window.getCurrent = function () {
             return Window.current;
         };
 
-        Window.prototype.on = function (eventName, eventListener) {
+        /*Window.prototype.on = function (eventName, eventListener) {
             // TODO: Don't allow if window is closed!
             eventName = eventName.toLowerCase();
 
@@ -200,7 +193,7 @@
                 // Call listener with the 'this' context as the current window:
                 this._eventListeners[eventName][index].apply(this, args);
             }
-        };
+        };*/
 
         Window.prototype.isReady = function () {
             return this._window !== undefined;
@@ -211,138 +204,157 @@
         };
 
 		Window.prototype.getPosition = function () {
-			return this._bounds.getPosition();
+			return new Position(this._window.getBoundingClientRect());
 		};
 
 		Window.prototype.getWidth = function () {
-			return this._bounds.getWidth();
+			return this._window.getBoundingClientRect().width;
 		};
 
 		Window.prototype.getHeight = function () {
-			return this._bounds.getHeight();
+			return this._window.getBoundingClientRect().height;
 		};
 
 		Window.prototype.getSize = function () {
-			return this._bounds.getSize();
+			let box = this._window.getBoundingClientRect();
+			return new Size(box.width, box.height);
 		};
 
 		Window.prototype.getBounds = function () {
-			return this._bounds.clone();
+			return new BoundingBox(this._window.getBoundingClientRect());
 		};
 
 
 
 
 		Window.prototype.close = function (callback) {
-			this._window.close(callback);
+			this._window.parentElement.removeChild(this._window);
+			let index = windowfactory._windows.indexOf(this);
+			if (index >= 0) { windowfactory._windows.splice(index, 1); }
+			this._isClosed = true;
+			if (callback) { callback(); }
 		};
 
-		Window.prototype.minimize = function (callback) {
+		/*Window.prototype.minimize = function (callback) {
 			if (!this._ready) { throw "minimize can't be called on an unready window"; }
 
 			callback = new SyncCallback(callback);
 			for (let window of this._dockedGroup) {
 				window._window.minimize(callback.ref());
 			}
-		};
+		};*/
 
 		Window.prototype.maximize = function (callback) {
 			if (!this._ready) { throw "maximize can't be called on an unready window"; }
 
-			this._window.maximize(callback);
+			this._restoreBounds = this.getBounds();
+			this._window.style.left = 0;
+			this._window.style.top = 0;
+			this._window.style.width = "100%";
+			this._window.style.height = "100%";
+			this._isMaximized = true;
+			if (callback) { callback(); }
 		};
 
 		Window.prototype.show = function (callback) {
 			if (!this._ready) { throw "show can't be called on an unready window"; }
 
-			callback = new SyncCallback(callback);
 			for (let window of this._dockedGroup) {
-				window._window.show(callback.ref());
+				window._window.style.display = "";
 			}
+			if (callback) { callback(); }
 		};
 
 		Window.prototype.hide = function (callback) {
 			if (!this._ready) { throw "hide can't be called on an unready window"; }
 
-			callback = new SyncCallback(callback);
 			for (let window of this._dockedGroup) {
-				window._window.hide(callback.ref());
+				window._window.style.display = "none";
 			}
+			if (callback) { callback(); }
 		};
 
 		Window.prototype.restore = function (callback) {
 			if (!this._ready) { throw "restore can't be called on an unready window"; }
 
-			callback = new SyncCallback(callback);
 			for (let window of this._dockedGroup) {
-				window._window.restore(callback.ref());
+				if (window._isMaximized) {
+					window._window.style.left = window._restoreBounds.left + "px";
+					window._window.style.top = window._restoreBounds.top + "px";
+					window._window.style.width = window._restoreBounds.getWidth() + "px";
+					window._window.style.height = window._restoreBounds.getHeight() + "px";
+					window._isMaximized = false;
+				}
 			}
+			if (callback) { callback(); }
 		};
 
 		Window.prototype.bringToFront = function (callback) {
 			if (!this._ready) { throw "bringToFront can't be called on an unready window"; }
-			let thisWindow = this;
 
-			let beforeCallback = new SyncCallback(function () {
-				thisWindow._window.bringToFront(callback);
-			});
 			for (let window of this._dockedGroup) {
 				if (window !== this) {
-					window._window.bringToFront(beforeCallback.ref());
+					window._window.style["z-index"] = windowfactory._getNextZIndex();
 				}
 			}
+			this._window.style["z-index"] = windowfactory._getNextZIndex();
+			if (callback) { callback(); }
 		};
 
 		Window.prototype.focus = function (callback) {
 			if (!this._ready) { throw "focus can't be called on an unready window"; }
-			let thisWindow = this;
 
-			let beforeCallback = new SyncCallback(function () {
-				thisWindow._window.focus(callback);
-			});
 			for (let window of this._dockedGroup) {
-				if (window !== this) {
-					window._window.focus(beforeCallback.ref());
-				}
+				if (window !== this) { window._window.contentWindow.focus(); }
 			}
+			this._window.contentWindow.focus();
+			if (callback) { callback(); }
 		};
 
 		Window.prototype.resizeTo = function (width, height, callback) {
 			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
 			let size = new Position(width, height);
 
-			this._window.resizeTo(size.left, size.top, "top-left", callback);
+			this.undock();
+			this._window.width = size.left;
+			this._window.height = size.top;
+			if (callback) { callback(); }
 		};
 
 		Window.prototype.moveTo = function (left, top, callback) {
 			if (!this._ready) { throw "moveTo can't be called on an unready window"; }
 			let deltaPos = (new Position(left, top)).subtract(this.getPosition());
 
-			callback = new SyncCallback(callback);
 			for (let window of this._dockedGroup) {
 				let pos = window.getPosition().add(deltaPos);
-				window._bounds.moveTo(pos);
-				window._window.moveTo(pos.left, pos.top, callback.ref());
+				window._window.style.left = pos.left + "px";
+				window._window.style.top = pos.top + "px";
 			}
+			if (callback) { callback(); }
 		};
 
 		Window.prototype.moveBy = function (deltaLeft, deltaTop, callback) {
 			if (!this._ready) { throw "moveBy can't be called on an unready window"; }
 			let deltaPos = new Position(deltaLeft, deltaTop);
 
-			callback = new SyncCallback(callback);
 			for (let window of this._dockedGroup) {
 				let pos = window.getPosition().add(deltaPos);
-				window._bounds.moveTo(pos);
-				window._window.moveTo(pos.left, pos.top, callback.ref());
+				window._window.style.left = pos.left + "px";
+				window._window.style.top = pos.top + "px";
 			}
+			if (callback) { callback(); }
 		};
 
 		Window.prototype.setBounds = function (left, top, right, bottom, callback) {
 			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
 			let bounds = new BoundingBox(left, top, right, bottom);
 
-			this._window.setBounds(bounds.left, bounds.top, bounds.right, bounds.bottom, callback);
+			this.undock();
+			this._window.style.left = bounds.left + "px";
+			this._window.style.top = bounds.top + "px";
+			this._window.style.width = bounds.getWidth() + "px";
+			this._window.style.height = bounds.getHeight() + "px";
+			if (callback) { callback(); }
 		};
 
 		Window.prototype.dock = function (other) {
@@ -374,6 +386,7 @@
 		};
 
 		Window.prototype._dragStart = function () {
+			this.restore();
 			for (let window of this._dockedGroup) {
 				window._dragStartPos = window.getPosition();
 			}
@@ -384,12 +397,9 @@
 			const thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft,
 														this._dragStartPos.top + deltaTop);
 			let snapDelta = new Vector(NaN, NaN);
-			for (const otherID in windowfactory._windows) {
-				if (windowfactory._windows.hasOwnProperty(otherID)) {
-					let other = windowfactory._windows[otherID];
-					if (other._dockedGroup !== this._dockedGroup) {
-						snapDelta.setMin(thisBounds.getSnapDelta(other.getBounds()));
-					}
+			for (const other of windowfactory._windows) {
+				if (other._dockedGroup !== this._dockedGroup) {
+					snapDelta.setMin(thisBounds.getSnapDelta(other.getBounds()));
 				}
 			}
 			deltaLeft += snapDelta.left || 0;
@@ -405,19 +415,17 @@
 					pos.top -= deltaTop;
 				}
 
-				other._window.moveTo(pos.left + deltaLeft, pos.top + deltaTop);
+				other._window.style.left = (pos.left + deltaLeft) + "px";
+				other._window.style.top = (pos.top + deltaTop) + "px";
 			}
 		};
 
 		Window.prototype._dragStop = function () {
 			// Dock to those it snapped to:
 			const thisBounds = this.getBounds();
-			for (const otherID in windowfactory._windows) {
-				if (windowfactory._windows.hasOwnProperty(otherID)) {
-					let other = windowfactory._windows[otherID];
-					if (thisBounds.isTouching(other.getBounds())) {
-						this.dock(other);
-					}
+			for (const other of windowfactory._windows) {
+				if (thisBounds.isTouching(other.getBounds())) {
+					this.dock(other);
 				}
 			}
 
@@ -427,15 +435,11 @@
 		};
 
         // Handle current window in this context:
-		// TODO: Rewrite to remove setTimeout for the following:
-		const getCurrent = function () {
-			if (windowfactory._windows) {
-        		Window.current = windowfactory._windows[currentWin.name] || new Window(currentWin);
-			} else {
-				setTimeout(getCurrent, 5);
+		Window.current = (function () {
+			for (let win of windowfactory._windows) {
+				if (win._window.contentWindow === window) { return win; }
 			}
-		};
-		getCurrent();
+		})();
 
         Object.assign(windowfactory, {
             Window: Window
