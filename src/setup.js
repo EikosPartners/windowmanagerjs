@@ -19,6 +19,7 @@ if (typeof global !== "undefined" && global) {
         });
     }
 }
+
 if (typeof window !== "undefined" && window) {
     windowfactory.isRenderer = true;
     if (window.nodeRequire !== undefined) {
@@ -26,20 +27,53 @@ if (typeof window !== "undefined" && window) {
         windowfactory.nodeVersion = window.nodeRequire.nodeVersion;
     }
 }
+
 if (typeof process !== "undefined" && process && process.versions) {
+    // We are running in Electron Runtime:
     global.nodeRequire.electronVersion = windowfactory.electronVersion = global.process.versions.electron;
     global.nodeRequire.nodeVersion = windowfactory.nodeVersion = global.process.versions.node;
 }
+
 if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.System) {
-    windowfactory.openfinVersion = "pending";
-    fin.desktop.System.getVersion(function (version) {
-        windowfactory.openfinVersion = version;
-    }); // TODO: Handle errorCallback
-    let app = fin.desktop.Application.getCurrent();
-    console.log(app.getWindow(), window);
-    if (app.getWindow().contentWindow === window) {
-        windowfactory._windows = {};
-    }
+    // We are running in OpenFin Runtime:
+    windowfactory.openfinVersion = "startup";
+
+    let openfinReadyCallbacks = [];
+    windowfactory._openfinOnReady = function (callback) {
+        // Check if ready:
+        if (windowfactory.openfinVersion !== "startup") {
+            return callback();
+        }
+
+        // Check if eventListener is a function:
+        if (!callback || callback.constructor !== Function) {
+            throw "on requires argument 'eventListener' of type Function";
+        }
+
+        // Check if eventListener is already added:
+        if (openfinReadyCallbacks.indexOf(callback) >= 0) { return; }
+
+        // Add event listener:
+        openfinReadyCallbacks.push(callback);
+    };
+
+    fin.desktop.main(function () {
+        windowfactory.openfinVersion = "pending";
+        fin.desktop.System.getVersion(function (version) {
+            windowfactory.openfinVersion = version;
+        }); // TODO: Handle errorCallback
+        let app = fin.desktop.Application.getCurrent();
+        console.log(app.getWindow(), window);
+        if (app.getWindow().contentWindow === window) {
+            windowfactory._windows = {};
+        }
+
+        // Call callbacks:
+        for (let callback of openfinReadyCallbacks) {
+            callback();
+        }
+        openfinReadyCallbacks = undefined;
+    });
 }
 
 
