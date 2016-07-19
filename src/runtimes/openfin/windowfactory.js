@@ -41,8 +41,7 @@
         readyCallbacks = [];
     }
 
-
-    fin.desktop.main(function () {
+    windowfactory._openfinOnReady(function () {
         // Setup handlers on this window:
         let wX = 0;
         let wY = 0;
@@ -70,7 +69,7 @@
             Window.current._dragStop();
         });
 
-		// TODO: Rewrite to remove setTimeout for the following:
+        // TODO: Rewrite to remove setTimeout for the following:
         function checkReady() {
             if (Window.current && windowfactory.openfinVersion !== "pending") {
                 windowfactory.runtimeVersion = windowfactory.openfinVersion;
