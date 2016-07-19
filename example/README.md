@@ -27,5 +27,5 @@ npm install && npm start
 # To run the openfin app, go into the repository
 cd scalejs.windowfactory/example/app
 # Install dependencies and run the openfinBackend
-%localappdata%/OpenFin/OpenFinRVM.exe app.json
+%localappdata%/OpenFin/OpenFinRVM.exe --config=http://localhost:3000/app.json
 ```
