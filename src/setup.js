@@ -36,6 +36,7 @@ if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.System) {
         windowfactory.openfinVersion = version;
     }); // TODO: Handle errorCallback
     let app = fin.desktop.Application.getCurrent();
+    console.log(app.getWindow(), window);
     if (app.getWindow().contentWindow === window) {
         windowfactory._windows = {};
     }

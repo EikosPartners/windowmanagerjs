@@ -69,6 +69,7 @@
             windowfactory.openfinVersion = version;
         }); // TODO: Handle errorCallback
         var app = fin.desktop.Application.getCurrent();
+        console.log(app.getWindow(), window);
         if (app.getWindow().contentWindow === window) {
             windowfactory._windows = {};
         }
