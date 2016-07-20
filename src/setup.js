@@ -1,9 +1,8 @@
-/* global fin*/
-let windowfactory = {
-    isRenderer: false,
-    isBackend: false,
-    version: "0.3.0alpha"
-};
+/* global fin,EventHandler*/
+let windowfactory = new EventHandler(["window-create"]);
+windowfactory.isRenderer = false;
+windowfactory.isBackend = false;
+windowfactory.version = "0.4.0alpha";
 
 function getBrowserInfo() {
     // Credit: http://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
@@ -30,6 +29,7 @@ function getBrowserInfo() {
 if (typeof global !== "undefined" && global) {
     windowfactory.isBackend = true;
     if (typeof require !== "undefined") {
+        // We are running in an Electron Window Backend's Runtime:
         let _require = require;
         global.nodeRequire = _require;
         _require.windowfactoryPath = __filename;
@@ -45,13 +45,19 @@ if (typeof global !== "undefined" && global) {
 if (typeof window !== "undefined" && window) {
     windowfactory.isRenderer = true;
     if (window.nodeRequire !== undefined) {
+        // We are running in an Electron Window's Runtime:
         windowfactory.electronVersion = window.nodeRequire.electronVersion;
         windowfactory.nodeVersion = window.nodeRequire.nodeVersion;
+
+        const ipcRenderer = window.nodeRequire("electron").ipcRenderer;
+        ipcRenderer.on("window-create", function (event, otherID) {
+            windowfactory.emit("window-create", windowfactory._resolveWindowWithID(otherID));
+        });
     }
 }
 
 if (typeof process !== "undefined" && process && process.versions) {
-    // We are running in Electron Runtime:
+    // We are running in an Electron Runtime:
     global.nodeRequire.electronVersion = windowfactory.electronVersion = global.process.versions.electron;
     global.nodeRequire.nodeVersion = windowfactory.nodeVersion = global.process.versions.node;
 } else if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.System) {
@@ -82,9 +88,14 @@ if (typeof process !== "undefined" && process && process.versions) {
         fin.desktop.System.getVersion(function (version) {
             windowfactory.openfinVersion = version;
         }); // TODO: Handle errorCallback
+
         let app = fin.desktop.Application.getCurrent();
-        if (app.getWindow().contentWindow === window) {
+        let mainWindow = app.getWindow().contentWindow;
+
+        if (mainWindow === window) {
             windowfactory._windows = {};
+            windowfactory._internalBus = new EventHandler(["window-create"]);
+            windowfactory._internalBus.addPipe(windowfactory);
         }
 
         // Call callbacks:
@@ -103,6 +114,7 @@ if (typeof process !== "undefined" && process && process.versions) {
         // TODO: What happens if a website uses an iframe to a site that has an app with this extension?
         windowfactory._windows = [];
         windowfactory._launcher = window;
+        windowfactory._internalBus = new EventHandler(["window-create"]);
         let nextZIndex = 1000; // TODO: Recycle Z-Indexes! In case of a (probably never) overflow!
         windowfactory._getNextZIndex = function () {
             nextZIndex += 1;
@@ -117,9 +129,12 @@ if (typeof process !== "undefined" && process && process.versions) {
     } else {
         windowfactory._windows = window.parent.windowfactory._windows;
         windowfactory._launcher = window.parent.windowfactory._launcher || window.parent;
+        windowfactory._internalBus = window.parent.windowfactory._internalBus;
         windowfactory._getNextZIndex = window.parent.windowfactory._getNextZIndex;
         windowfactory.isLauncher = false;
     }
+
+    windowfactory._internalBus.addPipe(windowfactory);
 }
 
 

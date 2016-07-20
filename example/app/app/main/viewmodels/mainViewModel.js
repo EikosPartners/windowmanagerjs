@@ -50,6 +50,9 @@ define([ //array of strings or prequisites to execute function
                         height: 300
                     });
                     curWin.dock(childWin);
+                    curWin.on("close", function () {
+                        console.log("Window Closed:", this);
+                    });
                 }
             }
         };

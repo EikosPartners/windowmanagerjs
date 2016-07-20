@@ -1,4 +1,4 @@
-/*global windowfactory,fin,SyncCallback*/
+/*global windowfactory,fin,SyncCallback,EventHandler*/
 /*jshint bitwise: false*/
 (function () {
     if (windowfactory.isRenderer && !windowfactory.isBackend && windowfactory.browserVersion) {
@@ -20,7 +20,7 @@
 		};
 		const configMap = {
 		};
-        const acceptedEventHandlers = ["move", "close"];
+        const acceptedEventHandlers = ["move", "close", "minimize"];
 
 		const Window = function (config) {
 			if (!(this instanceof Window)) { return new Window(config); }
@@ -28,16 +28,12 @@
 			config = config || {}; // If no arguments are passed, assume we are creating a default blank window
 			const isArgConfig = !(config instanceof window.Window);
 
+			// Call the parent constructor:
+			EventHandler.call(this, acceptedEventHandlers);
             this._ready = false;
             this._isClosed = false;
 			this._isMaximized = false;
 			this._dockedGroup = [this];
-            // Setup handlers:
-            // TODO: Look into making these special properties that can't be deleted?
-            this._eventListeners = {};
-            for (let index = 0; index < acceptedEventHandlers.length; index += 1) {
-                this._eventListeners[acceptedEventHandlers[index]] = [];
-            }
 
 			if (isArgConfig) {
 				for (const prop in config) {
@@ -55,8 +51,8 @@
 				let newWindow = windowfactory._launcher.document.createElement("iframe");
 				newWindow.src = config.url;
 				newWindow.style.position = "absolute";
-				newWindow.style.left = (config.left || ((windowfactory._launcher.innerWidth - config.width)/2)) + "px";
-				newWindow.style.top = (config.top || ((windowfactory._launcher.innerHeight - config.height)/2)) + "px";
+				newWindow.style.left = (config.left || ((windowfactory._launcher.innerWidth - config.width) / 2)) + "px";
+				newWindow.style.top = (config.top || ((windowfactory._launcher.innerHeight - config.height) / 2)) + "px";
 				newWindow.style.width = config.width + "px";
 				newWindow.style.height = config.height + "px";
 				newWindow.style.margin = 0;
@@ -65,18 +61,22 @@
 				windowfactory._launcher.document.body.appendChild(newWindow);
 
 				this._window = newWindow;
+				windowfactory._windows.push(this);
 				this._ready = true;
+				windowfactory._internalBus.emit("window-create", this);
 				this.bringToFront();
 				this.focus();
 			} else {
 				this._window = config;
+				windowfactory._windows.push(this);
 				this._ready = true;
 				//this._setupDOM();
 			}
-			windowfactory._windows.push(this);
-
-			// TODO: Ensure docking system
-		}
+		};
+		// Inherit EventHandler
+		Window.prototype = Object.create(EventHandler.prototype);
+		// Correct the constructor pointer because it points to EventHandler:
+		Window.prototype.constructor = Window;
 
 		/*Window.prototype._setupDOM = function () {
 			let thisWindow = this;
@@ -125,76 +125,6 @@
             return Window.current;
         };
 
-        /*Window.prototype.on = function (eventName, eventListener) {
-            // TODO: Don't allow if window is closed!
-            eventName = eventName.toLowerCase();
-
-            // Check if this event can be subscribed to via this function:
-            if (this._eventListeners[eventName] === undefined) { return; }
-
-            // Check if eventListener is a function:
-            if (!eventListener || eventListener.constructor !== Function) {
-                throw "on requires argument 'eventListener' of type Function";
-            }
-
-            // Check if eventListener is already added:
-            if (this._eventListeners[eventName].indexOf(eventListener) >= 0) { return; }
-
-            // Add event listener:
-            this._eventListeners[eventName].push(eventListener);
-        };
-
-        Window.prototype.once = function (eventName, eventListener) {
-            function onceListener() {
-                this.off(eventName, onceListener);
-                eventListener.apply(this, arguments);
-            }
-            this.on(eventName, onceListener);
-        };
-
-        Window.prototype.off = function (eventName, eventListener) {
-            eventName = eventName.toLowerCase();
-
-            // If event listeners don't exist, bail:
-            if (this._eventListeners[eventName] === undefined) { return; }
-
-            // Check if eventListener is a function:
-            if (!eventListener || eventListener.constructor !== Function) {
-                throw "off requires argument 'eventListener' of type Function";
-            }
-
-            // Remove event listener, if exists:
-            const index = this._eventListeners[eventName].indexOf(eventListener);
-            if (index >= 0) { this._eventListeners[eventName].splice(index, 1); }
-        };
-
-        Window.prototype.clearEvent = function (eventName) {
-            eventName = eventName.toLowerCase();
-
-            // If event listeners don't exist, bail:
-            if (this._eventListeners[eventName] === undefined) { return; }
-
-            this._eventListeners[eventName] = [];
-        };
-
-        Window.prototype.emit = function (eventName) {
-            eventName = eventName.toLowerCase();
-
-            // If event listeners don't exist, bail:
-            if (this._eventListeners[eventName] === undefined) { return; }
-
-            // Get arguments:
-            let args = new Array(arguments.length - 1);
-            for (let index = 1; index < arguments.length; index += 1) {
-                args[index - 1] = arguments[index];
-            }
-
-            for (let index = 0; index < this._eventListeners[eventName].length; index += 1) {
-                // Call listener with the 'this' context as the current window:
-                this._eventListeners[eventName][index].apply(this, args);
-            }
-        };*/
-
         Window.prototype.isReady = function () {
             return this._window !== undefined;
         };
@@ -233,16 +163,17 @@
 			if (index >= 0) { windowfactory._windows.splice(index, 1); }
 			this._isClosed = true;
 			if (callback) { callback(); }
+			this.emit("close");
 		};
 
-		/*Window.prototype.minimize = function (callback) {
+		Window.prototype.minimize = function (callback) {
 			if (!this._ready) { throw "minimize can't be called on an unready window"; }
 
-			callback = new SyncCallback(callback);
+			// TODO: What do we do on minimize in this runtime?
 			for (let window of this._dockedGroup) {
-				window._window.minimize(callback.ref());
+				window.emit("minimize");
 			}
-		};*/
+		};
 
 		Window.prototype.maximize = function (callback) {
 			if (!this._ready) { throw "maximize can't be called on an unready window"; }
@@ -343,6 +274,9 @@
 				window._window.style.top = pos.top + "px";
 			}
 			if (callback) { callback(); }
+			for (let window of this._dockedGroup) {
+				window.emit("move");
+			}
 		};
 
 		Window.prototype.setBounds = function (left, top, right, bottom, callback) {
@@ -417,6 +351,7 @@
 
 				other._window.style.left = (pos.left + deltaLeft) + "px";
 				other._window.style.top = (pos.top + deltaTop) + "px";
+				other.emit("move");
 			}
 		};
 

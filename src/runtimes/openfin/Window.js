@@ -1,4 +1,4 @@
-/*global windowfactory,fin,SyncCallback*/
+/*global windowfactory,fin,SyncCallback,EventHandler*/
 /*jshint bitwise: false*/
 (function () {
     if (windowfactory.isRenderer && !windowfactory.isBackend && windowfactory.openfinVersion) {
@@ -23,7 +23,7 @@
 			width: "defaultWidth",
 			height: "defaultHeight"
 		};
-        const acceptedEventHandlers = ["move", "close"];
+        const acceptedEventHandlers = ["move", "close", "minimize"];
 
 		let lut = [];
 		for (let i = 0; i < 256; i += 1) { lut[i] = (i < 16 ? "0" : "") + (i).toString(16); }
@@ -47,16 +47,12 @@
 			config = config || {}; // If no arguments are passed, assume we are creating a default blank window
 			const isArgConfig = (config["app_uuid"] === undefined);
 
+			// Call the parent constructor:
+			EventHandler.call(this, acceptedEventHandlers);
 			this._bounds = new BoundingBox();
             this._ready = false;
             this._isClosed = false;
 			this._dockedGroup = [this];
-            // Setup handlers:
-            // TODO: Look into making these special properties that can't be deleted?
-            this._eventListeners = {};
-            for (let index = 0; index < acceptedEventHandlers.length; index += 1) {
-                this._eventListeners[acceptedEventHandlers[index]] = [];
-            }
 
 			if (isArgConfig) {
 				for (const prop in config) {
@@ -83,7 +79,11 @@
 			}
 
 			// TODO: Ensure docking system
-		}
+		};
+		// Inherit EventHandler
+		Window.prototype = Object.create(EventHandler.prototype);
+		// Correct the constructor pointer because it points to EventHandler:
+		Window.prototype.constructor = Window;
 
 		Window.prototype._setupDOM = function () {
 			let thisWindow = this;
@@ -91,6 +91,7 @@
 			function setWindows() {
 				if (thisWindow._window.contentWindow.windowfactory) {
 					thisWindow._window.contentWindow.windowfactory._windows = windowfactory._windows;
+					thisWindow._window.contentWindow.windowfactory._internalBus = windowfactory._internalBus;
 				} else {
 					setTimeout(setWindows, 5);
 				}
@@ -124,82 +125,19 @@
                 // TODO: Clean up ALL listeners
             }
             this._window.addEventListener("closed", onClose);
+
+			function onMinimized() {
+				thisWindow.emit("minimize");
+			}
+			this._window.addEventListener("minimized", onMinimized);
+
 			this._ready = true;
-			// Notify Subscribers
+			// TODO: Notify onReady Subscribers
+			windowfactory._internalBus.emit("window-create", this);
 		}
 
         Window.getCurrent = function () {
             return Window.current;
-        };
-
-        Window.prototype.on = function (eventName, eventListener) {
-            // TODO: Don't allow if window is closed!
-            eventName = eventName.toLowerCase();
-
-            // Check if this event can be subscribed to via this function:
-            if (this._eventListeners[eventName] === undefined) { return; }
-
-            // Check if eventListener is a function:
-            if (!eventListener || eventListener.constructor !== Function) {
-                throw "on requires argument 'eventListener' of type Function";
-            }
-
-            // Check if eventListener is already added:
-            if (this._eventListeners[eventName].indexOf(eventListener) >= 0) { return; }
-
-            // Add event listener:
-            this._eventListeners[eventName].push(eventListener);
-        };
-
-        Window.prototype.once = function (eventName, eventListener) {
-            function onceListener() {
-                this.off(eventName, onceListener);
-                eventListener.apply(this, arguments);
-            }
-            this.on(eventName, onceListener);
-        };
-
-        Window.prototype.off = function (eventName, eventListener) {
-            eventName = eventName.toLowerCase();
-
-            // If event listeners don't exist, bail:
-            if (this._eventListeners[eventName] === undefined) { return; }
-
-            // Check if eventListener is a function:
-            if (!eventListener || eventListener.constructor !== Function) {
-                throw "off requires argument 'eventListener' of type Function";
-            }
-
-            // Remove event listener, if exists:
-            const index = this._eventListeners[eventName].indexOf(eventListener);
-            if (index >= 0) { this._eventListeners[eventName].splice(index, 1); }
-        };
-
-        Window.prototype.clearEvent = function (eventName) {
-            eventName = eventName.toLowerCase();
-
-            // If event listeners don't exist, bail:
-            if (this._eventListeners[eventName] === undefined) { return; }
-
-            this._eventListeners[eventName] = [];
-        };
-
-        Window.prototype.emit = function (eventName) {
-            eventName = eventName.toLowerCase();
-
-            // If event listeners don't exist, bail:
-            if (this._eventListeners[eventName] === undefined) { return; }
-
-            // Get arguments:
-            let args = new Array(arguments.length - 1);
-            for (let index = 1; index < arguments.length; index += 1) {
-                args[index - 1] = arguments[index];
-            }
-
-            for (let index = 0; index < this._eventListeners[eventName].length; index += 1) {
-                // Call listener with the 'this' context as the current window:
-                this._eventListeners[eventName][index].apply(this, args);
-            }
         };
 
         Window.prototype.isReady = function () {
