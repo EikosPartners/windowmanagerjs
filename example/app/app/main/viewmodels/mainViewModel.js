@@ -47,13 +47,31 @@ define([ //array of strings or prequisites to execute function
                         left: mainWindowPosition.left - 300,
                         top: mainWindowPosition.top,
                         width: 300,
-                        height: 300
+                        height: 300,
+                        minWidth: 300,
+                        minHeight: 100,
+                        maxWidth: 400,
+                        maxHeight: 400
                     });
                     curWin.dock(childWin);
                     curWin.on("close", function () {
                         console.log("Window Closed:", this);
                     });
                 }
+            },
+            newWindow: function () {
+                var pos = new windowfactory.geometry.BoundingBox(0, 0, 200, 200).getCenteredOnPosition(curWin.getBounds());
+                var newWin = new windowfactory.Window({
+                    url: "/index.html?other",
+                    left: pos.left,
+                    top: pos.top,
+                    width: 200,
+                    height: 200,
+                    minWidth: 200,
+                    minHeight: 100,
+                    maxWidth: 400,
+                    maxHeight: 400
+                });
             }
         };
     };

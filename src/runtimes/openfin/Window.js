@@ -23,7 +23,11 @@
 			width: "defaultWidth",
 			height: "defaultHeight"
 		};
-        const acceptedEventHandlers = ["move", "close", "minimize"];
+        const acceptedEventHandlers = [
+			"drag-start", "drag-before", "drag-stop",
+			"dock-before",
+			"move", "move-before",
+			"resize-before", "close", "minimize"];
 
 		let lut = [];
 		for (let i = 0; i < 256; i += 1) { lut[i] = (i < 16 ? "0" : "") + (i).toString(16); }
@@ -247,6 +251,7 @@
 
 		Window.prototype.resizeTo = function (width, height, callback) {
 			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
+			if (!this.emit("resize-before")) { return; } // Allow preventing resize
 			let size = new Position(width, height);
 
 			this._window.resizeTo(size.left, size.top, "top-left", callback);
@@ -254,6 +259,7 @@
 
 		Window.prototype.moveTo = function (left, top, callback) {
 			if (!this._ready) { throw "moveTo can't be called on an unready window"; }
+			if (!this.emit("move-before")) { return; } // Allow preventing move
 			let deltaPos = (new Position(left, top)).subtract(this.getPosition());
 
 			callback = new SyncCallback(callback);
@@ -266,6 +272,7 @@
 
 		Window.prototype.moveBy = function (deltaLeft, deltaTop, callback) {
 			if (!this._ready) { throw "moveBy can't be called on an unready window"; }
+			if (!this.emit("move-before")) { return; } // Allow preventing move
 			let deltaPos = new Position(deltaLeft, deltaTop);
 
 			callback = new SyncCallback(callback);
@@ -284,6 +291,7 @@
 		};
 
 		Window.prototype.dock = function (other) {
+			if (!this.emit("dock-before")) { return; } // Allow preventing dock
 			if (other === undefined) { return; } // Failed to find other. TODO: Return error
 
 			// If other is already in the group, return:
@@ -312,12 +320,14 @@
 		};
 
 		Window.prototype._dragStart = function () {
+			if (!this.emit("drag-start")) { return; } // Allow preventing drag
 			for (let window of this._dockedGroup) {
 				window._dragStartPos = window.getPosition();
 			}
 		};
 
 		Window.prototype._dragBy = function (deltaLeft, deltaTop) {
+			if (!this.emit("drag-before")) { return; } // Allow preventing drag
 			// Perform Snap:
 			const thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft,
 														this._dragStartPos.top + deltaTop);
@@ -362,6 +372,8 @@
 			for (let window of this._dockedGroup) {
 				delete window._dragStartPos;
 			}
+
+			this.emit("drag-stop");
 		};
 
         // Handle current window in this context:
@@ -374,6 +386,10 @@
 			}
 		};
 		getCurrent();
+
+        Window.getAll = function () {
+			return Object.keys(windowfactory._windows).map(function (name) { return windowfactory._windows[name]; });
+		};
 
         Object.assign(windowfactory, {
             Window: Window

@@ -18,22 +18,24 @@ function EventHandler(acceptedEventHandlers = []) {
  * @param {string}
  * @param {callback}
  */
-EventHandler.prototype.on = function (eventName, eventListener) {
-    eventName = eventName.toLowerCase();
+EventHandler.prototype.on = function (eventNames, eventListener) {
+    eventNames = eventNames.toLowerCase().split(" ");
 
-    // Check if this event can be subscribed to via this function:
-    if (this._eventListeners[eventName] === undefined) { return; }
+    for (const eventName of eventNames) {
+        // Check if this event can be subscribed to via this function:
+        if (this._eventListeners[eventName] === undefined) { continue; }
 
-    // Check if eventListener is a function:
-    if (!eventListener || typeof eventListener.constructor !== "function") {
-        throw "on requires argument 'eventListener' of type Function";
+        // Check if eventListener is a function:
+        if (!eventListener || typeof eventListener.constructor !== "function") {
+            throw "on requires argument 'eventListener' of type Function";
+        }
+
+        // Check if eventListener is already added:
+        if (this._eventListeners[eventName].indexOf(eventListener) >= 0) { continue; }
+
+        // Add event listener:
+        this._eventListeners[eventName].push(eventListener);
     }
-
-    // Check if eventListener is already added:
-    if (this._eventListeners[eventName].indexOf(eventListener) >= 0) { return; }
-
-    // Add event listener:
-    this._eventListeners[eventName].push(eventListener);
 };
 
 /**
@@ -54,33 +56,37 @@ EventHandler.prototype.once = function (eventName, eventListener) {
  * @param {string}
  * @param {callback}
  */
-EventHandler.prototype.off = function (eventName, eventListener) {
-    eventName = eventName.toLowerCase();
+EventHandler.prototype.off = function (eventNames, eventListener) {
+    eventNames = eventNames.toLowerCase().split(" ");
 
-    // If event listeners don't exist, bail:
-    if (this._eventListeners[eventName] === undefined) { return; }
+    for (const eventName of eventNames) {
+        // If event listeners don't exist, bail:
+        if (this._eventListeners[eventName] === undefined) { return; }
 
-    // Check if eventListener is a function:
-    if (!eventListener || typeof eventListener.constructor !== "function") {
-        throw "off requires argument 'eventListener' of type Function";
+        // Check if eventListener is a function:
+        if (!eventListener || typeof eventListener.constructor !== "function") {
+            throw "off requires argument 'eventListener' of type Function";
+        }
+
+        // Remove event listener, if exists:
+        const index = this._eventListeners[eventName].indexOf(eventListener);
+        if (index >= 0) { this._eventListeners[eventName].splice(index, 1); }
     }
-
-    // Remove event listener, if exists:
-    const index = this._eventListeners[eventName].indexOf(eventListener);
-    if (index >= 0) { this._eventListeners[eventName].splice(index, 1); }
 };
 
 /**
  * @method
  * @param {string}
  */
-EventHandler.prototype.clearEvent = function (eventName) {
-    eventName = eventName.toLowerCase();
+EventHandler.prototype.clearEvent = function (eventNames) {
+    eventNames = eventNames.toLowerCase();
 
-    // If event listeners don't exist, bail:
-    if (this._eventListeners[eventName] === undefined) { return; }
+    for (const eventName of eventNames) {
+        // If event listeners don't exist, bail:
+        if (this._eventListeners[eventName] === undefined) { return; }
 
-    this._eventListeners[eventName] = [];
+        this._eventListeners[eventName] = [];
+    }
 };
 
 /**
@@ -100,15 +106,18 @@ EventHandler.prototype.emit = function (eventName) {
         args[index - 1] = arguments[index];
     }
 
+    let returnVal = true;
     for (const eventListener of this._eventListeners[eventName]) {
         // Call listener with the 'this' context as the current window:
-        eventListener.apply(this, args);
+        returnVal = returnVal && eventListener.apply(this, args) !== false;
     }
 
     for (const eventHandler of this._eventPipes) {
         // Call handler with the 'this' context as the current window:
-        eventHandler.emit.apply(eventHandler, arguments);
+        returnVal = returnVal && eventHandler.emit.apply(eventHandler, arguments) !== false;
     }
+
+    return returnVal;
 };
 
 /**

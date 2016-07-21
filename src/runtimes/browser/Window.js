@@ -16,11 +16,21 @@
 			saveWindowState: false,
 			autoShow: true,
 			icon: location.href + "favicon.ico",
-			url: "."
+			url: ".",
+			minWidth: 100,
+			minHeight: 100,
+			maxWidth: Infinity,
+			maxHeight: Infinity
 		};
 		const configMap = {
 		};
-        const acceptedEventHandlers = ["move", "close", "minimize"];
+        const acceptedEventHandlers = [
+			"drag-start", "drag-before", "drag-stop",
+			"dock-before",
+			"move", "move-before",
+			"resize-before", "close", "minimize"];
+		const transformPropNames = ["-ms-transform", "-moz-transform", "-o-transform",
+									"-webkit-transform", "transform"];
 
 		const Window = function (config) {
 			if (!(this instanceof Window)) { return new Window(config); }
@@ -48,6 +58,8 @@
 					}
 				}
 
+				this._minSize = new BoundingBox(config.minWidth, config.minHeight);
+				this._maxSize = new BoundingBox(config.maxWidth, config.maxHeight);
 				let newWindow = windowfactory._launcher.document.createElement("iframe");
 				newWindow.src = config.url;
 				newWindow.style.position = "absolute";
@@ -55,6 +67,10 @@
 				newWindow.style.top = (config.top || ((windowfactory._launcher.innerHeight - config.height) / 2)) + "px";
 				newWindow.style.width = config.width + "px";
 				newWindow.style.height = config.height + "px";
+				newWindow.style.minWidth = this._minSize.left + "px";
+				newWindow.style.minHeight = this._minSize.top + "px";
+				newWindow.style.maxWidth = this._maxSize.left + "px";
+				newWindow.style.maxHeight = this._maxSize.top + "px";
 				newWindow.style.margin = 0;
 				newWindow.style.padding = 0;
 				newWindow.style.border = 0;
@@ -67,6 +83,8 @@
 				this.bringToFront();
 				this.focus();
 			} else {
+				this._minSize = new BoundingBox(defaultConfig.minWidth, defaultConfig.minHeight);
+				this._maxSize = new BoundingBox(defaultConfig.maxWidth, defaultConfig.maxHeight);
 				this._window = config;
 				windowfactory._windows.push(this);
 				this._ready = true;
@@ -137,17 +155,35 @@
 			return new Position(this._window.getBoundingClientRect());
 		};
 
+		Window.prototype.getMinWidth = function () {
+			return this._minSize.left;
+		};
 		Window.prototype.getWidth = function () {
 			return this._window.getBoundingClientRect().width;
 		};
+		Window.prototype.getMaxWidth = function () {
+			return this._maxSize.left;
+		};
 
+		Window.prototype.getMinHeight = function () {
+			return this._minSize.top;
+		};
 		Window.prototype.getHeight = function () {
 			return this._window.getBoundingClientRect().height;
 		};
+		Window.prototype.getMaxHeight = function () {
+			return this._maxSize.top;
+		};
 
+		Window.prototype.getMinSize = function () {
+			return this._minSize.clone();
+		};
 		Window.prototype.getSize = function () {
 			let box = this._window.getBoundingClientRect();
 			return new Size(box.width, box.height);
+		};
+		Window.prototype.getMaxSize = function () {
+			return this._maxSize.clone();
 		};
 
 		Window.prototype.getBounds = function () {
@@ -161,6 +197,7 @@
 			this._window.parentElement.removeChild(this._window);
 			let index = windowfactory._windows.indexOf(this);
 			if (index >= 0) { windowfactory._windows.splice(index, 1); }
+			this.undock();
 			this._isClosed = true;
 			if (callback) { callback(); }
 			this.emit("close");
@@ -244,6 +281,7 @@
 
 		Window.prototype.resizeTo = function (width, height, callback) {
 			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
+			if (!this.emit("resize-before")) { return; } // Allow preventing resize
 			let size = new Position(width, height);
 
 			this.undock();
@@ -254,6 +292,7 @@
 
 		Window.prototype.moveTo = function (left, top, callback) {
 			if (!this._ready) { throw "moveTo can't be called on an unready window"; }
+			if (!this.emit("move-before")) { return; } // Allow preventing move
 			let deltaPos = (new Position(left, top)).subtract(this.getPosition());
 
 			for (let window of this._dockedGroup) {
@@ -266,6 +305,7 @@
 
 		Window.prototype.moveBy = function (deltaLeft, deltaTop, callback) {
 			if (!this._ready) { throw "moveBy can't be called on an unready window"; }
+			if (!this.emit("move-before")) { return; } // Allow preventing move
 			let deltaPos = new Position(deltaLeft, deltaTop);
 
 			for (let window of this._dockedGroup) {
@@ -279,19 +319,101 @@
 			}
 		};
 
+		Window.prototype.setMinSize = function (width, height, callback) {
+			if (!this._ready) { throw "setMinSize can't be called on an unready window"; }
+			const size = new Size(width, height);
+
+			this.undock(); // TODO: Support changing size when docked.
+			this._minSize.left = size.left;
+			this._minSize.top = size.top;
+			this._window.style.minWidth = this._minSize.left + "px";
+			this._window.style.minHeight = this._minSize.top + "px";
+			if (this.getWidth() < size.left || this.getHeight() < size.top) {
+				// Resize window to meet new min size:
+				// TODO: Take into account transform?
+				this._window.style.width = Math.max(this.getWidth(), size.left) + "px";
+				this._window.style.height = Math.max(this.getHeight(), size.top) + "px";
+				if (callback) { callback(); }
+				this.emit("resize");
+			} else {
+				if (callback) { callback(); }
+			}
+		};
+		Window.prototype.setSize = function (width, height, callback) {
+			if (!this._ready) { throw "setMaxSize can't be called on an unready window"; }
+			const size = new Size(width, height);
+
+			this.undock(); // TODO: Support changing size when docked.
+			this._window.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, size.left)) + "px";
+			this._window.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, size.top)) + "px";
+			// Clear transform:
+			for (let transformPropName of transformPropNames) {
+              this._window.style[transformPropName] = "";
+            }
+			if (callback) { callback(); }
+			this.emit("resize");
+		};
+		Window.prototype.forceScaledSize = function (width, height, callback) {
+			if (!this._ready) { throw "setMaxSize can't be called on an unready window"; }
+			const size = new Size(Math.min(this._maxSize.left, Math.max(this._minSize.left, width)),
+								Math.min(this._maxSize.top, Math.max(this._minSize.top, height)));
+
+			this.undock(); // TODO: Support changing size when docked.
+			this._window.style.width = size.left + "px";
+			this._window.style.height = size.top + "px";
+			// TODO: Calc transform:
+            let transform = Math.min(width / size.left, height / size.top);
+			for (let transformPropName of transformPropNames) {
+              this._window.style[transformPropName] = "scale(" + transform + ")";
+            }
+			if (callback) { callback(); }
+			this.emit("resize");
+		};
+		Window.prototype.setMaxSize = function (width, height, callback) {
+			if (!this._ready) { throw "setMaxSize can't be called on an unready window"; }
+			const size = new Size(width, height);
+
+			this.undock(); // TODO: Support changing size when docked.
+			this._maxSize.left = size.left;
+			this._maxSize.top = size.top;
+			this._window.style.maxWidth = this._maxSize.left + "px";
+			this._window.style.maxHeight = this._maxSize.top + "px";
+			if (this.getWidth() > size.left || this.getHeight() > size.top) {
+				// Resize window to meet new min size:
+				// TODO: Take into account transform?
+				this._window.style.width = Math.min(this.getWidth(), size.left) + "px";
+				this._window.style.height = Math.min(this.getHeight(), size.top) + "px";
+				// Clear transform:
+				for (let transformPropName of transformPropNames) {
+				this._window.style[transformPropName] = "";
+				}
+				if (callback) { callback(); }
+				this.emit("resize");
+			} else {
+				if (callback) { callback(); }
+			}
+		};
+
 		Window.prototype.setBounds = function (left, top, right, bottom, callback) {
 			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
 			let bounds = new BoundingBox(left, top, right, bottom);
 
-			this.undock();
+			this.undock(); // TODO: Support changing size when docked.
 			this._window.style.left = bounds.left + "px";
 			this._window.style.top = bounds.top + "px";
-			this._window.style.width = bounds.getWidth() + "px";
-			this._window.style.height = bounds.getHeight() + "px";
+			// TODO: Take into account transform?
+			this._window.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, bounds.getWidth())) + "px";
+			this._window.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, bounds.getHeight())) + "px";
+			// Clear transform:
+			for (let transformPropName of transformPropNames) {
+              this._window.style[transformPropName] = "";
+            }
+			// TODO: Events
 			if (callback) { callback(); }
 		};
 
 		Window.prototype.dock = function (other) {
+			if (!this.emit("dock-before")) { return; } // Allow preventing dock
 			if (other === undefined) { return; } // Failed to find other. TODO: Return error
 
 			// If other is already in the group, return:
@@ -320,6 +442,7 @@
 		};
 
 		Window.prototype._dragStart = function () {
+			if (!this.emit("drag-start")) { return; } // Allow preventing drag
 			this.restore();
 			for (let window of this._dockedGroup) {
 				window._dragStartPos = window.getPosition();
@@ -327,6 +450,7 @@
 		};
 
 		Window.prototype._dragBy = function (deltaLeft, deltaTop) {
+			if (!this.emit("drag-before")) { return; } // Allow preventing drag
 			// Perform Snap:
 			const thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft,
 														this._dragStartPos.top + deltaTop);
@@ -367,6 +491,8 @@
 			for (let window of this._dockedGroup) {
 				delete window._dragStartPos;
 			}
+
+			this.emit("drag-stop");
 		};
 
         // Handle current window in this context:
@@ -375,6 +501,10 @@
 				if (win._window.contentWindow === window) { return win; }
 			}
 		})();
+
+		Window.getAll = function () {
+			return windowfactory._windows.splice();
+		};
 
         Object.assign(windowfactory, {
             Window: Window

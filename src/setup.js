@@ -2,7 +2,7 @@
 let windowfactory = new EventHandler(["window-create"]);
 windowfactory.isRenderer = false;
 windowfactory.isBackend = false;
-windowfactory.version = "0.4.0alpha";
+windowfactory.version = "0.5.0alpha";
 
 function getBrowserInfo() {
     // Credit: http://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
@@ -145,16 +145,19 @@ function SyncCallback(callback) {
 	if (!(this instanceof SyncCallback)) { return new SyncCallback(callback); }
     let thisObj = this;
 
-    this.callback = function () {
+    this._deref = function () {
         thisObj.count -= 1;
         if (thisObj.count <= 0) { callback(); }
     };
 
     this.count = 0;
 }
-SyncCallback.prototype.ref = function () {
+SyncCallback.prototype.ref = function (callback) {
     this.count += 1;
-    return this.callback;
+    return function () {
+        if (callback) { callback.apply(null, arguments); }
+        this._deref();
+    };
 };
 
 // Runtimes are stitched in after this line.

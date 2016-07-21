@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>WindowFactory</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        color: white;
+        overflow: hidden;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      .tile {
+        position: absolute;
+        /*-ms-transform: scale(0.5);
+        -moz-transform: scale(0.5);
+        -o-transform: scale(0.5);
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);*/
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="Scripts/scalejs.windowfactory.js"></script>
+    <script>
+      window.addEventListener("load", function () {
+        var gridOrder = [];
+        var transforms = ["-ms-transform", "-moz-transform", "-o-transform", "-webkit-transform", "transform"];
+
+        function calculateGrid() {
+          var columns = 1;
+          var rows = 1;
+          while (columns * rows < gridOrder.length) {
+            if (window.innerWidth / columns < window.innerHeight / rows) {
+              rows += 1;
+            } else {
+              columns += 1;
+            }
+          }
+          var itemWidth = window.innerWidth / columns;
+          var itemHeight = window.innerHeight / rows;
+
+          for (var index = 0; index < gridOrder.length; index += 1) {
+            var win = gridOrder[index];
+            win._tile.style.left = (itemWidth * (index % columns)) + "px";
+            win._tile.style.top = (itemHeight * Math.floor(index / columns))+ "px";
+            win._tile.style.width = itemWidth + "px";
+            win._tile.style.height = itemHeight + "px";
+            /*var transform = Math.min(1,
+                  itemWidth / win._window.contentWindow.innerWidth,
+                  itemHeight / win._window.contentWindow.innerHeight);
+            win._tile.style.paddingLeft = Math.round((itemWidth - win._window.contentWindow.innerWidth*transform)/2) + "px";
+            win._tile.style.paddingTop = Math.round((itemHeight - win._window.contentWindow.innerHeight*transform)/2) + "px";
+            for (var index2 = 0; index2 < transforms.length; index2 += 1) {
+              win._window.style[transforms[index2]] = "scale(" + transform + ")";
+            }*/
+            win.forceScaledSize(itemWidth, itemHeight);
+            win._tile.style.paddingLeft = Math.round((itemWidth - win.getWidth())/2) + "px";
+            win._tile.style.paddingTop = Math.round((itemHeight - win.getHeight())/2) + "px";
+          }
+        }
+
+        windowfactory.on("window-create", function (window) {
+          var tile = document.createElement("div");
+          tile.classList.add("tile");
+          tile.appendChild(window._window);
+          window._window.style.position = "";
+          window._window.style.transformOrigin = "0 0";
+
+          window.moveTo(0, 0); // Reset Position
+          window.on("dock-before move-before", function () {
+            return false; // Prevent dragging, docking and moving.
+          });
+          document.body.appendChild(tile);
+
+          window._tile = tile;
+          gridOrder.push(window);
+
+          window.on("close", function () {
+            let index = gridOrder.indexOf(this);
+            if (index >= 0) { gridOrder.splice(index, 1); }
+            window._tile.parentNode.removeChild(window._tile);
+            calculateGrid();
+          });
+
+          function onDrop() {
+
+          }
+          window.on("drag-stop", onDrop);
+
+          function onResize() {
+            calculateGrid();
+          }
+          window.on("resize", onResize);
+          onResize();
+        });
+        var mainWindow = new windowfactory.Window({
+          url: "index.html",
+          minWidth: 400,
+          minHeight: 200,
+          maxWidth: 600,
+          maxHeight: 600
+        });
+        // TODO: Auto-tile windows.
+        // TODO: Resize window to fit tile space. If window's min size is larger than the tile space, zoom the window.
+
+        window.addEventListener("resize", calculateGrid);
+      });
+    </script>
+  </body>
+</html>

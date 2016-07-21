@@ -30,37 +30,35 @@
     }
 
     if (!windowfactory.isLauncher) {
-        (function () {
-            // Setup handlers on this window:
-            let wX = 0;
-            let wY = 0;
-            let dragging = false;
+        // Setup handlers on this window:
+        let wX = 0;
+        let wY = 0;
+        let dragging = false;
 
-            window.addEventListener("focus", function () {
-                Window.current.bringToFront();
-            });
+        window.addEventListener("focus", function () {
+            Window.current.bringToFront();
+        });
 
-            window.addEventListener("mousedown", function (e) {
-                if (e.target.classList.contains("window-drag")) {
-                    dragging = true;
-                    wX = event.screenX;
-                    wY = event.screenY;
-                    Window.current._dragStart();
-                }
-            });
+        window.addEventListener("mousedown", function (e) {
+            if (e.target.classList.contains("window-drag")) {
+                dragging = true;
+                wX = event.screenX;
+                wY = event.screenY;
+                Window.current._dragStart();
+            }
+        });
 
-            window.addEventListener("mousemove", function (e) {
-                if (dragging) {
-                    //Window.current.moveTo(event.screenX - wX, event.screenY - wY);
-                    Window.current._dragBy(event.screenX - wX, event.screenY - wY);
-                }
-            });
+        window.addEventListener("mousemove", function (e) {
+            if (dragging) {
+                //Window.current.moveTo(event.screenX - wX, event.screenY - wY);
+                Window.current._dragBy(event.screenX - wX, event.screenY - wY);
+            }
+        });
 
-            window.addEventListener("mouseup", function () {
-                dragging = false;
-                Window.current._dragStop();
-            });
-        })();
+        window.addEventListener("mouseup", function () {
+            dragging = false;
+            Window.current._dragStop();
+        });
     }
 
     Object.assign(windowfactory, {

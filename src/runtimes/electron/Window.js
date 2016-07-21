@@ -28,7 +28,11 @@
             left: "x",
             top: "y"
         };
-        const acceptedEventHandlers = ["move", "close", "minimize"];
+        const acceptedEventHandlers = [
+			"drag-start", "drag-before", "drag-stop",
+			"dock-before",
+			"move", "move-before",
+			"resize-before", "close", "minimize"];
         let windows = {};
 
         /**
@@ -365,6 +369,11 @@
         // Handle current window in this context:
         Window.current = new Window(currentWin);
 
+        Window.getAll = function () {
+            // TODO: Finish
+			//return windowfactory._windows.splice();
+		};
+
         Object.assign(windowfactory, {
             Window: Window,
             _resolveWindowWithID: function (id) {
@@ -373,10 +382,25 @@
         });
     } else if (windowfactory.isBackend) {
         // This is Electron's main process:
-        const {BrowserWindow} = global.nodeRequire("electron");
+        const {BrowserWindow, ipcMain} = global.nodeRequire("electron");
 
         if (BrowserWindow) {
             const {Vector, BoundingBox} = windowfactory.geometry;
+            /*let nextMessageID = 0;
+            BrowserWindow.prototype._emit = function (event, args, _callback) {
+                let retVal = true;
+                let callback = new SyncCallback(function () {
+                    if (retVal) { _callback(); }
+                });
+                for (const other of BrowserWindow.getAllWindows()) {
+                    ipcMain.once("_emit" + nextMessageID, callback.ref(function (val) {
+                        retVal &= val;
+                    }));
+                    other.webContents.send("_emit" + nextMessageID, ...args);
+                    nextMessageID += 1;
+                }
+            };*/
+            // TODO: Solve event syncing between windows
             BrowserWindow.prototype._notifyReady = function () {
                 for (let other of BrowserWindow.getAllWindows()) {
                     other.webContents.send("window-create", other.id);
@@ -393,7 +417,7 @@
                     });
 
                     this.on("maximize", function () {
-                        this.undock();
+				        this.undock(); // TODO: Support changing size when docked.
                     });
                     this.on("minimize", function () {
                         this._dockMinimize();
@@ -418,7 +442,7 @@
                         const newBounds = this.getBounds();
 
                         if (newBounds.width !== lastBounds.width || newBounds.height !== lastBounds.height) {
-                            this.undock();
+				            this.undock(); // TODO: Support changing size when docked.
                         }
                         // TODO: Handle resize positions of other docked windows
                         //       This requires reworking how windows are docked/connected
@@ -484,7 +508,10 @@
                 this.setAlwaysOnTop(false);
             };
             BrowserWindow.prototype._dragStart = function () {
+			    //if (!this.emit("drag-start")) { return; } // Allow preventing drag
                 this._ensureDockSystem();
+
+                this.restore();
 
                 for (let window of this._dockedGroup) {
                     window._dragStartPos = window.getPosition();
