@@ -1,7 +1,7 @@
 {
     "startup_app": {
         "name": "Eikos Partners - Hello World",
-        "url": "http://localhost:3000/index.html",
+        "url": "http://localhost:3000/app/main/index.html",
         "uuid": "mainwindow",
         "applicationIcon": "http://localhost:3000/favicon.ico",
         "autoShow": true,

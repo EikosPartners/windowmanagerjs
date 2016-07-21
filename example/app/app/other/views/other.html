@@ -1,7 +1,7 @@
 ﻿<div id="other_template">
     <link rel="stylesheet" type="text/css" href="css/win.css">
     <content>
-      <titlebar class="window-drag">New Window</titlebar>
+      <titlebar class="window-drag" data-bind="text: title"></titlebar>
       <!-- All of the Node.js APIs are available in this renderer process. -->
       <div data-bind="text: 'Runtime: ' + windowfactory.runtime + ' ' + windowfactory.runtimeVersion"></div>
       <button data-bind="click: undock">Undock</button>

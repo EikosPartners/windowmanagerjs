@@ -12,7 +12,8 @@ define([ //array of strings or prequisites to execute function
             observableArray = sandbox.mvvm.observableArray,
             computed = sandbox.mvvm.computed,
             curWin = windowfactory.Window.getCurrent(),
-            childWin;
+            childWin,
+            numOther = 0;
 
         return {
             moveRandom: function () {
@@ -43,7 +44,7 @@ define([ //array of strings or prequisites to execute function
                 } else {
                     var mainWindowPosition = curWin.getBounds();
                     childWin = new windowfactory.Window({
-                        url: "/index.html?child",
+                        url: "/app/child/index.html",
                         left: mainWindowPosition.left - 300,
                         top: mainWindowPosition.top,
                         width: 300,
@@ -61,8 +62,9 @@ define([ //array of strings or prequisites to execute function
             },
             newWindow: function () {
                 var pos = new windowfactory.geometry.BoundingBox(0, 0, 200, 200).getCenteredOnPosition(curWin.getBounds());
+                numOther += 1;
                 var newWin = new windowfactory.Window({
-                    url: "/index.html?other",
+                    url: "/app/other/index.html?" + numOther,
                     left: pos.left,
                     top: pos.top,
                     width: 200,

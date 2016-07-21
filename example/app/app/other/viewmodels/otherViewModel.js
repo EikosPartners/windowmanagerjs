@@ -22,7 +22,8 @@ define([ //array of strings or prequisites to execute function
             },
             undock: function () {
                 curWin.undock();
-            }
+            },
+            title: document.querySelector("title").innerText
         };
     };
 });
