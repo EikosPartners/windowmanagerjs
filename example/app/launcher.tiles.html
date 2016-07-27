@@ -16,11 +16,6 @@
       }
       .tile {
         position: absolute;
-        /*-ms-transform: scale(0.5);
-        -moz-transform: scale(0.5);
-        -o-transform: scale(0.5);
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);*/
         overflow: hidden;
       }
     </style>
@@ -49,23 +44,9 @@
           isMoving = true; // Enable moveTo
           for (var index = 0; index < gridOrder.length; index += 1) {
             var win = gridOrder[index];
-            /*win._tile.style.left = (itemWidth * (index % columns)) + "px";
-            win._tile.style.top = (itemHeight * Math.floor(index / columns))+ "px";
-            win._tile.style.width = itemWidth + "px";
-            win._tile.style.height = itemHeight + "px";*/
-            /*var transform = Math.min(1,
-                  itemWidth / win._window.contentWindow.innerWidth,
-                  itemHeight / win._window.contentWindow.innerHeight);
-            win._tile.style.paddingLeft = Math.round((itemWidth - win._window.contentWindow.innerWidth*transform)/2) + "px";
-            win._tile.style.paddingTop = Math.round((itemHeight - win._window.contentWindow.innerHeight*transform)/2) + "px";
-            for (var index2 = 0; index2 < transforms.length; index2 += 1) {
-              win._window.style[transforms[index2]] = "scale(" + transform + ")";
-            }*/
             win.forceScaledSize(itemWidth, itemHeight);
             win.moveTo(itemWidth * (index % columns) + (itemWidth - win.getWidth())/2,
                       itemHeight * Math.floor(index / columns) + (itemHeight - win.getHeight())/2);
-            //win._tile.style.paddingLeft = Math.round((itemWidth - win.getWidth())/2) + "px";
-            //win._tile.style.paddingTop = Math.round((itemHeight - win.getHeight())/2) + "px";
           }
           isMoving = false; // Disable moveTo
         }

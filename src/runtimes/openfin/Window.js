@@ -7,7 +7,7 @@
 		const Position = geometry.Position;
 		const Size = geometry.Size;
 		const BoundingBox = geometry.BoundingBox;
-		const currentWin = fin.desktop.Window.getCurrent();
+		let currentWin;// = fin.desktop.Window.getCurrent();
 		const defaultConfig = {
 			defaultWidth: 600,
 			defaultHeight: 600,
@@ -378,14 +378,17 @@
 
         // Handle current window in this context:
 		// TODO: Rewrite to remove setTimeout for the following:
-		const getCurrent = function () {
-			if (windowfactory._windows) {
-        		Window.current = windowfactory._windows[currentWin.name] || new Window(currentWin);
-			} else {
-				setTimeout(getCurrent, 5);
-			}
-		};
-		getCurrent();
+		fin.desktop.main(function () {
+			currentWin = fin.desktop.Window.getCurrent();
+			const getCurrent = function () {
+				if (windowfactory._windows) {
+					Window.current = windowfactory._windows[currentWin.name] || new Window(currentWin);
+				} else {
+					setTimeout(getCurrent, 5);
+				}
+			};
+			getCurrent();
+		});
 
         Window.getAll = function () {
 			return Object.keys(windowfactory._windows).map(function (name) { return windowfactory._windows[name]; });

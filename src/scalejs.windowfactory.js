@@ -7,12 +7,8 @@
 export default windowfactory;
 
 if (typeof define !== "undefined" && define && define.amd) {
-    require([
-        "scalejs!core"
-    ], function (
-        core
-    ) {
-        core.registerExtension({
+    require(["scalejs.core"], function (core) {
+        core.default.registerExtension({
             windowfactory: windowfactory
         });
     });

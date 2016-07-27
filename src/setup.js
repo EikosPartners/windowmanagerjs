@@ -2,7 +2,7 @@
 let windowfactory = new EventHandler(["window-create"]);
 windowfactory.isRenderer = false;
 windowfactory.isBackend = false;
-windowfactory.version = "0.5.0alpha";
+windowfactory.version = "0.6.0alpha";
 
 function getBrowserInfo() {
     // Credit: http://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
@@ -28,21 +28,17 @@ function getBrowserInfo() {
 
 if (typeof global !== "undefined" && global) {
     windowfactory.isBackend = true;
-    if (typeof require !== "undefined") {
+    if (typeof require === "function" && require.main && require.main.filename) {
         // We are running in an Electron Window Backend's Runtime:
-        let _require = require;
-        global.nodeRequire = _require;
-        _require.windowfactoryPath = __filename;
-        const path = _require("path");
-        global.workingDir = path.dirname(_require.main.filename);
-        process.once("loaded", function () {
+        global.nodeRequire = require;
+        global.nodeRequire.windowfactoryPath = __filename;
+        global.workingDir = global.nodeRequire("path").dirname(global.nodeRequire.main.filename);
+        //process.once("loaded", function () {
             //global.nodeRequire = _require;
             //global.workingDir = nodeRequire.main.filename;
-        });
+        //});
     }
-}
-
-if (typeof window !== "undefined" && window) {
+} else if (typeof window !== "undefined" && window) {
     windowfactory.isRenderer = true;
     if (window.nodeRequire !== undefined) {
         // We are running in an Electron Window's Runtime:
@@ -56,11 +52,11 @@ if (typeof window !== "undefined" && window) {
     }
 }
 
-if (typeof process !== "undefined" && process && process.versions) {
+if (typeof process !== "undefined" && process && process.versions && process.versions.electron) {
     // We are running in an Electron Runtime:
     global.nodeRequire.electronVersion = windowfactory.electronVersion = global.process.versions.electron;
     global.nodeRequire.nodeVersion = windowfactory.nodeVersion = global.process.versions.node;
-} else if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.System) {
+} else if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.main) {
     // We are running in OpenFin Runtime:
     windowfactory.openfinVersion = "startup";
 
@@ -104,7 +100,7 @@ if (typeof process !== "undefined" && process && process.versions) {
         }
         openfinReadyCallbacks = undefined;
     });
-} else {
+} else if (window.nodeRequire === undefined) {
     // We are running in Browser Runtime:
     let browser = getBrowserInfo();
     windowfactory.browserVersion = browser.version;

@@ -337,7 +337,7 @@
     var windowfactory = new EventHandler(["window-create"]);
     windowfactory.isRenderer = false;
     windowfactory.isBackend = false;
-    windowfactory.version = "0.5.0alpha";
+    windowfactory.version = "0.6.0alpha";
 
     function getBrowserInfo() {
         // Credit: http://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
@@ -366,21 +366,17 @@
 
     if (typeof global !== "undefined" && global) {
         windowfactory.isBackend = true;
-        if (typeof require !== "undefined") {
+        if (typeof require === "function" && require.main && require.main.filename) {
             // We are running in an Electron Window Backend's Runtime:
-            var _require = require;
-            global.nodeRequire = _require;
-            _require.windowfactoryPath = __filename;
-            var path = _require("path");
-            global.workingDir = path.dirname(_require.main.filename);
-            process.once("loaded", function () {
-                //global.nodeRequire = _require;
-                //global.workingDir = nodeRequire.main.filename;
-            });
+            global.nodeRequire = require;
+            global.nodeRequire.windowfactoryPath = __filename;
+            global.workingDir = global.nodeRequire("path").dirname(global.nodeRequire.main.filename);
+            //process.once("loaded", function () {
+            //global.nodeRequire = _require;
+            //global.workingDir = nodeRequire.main.filename;
+            //});
         }
-    }
-
-    if (typeof window !== "undefined" && window) {
+    } else if (typeof window !== "undefined" && window) {
         windowfactory.isRenderer = true;
         if (window.nodeRequire !== undefined) {
             // We are running in an Electron Window's Runtime:
@@ -394,11 +390,11 @@
         }
     }
 
-    if (typeof process !== "undefined" && process && process.versions) {
+    if (typeof process !== "undefined" && process && process.versions && process.versions.electron) {
         // We are running in an Electron Runtime:
         global.nodeRequire.electronVersion = windowfactory.electronVersion = global.process.versions.electron;
         global.nodeRequire.nodeVersion = windowfactory.nodeVersion = global.process.versions.node;
-    } else if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.System) {
+    } else if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.main) {
         (function () {
             // We are running in OpenFin Runtime:
             windowfactory.openfinVersion = "startup";
@@ -468,7 +464,7 @@
                 openfinReadyCallbacks = undefined;
             });
         })();
-    } else {
+    } else if (window.nodeRequire === undefined) {
         // We are running in Browser Runtime:
         var browser = getBrowserInfo();
         windowfactory.browserVersion = browser.version;
@@ -3596,7 +3592,7 @@
                 var Position = geometry.Position;
                 var Size = geometry.Size;
                 var BoundingBox = geometry.BoundingBox;
-                var currentWin = fin.desktop.Window.getCurrent();
+                var currentWin = void 0; // = fin.desktop.Window.getCurrent();
                 var defaultConfig = {
                     defaultWidth: 600,
                     defaultHeight: 600,
@@ -4252,14 +4248,17 @@
 
                 // Handle current window in this context:
                 // TODO: Rewrite to remove setTimeout for the following:
-                var getCurrent = function getCurrent() {
-                    if (windowfactory._windows) {
-                        Window.current = windowfactory._windows[currentWin.name] || new Window(currentWin);
-                    } else {
-                        setTimeout(getCurrent, 5);
-                    }
-                };
-                getCurrent();
+                fin.desktop.main(function () {
+                    currentWin = fin.desktop.Window.getCurrent();
+                    var getCurrent = function getCurrent() {
+                        if (windowfactory._windows) {
+                            Window.current = windowfactory._windows[currentWin.name] || new Window(currentWin);
+                        } else {
+                            setTimeout(getCurrent, 5);
+                        }
+                    };
+                    getCurrent();
+                });
 
                 Window.getAll = function () {
                     return Object.keys(windowfactory._windows).map(function (name) {
@@ -4402,8 +4401,8 @@
 
 
     if (typeof define !== "undefined" && define && define.amd) {
-        require(["scalejs!core"], function (core) {
-            core.registerExtension({
+        require(["scalejs.core"], function (core) {
+            core.default.registerExtension({
                 windowfactory: windowfactory
             });
         });
