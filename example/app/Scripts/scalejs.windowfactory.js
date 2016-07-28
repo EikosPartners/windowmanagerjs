@@ -364,17 +364,19 @@
         };
     }
 
-    if (typeof global !== "undefined" && global) {
+    if (typeof window === "undefined" && typeof global !== "undefined" && global) {
         windowfactory.isBackend = true;
         if (typeof require === "function" && require.main && require.main.filename) {
             // We are running in an Electron Window Backend's Runtime:
-            global.nodeRequire = require;
+            let _require = require;
+            global.nodeRequire = _require;
             global.nodeRequire.windowfactoryPath = __filename;
-            global.workingDir = global.nodeRequire("path").dirname(global.nodeRequire.main.filename);
-            //process.once("loaded", function () {
-            //global.nodeRequire = _require;
-            //global.workingDir = nodeRequire.main.filename;
-            //});
+            let workingDir = global.nodeRequire("path").dirname(global.nodeRequire.main.filename);
+            global.workingDir = workingDir;
+            process.once("loaded", function () {
+                global.nodeRequire = _require;
+                global.workingDir = nodeRequire.main.filename;
+            });
         }
     } else if (typeof window !== "undefined" && window) {
         windowfactory.isRenderer = true;

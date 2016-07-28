@@ -364,7 +364,7 @@
         };
     }
 
-    if (typeof global !== "undefined" && global) {
+    if (typeof window === "undefined" && typeof global !== "undefined" && global) {
         windowfactory.isBackend = true;
         if (typeof require === "function" && require.main && require.main.filename) {
             // We are running in an Electron Window Backend's Runtime:
