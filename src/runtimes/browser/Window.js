@@ -94,6 +94,7 @@
 				this._window = newWindow;
 				windowfactory._windows.push(this);
 				this._ready = true;
+				this.emit("ready");
 				windowfactory._internalBus.emit("window-create", this);
 				this.bringToFront();
 				this.focus();
@@ -159,8 +160,14 @@
         };
 
         Window.prototype.isReady = function () {
-            return this._window !== undefined;
+            return this._ready;
         };
+		Window.prototype.onReady = function (callback) {
+			if (this.isClosed()) { throw "onReady can't be called on a closed window"; }
+			if (this.isReady()) { return callback.call(this); }
+
+			this.once("ready", callback);
+		};
 
         Window.prototype.isClosed = function () {
             return this._isClosed;
@@ -237,6 +244,8 @@
 
 
 		Window.prototype.close = function (callback) {
+            if (this.isClosed()) { return callback && callback(); }
+
 			this._window.parentElement.removeChild(this._window);
 			let index = windowfactory._windows.indexOf(this);
 			if (index >= 0) { windowfactory._windows.splice(index, 1); }

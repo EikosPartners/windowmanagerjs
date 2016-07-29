@@ -338,7 +338,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory.isRenderer = false;
     windowfactory.isBackend = false;
-    windowfactory.version = "0.6.1alpha";
+    windowfactory.version = "0.6.2alpha";
 
     function getBrowserInfo() {
         // Credit: http://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
@@ -1484,6 +1484,7 @@
                         this._window = newWindow;
                         windowfactory._windows.push(this);
                         this._ready = true;
+                        this.emit("ready");
                         windowfactory._internalBus.emit("window-create", this);
                         this.bringToFront();
                         this.focus();
@@ -1546,7 +1547,17 @@
                 };
 
                 Window.prototype.isReady = function () {
-                    return this._window !== undefined;
+                    return this._ready;
+                };
+                Window.prototype.onReady = function (callback) {
+                    if (this.isClosed()) {
+                        throw "onReady can't be called on a closed window";
+                    }
+                    if (this.isReady()) {
+                        return callback.call(this);
+                    }
+
+                    this.once("ready", callback);
                 };
 
                 Window.prototype.isClosed = function () {
@@ -1625,6 +1636,10 @@
                 };
 
                 Window.prototype.close = function (callback) {
+                    if (this.isClosed()) {
+                        return callback && callback();
+                    }
+
                     this._window.parentElement.removeChild(this._window);
                     var index = windowfactory._windows.indexOf(this);
                     if (index >= 0) {
@@ -2775,6 +2790,10 @@
                  * @param {callback=}
                  */
                 Window.prototype.close = function (callback) {
+                    if (this.isClosed()) {
+                        return callback && callback();
+                    }
+
                     this._window.close();
                     if (callback) {
                         callback();
@@ -3693,7 +3712,7 @@
                     width: "defaultWidth",
                     height: "defaultHeight"
                 };
-                var acceptedEventHandlers = ["drag-start", "drag-before", "drag-stop", "dock-before", "move", "move-before", "resize-before", "close", "minimize"];
+                var acceptedEventHandlers = ["ready", "drag-start", "drag-before", "drag-stop", "dock-before", "move", "move-before", "resize-before", "close", "minimize"];
 
                 var lut = [];
                 for (var i = 0; i < 256; i += 1) {
@@ -3724,6 +3743,7 @@
                     this._ready = false;
                     this._isClosed = false;
                     this._dockedGroup = [this];
+                    this._children = [];
                     this._parent = undefined;
 
                     if (isArgConfig) {
@@ -3845,7 +3865,7 @@
                     this._window.addEventListener("minimized", onMinimized);
 
                     this._ready = true;
-                    // TODO: Notify onReady Subscribers
+                    this.emit("ready");
                     windowfactory._internalBus.emit("window-create", this);
                 };
 
@@ -3854,7 +3874,17 @@
                 };
 
                 Window.prototype.isReady = function () {
-                    return this._window !== undefined;
+                    return this._ready;
+                };
+                Window.prototype.onReady = function (callback) {
+                    if (this.isClosed()) {
+                        throw "onReady can't be called on a closed window";
+                    }
+                    if (this.isReady()) {
+                        return callback.call(this);
+                    }
+
+                    this.once("ready", callback);
                 };
 
                 Window.prototype.isClosed = function () {
@@ -3914,6 +3944,9 @@
                 };
 
                 Window.prototype.close = function (callback) {
+                    if (this.isClosed()) {
+                        return callback && callback();
+                    }
                     this._window.close(callback);
                 };
 
@@ -4217,7 +4250,7 @@
 
                 Window.prototype.setSize = function (width, height, callback) {
                     if (!this._ready) {
-                        throw "setMaxSize can't be called on an unready window";
+                        throw "setSize can't be called on an unready window";
                     }
                     var size = new Size(width, height);
 

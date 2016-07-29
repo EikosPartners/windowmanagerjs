@@ -197,6 +197,8 @@
          * @param {callback=}
          */
         Window.prototype.close = function (callback) {
+            if (this.isClosed()) { return callback && callback(); }
+
             this._window.close();
             if (callback) { callback(); }
         };

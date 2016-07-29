@@ -24,6 +24,7 @@
 			height: "defaultHeight"
 		};
         const acceptedEventHandlers = [
+			"ready",
 			"drag-start", "drag-before", "drag-stop",
 			"dock-before",
 			"move", "move-before",
@@ -57,6 +58,7 @@
             this._ready = false;
             this._isClosed = false;
 			this._dockedGroup = [this];
+			this._children = [];
 			this._parent = undefined;
 
 			if (isArgConfig) {
@@ -156,7 +158,7 @@
 			this._window.addEventListener("minimized", onMinimized);
 
 			this._ready = true;
-			// TODO: Notify onReady Subscribers
+			this.emit("ready");
 			windowfactory._internalBus.emit("window-create", this);
 		}
 
@@ -165,8 +167,14 @@
         };
 
         Window.prototype.isReady = function () {
-            return this._window !== undefined;
+            return this._ready;
         };
+		Window.prototype.onReady = function (callback) {
+			if (this.isClosed()) { throw "onReady can't be called on a closed window"; }
+			if (this.isReady()) { return callback.call(this); }
+
+			this.once("ready", callback);
+		};
 
         Window.prototype.isClosed = function () {
             return this._isClosed;
@@ -224,6 +232,7 @@
 
 
 		Window.prototype.close = function (callback) {
+            if (this.isClosed()) { return callback && callback(); }
 			this._window.close(callback);
 		};
 
@@ -332,7 +341,7 @@
 		};
 
 		Window.prototype.setSize = function (width, height, callback) {
-			if (!this._ready) { throw "setMaxSize can't be called on an unready window"; }
+			if (!this._ready) { throw "setSize can't be called on an unready window"; }
 			const size = new Size(width, height);
 
 			this._window.resizeTo(size.left, size.top, "top-left", callback);
