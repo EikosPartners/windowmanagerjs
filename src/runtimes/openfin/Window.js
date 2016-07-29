@@ -57,6 +57,7 @@
             this._ready = false;
             this._isClosed = false;
 			this._dockedGroup = [this];
+			this._parent = undefined;
 
 			if (isArgConfig) {
 				for (const prop in config) {
@@ -71,6 +72,13 @@
 					}
 				}
 				config.name = getUniqueWindowName();
+
+				if (config.parent) {
+					config.parent._children.push(this);
+					this._parent = config.parent;
+					// TODO: Emit event "child-added" on parent
+					delete config.parent;
+				}
 
 				windowfactory._windows[config.name] = this;
 				this._window = new fin.desktop.Window(config, this._setupDOM.bind(this), function (err) {
@@ -123,8 +131,20 @@
             function onClose() {
                 thisWindow._isClosed = true;
 				delete windowfactory._windows[thisWindow._window.name];
+
+				// Undock:
 				thisWindow.undock();
+
+				// Move children to parent:
+				for (const child of thisWindow.getChildren()) {
+					// We use getChildren to have a copy of the list, so child.setParent doesn't modify this loop's list!
+					// TODO: Optimize this loop, by not making a copy of children, and not executing splice in each setParent!
+					child.setParent(child);
+				}
+				thisWindow.setParent(undefined); // Remove from parent
+
                 thisWindow.emit("close");
+				windowfactory._internalBus.emit("window-close", thisWindow);
                 thisWindow._window = undefined;
                 // TODO: Clean up ALL listeners
             }
@@ -170,6 +190,34 @@
 
 		Window.prototype.getBounds = function () {
 			return this._bounds.clone();
+		};
+
+		Window.prototype.getParent = function () {
+			return this._parent;
+		};
+		Window.prototype.setParent = function (parent) {
+			// TODO: Execute appropriate checks (if not closed, and is this new parent a window)
+
+			if (parent === this._parent) { return; }
+
+			if (this._parent) {
+				const index = this._parent._children.indexOf(this);
+				if (index >= 0) { this._parent._children.splice(index, 1); }
+				// TODO: Emit event "child-removed" on current parent.
+			}
+
+			if (parent) {
+				this._parent = parent;
+				this._parent._children.push(this);
+				// TODO: Emit event "child-added on parent".
+			}
+		};
+
+		Window.prototype.getChildren = function () {
+			return this._children.slice();
+		};
+		Window.prototype.addChild = function (child) {
+			child.setParent(this);
 		};
 
 

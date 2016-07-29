@@ -1,5 +1,6 @@
 /* global fin,EventHandler*/
-let windowfactory = new EventHandler(["window-create"]);
+let windowfactoryEventNames = ["window-create", "window-close"];
+let windowfactory = new EventHandler(windowfactoryEventNames);
 windowfactory.isRenderer = false;
 windowfactory.isBackend = false;
 windowfactory.version = "0.6.0alpha";
@@ -90,9 +91,12 @@ if (typeof process !== "undefined" && process && process.versions && process.ver
 
         if (mainWindow === window) {
             windowfactory._windows = {};
-            windowfactory._internalBus = new EventHandler(["window-create"]);
-            windowfactory._internalBus.addPipe(windowfactory);
+            windowfactory._internalBus = new EventHandler(windowfactoryEventNames);
+        } else {
+            windowfactory._internalBus = window.parent.windowfactory._internalBus;
         }
+
+        windowfactory._internalBus.addPipe(windowfactory);
 
         // Call callbacks:
         for (let callback of openfinReadyCallbacks) {
@@ -110,7 +114,7 @@ if (typeof process !== "undefined" && process && process.versions && process.ver
         // TODO: What happens if a website uses an iframe to a site that has an app with this extension?
         windowfactory._windows = [];
         windowfactory._launcher = window;
-        windowfactory._internalBus = new EventHandler(["window-create"]);
+        windowfactory._internalBus = new EventHandler(windowfactoryEventNames);
         let nextZIndex = 1000; // TODO: Recycle Z-Indexes! In case of a (probably never) overflow!
         windowfactory._getNextZIndex = function () {
             nextZIndex += 1;

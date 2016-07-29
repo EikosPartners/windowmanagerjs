@@ -334,7 +334,8 @@
         }
     };
     /* global fin,EventHandler*/
-    var windowfactory = new EventHandler(["window-create"]);
+    var windowfactoryEventNames = ["window-create", "window-close"];
+    var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory.isRenderer = false;
     windowfactory.isBackend = false;
     windowfactory.version = "0.6.0alpha";
@@ -431,9 +432,12 @@
 
                 if (mainWindow === window) {
                     windowfactory._windows = {};
-                    windowfactory._internalBus = new EventHandler(["window-create"]);
-                    windowfactory._internalBus.addPipe(windowfactory);
+                    windowfactory._internalBus = new EventHandler(windowfactoryEventNames);
+                } else {
+                    windowfactory._internalBus = window.parent.windowfactory._internalBus;
                 }
+
+                windowfactory._internalBus.addPipe(windowfactory);
 
                 // Call callbacks:
                 var _iteratorNormalCompletion7 = true;
@@ -475,7 +479,7 @@
                 // TODO: What happens if a website uses an iframe to a site that has an app with this extension?
                 windowfactory._windows = [];
                 windowfactory._launcher = window;
-                windowfactory._internalBus = new EventHandler(["window-create"]);
+                windowfactory._internalBus = new EventHandler(windowfactoryEventNames);
                 var nextZIndex = 1000; // TODO: Recycle Z-Indexes! In case of a (probably never) overflow!
                 windowfactory._getNextZIndex = function () {
                     nextZIndex += 1;
@@ -1430,6 +1434,8 @@
                     this._isClosed = false;
                     this._isMaximized = false;
                     this._dockedGroup = [this];
+                    this._children = []; // TODO: Add way to remove or change heirarchy.
+                    this._parent = undefined;
 
                     if (isArgConfig) {
                         for (var prop in config) {
@@ -1442,6 +1448,13 @@
                             if (defaultConfig.hasOwnProperty(_prop)) {
                                 config[_prop] = config[_prop] || defaultConfig[_prop];
                             }
+                        }
+
+                        if (config.parent) {
+                            config.parent._children.push(this);
+                            this._parent = config.parent;
+                            // TODO: Emit event "child-added" on parent
+                            delete config.parent;
                         }
 
                         this._minSize = new BoundingBox(config.minWidth, config.minHeight);
@@ -1579,35 +1592,60 @@
                     return new BoundingBox(this._window.getBoundingClientRect());
                 };
 
+                Window.prototype.getParent = function () {
+                    return this._parent;
+                };
+                Window.prototype.setParent = function (parent) {
+                    // TODO: Execute appropriate checks (if not closed, and is this new parent a window)
+
+                    if (parent === this._parent) {
+                        return;
+                    }
+
+                    if (this._parent) {
+                        var index = this._parent._children.indexOf(this);
+                        if (index >= 0) {
+                            this._parent._children.splice(index, 1);
+                        }
+                        // TODO: Emit event "child-removed" on current parent.
+                    }
+
+                    if (parent) {
+                        this._parent = parent;
+                        this._parent._children.push(this);
+                        // TODO: Emit event "child-added on parent".
+                    }
+                };
+
+                Window.prototype.getChildren = function () {
+                    return this._children.slice();
+                };
+                Window.prototype.addChild = function (child) {
+                    child.setParent(this);
+                };
+
                 Window.prototype.close = function (callback) {
                     this._window.parentElement.removeChild(this._window);
                     var index = windowfactory._windows.indexOf(this);
                     if (index >= 0) {
                         windowfactory._windows.splice(index, 1);
                     }
+
+                    // Undock:
                     this.undock();
-                    this._isClosed = true;
-                    if (callback) {
-                        callback();
-                    }
-                    this.emit("close");
-                };
 
-                Window.prototype.minimize = function (callback) {
-                    if (!this._ready) {
-                        throw "minimize can't be called on an unready window";
-                    }
-
-                    // TODO: What do we do on minimize in this runtime?
+                    // Move children to parent:
                     var _iteratorNormalCompletion8 = true;
                     var _didIteratorError8 = false;
                     var _iteratorError8 = undefined;
 
                     try {
-                        for (var _iterator8 = this._dockedGroup[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                            var _window = _step8.value;
+                        for (var _iterator8 = this.getChildren()[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                            var child = _step8.value;
 
-                            _window.emit("minimize");
+                            // We use getChildren to have a copy of the list, so child.setParent doesn't modify this loop's list!
+                            // TODO: Optimize this loop, by not making a copy of children, and not executing splice in each setParent!
+                            child.setParent(child);
                         }
                     } catch (err) {
                         _didIteratorError8 = true;
@@ -1620,6 +1658,47 @@
                         } finally {
                             if (_didIteratorError8) {
                                 throw _iteratorError8;
+                            }
+                        }
+                    }
+
+                    this.setParent(undefined); // Remove from parent
+
+                    this._isClosed = true;
+                    if (callback) {
+                        callback();
+                    }
+                    this.emit("close");
+                    windowfactory._internalBus.emit("window-close", this);
+                };
+
+                Window.prototype.minimize = function (callback) {
+                    if (!this._ready) {
+                        throw "minimize can't be called on an unready window";
+                    }
+
+                    // TODO: What do we do on minimize in this runtime?
+                    var _iteratorNormalCompletion9 = true;
+                    var _didIteratorError9 = false;
+                    var _iteratorError9 = undefined;
+
+                    try {
+                        for (var _iterator9 = this._dockedGroup[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                            var _window = _step9.value;
+
+                            _window.emit("minimize");
+                        }
+                    } catch (err) {
+                        _didIteratorError9 = true;
+                        _iteratorError9 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                                _iterator9.return();
+                            }
+                        } finally {
+                            if (_didIteratorError9) {
+                                throw _iteratorError9;
                             }
                         }
                     }
@@ -1646,50 +1725,15 @@
                         throw "show can't be called on an unready window";
                     }
 
-                    var _iteratorNormalCompletion9 = true;
-                    var _didIteratorError9 = false;
-                    var _iteratorError9 = undefined;
-
-                    try {
-                        for (var _iterator9 = this._dockedGroup[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                            var _window2 = _step9.value;
-
-                            _window2._window.style.display = "";
-                        }
-                    } catch (err) {
-                        _didIteratorError9 = true;
-                        _iteratorError9 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                                _iterator9.return();
-                            }
-                        } finally {
-                            if (_didIteratorError9) {
-                                throw _iteratorError9;
-                            }
-                        }
-                    }
-
-                    if (callback) {
-                        callback();
-                    }
-                };
-
-                Window.prototype.hide = function (callback) {
-                    if (!this._ready) {
-                        throw "hide can't be called on an unready window";
-                    }
-
                     var _iteratorNormalCompletion10 = true;
                     var _didIteratorError10 = false;
                     var _iteratorError10 = undefined;
 
                     try {
                         for (var _iterator10 = this._dockedGroup[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-                            var _window3 = _step10.value;
+                            var _window2 = _step10.value;
 
-                            _window3._window.style.display = "none";
+                            _window2._window.style.display = "";
                         }
                     } catch (err) {
                         _didIteratorError10 = true;
@@ -1711,9 +1755,9 @@
                     }
                 };
 
-                Window.prototype.restore = function (callback) {
+                Window.prototype.hide = function (callback) {
                     if (!this._ready) {
-                        throw "restore can't be called on an unready window";
+                        throw "hide can't be called on an unready window";
                     }
 
                     var _iteratorNormalCompletion11 = true;
@@ -1722,15 +1766,9 @@
 
                     try {
                         for (var _iterator11 = this._dockedGroup[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-                            var _window4 = _step11.value;
+                            var _window3 = _step11.value;
 
-                            if (_window4._isMaximized) {
-                                _window4._window.style.left = _window4._restoreBounds.left + "px";
-                                _window4._window.style.top = _window4._restoreBounds.top + "px";
-                                _window4._window.style.width = _window4._restoreBounds.getWidth() + "px";
-                                _window4._window.style.height = _window4._restoreBounds.getHeight() + "px";
-                                _window4._isMaximized = false;
-                            }
+                            _window3._window.style.display = "none";
                         }
                     } catch (err) {
                         _didIteratorError11 = true;
@@ -1752,9 +1790,9 @@
                     }
                 };
 
-                Window.prototype.bringToFront = function (callback) {
+                Window.prototype.restore = function (callback) {
                     if (!this._ready) {
-                        throw "bringToFront can't be called on an unready window";
+                        throw "restore can't be called on an unready window";
                     }
 
                     var _iteratorNormalCompletion12 = true;
@@ -1763,10 +1801,14 @@
 
                     try {
                         for (var _iterator12 = this._dockedGroup[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-                            var _window5 = _step12.value;
+                            var _window4 = _step12.value;
 
-                            if (_window5 !== this) {
-                                _window5._window.style["z-index"] = windowfactory._getNextZIndex();
+                            if (_window4._isMaximized) {
+                                _window4._window.style.left = _window4._restoreBounds.left + "px";
+                                _window4._window.style.top = _window4._restoreBounds.top + "px";
+                                _window4._window.style.width = _window4._restoreBounds.getWidth() + "px";
+                                _window4._window.style.height = _window4._restoreBounds.getHeight() + "px";
+                                _window4._isMaximized = false;
                             }
                         }
                     } catch (err) {
@@ -1784,15 +1826,14 @@
                         }
                     }
 
-                    this._window.style["z-index"] = windowfactory._getNextZIndex();
                     if (callback) {
                         callback();
                     }
                 };
 
-                Window.prototype.focus = function (callback) {
+                Window.prototype.bringToFront = function (callback) {
                     if (!this._ready) {
-                        throw "focus can't be called on an unready window";
+                        throw "bringToFront can't be called on an unready window";
                     }
 
                     var _iteratorNormalCompletion13 = true;
@@ -1801,10 +1842,10 @@
 
                     try {
                         for (var _iterator13 = this._dockedGroup[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-                            var _window6 = _step13.value;
+                            var _window5 = _step13.value;
 
-                            if (_window6 !== this) {
-                                _window6._window.contentWindow.focus();
+                            if (_window5 !== this) {
+                                _window5._window.style["z-index"] = windowfactory._getNextZIndex();
                             }
                         }
                     } catch (err) {
@@ -1818,6 +1859,44 @@
                         } finally {
                             if (_didIteratorError13) {
                                 throw _iteratorError13;
+                            }
+                        }
+                    }
+
+                    this._window.style["z-index"] = windowfactory._getNextZIndex();
+                    if (callback) {
+                        callback();
+                    }
+                };
+
+                Window.prototype.focus = function (callback) {
+                    if (!this._ready) {
+                        throw "focus can't be called on an unready window";
+                    }
+
+                    var _iteratorNormalCompletion14 = true;
+                    var _didIteratorError14 = false;
+                    var _iteratorError14 = undefined;
+
+                    try {
+                        for (var _iterator14 = this._dockedGroup[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+                            var _window6 = _step14.value;
+
+                            if (_window6 !== this) {
+                                _window6._window.contentWindow.focus();
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError14 = true;
+                        _iteratorError14 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion14 && _iterator14.return) {
+                                _iterator14.return();
+                            }
+                        } finally {
+                            if (_didIteratorError14) {
+                                throw _iteratorError14;
                             }
                         }
                     }
@@ -1854,58 +1933,17 @@
                     } // Allow preventing move
                     var deltaPos = new Position(left, top).subtract(this.getPosition());
 
-                    var _iteratorNormalCompletion14 = true;
-                    var _didIteratorError14 = false;
-                    var _iteratorError14 = undefined;
-
-                    try {
-                        for (var _iterator14 = this._dockedGroup[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-                            var _window7 = _step14.value;
-
-                            var pos = _window7.getPosition().add(deltaPos);
-                            _window7._window.style.left = pos.left + "px";
-                            _window7._window.style.top = pos.top + "px";
-                        }
-                    } catch (err) {
-                        _didIteratorError14 = true;
-                        _iteratorError14 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion14 && _iterator14.return) {
-                                _iterator14.return();
-                            }
-                        } finally {
-                            if (_didIteratorError14) {
-                                throw _iteratorError14;
-                            }
-                        }
-                    }
-
-                    if (callback) {
-                        callback();
-                    }
-                };
-
-                Window.prototype.moveBy = function (deltaLeft, deltaTop, callback) {
-                    if (!this._ready) {
-                        throw "moveBy can't be called on an unready window";
-                    }
-                    if (!this.emit("move-before")) {
-                        return;
-                    } // Allow preventing move
-                    var deltaPos = new Position(deltaLeft, deltaTop);
-
                     var _iteratorNormalCompletion15 = true;
                     var _didIteratorError15 = false;
                     var _iteratorError15 = undefined;
 
                     try {
                         for (var _iterator15 = this._dockedGroup[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-                            var _window8 = _step15.value;
+                            var _window7 = _step15.value;
 
-                            var pos = _window8.getPosition().add(deltaPos);
-                            _window8._window.style.left = pos.left + "px";
-                            _window8._window.style.top = pos.top + "px";
+                            var pos = _window7.getPosition().add(deltaPos);
+                            _window7._window.style.left = pos.left + "px";
+                            _window7._window.style.top = pos.top + "px";
                         }
                     } catch (err) {
                         _didIteratorError15 = true;
@@ -1925,15 +1963,28 @@
                     if (callback) {
                         callback();
                     }
+                };
+
+                Window.prototype.moveBy = function (deltaLeft, deltaTop, callback) {
+                    if (!this._ready) {
+                        throw "moveBy can't be called on an unready window";
+                    }
+                    if (!this.emit("move-before")) {
+                        return;
+                    } // Allow preventing move
+                    var deltaPos = new Position(deltaLeft, deltaTop);
+
                     var _iteratorNormalCompletion16 = true;
                     var _didIteratorError16 = false;
                     var _iteratorError16 = undefined;
 
                     try {
                         for (var _iterator16 = this._dockedGroup[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-                            var _window9 = _step16.value;
+                            var _window8 = _step16.value;
 
-                            _window9.emit("move");
+                            var pos = _window8.getPosition().add(deltaPos);
+                            _window8._window.style.left = pos.left + "px";
+                            _window8._window.style.top = pos.top + "px";
                         }
                     } catch (err) {
                         _didIteratorError16 = true;
@@ -1946,6 +1997,34 @@
                         } finally {
                             if (_didIteratorError16) {
                                 throw _iteratorError16;
+                            }
+                        }
+                    }
+
+                    if (callback) {
+                        callback();
+                    }
+                    var _iteratorNormalCompletion17 = true;
+                    var _didIteratorError17 = false;
+                    var _iteratorError17 = undefined;
+
+                    try {
+                        for (var _iterator17 = this._dockedGroup[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+                            var _window9 = _step17.value;
+
+                            _window9.emit("move");
+                        }
+                    } catch (err) {
+                        _didIteratorError17 = true;
+                        _iteratorError17 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion17 && _iterator17.return) {
+                                _iterator17.return();
+                            }
+                        } finally {
+                            if (_didIteratorError17) {
+                                throw _iteratorError17;
                             }
                         }
                     }
@@ -1987,27 +2066,27 @@
                     this._window.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, size.left)) + "px";
                     this._window.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, size.top)) + "px";
                     // Clear transform:
-                    var _iteratorNormalCompletion17 = true;
-                    var _didIteratorError17 = false;
-                    var _iteratorError17 = undefined;
+                    var _iteratorNormalCompletion18 = true;
+                    var _didIteratorError18 = false;
+                    var _iteratorError18 = undefined;
 
                     try {
-                        for (var _iterator17 = transformPropNames[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-                            var transformPropName = _step17.value;
+                        for (var _iterator18 = transformPropNames[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+                            var transformPropName = _step18.value;
 
                             this._window.style[transformPropName] = "";
                         }
                     } catch (err) {
-                        _didIteratorError17 = true;
-                        _iteratorError17 = err;
+                        _didIteratorError18 = true;
+                        _iteratorError18 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion17 && _iterator17.return) {
-                                _iterator17.return();
+                            if (!_iteratorNormalCompletion18 && _iterator18.return) {
+                                _iterator18.return();
                             }
                         } finally {
-                            if (_didIteratorError17) {
-                                throw _iteratorError17;
+                            if (_didIteratorError18) {
+                                throw _iteratorError18;
                             }
                         }
                     }
@@ -2028,27 +2107,27 @@
                     this._window.style.height = size.top + "px";
                     // TODO: Calc transform:
                     var transform = Math.min(width / size.left, height / size.top);
-                    var _iteratorNormalCompletion18 = true;
-                    var _didIteratorError18 = false;
-                    var _iteratorError18 = undefined;
+                    var _iteratorNormalCompletion19 = true;
+                    var _didIteratorError19 = false;
+                    var _iteratorError19 = undefined;
 
                     try {
-                        for (var _iterator18 = transformPropNames[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
-                            var transformPropName = _step18.value;
+                        for (var _iterator19 = transformPropNames[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+                            var transformPropName = _step19.value;
 
                             this._window.style[transformPropName] = "scale(" + transform + ")";
                         }
                     } catch (err) {
-                        _didIteratorError18 = true;
-                        _iteratorError18 = err;
+                        _didIteratorError19 = true;
+                        _iteratorError19 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion18 && _iterator18.return) {
-                                _iterator18.return();
+                            if (!_iteratorNormalCompletion19 && _iterator19.return) {
+                                _iterator19.return();
                             }
                         } finally {
-                            if (_didIteratorError18) {
-                                throw _iteratorError18;
+                            if (_didIteratorError19) {
+                                throw _iteratorError19;
                             }
                         }
                     }
@@ -2075,27 +2154,27 @@
                         this._window.style.width = Math.min(this.getWidth(), size.left) + "px";
                         this._window.style.height = Math.min(this.getHeight(), size.top) + "px";
                         // Clear transform:
-                        var _iteratorNormalCompletion19 = true;
-                        var _didIteratorError19 = false;
-                        var _iteratorError19 = undefined;
+                        var _iteratorNormalCompletion20 = true;
+                        var _didIteratorError20 = false;
+                        var _iteratorError20 = undefined;
 
                         try {
-                            for (var _iterator19 = transformPropNames[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-                                var transformPropName = _step19.value;
+                            for (var _iterator20 = transformPropNames[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+                                var transformPropName = _step20.value;
 
                                 this._window.style[transformPropName] = "";
                             }
                         } catch (err) {
-                            _didIteratorError19 = true;
-                            _iteratorError19 = err;
+                            _didIteratorError20 = true;
+                            _iteratorError20 = err;
                         } finally {
                             try {
-                                if (!_iteratorNormalCompletion19 && _iterator19.return) {
-                                    _iterator19.return();
+                                if (!_iteratorNormalCompletion20 && _iterator20.return) {
+                                    _iterator20.return();
                                 }
                             } finally {
-                                if (_didIteratorError19) {
-                                    throw _iteratorError19;
+                                if (_didIteratorError20) {
+                                    throw _iteratorError20;
                                 }
                             }
                         }
@@ -2124,28 +2203,28 @@
                     this._window.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, bounds.getWidth())) + "px";
                     this._window.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, bounds.getHeight())) + "px";
                     // Clear transform:
-                    var _iteratorNormalCompletion20 = true;
-                    var _didIteratorError20 = false;
-                    var _iteratorError20 = undefined;
+                    var _iteratorNormalCompletion21 = true;
+                    var _didIteratorError21 = false;
+                    var _iteratorError21 = undefined;
 
                     try {
-                        for (var _iterator20 = transformPropNames[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-                            var transformPropName = _step20.value;
+                        for (var _iterator21 = transformPropNames[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+                            var transformPropName = _step21.value;
 
                             this._window.style[transformPropName] = "";
                         }
                         // TODO: Events
                     } catch (err) {
-                        _didIteratorError20 = true;
-                        _iteratorError20 = err;
+                        _didIteratorError21 = true;
+                        _iteratorError21 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion20 && _iterator20.return) {
-                                _iterator20.return();
+                            if (!_iteratorNormalCompletion21 && _iterator21.return) {
+                                _iterator21.return();
                             }
                         } finally {
-                            if (_didIteratorError20) {
-                                throw _iteratorError20;
+                            if (_didIteratorError21) {
+                                throw _iteratorError21;
                             }
                         }
                     }
@@ -2169,13 +2248,13 @@
                     }
 
                     // Loop through all windows in otherGroup and add them to this's group:
-                    var _iteratorNormalCompletion21 = true;
-                    var _didIteratorError21 = false;
-                    var _iteratorError21 = undefined;
+                    var _iteratorNormalCompletion22 = true;
+                    var _didIteratorError22 = false;
+                    var _iteratorError22 = undefined;
 
                     try {
-                        for (var _iterator21 = other._dockedGroup[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
-                            var _other = _step21.value;
+                        for (var _iterator22 = other._dockedGroup[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+                            var _other = _step22.value;
 
                             this._dockedGroup.push(_other);
                             // Sharing the array between window objects makes it easier to manage:
@@ -2185,16 +2264,16 @@
                         //console.log("dock", thisWindow._dockedGroup);
                         // TODO: Check if otherGroup is touching
                     } catch (err) {
-                        _didIteratorError21 = true;
-                        _iteratorError21 = err;
+                        _didIteratorError22 = true;
+                        _iteratorError22 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion21 && _iterator21.return) {
-                                _iterator21.return();
+                            if (!_iteratorNormalCompletion22 && _iterator22.return) {
+                                _iterator22.return();
                             }
                         } finally {
-                            if (_didIteratorError21) {
-                                throw _iteratorError21;
+                            if (_didIteratorError22) {
+                                throw _iteratorError22;
                             }
                         }
                     }
@@ -2218,50 +2297,15 @@
                         return;
                     } // Allow preventing drag
                     this.restore();
-                    var _iteratorNormalCompletion22 = true;
-                    var _didIteratorError22 = false;
-                    var _iteratorError22 = undefined;
-
-                    try {
-                        for (var _iterator22 = this._dockedGroup[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-                            var _window10 = _step22.value;
-
-                            _window10._dragStartPos = _window10.getPosition();
-                        }
-                    } catch (err) {
-                        _didIteratorError22 = true;
-                        _iteratorError22 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion22 && _iterator22.return) {
-                                _iterator22.return();
-                            }
-                        } finally {
-                            if (_didIteratorError22) {
-                                throw _iteratorError22;
-                            }
-                        }
-                    }
-                };
-
-                Window.prototype._dragBy = function (deltaLeft, deltaTop) {
-                    if (!this.emit("drag-before")) {
-                        return;
-                    } // Allow preventing drag
-                    // Perform Snap:
-                    var thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft, this._dragStartPos.top + deltaTop);
-                    var snapDelta = new Vector(NaN, NaN);
                     var _iteratorNormalCompletion23 = true;
                     var _didIteratorError23 = false;
                     var _iteratorError23 = undefined;
 
                     try {
-                        for (var _iterator23 = windowfactory._windows[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
-                            var other = _step23.value;
+                        for (var _iterator23 = this._dockedGroup[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+                            var _window10 = _step23.value;
 
-                            if (other._dockedGroup !== this._dockedGroup) {
-                                snapDelta.setMin(thisBounds.getSnapDelta(other.getBounds()));
-                            }
+                            _window10._dragStartPos = _window10.getPosition();
                         }
                     } catch (err) {
                         _didIteratorError23 = true;
@@ -2277,30 +2321,26 @@
                             }
                         }
                     }
+                };
 
-                    deltaLeft += snapDelta.left || 0;
-                    deltaTop += snapDelta.top || 0;
-
+                Window.prototype._dragBy = function (deltaLeft, deltaTop) {
+                    if (!this.emit("drag-before")) {
+                        return;
+                    } // Allow preventing drag
+                    // Perform Snap:
+                    var thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft, this._dragStartPos.top + deltaTop);
+                    var snapDelta = new Vector(NaN, NaN);
                     var _iteratorNormalCompletion24 = true;
                     var _didIteratorError24 = false;
                     var _iteratorError24 = undefined;
 
                     try {
-                        for (var _iterator24 = this._dockedGroup[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
-                            var _other2 = _step24.value;
+                        for (var _iterator24 = windowfactory._windows[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+                            var other = _step24.value;
 
-                            var pos = _other2._dragStartPos;
-
-                            // If other doesn't have a drag position, start it:
-                            if (pos === undefined) {
-                                pos = _other2._dragStartPos = _other2.getPosition();
-                                pos.left -= deltaLeft;
-                                pos.top -= deltaTop;
+                            if (other._dockedGroup !== this._dockedGroup) {
+                                snapDelta.setMin(thisBounds.getSnapDelta(other.getBounds()));
                             }
-
-                            _other2._window.style.left = pos.left + deltaLeft + "px";
-                            _other2._window.style.top = pos.top + deltaTop + "px";
-                            _other2.emit("move");
                         }
                     } catch (err) {
                         _didIteratorError24 = true;
@@ -2316,22 +2356,30 @@
                             }
                         }
                     }
-                };
 
-                Window.prototype._dragStop = function () {
-                    // Dock to those it snapped to:
-                    var thisBounds = this.getBounds();
+                    deltaLeft += snapDelta.left || 0;
+                    deltaTop += snapDelta.top || 0;
+
                     var _iteratorNormalCompletion25 = true;
                     var _didIteratorError25 = false;
                     var _iteratorError25 = undefined;
 
                     try {
-                        for (var _iterator25 = windowfactory._windows[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
-                            var other = _step25.value;
+                        for (var _iterator25 = this._dockedGroup[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+                            var _other2 = _step25.value;
 
-                            if (thisBounds.isTouching(other.getBounds())) {
-                                this.dock(other);
+                            var pos = _other2._dragStartPos;
+
+                            // If other doesn't have a drag position, start it:
+                            if (pos === undefined) {
+                                pos = _other2._dragStartPos = _other2.getPosition();
+                                pos.left -= deltaLeft;
+                                pos.top -= deltaTop;
                             }
+
+                            _other2._window.style.left = pos.left + deltaLeft + "px";
+                            _other2._window.style.top = pos.top + deltaTop + "px";
+                            _other2.emit("move");
                         }
                     } catch (err) {
                         _didIteratorError25 = true;
@@ -2347,16 +2395,22 @@
                             }
                         }
                     }
+                };
 
+                Window.prototype._dragStop = function () {
+                    // Dock to those it snapped to:
+                    var thisBounds = this.getBounds();
                     var _iteratorNormalCompletion26 = true;
                     var _didIteratorError26 = false;
                     var _iteratorError26 = undefined;
 
                     try {
-                        for (var _iterator26 = this._dockedGroup[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
-                            var _window11 = _step26.value;
+                        for (var _iterator26 = windowfactory._windows[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
+                            var other = _step26.value;
 
-                            delete _window11._dragStartPos;
+                            if (thisBounds.isTouching(other.getBounds())) {
+                                this.dock(other);
+                            }
                         }
                     } catch (err) {
                         _didIteratorError26 = true;
@@ -2373,22 +2427,15 @@
                         }
                     }
 
-                    this.emit("drag-stop");
-                };
-
-                // Handle current window in this context:
-                Window.current = function () {
                     var _iteratorNormalCompletion27 = true;
                     var _didIteratorError27 = false;
                     var _iteratorError27 = undefined;
 
                     try {
-                        for (var _iterator27 = windowfactory._windows[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
-                            var win = _step27.value;
+                        for (var _iterator27 = this._dockedGroup[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+                            var _window11 = _step27.value;
 
-                            if (win._window.contentWindow === window) {
-                                return win;
-                            }
+                            delete _window11._dragStartPos;
                         }
                     } catch (err) {
                         _didIteratorError27 = true;
@@ -2401,6 +2448,38 @@
                         } finally {
                             if (_didIteratorError27) {
                                 throw _iteratorError27;
+                            }
+                        }
+                    }
+
+                    this.emit("drag-stop");
+                };
+
+                // Handle current window in this context:
+                Window.current = function () {
+                    var _iteratorNormalCompletion28 = true;
+                    var _didIteratorError28 = false;
+                    var _iteratorError28 = undefined;
+
+                    try {
+                        for (var _iterator28 = windowfactory._windows[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+                            var win = _step28.value;
+
+                            if (win._window.contentWindow === window) {
+                                return win;
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError28 = true;
+                        _iteratorError28 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion28 && _iterator28.return) {
+                                _iterator28.return();
+                            }
+                        } finally {
+                            if (_didIteratorError28) {
+                                throw _iteratorError28;
                             }
                         }
                     }
@@ -2954,27 +3033,27 @@
                         };*/
                         // TODO: Solve event syncing between windows
                         BrowserWindow.prototype._notifyReady = function () {
-                            var _iteratorNormalCompletion28 = true;
-                            var _didIteratorError28 = false;
-                            var _iteratorError28 = undefined;
+                            var _iteratorNormalCompletion29 = true;
+                            var _didIteratorError29 = false;
+                            var _iteratorError29 = undefined;
 
                             try {
-                                for (var _iterator28 = BrowserWindow.getAllWindows()[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
-                                    var other = _step28.value;
+                                for (var _iterator29 = BrowserWindow.getAllWindows()[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
+                                    var other = _step29.value;
 
                                     other.webContents.send("window-create", other.id);
                                 }
                             } catch (err) {
-                                _didIteratorError28 = true;
-                                _iteratorError28 = err;
+                                _didIteratorError29 = true;
+                                _iteratorError29 = err;
                             } finally {
                                 try {
-                                    if (!_iteratorNormalCompletion28 && _iterator28.return) {
-                                        _iterator28.return();
+                                    if (!_iteratorNormalCompletion29 && _iterator29.return) {
+                                        _iterator29.return();
                                     }
                                 } finally {
-                                    if (_didIteratorError28) {
-                                        throw _iteratorError28;
+                                    if (_didIteratorError29) {
+                                        throw _iteratorError29;
                                     }
                                 }
                             }
@@ -3000,29 +3079,29 @@
                                     });
 
                                     _this.on("restore", function () {
-                                        var _iteratorNormalCompletion29 = true;
-                                        var _didIteratorError29 = false;
-                                        var _iteratorError29 = undefined;
+                                        var _iteratorNormalCompletion30 = true;
+                                        var _didIteratorError30 = false;
+                                        var _iteratorError30 = undefined;
 
                                         try {
-                                            for (var _iterator29 = this._dockedGroup[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
-                                                var other = _step29.value;
+                                            for (var _iterator30 = this._dockedGroup[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
+                                                var other = _step30.value;
 
                                                 if (other !== this) {
                                                     other.restore();
                                                 }
                                             }
                                         } catch (err) {
-                                            _didIteratorError29 = true;
-                                            _iteratorError29 = err;
+                                            _didIteratorError30 = true;
+                                            _iteratorError30 = err;
                                         } finally {
                                             try {
-                                                if (!_iteratorNormalCompletion29 && _iterator29.return) {
-                                                    _iterator29.return();
+                                                if (!_iteratorNormalCompletion30 && _iterator30.return) {
+                                                    _iterator30.return();
                                                 }
                                             } finally {
-                                                if (_didIteratorError29) {
-                                                    throw _iteratorError29;
+                                                if (_didIteratorError30) {
+                                                    throw _iteratorError30;
                                                 }
                                             }
                                         }
@@ -3073,13 +3152,13 @@
                             other._ensureDockSystem();
 
                             // Loop through all windows in otherGroup and add them to this's group:
-                            var _iteratorNormalCompletion30 = true;
-                            var _didIteratorError30 = false;
-                            var _iteratorError30 = undefined;
+                            var _iteratorNormalCompletion31 = true;
+                            var _didIteratorError31 = false;
+                            var _iteratorError31 = undefined;
 
                             try {
-                                for (var _iterator30 = other._dockedGroup[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
-                                    var _other3 = _step30.value;
+                                for (var _iterator31 = other._dockedGroup[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+                                    var _other3 = _step31.value;
 
                                     this._dockedGroup.push(_other3);
                                     // Sharing the array between window objects makes it easier to manage:
@@ -3089,16 +3168,16 @@
                                 //console.log("dock", this._dockedGroup);
                                 // TODO: Check if otherGroup is touching
                             } catch (err) {
-                                _didIteratorError30 = true;
-                                _iteratorError30 = err;
+                                _didIteratorError31 = true;
+                                _iteratorError31 = err;
                             } finally {
                                 try {
-                                    if (!_iteratorNormalCompletion30 && _iterator30.return) {
-                                        _iterator30.return();
+                                    if (!_iteratorNormalCompletion31 && _iterator31.return) {
+                                        _iterator31.return();
                                     }
                                 } finally {
-                                    if (_didIteratorError30) {
-                                        throw _iteratorError30;
+                                    if (_didIteratorError31) {
+                                        throw _iteratorError31;
                                     }
                                 }
                             }
@@ -3121,52 +3200,18 @@
                         BrowserWindow.prototype._dockFocus = function () {
                             this._ensureDockSystem();
 
-                            var _iteratorNormalCompletion31 = true;
-                            var _didIteratorError31 = false;
-                            var _iteratorError31 = undefined;
-
-                            try {
-                                for (var _iterator31 = this._dockedGroup[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
-                                    var _window12 = _step31.value;
-
-                                    if (_window12 !== this) {
-                                        _window12.setAlwaysOnTop(true);
-                                        _window12.setAlwaysOnTop(false);
-                                    }
-                                }
-                            } catch (err) {
-                                _didIteratorError31 = true;
-                                _iteratorError31 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion31 && _iterator31.return) {
-                                        _iterator31.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError31) {
-                                        throw _iteratorError31;
-                                    }
-                                }
-                            }
-
-                            this.setAlwaysOnTop(true);
-                            this.setAlwaysOnTop(false);
-                        };
-                        BrowserWindow.prototype._dragStart = function () {
-                            //if (!this.emit("drag-start")) { return; } // Allow preventing drag
-                            this._ensureDockSystem();
-
-                            this.restore();
-
                             var _iteratorNormalCompletion32 = true;
                             var _didIteratorError32 = false;
                             var _iteratorError32 = undefined;
 
                             try {
                                 for (var _iterator32 = this._dockedGroup[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
-                                    var _window13 = _step32.value;
+                                    var _window12 = _step32.value;
 
-                                    _window13._dragStartPos = _window13.getPosition();
+                                    if (_window12 !== this) {
+                                        _window12.setAlwaysOnTop(true);
+                                        _window12.setAlwaysOnTop(false);
+                                    }
                                 }
                             } catch (err) {
                                 _didIteratorError32 = true;
@@ -3182,28 +3227,25 @@
                                     }
                                 }
                             }
+
+                            this.setAlwaysOnTop(true);
+                            this.setAlwaysOnTop(false);
                         };
-                        BrowserWindow.prototype._getBounds = function () {
-                            var bounds = this.getBounds();
-                            return new BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
-                        };
-                        BrowserWindow.prototype._dragBy = function (deltaLeft, deltaTop) {
+                        BrowserWindow.prototype._dragStart = function () {
+                            //if (!this.emit("drag-start")) { return; } // Allow preventing drag
                             this._ensureDockSystem();
 
-                            // Perform Snap:
-                            var thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft, this._dragStartPos[1] + deltaTop);
-                            var snapDelta = new Vector(NaN, NaN);
+                            this.restore();
+
                             var _iteratorNormalCompletion33 = true;
                             var _didIteratorError33 = false;
                             var _iteratorError33 = undefined;
 
                             try {
-                                for (var _iterator33 = BrowserWindow.getAllWindows()[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
-                                    var other = _step33.value;
+                                for (var _iterator33 = this._dockedGroup[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+                                    var _window13 = _step33.value;
 
-                                    if (other._dockedGroup !== this._dockedGroup) {
-                                        snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
-                                    }
+                                    _window13._dragStartPos = _window13.getPosition();
                                 }
                             } catch (err) {
                                 _didIteratorError33 = true;
@@ -3219,28 +3261,28 @@
                                     }
                                 }
                             }
+                        };
+                        BrowserWindow.prototype._getBounds = function () {
+                            var bounds = this.getBounds();
+                            return new BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
+                        };
+                        BrowserWindow.prototype._dragBy = function (deltaLeft, deltaTop) {
+                            this._ensureDockSystem();
 
-                            deltaLeft += snapDelta.left || 0;
-                            deltaTop += snapDelta.top || 0;
-
+                            // Perform Snap:
+                            var thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft, this._dragStartPos[1] + deltaTop);
+                            var snapDelta = new Vector(NaN, NaN);
                             var _iteratorNormalCompletion34 = true;
                             var _didIteratorError34 = false;
                             var _iteratorError34 = undefined;
 
                             try {
-                                for (var _iterator34 = this._dockedGroup[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
-                                    var _other4 = _step34.value;
+                                for (var _iterator34 = BrowserWindow.getAllWindows()[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+                                    var other = _step34.value;
 
-                                    var pos = _other4._dragStartPos;
-
-                                    // If other doesn't have a drag position, start it:
-                                    if (pos === undefined) {
-                                        pos = _other4._dragStartPos = _other4.getPosition();
-                                        pos[0] -= deltaLeft;
-                                        pos[1] -= deltaTop;
+                                    if (other._dockedGroup !== this._dockedGroup) {
+                                        snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
                                     }
-
-                                    _other4.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
                                 }
                             } catch (err) {
                                 _didIteratorError34 = true;
@@ -3256,23 +3298,28 @@
                                     }
                                 }
                             }
-                        };
-                        BrowserWindow.prototype._dragStop = function () {
-                            this._ensureDockSystem();
 
-                            // Dock to those it snapped to:
-                            var thisBounds = this._getBounds();
+                            deltaLeft += snapDelta.left || 0;
+                            deltaTop += snapDelta.top || 0;
+
                             var _iteratorNormalCompletion35 = true;
                             var _didIteratorError35 = false;
                             var _iteratorError35 = undefined;
 
                             try {
-                                for (var _iterator35 = BrowserWindow.getAllWindows()[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
-                                    var other = _step35.value;
+                                for (var _iterator35 = this._dockedGroup[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+                                    var _other4 = _step35.value;
 
-                                    if (thisBounds.isTouching(other._getBounds())) {
-                                        this.dock(other.id);
+                                    var pos = _other4._dragStartPos;
+
+                                    // If other doesn't have a drag position, start it:
+                                    if (pos === undefined) {
+                                        pos = _other4._dragStartPos = _other4.getPosition();
+                                        pos[0] -= deltaLeft;
+                                        pos[1] -= deltaTop;
                                     }
+
+                                    _other4.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
                                 }
                             } catch (err) {
                                 _didIteratorError35 = true;
@@ -3288,16 +3335,23 @@
                                     }
                                 }
                             }
+                        };
+                        BrowserWindow.prototype._dragStop = function () {
+                            this._ensureDockSystem();
 
+                            // Dock to those it snapped to:
+                            var thisBounds = this._getBounds();
                             var _iteratorNormalCompletion36 = true;
                             var _didIteratorError36 = false;
                             var _iteratorError36 = undefined;
 
                             try {
-                                for (var _iterator36 = this._dockedGroup[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
-                                    var _window14 = _step36.value;
+                                for (var _iterator36 = BrowserWindow.getAllWindows()[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
+                                    var other = _step36.value;
 
-                                    delete _window14._dragStartPos;
+                                    if (thisBounds.isTouching(other._getBounds())) {
+                                        this.dock(other.id);
+                                    }
                                 }
                             } catch (err) {
                                 _didIteratorError36 = true;
@@ -3313,13 +3367,6 @@
                                     }
                                 }
                             }
-                        };
-                        BrowserWindow.prototype._dockMoveTo = function (left, top) {
-                            this._ensureDockSystem();
-
-                            var oldPos = this.getPosition();
-                            var deltaLeft = left - oldPos[0];
-                            var deltaTop = top - oldPos[1];
 
                             var _iteratorNormalCompletion37 = true;
                             var _didIteratorError37 = false;
@@ -3327,11 +3374,9 @@
 
                             try {
                                 for (var _iterator37 = this._dockedGroup[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
-                                    var other = _step37.value;
+                                    var _window14 = _step37.value;
 
-                                    var pos = other.getPosition();
-
-                                    other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
+                                    delete _window14._dragStartPos;
                                 }
                             } catch (err) {
                                 _didIteratorError37 = true;
@@ -3348,8 +3393,12 @@
                                 }
                             }
                         };
-                        BrowserWindow.prototype._dockMinimize = function (left, top) {
+                        BrowserWindow.prototype._dockMoveTo = function (left, top) {
                             this._ensureDockSystem();
+
+                            var oldPos = this.getPosition();
+                            var deltaLeft = left - oldPos[0];
+                            var deltaTop = top - oldPos[1];
 
                             var _iteratorNormalCompletion38 = true;
                             var _didIteratorError38 = false;
@@ -3357,9 +3406,11 @@
 
                             try {
                                 for (var _iterator38 = this._dockedGroup[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
-                                    var _window15 = _step38.value;
+                                    var other = _step38.value;
 
-                                    _window15.minimize();
+                                    var pos = other.getPosition();
+
+                                    other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
                                 }
                             } catch (err) {
                                 _didIteratorError38 = true;
@@ -3376,7 +3427,7 @@
                                 }
                             }
                         };
-                        BrowserWindow.prototype._dockHide = function (left, top) {
+                        BrowserWindow.prototype._dockMinimize = function (left, top) {
                             this._ensureDockSystem();
 
                             var _iteratorNormalCompletion39 = true;
@@ -3385,9 +3436,9 @@
 
                             try {
                                 for (var _iterator39 = this._dockedGroup[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
-                                    var _window16 = _step39.value;
+                                    var _window15 = _step39.value;
 
-                                    _window16.hide();
+                                    _window15.minimize();
                                 }
                             } catch (err) {
                                 _didIteratorError39 = true;
@@ -3404,7 +3455,7 @@
                                 }
                             }
                         };
-                        BrowserWindow.prototype._dockShow = function (left, top) {
+                        BrowserWindow.prototype._dockHide = function (left, top) {
                             this._ensureDockSystem();
 
                             var _iteratorNormalCompletion40 = true;
@@ -3413,9 +3464,9 @@
 
                             try {
                                 for (var _iterator40 = this._dockedGroup[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
-                                    var _window17 = _step40.value;
+                                    var _window16 = _step40.value;
 
-                                    _window17.show();
+                                    _window16.hide();
                                 }
                             } catch (err) {
                                 _didIteratorError40 = true;
@@ -3428,6 +3479,34 @@
                                 } finally {
                                     if (_didIteratorError40) {
                                         throw _iteratorError40;
+                                    }
+                                }
+                            }
+                        };
+                        BrowserWindow.prototype._dockShow = function (left, top) {
+                            this._ensureDockSystem();
+
+                            var _iteratorNormalCompletion41 = true;
+                            var _didIteratorError41 = false;
+                            var _iteratorError41 = undefined;
+
+                            try {
+                                for (var _iterator41 = this._dockedGroup[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
+                                    var _window17 = _step41.value;
+
+                                    _window17.show();
+                                }
+                            } catch (err) {
+                                _didIteratorError41 = true;
+                                _iteratorError41 = err;
+                            } finally {
+                                try {
+                                    if (!_iteratorNormalCompletion41 && _iterator41.return) {
+                                        _iterator41.return();
+                                    }
+                                } finally {
+                                    if (_didIteratorError41) {
+                                        throw _iteratorError41;
                                     }
                                 }
                             }
@@ -3645,6 +3724,7 @@
                     this._ready = false;
                     this._isClosed = false;
                     this._dockedGroup = [this];
+                    this._parent = undefined;
 
                     if (isArgConfig) {
                         for (var prop in config) {
@@ -3659,6 +3739,13 @@
                             }
                         }
                         config.name = getUniqueWindowName();
+
+                        if (config.parent) {
+                            config.parent._children.push(this);
+                            this._parent = config.parent;
+                            // TODO: Emit event "child-added" on parent
+                            delete config.parent;
+                        }
 
                         windowfactory._windows[config.name] = this;
                         this._window = new fin.desktop.Window(config, this._setupDOM.bind(this), function (err) {
@@ -3711,8 +3798,42 @@
                     function onClose() {
                         thisWindow._isClosed = true;
                         delete windowfactory._windows[thisWindow._window.name];
+
+                        // Undock:
                         thisWindow.undock();
+
+                        // Move children to parent:
+                        var _iteratorNormalCompletion42 = true;
+                        var _didIteratorError42 = false;
+                        var _iteratorError42 = undefined;
+
+                        try {
+                            for (var _iterator42 = thisWindow.getChildren()[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
+                                var child = _step42.value;
+
+                                // We use getChildren to have a copy of the list, so child.setParent doesn't modify this loop's list!
+                                // TODO: Optimize this loop, by not making a copy of children, and not executing splice in each setParent!
+                                child.setParent(child);
+                            }
+                        } catch (err) {
+                            _didIteratorError42 = true;
+                            _iteratorError42 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion42 && _iterator42.return) {
+                                    _iterator42.return();
+                                }
+                            } finally {
+                                if (_didIteratorError42) {
+                                    throw _iteratorError42;
+                                }
+                            }
+                        }
+
+                        thisWindow.setParent(undefined); // Remove from parent
+
                         thisWindow.emit("close");
+                        windowfactory._internalBus.emit("window-close", thisWindow);
                         thisWindow._window = undefined;
                         // TODO: Clean up ALL listeners
                     }
@@ -3760,6 +3881,38 @@
                     return this._bounds.clone();
                 };
 
+                Window.prototype.getParent = function () {
+                    return this._parent;
+                };
+                Window.prototype.setParent = function (parent) {
+                    // TODO: Execute appropriate checks (if not closed, and is this new parent a window)
+
+                    if (parent === this._parent) {
+                        return;
+                    }
+
+                    if (this._parent) {
+                        var index = this._parent._children.indexOf(this);
+                        if (index >= 0) {
+                            this._parent._children.splice(index, 1);
+                        }
+                        // TODO: Emit event "child-removed" on current parent.
+                    }
+
+                    if (parent) {
+                        this._parent = parent;
+                        this._parent._children.push(this);
+                        // TODO: Emit event "child-added on parent".
+                    }
+                };
+
+                Window.prototype.getChildren = function () {
+                    return this._children.slice();
+                };
+                Window.prototype.addChild = function (child) {
+                    child.setParent(this);
+                };
+
                 Window.prototype.close = function (callback) {
                     this._window.close(callback);
                 };
@@ -3770,27 +3923,27 @@
                     }
 
                     callback = new SyncCallback(callback);
-                    var _iteratorNormalCompletion41 = true;
-                    var _didIteratorError41 = false;
-                    var _iteratorError41 = undefined;
+                    var _iteratorNormalCompletion43 = true;
+                    var _didIteratorError43 = false;
+                    var _iteratorError43 = undefined;
 
                     try {
-                        for (var _iterator41 = this._dockedGroup[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
-                            var _window18 = _step41.value;
+                        for (var _iterator43 = this._dockedGroup[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
+                            var _window18 = _step43.value;
 
                             _window18._window.minimize(callback.ref());
                         }
                     } catch (err) {
-                        _didIteratorError41 = true;
-                        _iteratorError41 = err;
+                        _didIteratorError43 = true;
+                        _iteratorError43 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion41 && _iterator41.return) {
-                                _iterator41.return();
+                            if (!_iteratorNormalCompletion43 && _iterator43.return) {
+                                _iterator43.return();
                             }
                         } finally {
-                            if (_didIteratorError41) {
-                                throw _iteratorError41;
+                            if (_didIteratorError43) {
+                                throw _iteratorError43;
                             }
                         }
                     }
@@ -3810,79 +3963,15 @@
                     }
 
                     callback = new SyncCallback(callback);
-                    var _iteratorNormalCompletion42 = true;
-                    var _didIteratorError42 = false;
-                    var _iteratorError42 = undefined;
-
-                    try {
-                        for (var _iterator42 = this._dockedGroup[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
-                            var _window19 = _step42.value;
-
-                            _window19._window.show(callback.ref());
-                        }
-                    } catch (err) {
-                        _didIteratorError42 = true;
-                        _iteratorError42 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion42 && _iterator42.return) {
-                                _iterator42.return();
-                            }
-                        } finally {
-                            if (_didIteratorError42) {
-                                throw _iteratorError42;
-                            }
-                        }
-                    }
-                };
-
-                Window.prototype.hide = function (callback) {
-                    if (!this._ready) {
-                        throw "hide can't be called on an unready window";
-                    }
-
-                    callback = new SyncCallback(callback);
-                    var _iteratorNormalCompletion43 = true;
-                    var _didIteratorError43 = false;
-                    var _iteratorError43 = undefined;
-
-                    try {
-                        for (var _iterator43 = this._dockedGroup[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
-                            var _window20 = _step43.value;
-
-                            _window20._window.hide(callback.ref());
-                        }
-                    } catch (err) {
-                        _didIteratorError43 = true;
-                        _iteratorError43 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion43 && _iterator43.return) {
-                                _iterator43.return();
-                            }
-                        } finally {
-                            if (_didIteratorError43) {
-                                throw _iteratorError43;
-                            }
-                        }
-                    }
-                };
-
-                Window.prototype.restore = function (callback) {
-                    if (!this._ready) {
-                        throw "restore can't be called on an unready window";
-                    }
-
-                    callback = new SyncCallback(callback);
                     var _iteratorNormalCompletion44 = true;
                     var _didIteratorError44 = false;
                     var _iteratorError44 = undefined;
 
                     try {
                         for (var _iterator44 = this._dockedGroup[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
-                            var _window21 = _step44.value;
+                            var _window19 = _step44.value;
 
-                            _window21._window.restore(callback.ref());
+                            _window19._window.show(callback.ref());
                         }
                     } catch (err) {
                         _didIteratorError44 = true;
@@ -3900,26 +3989,21 @@
                     }
                 };
 
-                Window.prototype.bringToFront = function (callback) {
+                Window.prototype.hide = function (callback) {
                     if (!this._ready) {
-                        throw "bringToFront can't be called on an unready window";
+                        throw "hide can't be called on an unready window";
                     }
-                    var thisWindow = this;
 
-                    var beforeCallback = new SyncCallback(function () {
-                        thisWindow._window.bringToFront(callback);
-                    });
+                    callback = new SyncCallback(callback);
                     var _iteratorNormalCompletion45 = true;
                     var _didIteratorError45 = false;
                     var _iteratorError45 = undefined;
 
                     try {
                         for (var _iterator45 = this._dockedGroup[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
-                            var _window22 = _step45.value;
+                            var _window20 = _step45.value;
 
-                            if (_window22 !== this) {
-                                _window22._window.bringToFront(beforeCallback.ref());
-                            }
+                            _window20._window.hide(callback.ref());
                         }
                     } catch (err) {
                         _didIteratorError45 = true;
@@ -3937,26 +4021,21 @@
                     }
                 };
 
-                Window.prototype.focus = function (callback) {
+                Window.prototype.restore = function (callback) {
                     if (!this._ready) {
-                        throw "focus can't be called on an unready window";
+                        throw "restore can't be called on an unready window";
                     }
-                    var thisWindow = this;
 
-                    var beforeCallback = new SyncCallback(function () {
-                        thisWindow._window.focus(callback);
-                    });
+                    callback = new SyncCallback(callback);
                     var _iteratorNormalCompletion46 = true;
                     var _didIteratorError46 = false;
                     var _iteratorError46 = undefined;
 
                     try {
                         for (var _iterator46 = this._dockedGroup[Symbol.iterator](), _step46; !(_iteratorNormalCompletion46 = (_step46 = _iterator46.next()).done); _iteratorNormalCompletion46 = true) {
-                            var _window23 = _step46.value;
+                            var _window21 = _step46.value;
 
-                            if (_window23 !== this) {
-                                _window23._window.focus(beforeCallback.ref());
-                            }
+                            _window21._window.restore(callback.ref());
                         }
                     } catch (err) {
                         _didIteratorError46 = true;
@@ -3969,6 +4048,80 @@
                         } finally {
                             if (_didIteratorError46) {
                                 throw _iteratorError46;
+                            }
+                        }
+                    }
+                };
+
+                Window.prototype.bringToFront = function (callback) {
+                    if (!this._ready) {
+                        throw "bringToFront can't be called on an unready window";
+                    }
+                    var thisWindow = this;
+
+                    var beforeCallback = new SyncCallback(function () {
+                        thisWindow._window.bringToFront(callback);
+                    });
+                    var _iteratorNormalCompletion47 = true;
+                    var _didIteratorError47 = false;
+                    var _iteratorError47 = undefined;
+
+                    try {
+                        for (var _iterator47 = this._dockedGroup[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
+                            var _window22 = _step47.value;
+
+                            if (_window22 !== this) {
+                                _window22._window.bringToFront(beforeCallback.ref());
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError47 = true;
+                        _iteratorError47 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion47 && _iterator47.return) {
+                                _iterator47.return();
+                            }
+                        } finally {
+                            if (_didIteratorError47) {
+                                throw _iteratorError47;
+                            }
+                        }
+                    }
+                };
+
+                Window.prototype.focus = function (callback) {
+                    if (!this._ready) {
+                        throw "focus can't be called on an unready window";
+                    }
+                    var thisWindow = this;
+
+                    var beforeCallback = new SyncCallback(function () {
+                        thisWindow._window.focus(callback);
+                    });
+                    var _iteratorNormalCompletion48 = true;
+                    var _didIteratorError48 = false;
+                    var _iteratorError48 = undefined;
+
+                    try {
+                        for (var _iterator48 = this._dockedGroup[Symbol.iterator](), _step48; !(_iteratorNormalCompletion48 = (_step48 = _iterator48.next()).done); _iteratorNormalCompletion48 = true) {
+                            var _window23 = _step48.value;
+
+                            if (_window23 !== this) {
+                                _window23._window.focus(beforeCallback.ref());
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError48 = true;
+                        _iteratorError48 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion48 && _iterator48.return) {
+                                _iterator48.return();
+                            }
+                        } finally {
+                            if (_didIteratorError48) {
+                                throw _iteratorError48;
                             }
                         }
                     }
@@ -3996,29 +4149,29 @@
                     var deltaPos = new Position(left, top).subtract(this.getPosition());
 
                     callback = new SyncCallback(callback);
-                    var _iteratorNormalCompletion47 = true;
-                    var _didIteratorError47 = false;
-                    var _iteratorError47 = undefined;
+                    var _iteratorNormalCompletion49 = true;
+                    var _didIteratorError49 = false;
+                    var _iteratorError49 = undefined;
 
                     try {
-                        for (var _iterator47 = this._dockedGroup[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
-                            var _window24 = _step47.value;
+                        for (var _iterator49 = this._dockedGroup[Symbol.iterator](), _step49; !(_iteratorNormalCompletion49 = (_step49 = _iterator49.next()).done); _iteratorNormalCompletion49 = true) {
+                            var _window24 = _step49.value;
 
                             var pos = _window24.getPosition().add(deltaPos);
                             _window24._bounds.moveTo(pos);
                             _window24._window.moveTo(pos.left, pos.top, callback.ref());
                         }
                     } catch (err) {
-                        _didIteratorError47 = true;
-                        _iteratorError47 = err;
+                        _didIteratorError49 = true;
+                        _iteratorError49 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion47 && _iterator47.return) {
-                                _iterator47.return();
+                            if (!_iteratorNormalCompletion49 && _iterator49.return) {
+                                _iterator49.return();
                             }
                         } finally {
-                            if (_didIteratorError47) {
-                                throw _iteratorError47;
+                            if (_didIteratorError49) {
+                                throw _iteratorError49;
                             }
                         }
                     }
@@ -4034,29 +4187,29 @@
                     var deltaPos = new Position(deltaLeft, deltaTop);
 
                     callback = new SyncCallback(callback);
-                    var _iteratorNormalCompletion48 = true;
-                    var _didIteratorError48 = false;
-                    var _iteratorError48 = undefined;
+                    var _iteratorNormalCompletion50 = true;
+                    var _didIteratorError50 = false;
+                    var _iteratorError50 = undefined;
 
                     try {
-                        for (var _iterator48 = this._dockedGroup[Symbol.iterator](), _step48; !(_iteratorNormalCompletion48 = (_step48 = _iterator48.next()).done); _iteratorNormalCompletion48 = true) {
-                            var _window25 = _step48.value;
+                        for (var _iterator50 = this._dockedGroup[Symbol.iterator](), _step50; !(_iteratorNormalCompletion50 = (_step50 = _iterator50.next()).done); _iteratorNormalCompletion50 = true) {
+                            var _window25 = _step50.value;
 
                             var pos = _window25.getPosition().add(deltaPos);
                             _window25._bounds.moveTo(pos);
                             _window25._window.moveTo(pos.left, pos.top, callback.ref());
                         }
                     } catch (err) {
-                        _didIteratorError48 = true;
-                        _iteratorError48 = err;
+                        _didIteratorError50 = true;
+                        _iteratorError50 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion48 && _iterator48.return) {
-                                _iterator48.return();
+                            if (!_iteratorNormalCompletion50 && _iterator50.return) {
+                                _iterator50.return();
                             }
                         } finally {
-                            if (_didIteratorError48) {
-                                throw _iteratorError48;
+                            if (_didIteratorError50) {
+                                throw _iteratorError50;
                             }
                         }
                     }
@@ -4094,13 +4247,13 @@
                     }
 
                     // Loop through all windows in otherGroup and add them to this's group:
-                    var _iteratorNormalCompletion49 = true;
-                    var _didIteratorError49 = false;
-                    var _iteratorError49 = undefined;
+                    var _iteratorNormalCompletion51 = true;
+                    var _didIteratorError51 = false;
+                    var _iteratorError51 = undefined;
 
                     try {
-                        for (var _iterator49 = other._dockedGroup[Symbol.iterator](), _step49; !(_iteratorNormalCompletion49 = (_step49 = _iterator49.next()).done); _iteratorNormalCompletion49 = true) {
-                            var _other5 = _step49.value;
+                        for (var _iterator51 = other._dockedGroup[Symbol.iterator](), _step51; !(_iteratorNormalCompletion51 = (_step51 = _iterator51.next()).done); _iteratorNormalCompletion51 = true) {
+                            var _other5 = _step51.value;
 
                             this._dockedGroup.push(_other5);
                             // Sharing the array between window objects makes it easier to manage:
@@ -4110,16 +4263,16 @@
                         //console.log("dock", thisWindow._dockedGroup);
                         // TODO: Check if otherGroup is touching
                     } catch (err) {
-                        _didIteratorError49 = true;
-                        _iteratorError49 = err;
+                        _didIteratorError51 = true;
+                        _iteratorError51 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion49 && _iterator49.return) {
-                                _iterator49.return();
+                            if (!_iteratorNormalCompletion51 && _iterator51.return) {
+                                _iterator51.return();
                             }
                         } finally {
-                            if (_didIteratorError49) {
-                                throw _iteratorError49;
+                            if (_didIteratorError51) {
+                                throw _iteratorError51;
                             }
                         }
                     }
@@ -4142,27 +4295,27 @@
                     if (!this.emit("drag-start")) {
                         return;
                     } // Allow preventing drag
-                    var _iteratorNormalCompletion50 = true;
-                    var _didIteratorError50 = false;
-                    var _iteratorError50 = undefined;
+                    var _iteratorNormalCompletion52 = true;
+                    var _didIteratorError52 = false;
+                    var _iteratorError52 = undefined;
 
                     try {
-                        for (var _iterator50 = this._dockedGroup[Symbol.iterator](), _step50; !(_iteratorNormalCompletion50 = (_step50 = _iterator50.next()).done); _iteratorNormalCompletion50 = true) {
-                            var _window26 = _step50.value;
+                        for (var _iterator52 = this._dockedGroup[Symbol.iterator](), _step52; !(_iteratorNormalCompletion52 = (_step52 = _iterator52.next()).done); _iteratorNormalCompletion52 = true) {
+                            var _window26 = _step52.value;
 
                             _window26._dragStartPos = _window26.getPosition();
                         }
                     } catch (err) {
-                        _didIteratorError50 = true;
-                        _iteratorError50 = err;
+                        _didIteratorError52 = true;
+                        _iteratorError52 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion50 && _iterator50.return) {
-                                _iterator50.return();
+                            if (!_iteratorNormalCompletion52 && _iterator52.return) {
+                                _iterator52.return();
                             }
                         } finally {
-                            if (_didIteratorError50) {
-                                throw _iteratorError50;
+                            if (_didIteratorError52) {
+                                throw _iteratorError52;
                             }
                         }
                     }
@@ -4186,13 +4339,13 @@
                     deltaLeft += snapDelta.left || 0;
                     deltaTop += snapDelta.top || 0;
 
-                    var _iteratorNormalCompletion51 = true;
-                    var _didIteratorError51 = false;
-                    var _iteratorError51 = undefined;
+                    var _iteratorNormalCompletion53 = true;
+                    var _didIteratorError53 = false;
+                    var _iteratorError53 = undefined;
 
                     try {
-                        for (var _iterator51 = this._dockedGroup[Symbol.iterator](), _step51; !(_iteratorNormalCompletion51 = (_step51 = _iterator51.next()).done); _iteratorNormalCompletion51 = true) {
-                            var _other6 = _step51.value;
+                        for (var _iterator53 = this._dockedGroup[Symbol.iterator](), _step53; !(_iteratorNormalCompletion53 = (_step53 = _iterator53.next()).done); _iteratorNormalCompletion53 = true) {
+                            var _other6 = _step53.value;
 
                             var pos = _other6._dragStartPos;
 
@@ -4206,16 +4359,16 @@
                             _other6._window.moveTo(pos.left + deltaLeft, pos.top + deltaTop);
                         }
                     } catch (err) {
-                        _didIteratorError51 = true;
-                        _iteratorError51 = err;
+                        _didIteratorError53 = true;
+                        _iteratorError53 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion51 && _iterator51.return) {
-                                _iterator51.return();
+                            if (!_iteratorNormalCompletion53 && _iterator53.return) {
+                                _iterator53.return();
                             }
                         } finally {
-                            if (_didIteratorError51) {
-                                throw _iteratorError51;
+                            if (_didIteratorError53) {
+                                throw _iteratorError53;
                             }
                         }
                     }
@@ -4233,27 +4386,27 @@
                         }
                     }
 
-                    var _iteratorNormalCompletion52 = true;
-                    var _didIteratorError52 = false;
-                    var _iteratorError52 = undefined;
+                    var _iteratorNormalCompletion54 = true;
+                    var _didIteratorError54 = false;
+                    var _iteratorError54 = undefined;
 
                     try {
-                        for (var _iterator52 = this._dockedGroup[Symbol.iterator](), _step52; !(_iteratorNormalCompletion52 = (_step52 = _iterator52.next()).done); _iteratorNormalCompletion52 = true) {
-                            var _window27 = _step52.value;
+                        for (var _iterator54 = this._dockedGroup[Symbol.iterator](), _step54; !(_iteratorNormalCompletion54 = (_step54 = _iterator54.next()).done); _iteratorNormalCompletion54 = true) {
+                            var _window27 = _step54.value;
 
                             delete _window27._dragStartPos;
                         }
                     } catch (err) {
-                        _didIteratorError52 = true;
-                        _iteratorError52 = err;
+                        _didIteratorError54 = true;
+                        _iteratorError54 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion52 && _iterator52.return) {
-                                _iterator52.return();
+                            if (!_iteratorNormalCompletion54 && _iterator54.return) {
+                                _iterator54.return();
                             }
                         } finally {
-                            if (_didIteratorError52) {
-                                throw _iteratorError52;
+                            if (_didIteratorError54) {
+                                throw _iteratorError54;
                             }
                         }
                     }
@@ -4321,29 +4474,29 @@
                 Window.current.bringToFront();
             });
             Window.current._window.addEventListener("restored", function () {
-                var _iteratorNormalCompletion53 = true;
-                var _didIteratorError53 = false;
-                var _iteratorError53 = undefined;
+                var _iteratorNormalCompletion55 = true;
+                var _didIteratorError55 = false;
+                var _iteratorError55 = undefined;
 
                 try {
-                    for (var _iterator53 = Window.current._dockedGroup[Symbol.iterator](), _step53; !(_iteratorNormalCompletion53 = (_step53 = _iterator53.next()).done); _iteratorNormalCompletion53 = true) {
-                        var other = _step53.value;
+                    for (var _iterator55 = Window.current._dockedGroup[Symbol.iterator](), _step55; !(_iteratorNormalCompletion55 = (_step55 = _iterator55.next()).done); _iteratorNormalCompletion55 = true) {
+                        var other = _step55.value;
 
                         if (other !== Window.current) {
                             other._window.restore();
                         }
                     }
                 } catch (err) {
-                    _didIteratorError53 = true;
-                    _iteratorError53 = err;
+                    _didIteratorError55 = true;
+                    _iteratorError55 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion53 && _iterator53.return) {
-                            _iterator53.return();
+                        if (!_iteratorNormalCompletion55 && _iterator55.return) {
+                            _iterator55.return();
                         }
                     } finally {
-                        if (_didIteratorError53) {
-                            throw _iteratorError53;
+                        if (_didIteratorError55) {
+                            throw _iteratorError55;
                         }
                     }
                 }
