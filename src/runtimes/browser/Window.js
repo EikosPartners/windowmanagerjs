@@ -63,8 +63,14 @@
 				let newWindow = windowfactory._launcher.document.createElement("iframe");
 				newWindow.src = config.url;
 				newWindow.style.position = "absolute";
-				newWindow.style.left = (config.left || ((windowfactory._launcher.innerWidth - config.width) / 2)) + "px";
-				newWindow.style.top = (config.top || ((windowfactory._launcher.innerHeight - config.height) / 2)) + "px";
+				if (!Number.isFinite(config.left)) {
+					config.left = (windowfactory._launcher.innerWidth - config.width) / 2;
+				}
+				newWindow.style.left = config.left  + "px";
+				if (!Number.isFinite(config.top)) {
+					config.top = (windowfactory._launcher.innerHeight - config.height) / 2;
+				}
+				newWindow.style.top = config.top + "px";
 				newWindow.style.width = config.width + "px";
 				newWindow.style.height = config.height + "px";
 				newWindow.style.minWidth = this._minSize.left + "px";
@@ -285,8 +291,8 @@
 			let size = new Position(width, height);
 
 			this.undock();
-			this._window.width = size.left;
-			this._window.height = size.top;
+			this._window.width = size.left + "px";
+			this._window.height = size.top + "px";
 			if (callback) { callback(); }
 		};
 
@@ -344,8 +350,8 @@
 			const size = new Size(width, height);
 
 			this.undock(); // TODO: Support changing size when docked.
-			this._window.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, size.left)) + "px";
-			this._window.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, size.top)) + "px";
+			this._window.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, size.left)) + "px";
+			this._window.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, size.top)) + "px";
 			// Clear transform:
 			for (let transformPropName of transformPropNames) {
               this._window.style[transformPropName] = "";

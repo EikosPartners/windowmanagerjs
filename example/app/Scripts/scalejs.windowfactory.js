@@ -368,15 +368,13 @@
         windowfactory.isBackend = true;
         if (typeof require === "function" && require.main && require.main.filename) {
             // We are running in an Electron Window Backend's Runtime:
-            let _require = require;
-            global.nodeRequire = _require;
+            global.nodeRequire = require;
             global.nodeRequire.windowfactoryPath = __filename;
-            let workingDir = global.nodeRequire("path").dirname(global.nodeRequire.main.filename);
-            global.workingDir = workingDir;
-            process.once("loaded", function () {
-                global.nodeRequire = _require;
-                global.workingDir = nodeRequire.main.filename;
-            });
+            global.workingDir = global.nodeRequire("path").dirname(global.nodeRequire.main.filename);
+            //process.once("loaded", function () {
+            //global.nodeRequire = _require;
+            //global.workingDir = nodeRequire.main.filename;
+            //});
         }
     } else if (typeof window !== "undefined" && window) {
         windowfactory.isRenderer = true;
@@ -1451,8 +1449,14 @@
                         var newWindow = windowfactory._launcher.document.createElement("iframe");
                         newWindow.src = config.url;
                         newWindow.style.position = "absolute";
-                        newWindow.style.left = (config.left || (windowfactory._launcher.innerWidth - config.width) / 2) + "px";
-                        newWindow.style.top = (config.top || (windowfactory._launcher.innerHeight - config.height) / 2) + "px";
+                        if (!Number.isFinite(config.left)) {
+                            config.left = (windowfactory._launcher.innerWidth - config.width) / 2;
+                        }
+                        newWindow.style.left = config.left + "px";
+                        if (!Number.isFinite(config.top)) {
+                            config.top = (windowfactory._launcher.innerHeight - config.height) / 2;
+                        }
+                        newWindow.style.top = config.top + "px";
                         newWindow.style.width = config.width + "px";
                         newWindow.style.height = config.height + "px";
                         newWindow.style.minWidth = this._minSize.left + "px";
@@ -1834,8 +1838,8 @@
                     var size = new Position(width, height);
 
                     this.undock();
-                    this._window.width = size.left;
-                    this._window.height = size.top;
+                    this._window.width = size.left + "px";
+                    this._window.height = size.top + "px";
                     if (callback) {
                         callback();
                     }
@@ -1980,8 +1984,8 @@
                     var size = new Size(width, height);
 
                     this.undock(); // TODO: Support changing size when docked.
-                    this._window.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, size.left)) + "px";
-                    this._window.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, size.top)) + "px";
+                    this._window.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, size.left)) + "px";
+                    this._window.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, size.top)) + "px";
                     // Clear transform:
                     var _iteratorNormalCompletion17 = true;
                     var _didIteratorError17 = false;
@@ -4056,6 +4060,15 @@
                             }
                         }
                     }
+                };
+
+                Window.prototype.setSize = function (width, height, callback) {
+                    if (!this._ready) {
+                        throw "setMaxSize can't be called on an unready window";
+                    }
+                    var size = new Size(width, height);
+
+                    this._window.resizeTo(size.left, size.top, "top-left", callback);
                 };
 
                 Window.prototype.setBounds = function (left, top, right, bottom, callback) {

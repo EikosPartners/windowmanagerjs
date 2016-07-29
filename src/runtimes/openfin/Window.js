@@ -283,6 +283,13 @@
 			}
 		};
 
+		Window.prototype.setSize = function (width, height, callback) {
+			if (!this._ready) { throw "setMaxSize can't be called on an unready window"; }
+			const size = new Size(width, height);
+
+			this._window.resizeTo(size.left, size.top, "top-left", callback);
+		};
+
 		Window.prototype.setBounds = function (left, top, right, bottom, callback) {
 			if (!this._ready) { throw "resizeTo can't be called on an unready window"; }
 			let bounds = new BoundingBox(left, top, right, bottom);
