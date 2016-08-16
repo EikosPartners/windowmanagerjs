@@ -131,6 +131,8 @@
 			this._window.addEventListener("bounds-changed", onBoundsChange);
 
             function onClose() {
+				// TODO: Is it possible that onClose might not be called when the window is closed?
+				//       What if this event is set up on a window that has closed already, and then this window closes?
                 thisWindow._isClosed = true;
 				delete windowfactory._windows[thisWindow._window.name];
 
@@ -138,10 +140,11 @@
 				thisWindow.undock();
 
 				// Move children to parent:
+				const parent = thisWindow.getParent();
 				for (const child of thisWindow.getChildren()) {
 					// We use getChildren to have a copy of the list, so child.setParent doesn't modify this loop's list!
 					// TODO: Optimize this loop, by not making a copy of children, and not executing splice in each setParent!
-					child.setParent(child);
+					child.setParent(parent);
 				}
 				thisWindow.setParent(undefined); // Remove from parent
 

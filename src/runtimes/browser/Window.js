@@ -254,10 +254,11 @@
 			this.undock();
 
 			// Move children to parent:
+			const parent = this.getParent();
 			for (const child of this.getChildren()) {
 				// We use getChildren to have a copy of the list, so child.setParent doesn't modify this loop's list!
 				// TODO: Optimize this loop, by not making a copy of children, and not executing splice in each setParent!
-				child.setParent(child);
+				child.setParent(parent);
 			}
 			this.setParent(undefined); // Remove from parent
 
@@ -539,6 +540,9 @@
 
 				other._window.style.left = (pos.left + deltaLeft) + "px";
 				other._window.style.top = (pos.top + deltaTop) + "px";
+				//let transformMatrix = [1, 0, 0, 1, pos.left + deltaLeft, pos.top + deltaTop];
+				//other._window.style.transform = "matrix(" + transformMatrix.join() + ")";
+				//other._window.style.transform = "translate(" + (pos.left + deltaLeft) + "px," + (pos.top + deltaTop) + "px)";
 				other.emit("move");
 			}
 		};
