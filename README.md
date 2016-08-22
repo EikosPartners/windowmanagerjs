@@ -27,4 +27,4 @@ See example/README.md
 `"scalejs.windowfactory": "Scripts/scalejs.windowfactory",`
 
 ## API Information
-[API Wiki](https://cdn.rawgit.com/EikosPartners/scalejs.windowfactory/master/doc/index.html)
+[API Wiki](https://eikospartners.github.io/scalejs.windowfactory/)
