@@ -4,12 +4,12 @@ This extension is designed to support multiple different different encapsulation
 
 
 Runtimes supported:  
+* Web Browsers (Chrome, Firefox, IE, Edge, ect.)  
 * [OpenFin](https://openfin.co/)  
 * [Electron](http://electron.atom.io/)  
 
 Future runtimes:  
 * [NW.js](http://nwjs.io/)  
-* Web Browsers (Chrome, Firefox, IE, Edge, ect.)  
 
 ## Running the Example Demo
 See example/README.md

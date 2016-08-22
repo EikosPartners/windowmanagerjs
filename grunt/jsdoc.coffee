@@ -1,4 +1,8 @@
-module.exports =
+module.exports = ( grunt ) ->
+    options = grunt.file.readJSON 'jsdoc.json'
+
     dist:
-        src: ['src/**/*.js', 'README.md']
-        dest: 'docs'
+        src: []
+        dest: "docs"
+        options:
+            configure: "jsdoc.json"

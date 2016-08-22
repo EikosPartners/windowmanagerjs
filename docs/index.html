@@ -2,32 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>Home - Documentation</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
-
 <body>
 
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="EventHandler.html">EventHandler</a><ul class='methods'><li data-type='method'><a href="EventHandler.html#addPipe">addPipe</a></li><li data-type='method'><a href="EventHandler.html#clearEvent">clearEvent</a></li><li data-type='method'><a href="EventHandler.html#emit">emit</a></li><li data-type='method'><a href="EventHandler.html#off">off</a></li><li data-type='method'><a href="EventHandler.html#on">on</a></li><li data-type='method'><a href="EventHandler.html#once">once</a></li><li data-type='method'><a href="EventHandler.html#removePipe">removePipe</a></li></ul></li><li><a href="module-geometry.BoundingBox.html">BoundingBox</a></li><li><a href="module-geometry.CollisionMesh.html">CollisionMesh</a></li><li><a href="module-geometry.Position.html">Position</a></li><li><a href="module-geometry.Size.html">Size</a></li><li><a href="module-geometry.Vector.html">Vector</a><ul class='methods'><li data-type='method'><a href="module-geometry.Vector.html#clone">clone</a></li><li data-type='method'><a href="module-geometry.Vector.html#getBoundingBox">getBoundingBox</a></li><li data-type='method'><a href="module-geometry.Vector.html#getCollisionMesh">getCollisionMesh</a></li><li data-type='method'><a href="module-geometry.Vector.html#getVector">getVector</a></li></ul></li><li><a href="Window.html">Window</a><ul class='methods'><li data-type='method'><a href="Window.html#.getCurrent">getCurrent</a></li><li data-type='method'><a href="Window.html#bringToFront">bringToFront</a></li><li data-type='method'><a href="Window.html#close">close</a></li><li data-type='method'><a href="Window.html#focus">focus</a></li><li data-type='method'><a href="Window.html#getBounds">getBounds</a></li><li data-type='method'><a href="Window.html#getHeight">getHeight</a></li><li data-type='method'><a href="Window.html#getPosition">getPosition</a></li><li data-type='method'><a href="Window.html#getSize">getSize</a></li><li data-type='method'><a href="Window.html#getWidth">getWidth</a></li><li data-type='method'><a href="Window.html#hide">hide</a></li><li data-type='method'><a href="Window.html#isClosed">isClosed</a></li><li data-type='method'><a href="Window.html#isReady">isReady</a></li><li data-type='method'><a href="Window.html#maximize">maximize</a></li><li data-type='method'><a href="Window.html#minimize">minimize</a></li><li data-type='method'><a href="Window.html#moveBy">moveBy</a></li><li data-type='method'><a href="Window.html#moveTo">moveTo</a></li><li data-type='method'><a href="Window.html#resizeTo">resizeTo</a></li><li data-type='method'><a href="Window.html#restore">restore</a></li><li data-type='method'><a href="Window.html#setBounds">setBounds</a></li><li data-type='method'><a href="Window.html#show">show</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-geometry.html">geometry</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
 <div id="main">
-
-    <h1 class="page-title">Home</h1>
+    
 
     
 
 
 
     
-
-
-    <h3> </h3>
-
 
 
 
@@ -40,19 +46,17 @@
     
 
 
-
-
-    <section>
+    <section class="readme">
         <article><h1>scalejs.windowfactory</h1><p>An extension for scalejs to manage multiple dockable HTML windows.<br>This extension is designed to support multiple different different encapsulation runtimes.  </p>
 <p>Runtimes supported:  </p>
 <ul>
+<li>Web Browsers (Chrome, Firefox, IE, Edge, ect.)  </li>
 <li><a href="https://openfin.co/">OpenFin</a>  </li>
 <li><a href="http://electron.atom.io/">Electron</a>  </li>
 </ul>
 <p>Future runtimes:  </p>
 <ul>
 <li><a href="http://nwjs.io/">NW.js</a>  </li>
-<li>Web Browsers (Chrome, Firefox, IE, Edge, ect.)  </li>
 </ul>
 <h2>Running the Example Demo</h2><p>See example/README.md</p>
 <h2>Installing via Bower Install</h2><p><code>bower install https://github.com/EikosPartners/scalejs.windowfactory.git</code></p>
@@ -66,7 +70,7 @@
 <li>Add the script to the <code>/Scripts/</code> folder in your scalejs application.</li>
 <li>[Optional] Add the script to your <code>config.js</code> paths to shorten the define. Example:<br><code>&quot;scalejs.windowfactory&quot;: &quot;Scripts/scalejs.windowfactory&quot;,</code></li>
 </ol>
-<h2>API Information</h2><p><a href="https://cdn.rawgit.com/EikosPartners/scalejs.windowfactory/master/doc/index.html">API Wiki</a></p></article>
+<h2>API Information</h2><p><a href="https://eikospartners.github.io/scalejs.windowfactory/">API Wiki</a></p></article>
     </section>
 
 
@@ -76,17 +80,13 @@
 
 </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-geometry.html">geometry</a></li></ul><h3>Classes</h3><ul><li><a href="EventHandler.html">EventHandler</a></li><li><a href="module-geometry.BoundingBox.html">BoundingBox</a></li><li><a href="module-geometry.CollisionMesh.html">CollisionMesh</a></li><li><a href="module-geometry.Position.html">Position</a></li><li><a href="module-geometry.Size.html">Size</a></li><li><a href="module-geometry.Vector.html">Vector</a></li><li><a href="Window.html">Window</a></li></ul><h3><a href="global.html">Global</a></h3>
-</nav>
-
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Aug 22 2016 09:50:49 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Aug 22 2016 10:49:01 GMT-0400 (Eastern Daylight Time) using the Minami theme.
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
 </body>
 </html>

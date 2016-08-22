@@ -1,0 +1,17 @@
+{
+    "source": {
+        "include": ["src/", "README.md"],
+        "exclude": []
+    },
+    "templates": {
+        "default": {
+            "outputSourceFiles": false
+        }
+    },
+    "opts": {
+        "private": true,
+        "recurse": true,
+        "template": "./node_modules/minami",
+        "destination": "./docs/"
+    }
+}
