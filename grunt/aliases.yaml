@@ -13,11 +13,11 @@ build:
     - 'compile'
     - 'concat'
     - 'babel'
-    - 'uglify'
     - 'copy:build'
 
 release:
     - 'build'
+    - 'uglify'
     - 'copy:release'
 
 test:

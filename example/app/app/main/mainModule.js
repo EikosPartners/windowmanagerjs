@@ -19,6 +19,10 @@ define([
             template = sandbox.mvvm.template,
             mainWindow = windowfactory.Window.getCurrent();
 
+        windowfactory.on("window-create", function (window) {
+            console.debug("Window Created:", window);
+        });
+
         var viewModel = mainViewModel(this, sandbox);
 
         root(template('main_template', viewModel));

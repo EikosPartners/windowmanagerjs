@@ -1,6 +1,6 @@
 ﻿/*global require*/
 define([
-    'scalejs!application/' + (location.search.replace(/^\?/, "") || "main"),
+    'scalejs!application/main',
     'scalejs.windowfactory'
 ], function (
     application

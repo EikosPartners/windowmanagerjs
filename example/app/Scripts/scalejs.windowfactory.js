@@ -31,43 +31,323 @@
         return target;
     };
 
-    /* global fin*/
-    var windowfactory = {
-        isRenderer: false,
-        isBackend: false,
-        version: "0.2.1alpha"
+    /**
+     * An EventHandler
+     * @constructor
+     * @alias EventHandler
+     * @param {string[]} [acceptedEventHandlers=[]] - String of allowed events.
+     */
+    function EventHandler() {
+        var acceptedEventHandlers = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
+        this._eventListeners = {};
+        this._eventPipes = [];
+        // TODO: Look into making these special properties that can't be deleted?
+        for (var _iterator = acceptedEventHandlers, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+            var _ref;
+
+            if (_isArray) {
+                if (_i >= _iterator.length) break;
+                _ref = _iterator[_i++];
+            } else {
+                _i = _iterator.next();
+                if (_i.done) break;
+                _ref = _i.value;
+            }
+
+            var acceptedEventHandler = _ref;
+
+            this._eventListeners[acceptedEventHandler] = [];
+        }
+    }
+
+    /**
+     * @method
+     * @param {string}
+     * @param {callback}
+     */
+    EventHandler.prototype.on = function (eventNames, eventListener) {
+        eventNames = eventNames.toLowerCase().split(" ");
+
+        for (var _iterator2 = eventNames, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
+            var _ref2;
+
+            if (_isArray2) {
+                if (_i2 >= _iterator2.length) break;
+                _ref2 = _iterator2[_i2++];
+            } else {
+                _i2 = _iterator2.next();
+                if (_i2.done) break;
+                _ref2 = _i2.value;
+            }
+
+            var eventName = _ref2;
+
+            // Check if this event can be subscribed to via this function:
+            if (this._eventListeners[eventName] === undefined) {
+                continue;
+            }
+
+            // Check if eventListener is a function:
+            if (!eventListener || typeof eventListener.constructor !== "function") {
+                throw "on requires argument 'eventListener' of type Function";
+            }
+
+            // Check if eventListener is already added:
+            if (this._eventListeners[eventName].indexOf(eventListener) >= 0) {
+                continue;
+            }
+
+            // Add event listener:
+            this._eventListeners[eventName].push(eventListener);
+        }
     };
 
-    if (typeof global !== "undefined" && global) {
+    /**
+     * @method
+     * @param {string}
+     * @param {callback}
+     */
+    EventHandler.prototype.once = function (eventName, eventListener) {
+        function onceListener() {
+            this.off(eventName, onceListener);
+            eventListener.apply(this, arguments);
+        }
+        this.on(eventName, onceListener);
+    };
+
+    /**
+     * @method
+     * @param {string}
+     * @param {callback}
+     */
+    EventHandler.prototype.off = function (eventNames, eventListener) {
+        eventNames = eventNames.toLowerCase().split(" ");
+
+        for (var _iterator3 = eventNames, _isArray3 = Array.isArray(_iterator3), _i3 = 0, _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator]();;) {
+            var _ref3;
+
+            if (_isArray3) {
+                if (_i3 >= _iterator3.length) break;
+                _ref3 = _iterator3[_i3++];
+            } else {
+                _i3 = _iterator3.next();
+                if (_i3.done) break;
+                _ref3 = _i3.value;
+            }
+
+            var eventName = _ref3;
+
+            // If event listeners don't exist, bail:
+            if (this._eventListeners[eventName] === undefined) {
+                return;
+            }
+
+            // Check if eventListener is a function:
+            if (!eventListener || typeof eventListener.constructor !== "function") {
+                throw "off requires argument 'eventListener' of type Function";
+            }
+
+            // Remove event listener, if exists:
+            var index = this._eventListeners[eventName].indexOf(eventListener);
+            if (index >= 0) {
+                this._eventListeners[eventName].splice(index, 1);
+            }
+        }
+    };
+
+    /**
+     * @method
+     * @param {string}
+     */
+    EventHandler.prototype.clearEvent = function (eventNames) {
+        eventNames = eventNames.toLowerCase();
+
+        for (var _iterator4 = eventNames, _isArray4 = Array.isArray(_iterator4), _i4 = 0, _iterator4 = _isArray4 ? _iterator4 : _iterator4[Symbol.iterator]();;) {
+            var _ref4;
+
+            if (_isArray4) {
+                if (_i4 >= _iterator4.length) break;
+                _ref4 = _iterator4[_i4++];
+            } else {
+                _i4 = _iterator4.next();
+                if (_i4.done) break;
+                _ref4 = _i4.value;
+            }
+
+            var eventName = _ref4;
+
+            // If event listeners don't exist, bail:
+            if (this._eventListeners[eventName] === undefined) {
+                return;
+            }
+
+            this._eventListeners[eventName] = [];
+        }
+    };
+
+    /**
+     * @method
+     * @param {string}
+     * @param {...*} args - Arguments to pass to listeners
+     */
+    EventHandler.prototype.emit = function (eventName) {
+        eventName = eventName.toLowerCase();
+
+        // If event listeners don't exist, bail:
+        if (this._eventListeners[eventName] === undefined) {
+            return;
+        }
+
+        // Get arguments:
+        var args = new Array(arguments.length - 1);
+        for (var index = 1; index < arguments.length; index += 1) {
+            args[index - 1] = arguments[index];
+        }
+
+        var returnVal = true;
+        for (var _iterator5 = this._eventListeners[eventName], _isArray5 = Array.isArray(_iterator5), _i5 = 0, _iterator5 = _isArray5 ? _iterator5 : _iterator5[Symbol.iterator]();;) {
+            var _ref5;
+
+            if (_isArray5) {
+                if (_i5 >= _iterator5.length) break;
+                _ref5 = _iterator5[_i5++];
+            } else {
+                _i5 = _iterator5.next();
+                if (_i5.done) break;
+                _ref5 = _i5.value;
+            }
+
+            var eventListener = _ref5;
+
+            // Call listener with the 'this' context as the current window:
+            returnVal = returnVal && eventListener.apply(this, args) !== false;
+        }
+
+        for (var _iterator6 = this._eventPipes, _isArray6 = Array.isArray(_iterator6), _i6 = 0, _iterator6 = _isArray6 ? _iterator6 : _iterator6[Symbol.iterator]();;) {
+            var _ref6;
+
+            if (_isArray6) {
+                if (_i6 >= _iterator6.length) break;
+                _ref6 = _iterator6[_i6++];
+            } else {
+                _i6 = _iterator6.next();
+                if (_i6.done) break;
+                _ref6 = _i6.value;
+            }
+
+            var eventHandler = _ref6;
+
+            // Call handler with the 'this' context as the current window:
+            returnVal = returnVal && eventHandler.emit.apply(eventHandler, arguments) !== false;
+        }
+
+        return returnVal;
+    };
+
+    /**
+     * @method
+     * @param {EventHandler}
+     */
+    EventHandler.prototype.addPipe = function (eventHandler) {
+        // Check if eventHandler is a EventHandler:
+        if (!eventHandler || !eventHandler.emit) {
+            throw "addPipe requires argument 'eventHandler' of type EventHandler";
+        }
+
+        // Check if eventHandler is already added:
+        if (this._eventPipes.indexOf(eventHandler) >= 0) {
+            return;
+        }
+
+        // Add event handler:
+        this._eventPipes.push(eventHandler);
+    };
+
+    /**
+     * @method
+     * @param {EventHandler}
+     */
+    EventHandler.prototype.removePipe = function (eventHandler) {
+        // Check if eventHandler is a EventHandler:
+        if (!eventHandler || !eventHandler.emit) {
+            throw "removePipe requires argument 'eventHandler' of type EventHandler";
+        }
+
+        // Check if eventHandler is already added:
+        if (this._eventPipes.indexOf(eventHandler) >= 0) {
+            return;
+        }
+
+        // Remove eventHandler, if exists:
+        var index = this._eventPipes.indexOf(eventHandler);
+        if (index >= 0) {
+            this._eventPipes.splice(index, 1);
+        }
+    };
+    /* global fin,EventHandler*/
+    var windowfactoryEventNames = ["window-create", "window-close"];
+    var windowfactory = new EventHandler(windowfactoryEventNames);
+    windowfactory.isRenderer = false;
+    windowfactory.isBackend = false;
+    windowfactory.version = "0.6.2alpha";
+
+    function getBrowserInfo() {
+        // Credit: http://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
+        var ua = navigator.userAgent,
+            tem = void 0,
+            M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+        if (/trident/i.test(M[1])) {
+            tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+            return { name: "IE ", version: tem[1] || "" };
+        }
+        if (M[1] === "Chrome") {
+            tem = ua.match(/\bOPR\/(\d+)/);
+            if (tem !== null) {
+                return { name: "Opera", version: tem[1] };
+            }
+        }
+        M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, "-?"];
+        if ((tem = ua.match(/version\/(\d+)/i)) !== null) {
+            M.splice(1, 1, tem[1]);
+        }
+        return {
+            name: M[0],
+            version: M[1]
+        };
+    }
+
+    if (typeof window === "undefined" && typeof global !== "undefined" && global) {
         windowfactory.isBackend = true;
-        if (typeof require !== "undefined") {
-            var _require = require;
-            global.nodeRequire = _require;
-            _require.windowfactoryPath = __filename;
-            var path = _require("path");
-            global.workingDir = path.dirname(_require.main.filename);
-            process.once("loaded", function () {
-                //global.nodeRequire = _require;
-                //global.workingDir = nodeRequire.main.filename;
+        if (typeof require === "function" && require.main && require.main.filename) {
+            // We are running in an Electron Window Backend's Runtime:
+            global.nodeRequire = require;
+            global.nodeRequire.windowfactoryPath = __filename;
+            global.workingDir = global.nodeRequire("path").dirname(global.nodeRequire.main.filename);
+            //process.once("loaded", function () {
+            //global.nodeRequire = _require;
+            //global.workingDir = nodeRequire.main.filename;
+            //});
+        }
+    } else if (typeof window !== "undefined" && window) {
+        windowfactory.isRenderer = true;
+        if (window.nodeRequire !== undefined) {
+            // We are running in an Electron Window's Runtime:
+            windowfactory.electronVersion = window.nodeRequire.electronVersion;
+            windowfactory.nodeVersion = window.nodeRequire.nodeVersion;
+
+            var ipcRenderer = window.nodeRequire("electron").ipcRenderer;
+            ipcRenderer.on("window-create", function (event, otherID) {
+                windowfactory.emit("window-create", windowfactory._resolveWindowWithID(otherID));
             });
         }
     }
 
-    if (typeof window !== "undefined" && window) {
-        windowfactory.isRenderer = true;
-        if (window.nodeRequire !== undefined) {
-            windowfactory.electronVersion = window.nodeRequire.electronVersion;
-            windowfactory.nodeVersion = window.nodeRequire.nodeVersion;
-        }
-    }
-
-    if (typeof process !== "undefined" && process && process.versions) {
-        // We are running in Electron Runtime:
+    if (typeof process !== "undefined" && process && process.versions && process.versions.electron) {
+        // We are running in an Electron Runtime:
         global.nodeRequire.electronVersion = windowfactory.electronVersion = global.process.versions.electron;
         global.nodeRequire.nodeVersion = windowfactory.nodeVersion = global.process.versions.node;
-    }
-
-    if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.System) {
+    } else if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.main) {
         (function () {
             // We are running in OpenFin Runtime:
             windowfactory.openfinVersion = "startup";
@@ -98,41 +378,72 @@
                 fin.desktop.System.getVersion(function (version) {
                     windowfactory.openfinVersion = version;
                 }); // TODO: Handle errorCallback
+
                 var app = fin.desktop.Application.getCurrent();
-                console.log(app.getWindow(), window);
-                if (app.getWindow().contentWindow === window) {
+                var mainWindow = app.getWindow().contentWindow;
+
+                if (mainWindow === window) {
                     windowfactory._windows = {};
+                    windowfactory._internalBus = new EventHandler(windowfactoryEventNames);
+                } else {
+                    windowfactory._internalBus = window.parent.windowfactory._internalBus;
                 }
+
+                windowfactory._internalBus.addPipe(windowfactory);
 
                 // Call callbacks:
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
+                for (var _iterator7 = openfinReadyCallbacks, _isArray7 = Array.isArray(_iterator7), _i7 = 0, _iterator7 = _isArray7 ? _iterator7 : _iterator7[Symbol.iterator]();;) {
+                    var _ref7;
 
-                try {
-                    for (var _iterator = openfinReadyCallbacks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var callback = _step.value;
+                    if (_isArray7) {
+                        if (_i7 >= _iterator7.length) break;
+                        _ref7 = _iterator7[_i7++];
+                    } else {
+                        _i7 = _iterator7.next();
+                        if (_i7.done) break;
+                        _ref7 = _i7.value;
+                    }
 
-                        callback();
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
+                    var callback = _ref7;
+
+                    callback();
                 }
-
                 openfinReadyCallbacks = undefined;
             });
         })();
+    } else if (window.nodeRequire === undefined) {
+        // We are running in Browser Runtime:
+        var browser = getBrowserInfo();
+        windowfactory.browserVersion = browser.version;
+        windowfactory.browserRuntime = browser.name;
+        if (window.parent === window) {
+            (function () {
+                // This is the root window:
+                // TODO: What happens if a website uses an iframe to a site that has an app with this extension?
+                windowfactory._windows = [];
+                windowfactory._launcher = window;
+                windowfactory._internalBus = new EventHandler(windowfactoryEventNames);
+                var nextZIndex = 1000; // TODO: Recycle Z-Indexes! In case of a (probably never) overflow!
+                windowfactory._getNextZIndex = function () {
+                    nextZIndex += 1;
+                    return nextZIndex;
+                };
+                windowfactory.isLauncher = true;
+
+                /*document.body.innerHTML = "Test";
+                let stylesheet = document.createElement("style");
+                stylesheet.innerHTML = "html,body{margin:0;padding:0;background:black;color:white}";
+                document.head.appendChild(stylesheet);*/
+            })();
+        } else {
+            windowfactory._windows = window.parent.windowfactory._windows;
+            windowfactory._launcher = window.parent.windowfactory._launcher || window.parent;
+            windowfactory._internalBus = window.parent.windowfactory._internalBus;
+            windowfactory._getNextZIndex = window.parent.windowfactory._getNextZIndex;
+            windowfactory.isLauncher = false;
+        }
+
+        windowfactory._internalBus.addPipe(windowfactory);
     }
 
     if (typeof global !== "undefined" && global) {
@@ -148,7 +459,7 @@
         }
         var thisObj = this;
 
-        this.callback = function () {
+        this._deref = function () {
             thisObj.count -= 1;
             if (thisObj.count <= 0) {
                 callback();
@@ -157,14 +468,20 @@
 
         this.count = 0;
     }
-    SyncCallback.prototype.ref = function () {
+    SyncCallback.prototype.ref = function (callback) {
         this.count += 1;
-        return this.callback;
+        return function () {
+            if (callback) {
+                callback.apply(null, arguments);
+            }
+            this._deref();
+        };
     };
 
     // Runtimes are stitched in after this line.
 
     // After the runtimes, the scalejs.windowfactory.js script is stitched in.
+
     /**
      * This module handles various geometric shapes used in calculations for windowfactory.
      * @module geometry
@@ -277,9 +594,7 @@
                 throw "set requires argument 'other'";
             }
             other = other.getVector();
-            if (other.constructor !== Vector) {
-                throw "set requires argument 'other' to resolve to type Vector";
-            }
+            //if (other.constructor !== Vector) { throw "set requires argument 'other' to resolve to type Vector"; }
 
             this.left = other.left;
             this.top = other.top;
@@ -290,9 +605,7 @@
                 throw "setMin requires argument 'other'";
             }
             other = other.getVector();
-            if (other.constructor !== Vector) {
-                throw "setMin requires argument 'other' to resolve to type Vector";
-            }
+            //if (other.constructor !== Vector) { throw "setMin requires argument 'other' to resolve to type Vector"; }
 
             if (Math.abs(other.left) < Math.abs(this.left) || isNaN(this.left)) {
                 this.left = other.left;
@@ -306,9 +619,7 @@
                 throw "add requires argument 'other'";
             }
             other = other.getVector();
-            if (other.constructor !== Vector) {
-                throw "add requires argument 'other' to resolve to type Vector";
-            }
+            //if (other.constructor !== Vector) { throw "add requires argument 'other' to resolve to type Vector"; }
 
             this.left += other.left;
             this.top += other.top;
@@ -322,9 +633,7 @@
                 throw "subtract requires argument 'other'";
             }
             other = other.getVector();
-            if (other.constructor !== Vector) {
-                throw "subtract requires argument 'other' to resolve to type Vector";
-            }
+            //if (other.constructor !== Vector) { throw "subtract requires argument 'other' to resolve to type Vector"; }
 
             this.left -= other.left;
             this.top -= other.top;
@@ -410,9 +719,9 @@
                 throw "difference requires argument 'other'";
             }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) {
+            /*if (other.constructor !== BoundingBox) {
                 throw "difference requires argument 'other' to resolve to type BoundingBox";
-            }
+            }*/
 
             return new BoundingBox(this.left - other.left, this.top - other.top, this.right - other.right, this.bottom - other.bottom);
         };
@@ -421,9 +730,9 @@
                 throw "getCenteredOnPosition requires argument 'other'";
             }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) {
+            /*if (other.constructor !== BoundingBox) {
                 throw "getCenteredOnPosition requires argument 'other' to resolve to type BoundingBox";
-            }
+            }*/
 
             return other.getCenterPosition().subtract(this.getCenterPosition().subtract(this.getPosition()));
         };
@@ -432,9 +741,9 @@
                 throw "getIntersection requires argument 'other'";
             }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) {
+            /*if (other.constructor !== BoundingBox) {
                 throw "getIntersection requires argument 'other' to resolve to type BoundingBox";
-            }
+            }*/
 
             var left = Math.max(this.left, other.left),
                 top = Math.max(this.top, other.top),
@@ -515,9 +824,9 @@
                 throw "isContains requires argument 'other'";
             }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) {
+            /*if (other.constructor !== BoundingBox) {
                 throw "isContains requires argument 'other' to resolve to type BoundingBox";
-            }
+            }*/
 
             return other.left >= this.left && other.right <= this.right && other.top >= this.top && other.bottom <= this.bottom;
         };
@@ -541,9 +850,9 @@
                 throw "isTouching requires argument 'other'";
             }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) {
+            /*if (other.constructor !== BoundingBox) {
                 throw "isTouching requires argument 'other' to resolve to type BoundingBox";
-            }
+            }*/
 
             return this.top <= other.bottom && this.bottom >= other.top && (this.left === other.right || this.right === other.left) || this.left <= other.right && this.right >= other.left && (this.top === other.bottom || this.bottom === other.top);
         };
@@ -608,9 +917,9 @@
                 throw "getEdgeClosest requires argument 'other'";
             }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) {
+            /*if (other.constructor !== BoundingBox) {
                 throw "getEdgeClosest requires argument 'other' to resolve to type BoundingBox";
-            }
+            }*/
 
             var centerPos = this.getCenterPosition();
             var dis = [];
@@ -648,9 +957,9 @@
             }
             other = other.getBoundingBox();
             snapDistance = snapDistance || 5;
-            if (other.constructor !== BoundingBox) {
+            /*if (other.constructor !== BoundingBox) {
                 throw "getSnapDelta requires argument 'other' to resolve to type BoundingBox";
-            }
+            }*/
 
             var snapDelta = new Vector(NaN, NaN);
 
@@ -706,9 +1015,9 @@
                 throw "isColliding requires argument 'other'";
             }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) {
+            /*if (other.constructor !== BoundingBox) {
                 throw "isColliding requires argument 'other' to resolve to type BoundingBox";
-            }
+            }*/
 
             return this.left < other.right && this.right > other.left && this.top < other.bottom && this.bottom > other.top;
         };
@@ -746,9 +1055,9 @@
                 throw "isTouchingEdge requires argument 'other'";
             }
             other = other.getBoundingBox();
-            if (other.constructor !== BoundingBox) {
+            /*if (other.constructor !== BoundingBox) {
                 throw "isTouchingEdge requires argument 'other' to resolve to type BoundingBox";
-            }
+            }*/
 
             return this.left === other.right || this.right === other.left || this.top === other.bottom || this.bottom === other.top;
         };
@@ -878,9 +1187,9 @@
                 throw "isContains requires argument 'other'";
             }
             other = other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh();
-            if (other.constructor !== CollisionMesh) {
+            /*if (other.constructor !== CollisionMesh) {
                 throw "isContains requires argument 'other' to resolve to type CollisionMesh";
-            }
+            }*/
 
             for (var index = 0; index < this.boxes.length; index += 1) {
                 if (this.boxes[index].someContains(other.boxes)) {
@@ -894,9 +1203,9 @@
                 throw "someContains requires argument 'other'";
             }
             other = other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh();
-            if (other.constructor !== CollisionMesh) {
+            /*if (other.constructor !== CollisionMesh) {
                 throw "someContains requires argument 'other' to resolve to type CollisionMesh";
-            }
+            }*/
 
             for (var index = 0; index < this.boxes.length; index += 1) {
                 if (this.boxes[index].someContains(other.boxes)) {
@@ -910,9 +1219,9 @@
                 throw "isTouching requires argument 'other'";
             }
             other = other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh();
-            if (other.constructor !== CollisionMesh) {
+            /*if (other.constructor !== CollisionMesh) {
                 throw "isTouching requires argument 'other' to resolve to type CollisionMesh";
-            }
+            }*/
 
             for (var index = 0; index < this.boxes.length; index += 1) {
                 if (this.boxes[index].someTouching(other.boxes)) {
@@ -941,9 +1250,9 @@
                 throw "isColliding requires argument 'other'";
             }
             other = other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh();
-            if (other.constructor !== CollisionMesh) {
+            /*if (other.constructor !== CollisionMesh) {
                 throw "isColliding requires argument 'other' to resolve to type CollisionMesh";
-            }
+            }*/
 
             for (var index = 0; index < this.boxes.length; index += 1) {
                 if (this.boxes[index].someColliding(other.boxes)) {
@@ -974,9 +1283,9 @@
                 throw "getColliding requires argument 'other'";
             }
             other = other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh();
-            if (other.constructor !== CollisionMesh) {
+            /*if (other.constructor !== CollisionMesh) {
                 throw "getColliding requires argument 'other' to resolve to type CollisionMesh";
-            }
+            }*/
 
             for (var index = 0; index < this.boxes.length; index += 1) {
                 var collided = this.boxes[index].getColliding(other.boxes);
@@ -1025,7 +1334,1030 @@
         };
     }();
 
-    /*global windowfactory,nodeRequire*/
+    /*global windowfactory,fin,SyncCallback,EventHandler*/
+    /*jshint bitwise: false*/
+    (function () {
+        if (windowfactory.isRenderer && !windowfactory.isBackend && windowfactory.browserVersion) {
+            (function () {
+                var geometry = windowfactory.geometry;
+                var Vector = geometry.Vector;
+                var Position = geometry.Position;
+                var Size = geometry.Size;
+                var BoundingBox = geometry.BoundingBox;
+                var currentWin = window;
+                var defaultConfig = {
+                    width: 600,
+                    height: 600,
+                    frame: false,
+                    resizable: true,
+                    saveWindowState: false,
+                    autoShow: true,
+                    icon: location.href + "favicon.ico",
+                    url: ".",
+                    minWidth: 100,
+                    minHeight: 100,
+                    maxWidth: Infinity,
+                    maxHeight: Infinity
+                };
+                var configMap = {};
+                var acceptedEventHandlers = ["drag-start", "drag-before", "drag-stop", "dock-before", "move", "move-before", "resize-before", "close", "minimize"];
+                var transformPropNames = ["-ms-transform", "-moz-transform", "-o-transform", "-webkit-transform", "transform"];
+
+                var Window = function Window(config) {
+                    if (!(this instanceof Window)) {
+                        return new Window(config);
+                    }
+
+                    config = config || {}; // If no arguments are passed, assume we are creating a default blank window
+                    var isArgConfig = !(config instanceof window.Window);
+
+                    // Call the parent constructor:
+                    EventHandler.call(this, acceptedEventHandlers);
+                    this._ready = false;
+                    this._isClosed = false;
+                    this._isMaximized = false;
+                    this._dockedGroup = [this];
+                    this._children = []; // TODO: Add way to remove or change heirarchy.
+                    this._parent = undefined;
+
+                    if (isArgConfig) {
+                        for (var prop in config) {
+                            if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
+                                config[configMap[prop]] = config[prop];
+                                delete config[prop];
+                            }
+                        }
+                        for (var _prop in defaultConfig) {
+                            if (defaultConfig.hasOwnProperty(_prop)) {
+                                config[_prop] = config[_prop] || defaultConfig[_prop];
+                            }
+                        }
+
+                        if (config.parent) {
+                            config.parent._children.push(this);
+                            this._parent = config.parent;
+                            // TODO: Emit event "child-added" on parent
+                            delete config.parent;
+                        }
+
+                        this._minSize = new BoundingBox(config.minWidth, config.minHeight);
+                        this._maxSize = new BoundingBox(config.maxWidth, config.maxHeight);
+                        var newWindow = windowfactory._launcher.document.createElement("iframe");
+                        newWindow.src = config.url;
+                        newWindow.style.position = "absolute";
+                        if (!Number.isFinite(config.left)) {
+                            config.left = (windowfactory._launcher.innerWidth - config.width) / 2;
+                        }
+                        newWindow.style.left = config.left + "px";
+                        if (!Number.isFinite(config.top)) {
+                            config.top = (windowfactory._launcher.innerHeight - config.height) / 2;
+                        }
+                        newWindow.style.top = config.top + "px";
+                        newWindow.style.width = config.width + "px";
+                        newWindow.style.height = config.height + "px";
+                        newWindow.style.minWidth = this._minSize.left + "px";
+                        newWindow.style.minHeight = this._minSize.top + "px";
+                        newWindow.style.maxWidth = this._maxSize.left + "px";
+                        newWindow.style.maxHeight = this._maxSize.top + "px";
+                        newWindow.style.margin = 0;
+                        newWindow.style.padding = 0;
+                        newWindow.style.border = 0;
+                        windowfactory._launcher.document.body.appendChild(newWindow);
+
+                        this._window = newWindow;
+                        windowfactory._windows.push(this);
+                        this._ready = true;
+                        this.emit("ready");
+                        windowfactory._internalBus.emit("window-create", this);
+                        this.bringToFront();
+                        this.focus();
+                    } else {
+                        this._minSize = new BoundingBox(defaultConfig.minWidth, defaultConfig.minHeight);
+                        this._maxSize = new BoundingBox(defaultConfig.maxWidth, defaultConfig.maxHeight);
+                        this._window = config;
+                        windowfactory._windows.push(this);
+                        this._ready = true;
+                        //this._setupDOM();
+                    }
+                };
+                // Inherit EventHandler
+                Window.prototype = Object.create(EventHandler.prototype);
+                // Correct the constructor pointer because it points to EventHandler:
+                Window.prototype.constructor = Window;
+
+                /*Window.prototype._setupDOM = function () {
+                	let thisWindow = this;
+                	// TODO: Rewrite to remove setTimeout for the following:
+                	function setWindows() {
+                		if (thisWindow._window.contentWindow.windowfactory) {
+                			thisWindow._window.contentWindow.windowfactory._windows = windowfactory._windows;
+                		} else {
+                			setTimeout(setWindows, 5);
+                		}
+                	}
+                	setWindows();
+                			this._window.getBounds(function (bounds) {
+                		thisWindow._bounds.set(bounds.left, bounds.top, bounds.left + bounds.width, bounds.top + bounds.height);
+                	});
+                            // Setup _window event listeners:
+                          // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.
+                	function onBoundsChange(event) {
+                		thisWindow._bounds.set(event.left, event.top, event.left + event.width, event.top + event.height);
+                		if (event.changeType !== 0) {
+                			thisWindow.undock(); // Undock on resize. TODO: Allow resize with docking
+                		}
+                		if (event.changeType !== 1) {
+                              	thisWindow.emit("move"); // TODO: Pass what position it is at.
+                		}
+                	}
+                	this._window.addEventListener("bounds-changing", onBoundsChange);
+                	this._window.addEventListener("bounds-changed", onBoundsChange);
+                            function onClose() {
+                              thisWindow._isClosed = true;
+                		delete windowfactory._windows[thisWindow._window.name];
+                		thisWindow.undock();
+                              thisWindow.emit("close");
+                              thisWindow._window = undefined;
+                              // TODO: Clean up ALL listeners
+                          }
+                          this._window.addEventListener("closed", onClose);
+                	this._ready = true;
+                	// Notify Subscribers
+                }*/
+
+                Window.getCurrent = function () {
+                    return Window.current;
+                };
+
+                Window.prototype.isReady = function () {
+                    return this._ready;
+                };
+                Window.prototype.onReady = function (callback) {
+                    if (this.isClosed()) {
+                        throw "onReady can't be called on a closed window";
+                    }
+                    if (this.isReady()) {
+                        return callback.call(this);
+                    }
+
+                    this.once("ready", callback);
+                };
+
+                Window.prototype.isClosed = function () {
+                    return this._isClosed;
+                };
+
+                Window.prototype.getPosition = function () {
+                    return new Position(this._window.getBoundingClientRect());
+                };
+
+                Window.prototype.getMinWidth = function () {
+                    return this._minSize.left;
+                };
+                Window.prototype.getWidth = function () {
+                    return this._window.getBoundingClientRect().width;
+                };
+                Window.prototype.getMaxWidth = function () {
+                    return this._maxSize.left;
+                };
+
+                Window.prototype.getMinHeight = function () {
+                    return this._minSize.top;
+                };
+                Window.prototype.getHeight = function () {
+                    return this._window.getBoundingClientRect().height;
+                };
+                Window.prototype.getMaxHeight = function () {
+                    return this._maxSize.top;
+                };
+
+                Window.prototype.getMinSize = function () {
+                    return this._minSize.clone();
+                };
+                Window.prototype.getSize = function () {
+                    var box = this._window.getBoundingClientRect();
+                    return new Size(box.width, box.height);
+                };
+                Window.prototype.getMaxSize = function () {
+                    return this._maxSize.clone();
+                };
+
+                Window.prototype.getBounds = function () {
+                    return new BoundingBox(this._window.getBoundingClientRect());
+                };
+
+                Window.prototype.getParent = function () {
+                    return this._parent;
+                };
+                Window.prototype.setParent = function (parent) {
+                    // TODO: Execute appropriate checks (if not closed, and is this new parent a window)
+
+                    if (parent === this._parent) {
+                        return;
+                    }
+
+                    if (this._parent) {
+                        var index = this._parent._children.indexOf(this);
+                        if (index >= 0) {
+                            this._parent._children.splice(index, 1);
+                        }
+                        // TODO: Emit event "child-removed" on current parent.
+                    }
+
+                    if (parent) {
+                        this._parent = parent;
+                        this._parent._children.push(this);
+                        // TODO: Emit event "child-added on parent".
+                    }
+                };
+
+                Window.prototype.getChildren = function () {
+                    return this._children.slice();
+                };
+                Window.prototype.addChild = function (child) {
+                    child.setParent(this);
+                };
+
+                Window.prototype.close = function (callback) {
+                    if (this.isClosed()) {
+                        return callback && callback();
+                    }
+
+                    this._window.parentElement.removeChild(this._window);
+                    var index = windowfactory._windows.indexOf(this);
+                    if (index >= 0) {
+                        windowfactory._windows.splice(index, 1);
+                    }
+
+                    // Undock:
+                    this.undock();
+
+                    // Move children to parent:
+                    var parent = this.getParent();
+                    for (var _iterator8 = this.getChildren(), _isArray8 = Array.isArray(_iterator8), _i8 = 0, _iterator8 = _isArray8 ? _iterator8 : _iterator8[Symbol.iterator]();;) {
+                        var _ref8;
+
+                        if (_isArray8) {
+                            if (_i8 >= _iterator8.length) break;
+                            _ref8 = _iterator8[_i8++];
+                        } else {
+                            _i8 = _iterator8.next();
+                            if (_i8.done) break;
+                            _ref8 = _i8.value;
+                        }
+
+                        var child = _ref8;
+
+                        // We use getChildren to have a copy of the list, so child.setParent doesn't modify this loop's list!
+                        // TODO: Optimize this loop, by not making a copy of children, and not executing splice in each setParent!
+                        child.setParent(parent);
+                    }
+                    this.setParent(undefined); // Remove from parent
+
+                    this._isClosed = true;
+                    if (callback) {
+                        callback();
+                    }
+                    this.emit("close");
+                    windowfactory._internalBus.emit("window-close", this);
+                };
+
+                Window.prototype.minimize = function (callback) {
+                    if (!this._ready) {
+                        throw "minimize can't be called on an unready window";
+                    }
+
+                    // TODO: What do we do on minimize in this runtime?
+                    for (var _iterator9 = this._dockedGroup, _isArray9 = Array.isArray(_iterator9), _i9 = 0, _iterator9 = _isArray9 ? _iterator9 : _iterator9[Symbol.iterator]();;) {
+                        var _ref9;
+
+                        if (_isArray9) {
+                            if (_i9 >= _iterator9.length) break;
+                            _ref9 = _iterator9[_i9++];
+                        } else {
+                            _i9 = _iterator9.next();
+                            if (_i9.done) break;
+                            _ref9 = _i9.value;
+                        }
+
+                        var _window = _ref9;
+
+                        _window.emit("minimize");
+                    }
+                };
+
+                Window.prototype.maximize = function (callback) {
+                    if (!this._ready) {
+                        throw "maximize can't be called on an unready window";
+                    }
+
+                    this._restoreBounds = this.getBounds();
+                    this._window.style.left = 0;
+                    this._window.style.top = 0;
+                    this._window.style.width = "100%";
+                    this._window.style.height = "100%";
+                    this._isMaximized = true;
+                    if (callback) {
+                        callback();
+                    }
+                };
+
+                Window.prototype.show = function (callback) {
+                    if (!this._ready) {
+                        throw "show can't be called on an unready window";
+                    }
+
+                    for (var _iterator10 = this._dockedGroup, _isArray10 = Array.isArray(_iterator10), _i10 = 0, _iterator10 = _isArray10 ? _iterator10 : _iterator10[Symbol.iterator]();;) {
+                        var _ref10;
+
+                        if (_isArray10) {
+                            if (_i10 >= _iterator10.length) break;
+                            _ref10 = _iterator10[_i10++];
+                        } else {
+                            _i10 = _iterator10.next();
+                            if (_i10.done) break;
+                            _ref10 = _i10.value;
+                        }
+
+                        var _window2 = _ref10;
+
+                        _window2._window.style.display = "";
+                    }
+                    if (callback) {
+                        callback();
+                    }
+                };
+
+                Window.prototype.hide = function (callback) {
+                    if (!this._ready) {
+                        throw "hide can't be called on an unready window";
+                    }
+
+                    for (var _iterator11 = this._dockedGroup, _isArray11 = Array.isArray(_iterator11), _i11 = 0, _iterator11 = _isArray11 ? _iterator11 : _iterator11[Symbol.iterator]();;) {
+                        var _ref11;
+
+                        if (_isArray11) {
+                            if (_i11 >= _iterator11.length) break;
+                            _ref11 = _iterator11[_i11++];
+                        } else {
+                            _i11 = _iterator11.next();
+                            if (_i11.done) break;
+                            _ref11 = _i11.value;
+                        }
+
+                        var _window3 = _ref11;
+
+                        _window3._window.style.display = "none";
+                    }
+                    if (callback) {
+                        callback();
+                    }
+                };
+
+                Window.prototype.restore = function (callback) {
+                    if (!this._ready) {
+                        throw "restore can't be called on an unready window";
+                    }
+
+                    for (var _iterator12 = this._dockedGroup, _isArray12 = Array.isArray(_iterator12), _i12 = 0, _iterator12 = _isArray12 ? _iterator12 : _iterator12[Symbol.iterator]();;) {
+                        var _ref12;
+
+                        if (_isArray12) {
+                            if (_i12 >= _iterator12.length) break;
+                            _ref12 = _iterator12[_i12++];
+                        } else {
+                            _i12 = _iterator12.next();
+                            if (_i12.done) break;
+                            _ref12 = _i12.value;
+                        }
+
+                        var _window4 = _ref12;
+
+                        if (_window4._isMaximized) {
+                            _window4._window.style.left = _window4._restoreBounds.left + "px";
+                            _window4._window.style.top = _window4._restoreBounds.top + "px";
+                            _window4._window.style.width = _window4._restoreBounds.getWidth() + "px";
+                            _window4._window.style.height = _window4._restoreBounds.getHeight() + "px";
+                            _window4._isMaximized = false;
+                        }
+                    }
+                    if (callback) {
+                        callback();
+                    }
+                };
+
+                Window.prototype.bringToFront = function (callback) {
+                    if (!this._ready) {
+                        throw "bringToFront can't be called on an unready window";
+                    }
+
+                    for (var _iterator13 = this._dockedGroup, _isArray13 = Array.isArray(_iterator13), _i13 = 0, _iterator13 = _isArray13 ? _iterator13 : _iterator13[Symbol.iterator]();;) {
+                        var _ref13;
+
+                        if (_isArray13) {
+                            if (_i13 >= _iterator13.length) break;
+                            _ref13 = _iterator13[_i13++];
+                        } else {
+                            _i13 = _iterator13.next();
+                            if (_i13.done) break;
+                            _ref13 = _i13.value;
+                        }
+
+                        var _window5 = _ref13;
+
+                        if (_window5 !== this) {
+                            _window5._window.style["z-index"] = windowfactory._getNextZIndex();
+                        }
+                    }
+                    this._window.style["z-index"] = windowfactory._getNextZIndex();
+                    if (callback) {
+                        callback();
+                    }
+                };
+
+                Window.prototype.focus = function (callback) {
+                    if (!this._ready) {
+                        throw "focus can't be called on an unready window";
+                    }
+
+                    for (var _iterator14 = this._dockedGroup, _isArray14 = Array.isArray(_iterator14), _i14 = 0, _iterator14 = _isArray14 ? _iterator14 : _iterator14[Symbol.iterator]();;) {
+                        var _ref14;
+
+                        if (_isArray14) {
+                            if (_i14 >= _iterator14.length) break;
+                            _ref14 = _iterator14[_i14++];
+                        } else {
+                            _i14 = _iterator14.next();
+                            if (_i14.done) break;
+                            _ref14 = _i14.value;
+                        }
+
+                        var _window6 = _ref14;
+
+                        if (_window6 !== this) {
+                            _window6._window.contentWindow.focus();
+                        }
+                    }
+                    this._window.contentWindow.focus();
+                    if (callback) {
+                        callback();
+                    }
+                };
+
+                Window.prototype.resizeTo = function (width, height, callback) {
+                    if (!this._ready) {
+                        throw "resizeTo can't be called on an unready window";
+                    }
+                    if (!this.emit("resize-before")) {
+                        return;
+                    } // Allow preventing resize
+                    var size = new Position(width, height);
+
+                    this.undock();
+                    this._window.width = size.left + "px";
+                    this._window.height = size.top + "px";
+                    if (callback) {
+                        callback();
+                    }
+                };
+
+                Window.prototype.moveTo = function (left, top, callback) {
+                    if (!this._ready) {
+                        throw "moveTo can't be called on an unready window";
+                    }
+                    if (!this.emit("move-before")) {
+                        return;
+                    } // Allow preventing move
+                    var deltaPos = new Position(left, top).subtract(this.getPosition());
+
+                    for (var _iterator15 = this._dockedGroup, _isArray15 = Array.isArray(_iterator15), _i15 = 0, _iterator15 = _isArray15 ? _iterator15 : _iterator15[Symbol.iterator]();;) {
+                        var _ref15;
+
+                        if (_isArray15) {
+                            if (_i15 >= _iterator15.length) break;
+                            _ref15 = _iterator15[_i15++];
+                        } else {
+                            _i15 = _iterator15.next();
+                            if (_i15.done) break;
+                            _ref15 = _i15.value;
+                        }
+
+                        var _window7 = _ref15;
+
+                        var pos = _window7.getPosition().add(deltaPos);
+                        _window7._window.style.left = pos.left + "px";
+                        _window7._window.style.top = pos.top + "px";
+                    }
+                    if (callback) {
+                        callback();
+                    }
+                };
+
+                Window.prototype.moveBy = function (deltaLeft, deltaTop, callback) {
+                    if (!this._ready) {
+                        throw "moveBy can't be called on an unready window";
+                    }
+                    if (!this.emit("move-before")) {
+                        return;
+                    } // Allow preventing move
+                    var deltaPos = new Position(deltaLeft, deltaTop);
+
+                    for (var _iterator16 = this._dockedGroup, _isArray16 = Array.isArray(_iterator16), _i16 = 0, _iterator16 = _isArray16 ? _iterator16 : _iterator16[Symbol.iterator]();;) {
+                        var _ref16;
+
+                        if (_isArray16) {
+                            if (_i16 >= _iterator16.length) break;
+                            _ref16 = _iterator16[_i16++];
+                        } else {
+                            _i16 = _iterator16.next();
+                            if (_i16.done) break;
+                            _ref16 = _i16.value;
+                        }
+
+                        var _window8 = _ref16;
+
+                        var pos = _window8.getPosition().add(deltaPos);
+                        _window8._window.style.left = pos.left + "px";
+                        _window8._window.style.top = pos.top + "px";
+                    }
+                    if (callback) {
+                        callback();
+                    }
+                    for (var _iterator17 = this._dockedGroup, _isArray17 = Array.isArray(_iterator17), _i17 = 0, _iterator17 = _isArray17 ? _iterator17 : _iterator17[Symbol.iterator]();;) {
+                        var _ref17;
+
+                        if (_isArray17) {
+                            if (_i17 >= _iterator17.length) break;
+                            _ref17 = _iterator17[_i17++];
+                        } else {
+                            _i17 = _iterator17.next();
+                            if (_i17.done) break;
+                            _ref17 = _i17.value;
+                        }
+
+                        var _window9 = _ref17;
+
+                        _window9.emit("move");
+                    }
+                };
+
+                Window.prototype.setMinSize = function (width, height, callback) {
+                    if (!this._ready) {
+                        throw "setMinSize can't be called on an unready window";
+                    }
+                    var size = new Size(width, height);
+
+                    this.undock(); // TODO: Support changing size when docked.
+                    this._minSize.left = size.left;
+                    this._minSize.top = size.top;
+                    this._window.style.minWidth = this._minSize.left + "px";
+                    this._window.style.minHeight = this._minSize.top + "px";
+                    if (this.getWidth() < size.left || this.getHeight() < size.top) {
+                        // Resize window to meet new min size:
+                        // TODO: Take into account transform?
+                        this._window.style.width = Math.max(this.getWidth(), size.left) + "px";
+                        this._window.style.height = Math.max(this.getHeight(), size.top) + "px";
+                        if (callback) {
+                            callback();
+                        }
+                        this.emit("resize");
+                    } else {
+                        if (callback) {
+                            callback();
+                        }
+                    }
+                };
+                Window.prototype.setSize = function (width, height, callback) {
+                    if (!this._ready) {
+                        throw "setMaxSize can't be called on an unready window";
+                    }
+                    var size = new Size(width, height);
+
+                    this.undock(); // TODO: Support changing size when docked.
+                    this._window.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, size.left)) + "px";
+                    this._window.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, size.top)) + "px";
+                    // Clear transform:
+                    for (var _iterator18 = transformPropNames, _isArray18 = Array.isArray(_iterator18), _i18 = 0, _iterator18 = _isArray18 ? _iterator18 : _iterator18[Symbol.iterator]();;) {
+                        var _ref18;
+
+                        if (_isArray18) {
+                            if (_i18 >= _iterator18.length) break;
+                            _ref18 = _iterator18[_i18++];
+                        } else {
+                            _i18 = _iterator18.next();
+                            if (_i18.done) break;
+                            _ref18 = _i18.value;
+                        }
+
+                        var transformPropName = _ref18;
+
+                        this._window.style[transformPropName] = "";
+                    }
+                    if (callback) {
+                        callback();
+                    }
+                    this.emit("resize");
+                };
+                Window.prototype.forceScaledSize = function (width, height, callback) {
+                    if (!this._ready) {
+                        throw "setMaxSize can't be called on an unready window";
+                    }
+                    var size = new Size(Math.min(this._maxSize.left, Math.max(this._minSize.left, width)), Math.min(this._maxSize.top, Math.max(this._minSize.top, height)));
+
+                    this.undock(); // TODO: Support changing size when docked.
+                    this._window.style.width = size.left + "px";
+                    this._window.style.height = size.top + "px";
+                    // TODO: Calc transform:
+                    var transform = Math.min(width / size.left, height / size.top);
+                    for (var _iterator19 = transformPropNames, _isArray19 = Array.isArray(_iterator19), _i19 = 0, _iterator19 = _isArray19 ? _iterator19 : _iterator19[Symbol.iterator]();;) {
+                        var _ref19;
+
+                        if (_isArray19) {
+                            if (_i19 >= _iterator19.length) break;
+                            _ref19 = _iterator19[_i19++];
+                        } else {
+                            _i19 = _iterator19.next();
+                            if (_i19.done) break;
+                            _ref19 = _i19.value;
+                        }
+
+                        var transformPropName = _ref19;
+
+                        this._window.style[transformPropName] = "scale(" + transform + ")";
+                    }
+                    if (callback) {
+                        callback();
+                    }
+                    this.emit("resize");
+                };
+                Window.prototype.setMaxSize = function (width, height, callback) {
+                    if (!this._ready) {
+                        throw "setMaxSize can't be called on an unready window";
+                    }
+                    var size = new Size(width, height);
+
+                    this.undock(); // TODO: Support changing size when docked.
+                    this._maxSize.left = size.left;
+                    this._maxSize.top = size.top;
+                    this._window.style.maxWidth = this._maxSize.left + "px";
+                    this._window.style.maxHeight = this._maxSize.top + "px";
+                    if (this.getWidth() > size.left || this.getHeight() > size.top) {
+                        // Resize window to meet new min size:
+                        // TODO: Take into account transform?
+                        this._window.style.width = Math.min(this.getWidth(), size.left) + "px";
+                        this._window.style.height = Math.min(this.getHeight(), size.top) + "px";
+                        // Clear transform:
+                        for (var _iterator20 = transformPropNames, _isArray20 = Array.isArray(_iterator20), _i20 = 0, _iterator20 = _isArray20 ? _iterator20 : _iterator20[Symbol.iterator]();;) {
+                            var _ref20;
+
+                            if (_isArray20) {
+                                if (_i20 >= _iterator20.length) break;
+                                _ref20 = _iterator20[_i20++];
+                            } else {
+                                _i20 = _iterator20.next();
+                                if (_i20.done) break;
+                                _ref20 = _i20.value;
+                            }
+
+                            var transformPropName = _ref20;
+
+                            this._window.style[transformPropName] = "";
+                        }
+                        if (callback) {
+                            callback();
+                        }
+                        this.emit("resize");
+                    } else {
+                        if (callback) {
+                            callback();
+                        }
+                    }
+                };
+
+                Window.prototype.setBounds = function (left, top, right, bottom, callback) {
+                    if (!this._ready) {
+                        throw "resizeTo can't be called on an unready window";
+                    }
+                    var bounds = new BoundingBox(left, top, right, bottom);
+
+                    this.undock(); // TODO: Support changing size when docked.
+                    this._window.style.left = bounds.left + "px";
+                    this._window.style.top = bounds.top + "px";
+                    // TODO: Take into account transform?
+                    this._window.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, bounds.getWidth())) + "px";
+                    this._window.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, bounds.getHeight())) + "px";
+                    // Clear transform:
+                    for (var _iterator21 = transformPropNames, _isArray21 = Array.isArray(_iterator21), _i21 = 0, _iterator21 = _isArray21 ? _iterator21 : _iterator21[Symbol.iterator]();;) {
+                        var _ref21;
+
+                        if (_isArray21) {
+                            if (_i21 >= _iterator21.length) break;
+                            _ref21 = _iterator21[_i21++];
+                        } else {
+                            _i21 = _iterator21.next();
+                            if (_i21.done) break;
+                            _ref21 = _i21.value;
+                        }
+
+                        var transformPropName = _ref21;
+
+                        this._window.style[transformPropName] = "";
+                    }
+                    // TODO: Events
+                    if (callback) {
+                        callback();
+                    }
+                };
+
+                Window.prototype.dock = function (other) {
+                    if (!this.emit("dock-before")) {
+                        return;
+                    } // Allow preventing dock
+                    if (other === undefined) {
+                        return;
+                    } // Failed to find other. TODO: Return error
+
+                    // If other is already in the group, return:
+                    if (this._dockedGroup.indexOf(other) >= 0) {
+                        return;
+                    }
+
+                    // Loop through all windows in otherGroup and add them to this's group:
+                    for (var _iterator22 = other._dockedGroup, _isArray22 = Array.isArray(_iterator22), _i22 = 0, _iterator22 = _isArray22 ? _iterator22 : _iterator22[Symbol.iterator]();;) {
+                        var _ref22;
+
+                        if (_isArray22) {
+                            if (_i22 >= _iterator22.length) break;
+                            _ref22 = _iterator22[_i22++];
+                        } else {
+                            _i22 = _iterator22.next();
+                            if (_i22.done) break;
+                            _ref22 = _i22.value;
+                        }
+
+                        var _other = _ref22;
+
+                        this._dockedGroup.push(_other);
+                        // Sharing the array between window objects makes it easier to manage:
+                        _other._dockedGroup = this._dockedGroup;
+                    }
+
+                    //console.log("dock", thisWindow._dockedGroup);
+                    // TODO: Check if otherGroup is touching
+                };
+                Window.prototype.undock = function (other) {
+                    // Check to see if window is already undocked:
+                    if (this._dockedGroup.length === 1) {
+                        return;
+                    }
+
+                    // Undock this:
+                    this._dockedGroup.splice(this._dockedGroup.indexOf(this), 1);
+                    this._dockedGroup = [this];
+
+                    //console.log("undock", this._dockedGroup);
+                    // TODO: Redock those still touching, EXCEPT 'this'.
+                };
+
+                Window.prototype._dragStart = function () {
+                    if (!this.emit("drag-start")) {
+                        return;
+                    } // Allow preventing drag
+                    this.restore();
+                    for (var _iterator23 = this._dockedGroup, _isArray23 = Array.isArray(_iterator23), _i23 = 0, _iterator23 = _isArray23 ? _iterator23 : _iterator23[Symbol.iterator]();;) {
+                        var _ref23;
+
+                        if (_isArray23) {
+                            if (_i23 >= _iterator23.length) break;
+                            _ref23 = _iterator23[_i23++];
+                        } else {
+                            _i23 = _iterator23.next();
+                            if (_i23.done) break;
+                            _ref23 = _i23.value;
+                        }
+
+                        var _window10 = _ref23;
+
+                        _window10._dragStartPos = _window10.getPosition();
+                    }
+                };
+
+                Window.prototype._dragBy = function (deltaLeft, deltaTop) {
+                    if (!this.emit("drag-before")) {
+                        return;
+                    } // Allow preventing drag
+                    // Perform Snap:
+                    var thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft, this._dragStartPos.top + deltaTop);
+                    var snapDelta = new Vector(NaN, NaN);
+                    for (var _iterator24 = windowfactory._windows, _isArray24 = Array.isArray(_iterator24), _i24 = 0, _iterator24 = _isArray24 ? _iterator24 : _iterator24[Symbol.iterator]();;) {
+                        var _ref24;
+
+                        if (_isArray24) {
+                            if (_i24 >= _iterator24.length) break;
+                            _ref24 = _iterator24[_i24++];
+                        } else {
+                            _i24 = _iterator24.next();
+                            if (_i24.done) break;
+                            _ref24 = _i24.value;
+                        }
+
+                        var other = _ref24;
+
+                        if (other._dockedGroup !== this._dockedGroup) {
+                            snapDelta.setMin(thisBounds.getSnapDelta(other.getBounds()));
+                        }
+                    }
+                    deltaLeft += snapDelta.left || 0;
+                    deltaTop += snapDelta.top || 0;
+
+                    for (var _iterator25 = this._dockedGroup, _isArray25 = Array.isArray(_iterator25), _i25 = 0, _iterator25 = _isArray25 ? _iterator25 : _iterator25[Symbol.iterator]();;) {
+                        var _ref25;
+
+                        if (_isArray25) {
+                            if (_i25 >= _iterator25.length) break;
+                            _ref25 = _iterator25[_i25++];
+                        } else {
+                            _i25 = _iterator25.next();
+                            if (_i25.done) break;
+                            _ref25 = _i25.value;
+                        }
+
+                        var _other2 = _ref25;
+
+                        var pos = _other2._dragStartPos;
+
+                        // If other doesn't have a drag position, start it:
+                        if (pos === undefined) {
+                            pos = _other2._dragStartPos = _other2.getPosition();
+                            pos.left -= deltaLeft;
+                            pos.top -= deltaTop;
+                        }
+
+                        _other2._window.style.left = pos.left + deltaLeft + "px";
+                        _other2._window.style.top = pos.top + deltaTop + "px";
+                        //let transformMatrix = [1, 0, 0, 1, pos.left + deltaLeft, pos.top + deltaTop];
+                        //other._window.style.transform = "matrix(" + transformMatrix.join() + ")";
+                        //other._window.style.transform = "translate(" + (pos.left + deltaLeft) + "px," + (pos.top + deltaTop) + "px)";
+                        _other2.emit("move");
+                    }
+                };
+
+                Window.prototype._dragStop = function () {
+                    // Dock to those it snapped to:
+                    var thisBounds = this.getBounds();
+                    for (var _iterator26 = windowfactory._windows, _isArray26 = Array.isArray(_iterator26), _i26 = 0, _iterator26 = _isArray26 ? _iterator26 : _iterator26[Symbol.iterator]();;) {
+                        var _ref26;
+
+                        if (_isArray26) {
+                            if (_i26 >= _iterator26.length) break;
+                            _ref26 = _iterator26[_i26++];
+                        } else {
+                            _i26 = _iterator26.next();
+                            if (_i26.done) break;
+                            _ref26 = _i26.value;
+                        }
+
+                        var other = _ref26;
+
+                        if (thisBounds.isTouching(other.getBounds())) {
+                            this.dock(other);
+                        }
+                    }
+
+                    for (var _iterator27 = this._dockedGroup, _isArray27 = Array.isArray(_iterator27), _i27 = 0, _iterator27 = _isArray27 ? _iterator27 : _iterator27[Symbol.iterator]();;) {
+                        var _ref27;
+
+                        if (_isArray27) {
+                            if (_i27 >= _iterator27.length) break;
+                            _ref27 = _iterator27[_i27++];
+                        } else {
+                            _i27 = _iterator27.next();
+                            if (_i27.done) break;
+                            _ref27 = _i27.value;
+                        }
+
+                        var _window11 = _ref27;
+
+                        delete _window11._dragStartPos;
+                    }
+
+                    this.emit("drag-stop");
+                };
+
+                // Handle current window in this context:
+                Window.current = function () {
+                    for (var _iterator28 = windowfactory._windows, _isArray28 = Array.isArray(_iterator28), _i28 = 0, _iterator28 = _isArray28 ? _iterator28 : _iterator28[Symbol.iterator]();;) {
+                        var _ref28;
+
+                        if (_isArray28) {
+                            if (_i28 >= _iterator28.length) break;
+                            _ref28 = _iterator28[_i28++];
+                        } else {
+                            _i28 = _iterator28.next();
+                            if (_i28.done) break;
+                            _ref28 = _i28.value;
+                        }
+
+                        var win = _ref28;
+
+                        if (win._window.contentWindow === window) {
+                            return win;
+                        }
+                    }
+                }();
+
+                Window.getAll = function () {
+                    return windowfactory._windows.splice();
+                };
+
+                _extends(windowfactory, {
+                    Window: Window
+                });
+            })();
+        }
+    })();
+    /*global windowfactory,fin*/
+    (function () {
+        if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.browserVersion) {
+            return;
+        }
+
+        var Window = windowfactory.Window;
+        var readyCallbacks = [];
+        var _isReady = true;
+
+        function onReady(callback) {
+            // Check if callback is not a function:
+            if (!(callback && callback.constructor && callback.call && callback.apply)) {
+                throw "onReady expects a function passed as the callback argument!";
+            }
+
+            // Check if already ready:
+            if (_isReady) {
+                callback();
+            }
+
+            // Check to see if callback is already in readyCallbacks:
+            if (readyCallbacks.indexOf(callback) >= 0) {
+                return;
+            }
+
+            readyCallbacks.push(callback);
+        }
+
+        function ready() {
+            _isReady = true;
+            for (var index = 0; index < readyCallbacks.length; index += 1) {
+                readyCallbacks[index]();
+            }
+            readyCallbacks = [];
+        }
+
+        if (!windowfactory.isLauncher) {
+            (function () {
+                // Setup handlers on this window:
+                var wX = 0;
+                var wY = 0;
+                var dragging = false;
+
+                window.addEventListener("focus", function () {
+                    Window.current.bringToFront();
+                });
+
+                window.addEventListener("mousedown", function (e) {
+                    if (e.target.classList.contains("window-drag")) {
+                        dragging = true;
+                        wX = event.screenX;
+                        wY = event.screenY;
+                        Window.current._dragStart();
+                    }
+                });
+
+                window.addEventListener("mousemove", function (e) {
+                    if (dragging) {
+                        //Window.current.moveTo(event.screenX - wX, event.screenY - wY);
+                        Window.current._dragBy(event.screenX - wX, event.screenY - wY);
+                    }
+                });
+
+                window.addEventListener("mouseup", function () {
+                    dragging = false;
+                    Window.current._dragStop();
+                });
+            })();
+        }
+
+        _extends(windowfactory, {
+            onReady: onReady,
+            isReady: function isReady() {
+                return _isReady;
+            },
+            runtime: windowfactory.browserRuntime,
+            runtimeVersion: windowfactory.browserVersion
+        });
+    })();
+
+    /*global windowfactory,nodeRequire,EventHandler*/
     (function () {
         if (!windowfactory.electronVersion) {
             return;
@@ -1058,7 +2390,8 @@
                     left: "x",
                     top: "y"
                 };
-                var acceptedEventHandlers = ["move", "close"];
+                var acceptedEventHandlers = ["drag-start", "drag-before", "drag-stop", "dock-before", "move", "move-before", "resize-before", "close", "minimize"];
+                var windows = {};
 
                 /**
                  * Wraps a window object.
@@ -1074,6 +2407,8 @@
                     config = config || {}; // If no arguments are passed, assume we are creating a default blank window
                     var isArgConfig = config.webContents === undefined; // TODO: Improve checking of arguments.
 
+                    // Call the parent constructor:
+                    EventHandler.call(this, acceptedEventHandlers);
                     if (isArgConfig) {
                         for (var prop in config) {
                             if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
@@ -1081,9 +2416,9 @@
                                 delete config[prop];
                             }
                         }
-                        for (var _prop in defaultConfig) {
-                            if (defaultConfig.hasOwnProperty(_prop)) {
-                                config[_prop] = config[_prop] || defaultConfig[_prop];
+                        for (var _prop2 in defaultConfig) {
+                            if (defaultConfig.hasOwnProperty(_prop2)) {
+                                config[_prop2] = config[_prop2] || defaultConfig[_prop2];
                             }
                         }
                         var url = config.url;
@@ -1091,19 +2426,11 @@
 
                         this._window = new BrowserWindow(config);
                         this._window.loadURL(url[0] !== "/" ? url : path.join(remote.getGlobal("workingDir"), url));
-                        this._ready = true;
                     } else {
                         this._window = config;
-                        this._ready = true;
                     }
+                    windows[this._window.id] = this;
                     this._window._ensureDockSystem();
-
-                    // Setup handlers:
-                    // TODO: Look into making these special properties that can't be deleted?
-                    this._eventListeners = {};
-                    for (var index = 0; index < acceptedEventHandlers.length; index += 1) {
-                        this._eventListeners[acceptedEventHandlers[index]] = [];
-                    }
 
                     // Setup _window event listeners:
                     // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.
@@ -1112,6 +2439,11 @@
                         thisWindow.emit("move"); // TODO: Pass what position it is at.
                     }
                     this._window.on("move", _onmove);
+
+                    function _onminimize() {
+                        thisWindow.emit("minimize"); // TODO: Pass what position it is at.
+                    }
+                    this._window.on("minimize", _onmove);
 
                     function _onclose() {
                         thisWindow._isClosed = true;
@@ -1123,10 +2455,21 @@
                     this._window.on("close", _onclose);
 
                     currentWin.on("close", function () {
+                        delete windows[this._window.id];
                         thisWindow.off("move", _onmove);
                         thisWindow.off("close", _onclose);
+                        thisWindow.off("minimize", _onminimize);
                     });
+
+                    this._ready = true;
+                    if (isArgConfig) {
+                        this._window._notifyReady();
+                    }
                 };
+                // Inherit EventHandler
+                Window.prototype = Object.create(EventHandler.prototype);
+                // Correct the constructor pointer because it points to EventHandler:
+                Window.prototype.constructor = Window;
 
                 /**
                  * @static
@@ -1134,111 +2477,6 @@
                  */
                 Window.getCurrent = function () {
                     return Window.current;
-                };
-
-                /**
-                 * @method
-                 * @param {string}
-                 * @param {callback}
-                 */
-                Window.prototype.on = function (eventName, eventListener) {
-                    // TODO: Don't allow if window is closed!
-                    eventName = eventName.toLowerCase();
-
-                    // Check if this event can be subscribed to via this function:
-                    if (this._eventListeners[eventName] === undefined) {
-                        return;
-                    }
-
-                    // Check if eventListener is a function:
-                    if (!eventListener || eventListener.constructor !== Function) {
-                        throw "on requires argument 'eventListener' of type Function";
-                    }
-
-                    // Check if eventListener is already added:
-                    if (this._eventListeners[eventName].indexOf(eventListener) >= 0) {
-                        return;
-                    }
-
-                    // Add event listener:
-                    this._eventListeners[eventName].push(eventListener);
-                };
-
-                /**
-                 * @method
-                 * @param {string}
-                 * @param {callback}
-                 */
-                Window.prototype.once = function (eventName, eventListener) {
-                    function onceListener() {
-                        this.off(eventName, onceListener);
-                        eventListener.apply(this, arguments);
-                    }
-                    this.on(eventName, onceListener);
-                };
-
-                /**
-                 * @method
-                 * @param {string}
-                 * @param {callback}
-                 */
-                Window.prototype.off = function (eventName, eventListener) {
-                    eventName = eventName.toLowerCase();
-
-                    // If event listeners don't exist, bail:
-                    if (this._eventListeners[eventName] === undefined) {
-                        return;
-                    }
-
-                    // Check if eventListener is a function:
-                    if (!eventListener || eventListener.constructor !== Function) {
-                        throw "off requires argument 'eventListener' of type Function";
-                    }
-
-                    // Remove event listener, if exists:
-                    var index = this._eventListeners[eventName].indexOf(eventListener);
-                    if (index >= 0) {
-                        this._eventListeners[eventName].splice(index, 1);
-                    }
-                };
-
-                /**
-                 * @method
-                 * @param {string}
-                 */
-                Window.prototype.clearEvent = function (eventName) {
-                    eventName = eventName.toLowerCase();
-
-                    // If event listeners don't exist, bail:
-                    if (this._eventListeners[eventName] === undefined) {
-                        return;
-                    }
-
-                    this._eventListeners[eventName] = [];
-                };
-
-                /**
-                 * @method
-                 * @param {string}
-                 */
-                Window.prototype.emit = function (eventName) {
-                    eventName = eventName.toLowerCase();
-
-                    // If event listeners don't exist, bail:
-                    if (this._eventListeners[eventName] === undefined) {
-                        return;
-                    }
-
-                    // Get arguments:
-                    var args = new Array(arguments.length - 1);
-                    for (var index = 1; index < arguments.length; index += 1) {
-                        args[index - 1] = arguments[index];
-                    }
-
-                    for (var _index = 0; _index < this._eventListeners[eventName].length; _index += 1) {
-                        // Call listener with the 'this' context as the current window:
-                        this._eventListeners[eventName][_index].apply(this, args);
-                    }
                 };
 
                 /**
@@ -1318,6 +2556,10 @@
                  * @param {callback=}
                  */
                 Window.prototype.close = function (callback) {
+                    if (this.isClosed()) {
+                        return callback && callback();
+                    }
+
                     this._window.close();
                     if (callback) {
                         callback();
@@ -1534,8 +2776,16 @@
                 // Handle current window in this context:
                 Window.current = new Window(currentWin);
 
+                Window.getAll = function () {
+                    // TODO: Finish
+                    //return windowfactory._windows.splice();
+                };
+
                 _extends(windowfactory, {
-                    Window: Window
+                    Window: Window,
+                    _resolveWindowWithID: function _resolveWindowWithID(id) {
+                        return windows[id] || new Window(BrowserWindow.fromId(id));
+                    }
                 });
             })();
         } else if (windowfactory.isBackend) {
@@ -1543,6 +2793,7 @@
                 var _global$nodeRequire = global.nodeRequire("electron");
 
                 var BrowserWindow = _global$nodeRequire.BrowserWindow;
+                var ipcMain = _global$nodeRequire.ipcMain;
 
 
                 if (BrowserWindow) {
@@ -1551,6 +2802,39 @@
                         var Vector = _windowfactory$geomet.Vector;
                         var BoundingBox = _windowfactory$geomet.BoundingBox;
 
+                        /*let nextMessageID = 0;
+                        BrowserWindow.prototype._emit = function (event, args, _callback) {
+                            let retVal = true;
+                            let callback = new SyncCallback(function () {
+                                if (retVal) { _callback(); }
+                            });
+                            for (const other of BrowserWindow.getAllWindows()) {
+                                ipcMain.once("_emit" + nextMessageID, callback.ref(function (val) {
+                                    retVal &= val;
+                                }));
+                                other.webContents.send("_emit" + nextMessageID, ...args);
+                                nextMessageID += 1;
+                            }
+                        };*/
+                        // TODO: Solve event syncing between windows
+                        BrowserWindow.prototype._notifyReady = function () {
+                            for (var _iterator29 = BrowserWindow.getAllWindows(), _isArray29 = Array.isArray(_iterator29), _i29 = 0, _iterator29 = _isArray29 ? _iterator29 : _iterator29[Symbol.iterator]();;) {
+                                var _ref29;
+
+                                if (_isArray29) {
+                                    if (_i29 >= _iterator29.length) break;
+                                    _ref29 = _iterator29[_i29++];
+                                } else {
+                                    _i29 = _iterator29.next();
+                                    if (_i29.done) break;
+                                    _ref29 = _i29.value;
+                                }
+
+                                var other = _ref29;
+
+                                other.webContents.send("window-create", other.id);
+                            }
+                        };
                         BrowserWindow.prototype._ensureDockSystem = function () {
                             var _this = this;
 
@@ -1565,37 +2849,29 @@
                                     });
 
                                     _this.on("maximize", function () {
-                                        this.undock();
+                                        this.undock(); // TODO: Support changing size when docked.
                                     });
                                     _this.on("minimize", function () {
                                         this._dockMinimize();
                                     });
 
                                     _this.on("restore", function () {
-                                        var _iteratorNormalCompletion2 = true;
-                                        var _didIteratorError2 = false;
-                                        var _iteratorError2 = undefined;
+                                        for (var _iterator30 = this._dockedGroup, _isArray30 = Array.isArray(_iterator30), _i30 = 0, _iterator30 = _isArray30 ? _iterator30 : _iterator30[Symbol.iterator]();;) {
+                                            var _ref30;
 
-                                        try {
-                                            for (var _iterator2 = this._dockedGroup[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                                                var other = _step2.value;
-
-                                                if (other !== this) {
-                                                    other.restore();
-                                                }
+                                            if (_isArray30) {
+                                                if (_i30 >= _iterator30.length) break;
+                                                _ref30 = _iterator30[_i30++];
+                                            } else {
+                                                _i30 = _iterator30.next();
+                                                if (_i30.done) break;
+                                                _ref30 = _i30.value;
                                             }
-                                        } catch (err) {
-                                            _didIteratorError2 = true;
-                                            _iteratorError2 = err;
-                                        } finally {
-                                            try {
-                                                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                                                    _iterator2.return();
-                                                }
-                                            } finally {
-                                                if (_didIteratorError2) {
-                                                    throw _iteratorError2;
-                                                }
+
+                                            var other = _ref30;
+
+                                            if (other !== this) {
+                                                other.restore();
                                             }
                                         }
                                     });
@@ -1610,7 +2886,7 @@
                                         var newBounds = this.getBounds();
 
                                         if (newBounds.width !== lastBounds.width || newBounds.height !== lastBounds.height) {
-                                            this.undock();
+                                            this.undock(); // TODO: Support changing size when docked.
                                         }
                                         // TODO: Handle resize positions of other docked windows
                                         //       This requires reworking how windows are docked/connected
@@ -1645,35 +2921,27 @@
                             other._ensureDockSystem();
 
                             // Loop through all windows in otherGroup and add them to this's group:
-                            var _iteratorNormalCompletion3 = true;
-                            var _didIteratorError3 = false;
-                            var _iteratorError3 = undefined;
+                            for (var _iterator31 = other._dockedGroup, _isArray31 = Array.isArray(_iterator31), _i31 = 0, _iterator31 = _isArray31 ? _iterator31 : _iterator31[Symbol.iterator]();;) {
+                                var _ref31;
 
-                            try {
-                                for (var _iterator3 = other._dockedGroup[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                                    var _other = _step3.value;
-
-                                    this._dockedGroup.push(_other);
-                                    // Sharing the array between window objects makes it easier to manage:
-                                    _other._dockedGroup = this._dockedGroup;
+                                if (_isArray31) {
+                                    if (_i31 >= _iterator31.length) break;
+                                    _ref31 = _iterator31[_i31++];
+                                } else {
+                                    _i31 = _iterator31.next();
+                                    if (_i31.done) break;
+                                    _ref31 = _i31.value;
                                 }
 
-                                //console.log("dock", this._dockedGroup);
-                                // TODO: Check if otherGroup is touching
-                            } catch (err) {
-                                _didIteratorError3 = true;
-                                _iteratorError3 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                                        _iterator3.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError3) {
-                                        throw _iteratorError3;
-                                    }
-                                }
+                                var _other3 = _ref31;
+
+                                this._dockedGroup.push(_other3);
+                                // Sharing the array between window objects makes it easier to manage:
+                                _other3._dockedGroup = this._dockedGroup;
                             }
+
+                            //console.log("dock", this._dockedGroup);
+                            // TODO: Check if otherGroup is touching
                         };
                         BrowserWindow.prototype.undock = function () {
                             this._ensureDockSystem();
@@ -1693,63 +2961,49 @@
                         BrowserWindow.prototype._dockFocus = function () {
                             this._ensureDockSystem();
 
-                            var _iteratorNormalCompletion4 = true;
-                            var _didIteratorError4 = false;
-                            var _iteratorError4 = undefined;
+                            for (var _iterator32 = this._dockedGroup, _isArray32 = Array.isArray(_iterator32), _i32 = 0, _iterator32 = _isArray32 ? _iterator32 : _iterator32[Symbol.iterator]();;) {
+                                var _ref32;
 
-                            try {
-                                for (var _iterator4 = this._dockedGroup[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                                    var _window = _step4.value;
-
-                                    if (_window !== this) {
-                                        _window.setAlwaysOnTop(true);
-                                        _window.setAlwaysOnTop(false);
-                                    }
+                                if (_isArray32) {
+                                    if (_i32 >= _iterator32.length) break;
+                                    _ref32 = _iterator32[_i32++];
+                                } else {
+                                    _i32 = _iterator32.next();
+                                    if (_i32.done) break;
+                                    _ref32 = _i32.value;
                                 }
-                            } catch (err) {
-                                _didIteratorError4 = true;
-                                _iteratorError4 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                                        _iterator4.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError4) {
-                                        throw _iteratorError4;
-                                    }
+
+                                var _window12 = _ref32;
+
+                                if (_window12 !== this) {
+                                    _window12.setAlwaysOnTop(true);
+                                    _window12.setAlwaysOnTop(false);
                                 }
                             }
-
                             this.setAlwaysOnTop(true);
                             this.setAlwaysOnTop(false);
                         };
                         BrowserWindow.prototype._dragStart = function () {
+                            //if (!this.emit("drag-start")) { return; } // Allow preventing drag
                             this._ensureDockSystem();
 
-                            var _iteratorNormalCompletion5 = true;
-                            var _didIteratorError5 = false;
-                            var _iteratorError5 = undefined;
+                            this.restore();
 
-                            try {
-                                for (var _iterator5 = this._dockedGroup[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                                    var _window2 = _step5.value;
+                            for (var _iterator33 = this._dockedGroup, _isArray33 = Array.isArray(_iterator33), _i33 = 0, _iterator33 = _isArray33 ? _iterator33 : _iterator33[Symbol.iterator]();;) {
+                                var _ref33;
 
-                                    _window2._dragStartPos = _window2.getPosition();
+                                if (_isArray33) {
+                                    if (_i33 >= _iterator33.length) break;
+                                    _ref33 = _iterator33[_i33++];
+                                } else {
+                                    _i33 = _iterator33.next();
+                                    if (_i33.done) break;
+                                    _ref33 = _i33.value;
                                 }
-                            } catch (err) {
-                                _didIteratorError5 = true;
-                                _iteratorError5 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                                        _iterator5.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError5) {
-                                        throw _iteratorError5;
-                                    }
-                                }
+
+                                var _window13 = _ref33;
+
+                                _window13._dragStartPos = _window13.getPosition();
                             }
                         };
                         BrowserWindow.prototype._getBounds = function () {
@@ -1762,68 +3016,51 @@
                             // Perform Snap:
                             var thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft, this._dragStartPos[1] + deltaTop);
                             var snapDelta = new Vector(NaN, NaN);
-                            var _iteratorNormalCompletion6 = true;
-                            var _didIteratorError6 = false;
-                            var _iteratorError6 = undefined;
+                            for (var _iterator34 = BrowserWindow.getAllWindows(), _isArray34 = Array.isArray(_iterator34), _i34 = 0, _iterator34 = _isArray34 ? _iterator34 : _iterator34[Symbol.iterator]();;) {
+                                var _ref34;
 
-                            try {
-                                for (var _iterator6 = BrowserWindow.getAllWindows()[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                                    var other = _step6.value;
-
-                                    if (other._dockedGroup !== this._dockedGroup) {
-                                        snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
-                                    }
+                                if (_isArray34) {
+                                    if (_i34 >= _iterator34.length) break;
+                                    _ref34 = _iterator34[_i34++];
+                                } else {
+                                    _i34 = _iterator34.next();
+                                    if (_i34.done) break;
+                                    _ref34 = _i34.value;
                                 }
-                            } catch (err) {
-                                _didIteratorError6 = true;
-                                _iteratorError6 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                                        _iterator6.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError6) {
-                                        throw _iteratorError6;
-                                    }
+
+                                var other = _ref34;
+
+                                if (other._dockedGroup !== this._dockedGroup) {
+                                    snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
                                 }
                             }
-
                             deltaLeft += snapDelta.left || 0;
                             deltaTop += snapDelta.top || 0;
 
-                            var _iteratorNormalCompletion7 = true;
-                            var _didIteratorError7 = false;
-                            var _iteratorError7 = undefined;
+                            for (var _iterator35 = this._dockedGroup, _isArray35 = Array.isArray(_iterator35), _i35 = 0, _iterator35 = _isArray35 ? _iterator35 : _iterator35[Symbol.iterator]();;) {
+                                var _ref35;
 
-                            try {
-                                for (var _iterator7 = this._dockedGroup[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                                    var _other2 = _step7.value;
-
-                                    var pos = _other2._dragStartPos;
-
-                                    // If other doesn't have a drag position, start it:
-                                    if (pos === undefined) {
-                                        pos = _other2._dragStartPos = _other2.getPosition();
-                                        pos[0] -= deltaLeft;
-                                        pos[1] -= deltaTop;
-                                    }
-
-                                    _other2.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
+                                if (_isArray35) {
+                                    if (_i35 >= _iterator35.length) break;
+                                    _ref35 = _iterator35[_i35++];
+                                } else {
+                                    _i35 = _iterator35.next();
+                                    if (_i35.done) break;
+                                    _ref35 = _i35.value;
                                 }
-                            } catch (err) {
-                                _didIteratorError7 = true;
-                                _iteratorError7 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                                        _iterator7.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError7) {
-                                        throw _iteratorError7;
-                                    }
+
+                                var _other4 = _ref35;
+
+                                var pos = _other4._dragStartPos;
+
+                                // If other doesn't have a drag position, start it:
+                                if (pos === undefined) {
+                                    pos = _other4._dragStartPos = _other4.getPosition();
+                                    pos[0] -= deltaLeft;
+                                    pos[1] -= deltaTop;
                                 }
+
+                                _other4.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
                             }
                         };
                         BrowserWindow.prototype._dragStop = function () {
@@ -1831,56 +3068,40 @@
 
                             // Dock to those it snapped to:
                             var thisBounds = this._getBounds();
-                            var _iteratorNormalCompletion8 = true;
-                            var _didIteratorError8 = false;
-                            var _iteratorError8 = undefined;
+                            for (var _iterator36 = BrowserWindow.getAllWindows(), _isArray36 = Array.isArray(_iterator36), _i36 = 0, _iterator36 = _isArray36 ? _iterator36 : _iterator36[Symbol.iterator]();;) {
+                                var _ref36;
 
-                            try {
-                                for (var _iterator8 = BrowserWindow.getAllWindows()[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                                    var other = _step8.value;
-
-                                    if (thisBounds.isTouching(other._getBounds())) {
-                                        this.dock(other.id);
-                                    }
+                                if (_isArray36) {
+                                    if (_i36 >= _iterator36.length) break;
+                                    _ref36 = _iterator36[_i36++];
+                                } else {
+                                    _i36 = _iterator36.next();
+                                    if (_i36.done) break;
+                                    _ref36 = _i36.value;
                                 }
-                            } catch (err) {
-                                _didIteratorError8 = true;
-                                _iteratorError8 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                                        _iterator8.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError8) {
-                                        throw _iteratorError8;
-                                    }
+
+                                var other = _ref36;
+
+                                if (thisBounds.isTouching(other._getBounds())) {
+                                    this.dock(other.id);
                                 }
                             }
 
-                            var _iteratorNormalCompletion9 = true;
-                            var _didIteratorError9 = false;
-                            var _iteratorError9 = undefined;
+                            for (var _iterator37 = this._dockedGroup, _isArray37 = Array.isArray(_iterator37), _i37 = 0, _iterator37 = _isArray37 ? _iterator37 : _iterator37[Symbol.iterator]();;) {
+                                var _ref37;
 
-                            try {
-                                for (var _iterator9 = this._dockedGroup[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                                    var _window3 = _step9.value;
+                                if (_isArray37) {
+                                    if (_i37 >= _iterator37.length) break;
+                                    _ref37 = _iterator37[_i37++];
+                                } else {
+                                    _i37 = _iterator37.next();
+                                    if (_i37.done) break;
+                                    _ref37 = _i37.value;
+                                }
 
-                                    delete _window3._dragStartPos;
-                                }
-                            } catch (err) {
-                                _didIteratorError9 = true;
-                                _iteratorError9 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                                        _iterator9.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError9) {
-                                        throw _iteratorError9;
-                                    }
-                                }
+                                var _window14 = _ref37;
+
+                                delete _window14._dragStartPos;
                             }
                         };
                         BrowserWindow.prototype._dockMoveTo = function (left, top) {
@@ -1890,115 +3111,83 @@
                             var deltaLeft = left - oldPos[0];
                             var deltaTop = top - oldPos[1];
 
-                            var _iteratorNormalCompletion10 = true;
-                            var _didIteratorError10 = false;
-                            var _iteratorError10 = undefined;
+                            for (var _iterator38 = this._dockedGroup, _isArray38 = Array.isArray(_iterator38), _i38 = 0, _iterator38 = _isArray38 ? _iterator38 : _iterator38[Symbol.iterator]();;) {
+                                var _ref38;
 
-                            try {
-                                for (var _iterator10 = this._dockedGroup[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-                                    var other = _step10.value;
-
-                                    var pos = other.getPosition();
-
-                                    other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
+                                if (_isArray38) {
+                                    if (_i38 >= _iterator38.length) break;
+                                    _ref38 = _iterator38[_i38++];
+                                } else {
+                                    _i38 = _iterator38.next();
+                                    if (_i38.done) break;
+                                    _ref38 = _i38.value;
                                 }
-                            } catch (err) {
-                                _didIteratorError10 = true;
-                                _iteratorError10 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                                        _iterator10.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError10) {
-                                        throw _iteratorError10;
-                                    }
-                                }
+
+                                var other = _ref38;
+
+                                var pos = other.getPosition();
+
+                                other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
                             }
                         };
                         BrowserWindow.prototype._dockMinimize = function (left, top) {
                             this._ensureDockSystem();
 
-                            var _iteratorNormalCompletion11 = true;
-                            var _didIteratorError11 = false;
-                            var _iteratorError11 = undefined;
+                            for (var _iterator39 = this._dockedGroup, _isArray39 = Array.isArray(_iterator39), _i39 = 0, _iterator39 = _isArray39 ? _iterator39 : _iterator39[Symbol.iterator]();;) {
+                                var _ref39;
 
-                            try {
-                                for (var _iterator11 = this._dockedGroup[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-                                    var _window4 = _step11.value;
+                                if (_isArray39) {
+                                    if (_i39 >= _iterator39.length) break;
+                                    _ref39 = _iterator39[_i39++];
+                                } else {
+                                    _i39 = _iterator39.next();
+                                    if (_i39.done) break;
+                                    _ref39 = _i39.value;
+                                }
 
-                                    _window4.minimize();
-                                }
-                            } catch (err) {
-                                _didIteratorError11 = true;
-                                _iteratorError11 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                                        _iterator11.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError11) {
-                                        throw _iteratorError11;
-                                    }
-                                }
+                                var _window15 = _ref39;
+
+                                _window15.minimize();
                             }
                         };
                         BrowserWindow.prototype._dockHide = function (left, top) {
                             this._ensureDockSystem();
 
-                            var _iteratorNormalCompletion12 = true;
-                            var _didIteratorError12 = false;
-                            var _iteratorError12 = undefined;
+                            for (var _iterator40 = this._dockedGroup, _isArray40 = Array.isArray(_iterator40), _i40 = 0, _iterator40 = _isArray40 ? _iterator40 : _iterator40[Symbol.iterator]();;) {
+                                var _ref40;
 
-                            try {
-                                for (var _iterator12 = this._dockedGroup[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-                                    var _window5 = _step12.value;
+                                if (_isArray40) {
+                                    if (_i40 >= _iterator40.length) break;
+                                    _ref40 = _iterator40[_i40++];
+                                } else {
+                                    _i40 = _iterator40.next();
+                                    if (_i40.done) break;
+                                    _ref40 = _i40.value;
+                                }
 
-                                    _window5.hide();
-                                }
-                            } catch (err) {
-                                _didIteratorError12 = true;
-                                _iteratorError12 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion12 && _iterator12.return) {
-                                        _iterator12.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError12) {
-                                        throw _iteratorError12;
-                                    }
-                                }
+                                var _window16 = _ref40;
+
+                                _window16.hide();
                             }
                         };
                         BrowserWindow.prototype._dockShow = function (left, top) {
                             this._ensureDockSystem();
 
-                            var _iteratorNormalCompletion13 = true;
-                            var _didIteratorError13 = false;
-                            var _iteratorError13 = undefined;
+                            for (var _iterator41 = this._dockedGroup, _isArray41 = Array.isArray(_iterator41), _i41 = 0, _iterator41 = _isArray41 ? _iterator41 : _iterator41[Symbol.iterator]();;) {
+                                var _ref41;
 
-                            try {
-                                for (var _iterator13 = this._dockedGroup[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-                                    var _window6 = _step13.value;
+                                if (_isArray41) {
+                                    if (_i41 >= _iterator41.length) break;
+                                    _ref41 = _iterator41[_i41++];
+                                } else {
+                                    _i41 = _iterator41.next();
+                                    if (_i41.done) break;
+                                    _ref41 = _i41.value;
+                                }
 
-                                    _window6.show();
-                                }
-                            } catch (err) {
-                                _didIteratorError13 = true;
-                                _iteratorError13 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion13 && _iterator13.return) {
-                                        _iterator13.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError13) {
-                                        throw _iteratorError13;
-                                    }
-                                }
+                                var _window17 = _ref41;
+
+                                _window17.show();
                             }
                         };
                     })();
@@ -2015,7 +3204,7 @@
         var Window = windowfactory.Window;
         var remote = nodeRequire("electron").remote;
         var readyCallbacks = [];
-        var _isReady = true;
+        var _isReady2 = true;
         var allWindows = {};
 
         function registerWindow(window) {
@@ -2057,7 +3246,7 @@
             }
 
             // Check if already ready:
-            if (_isReady) {
+            if (_isReady2) {
                 callback();
             }
 
@@ -2149,7 +3338,7 @@
         _extends(windowfactory, {
             onReady: onReady,
             isReady: function isReady() {
-                return _isReady;
+                return _isReady2;
             },
             runtime: "Electron",
             runtimeVersion: windowfactory.electronVersion
@@ -2157,7 +3346,7 @@
     })();
     // TODO: Make scalejs.windowfactory the main.js script for Electron. Load the config.json
 
-    /*global windowfactory,fin,SyncCallback*/
+    /*global windowfactory,fin,SyncCallback,EventHandler*/
     /*jshint bitwise: false*/
     (function () {
         if (windowfactory.isRenderer && !windowfactory.isBackend && windowfactory.openfinVersion) {
@@ -2167,16 +3356,15 @@
                 var Position = geometry.Position;
                 var Size = geometry.Size;
                 var BoundingBox = geometry.BoundingBox;
-                var currentWin = fin.desktop.Window.getCurrent();
-                var mainWindow = fin.desktop.Application.getCurrent().getWindow();
+                var currentWin = void 0; // = fin.desktop.Window.getCurrent();
                 var defaultConfig = {
-                    width: 600,
-                    height: 600,
+                    defaultWidth: 600,
+                    defaultHeight: 600,
                     frame: false,
                     resizable: true,
                     saveWindowState: false,
                     autoShow: true,
-                    icon: "http://localhost:3000/favicon.ico"
+                    icon: location.href + "favicon.ico"
                 };
                 var configMap = {
                     left: "defaultLeft",
@@ -2184,7 +3372,7 @@
                     width: "defaultWidth",
                     height: "defaultHeight"
                 };
-                var acceptedEventHandlers = ["move", "close"];
+                var acceptedEventHandlers = ["ready", "drag-start", "drag-before", "drag-stop", "dock-before", "move", "move-before", "resize-before", "close", "minimize"];
 
                 var lut = [];
                 for (var i = 0; i < 256; i += 1) {
@@ -2207,18 +3395,16 @@
                     }
 
                     config = config || {}; // If no arguments are passed, assume we are creating a default blank window
-                    var isArgConfig = config["app_uuid"] === undefined;
+                    var isArgConfig = /*jshint camelcase: false*/config.app_uuid /*jshint camelcase: true*/ === undefined;
 
+                    // Call the parent constructor:
+                    EventHandler.call(this, acceptedEventHandlers);
                     this._bounds = new BoundingBox();
                     this._ready = false;
                     this._isClosed = false;
                     this._dockedGroup = [this];
-                    // Setup handlers:
-                    // TODO: Look into making these special properties that can't be deleted?
-                    this._eventListeners = {};
-                    for (var index = 0; index < acceptedEventHandlers.length; index += 1) {
-                        this._eventListeners[acceptedEventHandlers[index]] = [];
-                    }
+                    this._children = [];
+                    this._parent = undefined;
 
                     if (isArgConfig) {
                         for (var prop in config) {
@@ -2227,12 +3413,19 @@
                                 delete config[prop];
                             }
                         }
-                        for (var _prop2 in defaultConfig) {
-                            if (defaultConfig.hasOwnProperty(_prop2)) {
-                                config[_prop2] = config[_prop2] || defaultConfig[_prop2];
+                        for (var _prop3 in defaultConfig) {
+                            if (defaultConfig.hasOwnProperty(_prop3)) {
+                                config[_prop3] = config[_prop3] || defaultConfig[_prop3];
                             }
                         }
                         config.name = getUniqueWindowName();
+
+                        if (config.parent) {
+                            config.parent._children.push(this);
+                            this._parent = config.parent;
+                            // TODO: Emit event "child-added" on parent
+                            delete config.parent;
+                        }
 
                         windowfactory._windows[config.name] = this;
                         this._window = new fin.desktop.Window(config, this._setupDOM.bind(this), function (err) {
@@ -2246,6 +3439,10 @@
 
                     // TODO: Ensure docking system
                 };
+                // Inherit EventHandler
+                Window.prototype = Object.create(EventHandler.prototype);
+                // Correct the constructor pointer because it points to EventHandler:
+                Window.prototype.constructor = Window;
 
                 Window.prototype._setupDOM = function () {
                     var thisWindow = this;
@@ -2253,6 +3450,7 @@
                     function setWindows() {
                         if (thisWindow._window.contentWindow.windowfactory) {
                             thisWindow._window.contentWindow.windowfactory._windows = windowfactory._windows;
+                            thisWindow._window.contentWindow.windowfactory._internalBus = windowfactory._internalBus;
                         } else {
                             setTimeout(setWindows, 5);
                         }
@@ -2278,106 +3476,69 @@
                     this._window.addEventListener("bounds-changed", onBoundsChange);
 
                     function onClose() {
+                        // TODO: Is it possible that onClose might not be called when the window is closed?
+                        //       What if this event is set up on a window that has closed already, and then this window closes?
                         thisWindow._isClosed = true;
                         delete windowfactory._windows[thisWindow._window.name];
+
+                        // Undock:
                         thisWindow.undock();
+
+                        // Move children to parent:
+                        var parent = thisWindow.getParent();
+                        for (var _iterator42 = thisWindow.getChildren(), _isArray42 = Array.isArray(_iterator42), _i42 = 0, _iterator42 = _isArray42 ? _iterator42 : _iterator42[Symbol.iterator]();;) {
+                            var _ref42;
+
+                            if (_isArray42) {
+                                if (_i42 >= _iterator42.length) break;
+                                _ref42 = _iterator42[_i42++];
+                            } else {
+                                _i42 = _iterator42.next();
+                                if (_i42.done) break;
+                                _ref42 = _i42.value;
+                            }
+
+                            var child = _ref42;
+
+                            // We use getChildren to have a copy of the list, so child.setParent doesn't modify this loop's list!
+                            // TODO: Optimize this loop, by not making a copy of children, and not executing splice in each setParent!
+                            child.setParent(parent);
+                        }
+                        thisWindow.setParent(undefined); // Remove from parent
+
                         thisWindow.emit("close");
+                        windowfactory._internalBus.emit("window-close", thisWindow);
                         thisWindow._window = undefined;
                         // TODO: Clean up ALL listeners
                     }
                     this._window.addEventListener("closed", onClose);
+
+                    function onMinimized() {
+                        thisWindow.emit("minimize");
+                    }
+                    this._window.addEventListener("minimized", onMinimized);
+
                     this._ready = true;
-                    // Notify Subscribers
+                    this.emit("ready");
+                    windowfactory._internalBus.emit("window-create", this);
                 };
 
                 Window.getCurrent = function () {
                     return Window.current;
                 };
 
-                Window.prototype.on = function (eventName, eventListener) {
-                    // TODO: Don't allow if window is closed!
-                    eventName = eventName.toLowerCase();
-
-                    // Check if this event can be subscribed to via this function:
-                    if (this._eventListeners[eventName] === undefined) {
-                        return;
-                    }
-
-                    // Check if eventListener is a function:
-                    if (!eventListener || eventListener.constructor !== Function) {
-                        throw "on requires argument 'eventListener' of type Function";
-                    }
-
-                    // Check if eventListener is already added:
-                    if (this._eventListeners[eventName].indexOf(eventListener) >= 0) {
-                        return;
-                    }
-
-                    // Add event listener:
-                    this._eventListeners[eventName].push(eventListener);
-                };
-
-                Window.prototype.once = function (eventName, eventListener) {
-                    function onceListener() {
-                        this.off(eventName, onceListener);
-                        eventListener.apply(this, arguments);
-                    }
-                    this.on(eventName, onceListener);
-                };
-
-                Window.prototype.off = function (eventName, eventListener) {
-                    eventName = eventName.toLowerCase();
-
-                    // If event listeners don't exist, bail:
-                    if (this._eventListeners[eventName] === undefined) {
-                        return;
-                    }
-
-                    // Check if eventListener is a function:
-                    if (!eventListener || eventListener.constructor !== Function) {
-                        throw "off requires argument 'eventListener' of type Function";
-                    }
-
-                    // Remove event listener, if exists:
-                    var index = this._eventListeners[eventName].indexOf(eventListener);
-                    if (index >= 0) {
-                        this._eventListeners[eventName].splice(index, 1);
-                    }
-                };
-
-                Window.prototype.clearEvent = function (eventName) {
-                    eventName = eventName.toLowerCase();
-
-                    // If event listeners don't exist, bail:
-                    if (this._eventListeners[eventName] === undefined) {
-                        return;
-                    }
-
-                    this._eventListeners[eventName] = [];
-                };
-
-                Window.prototype.emit = function (eventName) {
-                    eventName = eventName.toLowerCase();
-
-                    // If event listeners don't exist, bail:
-                    if (this._eventListeners[eventName] === undefined) {
-                        return;
-                    }
-
-                    // Get arguments:
-                    var args = new Array(arguments.length - 1);
-                    for (var index = 1; index < arguments.length; index += 1) {
-                        args[index - 1] = arguments[index];
-                    }
-
-                    for (var _index2 = 0; _index2 < this._eventListeners[eventName].length; _index2 += 1) {
-                        // Call listener with the 'this' context as the current window:
-                        this._eventListeners[eventName][_index2].apply(this, args);
-                    }
-                };
-
                 Window.prototype.isReady = function () {
-                    return this._window !== undefined;
+                    return this._ready;
+                };
+                Window.prototype.onReady = function (callback) {
+                    if (this.isClosed()) {
+                        throw "onReady can't be called on a closed window";
+                    }
+                    if (this.isReady()) {
+                        return callback.call(this);
+                    }
+
+                    this.once("ready", callback);
                 };
 
                 Window.prototype.isClosed = function () {
@@ -2404,7 +3565,42 @@
                     return this._bounds.clone();
                 };
 
+                Window.prototype.getParent = function () {
+                    return this._parent;
+                };
+                Window.prototype.setParent = function (parent) {
+                    // TODO: Execute appropriate checks (if not closed, and is this new parent a window)
+
+                    if (parent === this._parent) {
+                        return;
+                    }
+
+                    if (this._parent) {
+                        var index = this._parent._children.indexOf(this);
+                        if (index >= 0) {
+                            this._parent._children.splice(index, 1);
+                        }
+                        // TODO: Emit event "child-removed" on current parent.
+                    }
+
+                    if (parent) {
+                        this._parent = parent;
+                        this._parent._children.push(this);
+                        // TODO: Emit event "child-added on parent".
+                    }
+                };
+
+                Window.prototype.getChildren = function () {
+                    return this._children.slice();
+                };
+                Window.prototype.addChild = function (child) {
+                    child.setParent(this);
+                };
+
                 Window.prototype.close = function (callback) {
+                    if (this.isClosed()) {
+                        return callback && callback();
+                    }
                     this._window.close(callback);
                 };
 
@@ -2414,29 +3610,21 @@
                     }
 
                     callback = new SyncCallback(callback);
-                    var _iteratorNormalCompletion14 = true;
-                    var _didIteratorError14 = false;
-                    var _iteratorError14 = undefined;
+                    for (var _iterator43 = this._dockedGroup, _isArray43 = Array.isArray(_iterator43), _i43 = 0, _iterator43 = _isArray43 ? _iterator43 : _iterator43[Symbol.iterator]();;) {
+                        var _ref43;
 
-                    try {
-                        for (var _iterator14 = this._dockedGroup[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-                            var _window7 = _step14.value;
+                        if (_isArray43) {
+                            if (_i43 >= _iterator43.length) break;
+                            _ref43 = _iterator43[_i43++];
+                        } else {
+                            _i43 = _iterator43.next();
+                            if (_i43.done) break;
+                            _ref43 = _i43.value;
+                        }
 
-                            _window7._window.minimize(callback.ref());
-                        }
-                    } catch (err) {
-                        _didIteratorError14 = true;
-                        _iteratorError14 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion14 && _iterator14.return) {
-                                _iterator14.return();
-                            }
-                        } finally {
-                            if (_didIteratorError14) {
-                                throw _iteratorError14;
-                            }
-                        }
+                        var _window18 = _ref43;
+
+                        _window18._window.minimize(callback.ref());
                     }
                 };
 
@@ -2454,29 +3642,21 @@
                     }
 
                     callback = new SyncCallback(callback);
-                    var _iteratorNormalCompletion15 = true;
-                    var _didIteratorError15 = false;
-                    var _iteratorError15 = undefined;
+                    for (var _iterator44 = this._dockedGroup, _isArray44 = Array.isArray(_iterator44), _i44 = 0, _iterator44 = _isArray44 ? _iterator44 : _iterator44[Symbol.iterator]();;) {
+                        var _ref44;
 
-                    try {
-                        for (var _iterator15 = this._dockedGroup[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-                            var _window8 = _step15.value;
+                        if (_isArray44) {
+                            if (_i44 >= _iterator44.length) break;
+                            _ref44 = _iterator44[_i44++];
+                        } else {
+                            _i44 = _iterator44.next();
+                            if (_i44.done) break;
+                            _ref44 = _i44.value;
+                        }
 
-                            _window8._window.show(callback.ref());
-                        }
-                    } catch (err) {
-                        _didIteratorError15 = true;
-                        _iteratorError15 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion15 && _iterator15.return) {
-                                _iterator15.return();
-                            }
-                        } finally {
-                            if (_didIteratorError15) {
-                                throw _iteratorError15;
-                            }
-                        }
+                        var _window19 = _ref44;
+
+                        _window19._window.show(callback.ref());
                     }
                 };
 
@@ -2486,29 +3666,21 @@
                     }
 
                     callback = new SyncCallback(callback);
-                    var _iteratorNormalCompletion16 = true;
-                    var _didIteratorError16 = false;
-                    var _iteratorError16 = undefined;
+                    for (var _iterator45 = this._dockedGroup, _isArray45 = Array.isArray(_iterator45), _i45 = 0, _iterator45 = _isArray45 ? _iterator45 : _iterator45[Symbol.iterator]();;) {
+                        var _ref45;
 
-                    try {
-                        for (var _iterator16 = this._dockedGroup[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-                            var _window9 = _step16.value;
+                        if (_isArray45) {
+                            if (_i45 >= _iterator45.length) break;
+                            _ref45 = _iterator45[_i45++];
+                        } else {
+                            _i45 = _iterator45.next();
+                            if (_i45.done) break;
+                            _ref45 = _i45.value;
+                        }
 
-                            _window9._window.hide(callback.ref());
-                        }
-                    } catch (err) {
-                        _didIteratorError16 = true;
-                        _iteratorError16 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion16 && _iterator16.return) {
-                                _iterator16.return();
-                            }
-                        } finally {
-                            if (_didIteratorError16) {
-                                throw _iteratorError16;
-                            }
-                        }
+                        var _window20 = _ref45;
+
+                        _window20._window.hide(callback.ref());
                     }
                 };
 
@@ -2518,29 +3690,21 @@
                     }
 
                     callback = new SyncCallback(callback);
-                    var _iteratorNormalCompletion17 = true;
-                    var _didIteratorError17 = false;
-                    var _iteratorError17 = undefined;
+                    for (var _iterator46 = this._dockedGroup, _isArray46 = Array.isArray(_iterator46), _i46 = 0, _iterator46 = _isArray46 ? _iterator46 : _iterator46[Symbol.iterator]();;) {
+                        var _ref46;
 
-                    try {
-                        for (var _iterator17 = this._dockedGroup[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-                            var _window10 = _step17.value;
+                        if (_isArray46) {
+                            if (_i46 >= _iterator46.length) break;
+                            _ref46 = _iterator46[_i46++];
+                        } else {
+                            _i46 = _iterator46.next();
+                            if (_i46.done) break;
+                            _ref46 = _i46.value;
+                        }
 
-                            _window10._window.restore(callback.ref());
-                        }
-                    } catch (err) {
-                        _didIteratorError17 = true;
-                        _iteratorError17 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion17 && _iterator17.return) {
-                                _iterator17.return();
-                            }
-                        } finally {
-                            if (_didIteratorError17) {
-                                throw _iteratorError17;
-                            }
-                        }
+                        var _window21 = _ref46;
+
+                        _window21._window.restore(callback.ref());
                     }
                 };
 
@@ -2553,30 +3717,22 @@
                     var beforeCallback = new SyncCallback(function () {
                         thisWindow._window.bringToFront(callback);
                     });
-                    var _iteratorNormalCompletion18 = true;
-                    var _didIteratorError18 = false;
-                    var _iteratorError18 = undefined;
+                    for (var _iterator47 = this._dockedGroup, _isArray47 = Array.isArray(_iterator47), _i47 = 0, _iterator47 = _isArray47 ? _iterator47 : _iterator47[Symbol.iterator]();;) {
+                        var _ref47;
 
-                    try {
-                        for (var _iterator18 = this._dockedGroup[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
-                            var _window11 = _step18.value;
-
-                            if (_window11 !== this) {
-                                _window11._window.bringToFront(beforeCallback.ref());
-                            }
+                        if (_isArray47) {
+                            if (_i47 >= _iterator47.length) break;
+                            _ref47 = _iterator47[_i47++];
+                        } else {
+                            _i47 = _iterator47.next();
+                            if (_i47.done) break;
+                            _ref47 = _i47.value;
                         }
-                    } catch (err) {
-                        _didIteratorError18 = true;
-                        _iteratorError18 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion18 && _iterator18.return) {
-                                _iterator18.return();
-                            }
-                        } finally {
-                            if (_didIteratorError18) {
-                                throw _iteratorError18;
-                            }
+
+                        var _window22 = _ref47;
+
+                        if (_window22 !== this) {
+                            _window22._window.bringToFront(beforeCallback.ref());
                         }
                     }
                 };
@@ -2590,30 +3746,22 @@
                     var beforeCallback = new SyncCallback(function () {
                         thisWindow._window.focus(callback);
                     });
-                    var _iteratorNormalCompletion19 = true;
-                    var _didIteratorError19 = false;
-                    var _iteratorError19 = undefined;
+                    for (var _iterator48 = this._dockedGroup, _isArray48 = Array.isArray(_iterator48), _i48 = 0, _iterator48 = _isArray48 ? _iterator48 : _iterator48[Symbol.iterator]();;) {
+                        var _ref48;
 
-                    try {
-                        for (var _iterator19 = this._dockedGroup[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-                            var _window12 = _step19.value;
-
-                            if (_window12 !== this) {
-                                _window12._window.focus(beforeCallback.ref());
-                            }
+                        if (_isArray48) {
+                            if (_i48 >= _iterator48.length) break;
+                            _ref48 = _iterator48[_i48++];
+                        } else {
+                            _i48 = _iterator48.next();
+                            if (_i48.done) break;
+                            _ref48 = _i48.value;
                         }
-                    } catch (err) {
-                        _didIteratorError19 = true;
-                        _iteratorError19 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion19 && _iterator19.return) {
-                                _iterator19.return();
-                            }
-                        } finally {
-                            if (_didIteratorError19) {
-                                throw _iteratorError19;
-                            }
+
+                        var _window23 = _ref48;
+
+                        if (_window23 !== this) {
+                            _window23._window.focus(beforeCallback.ref());
                         }
                     }
                 };
@@ -2622,6 +3770,9 @@
                     if (!this._ready) {
                         throw "resizeTo can't be called on an unready window";
                     }
+                    if (!this.emit("resize-before")) {
+                        return;
+                    } // Allow preventing resize
                     var size = new Position(width, height);
 
                     this._window.resizeTo(size.left, size.top, "top-left", callback);
@@ -2631,34 +3782,29 @@
                     if (!this._ready) {
                         throw "moveTo can't be called on an unready window";
                     }
+                    if (!this.emit("move-before")) {
+                        return;
+                    } // Allow preventing move
                     var deltaPos = new Position(left, top).subtract(this.getPosition());
 
                     callback = new SyncCallback(callback);
-                    var _iteratorNormalCompletion20 = true;
-                    var _didIteratorError20 = false;
-                    var _iteratorError20 = undefined;
+                    for (var _iterator49 = this._dockedGroup, _isArray49 = Array.isArray(_iterator49), _i49 = 0, _iterator49 = _isArray49 ? _iterator49 : _iterator49[Symbol.iterator]();;) {
+                        var _ref49;
 
-                    try {
-                        for (var _iterator20 = this._dockedGroup[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-                            var _window13 = _step20.value;
+                        if (_isArray49) {
+                            if (_i49 >= _iterator49.length) break;
+                            _ref49 = _iterator49[_i49++];
+                        } else {
+                            _i49 = _iterator49.next();
+                            if (_i49.done) break;
+                            _ref49 = _i49.value;
+                        }
 
-                            var pos = _window13.getPosition().add(deltaPos);
-                            _window13._bounds.moveTo(pos);
-                            _window13._window.moveTo(pos.left, pos.top, callback.ref());
-                        }
-                    } catch (err) {
-                        _didIteratorError20 = true;
-                        _iteratorError20 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion20 && _iterator20.return) {
-                                _iterator20.return();
-                            }
-                        } finally {
-                            if (_didIteratorError20) {
-                                throw _iteratorError20;
-                            }
-                        }
+                        var _window24 = _ref49;
+
+                        var pos = _window24.getPosition().add(deltaPos);
+                        _window24._bounds.moveTo(pos);
+                        _window24._window.moveTo(pos.left, pos.top, callback.ref());
                     }
                 };
 
@@ -2666,35 +3812,39 @@
                     if (!this._ready) {
                         throw "moveBy can't be called on an unready window";
                     }
+                    if (!this.emit("move-before")) {
+                        return;
+                    } // Allow preventing move
                     var deltaPos = new Position(deltaLeft, deltaTop);
 
                     callback = new SyncCallback(callback);
-                    var _iteratorNormalCompletion21 = true;
-                    var _didIteratorError21 = false;
-                    var _iteratorError21 = undefined;
+                    for (var _iterator50 = this._dockedGroup, _isArray50 = Array.isArray(_iterator50), _i50 = 0, _iterator50 = _isArray50 ? _iterator50 : _iterator50[Symbol.iterator]();;) {
+                        var _ref50;
 
-                    try {
-                        for (var _iterator21 = this._dockedGroup[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
-                            var _window14 = _step21.value;
+                        if (_isArray50) {
+                            if (_i50 >= _iterator50.length) break;
+                            _ref50 = _iterator50[_i50++];
+                        } else {
+                            _i50 = _iterator50.next();
+                            if (_i50.done) break;
+                            _ref50 = _i50.value;
+                        }
 
-                            var pos = _window14.getPosition().add(deltaPos);
-                            _window14._bounds.moveTo(pos);
-                            _window14._window.moveTo(pos.left, pos.top, callback.ref());
-                        }
-                    } catch (err) {
-                        _didIteratorError21 = true;
-                        _iteratorError21 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion21 && _iterator21.return) {
-                                _iterator21.return();
-                            }
-                        } finally {
-                            if (_didIteratorError21) {
-                                throw _iteratorError21;
-                            }
-                        }
+                        var _window25 = _ref50;
+
+                        var pos = _window25.getPosition().add(deltaPos);
+                        _window25._bounds.moveTo(pos);
+                        _window25._window.moveTo(pos.left, pos.top, callback.ref());
                     }
+                };
+
+                Window.prototype.setSize = function (width, height, callback) {
+                    if (!this._ready) {
+                        throw "setSize can't be called on an unready window";
+                    }
+                    var size = new Size(width, height);
+
+                    this._window.resizeTo(size.left, size.top, "top-left", callback);
                 };
 
                 Window.prototype.setBounds = function (left, top, right, bottom, callback) {
@@ -2707,6 +3857,9 @@
                 };
 
                 Window.prototype.dock = function (other) {
+                    if (!this.emit("dock-before")) {
+                        return;
+                    } // Allow preventing dock
                     if (other === undefined) {
                         return;
                     } // Failed to find other. TODO: Return error
@@ -2717,35 +3870,27 @@
                     }
 
                     // Loop through all windows in otherGroup and add them to this's group:
-                    var _iteratorNormalCompletion22 = true;
-                    var _didIteratorError22 = false;
-                    var _iteratorError22 = undefined;
+                    for (var _iterator51 = other._dockedGroup, _isArray51 = Array.isArray(_iterator51), _i51 = 0, _iterator51 = _isArray51 ? _iterator51 : _iterator51[Symbol.iterator]();;) {
+                        var _ref51;
 
-                    try {
-                        for (var _iterator22 = other._dockedGroup[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-                            var _other3 = _step22.value;
-
-                            this._dockedGroup.push(_other3);
-                            // Sharing the array between window objects makes it easier to manage:
-                            _other3._dockedGroup = this._dockedGroup;
+                        if (_isArray51) {
+                            if (_i51 >= _iterator51.length) break;
+                            _ref51 = _iterator51[_i51++];
+                        } else {
+                            _i51 = _iterator51.next();
+                            if (_i51.done) break;
+                            _ref51 = _i51.value;
                         }
 
-                        //console.log("dock", thisWindow._dockedGroup);
-                        // TODO: Check if otherGroup is touching
-                    } catch (err) {
-                        _didIteratorError22 = true;
-                        _iteratorError22 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion22 && _iterator22.return) {
-                                _iterator22.return();
-                            }
-                        } finally {
-                            if (_didIteratorError22) {
-                                throw _iteratorError22;
-                            }
-                        }
+                        var _other5 = _ref51;
+
+                        this._dockedGroup.push(_other5);
+                        // Sharing the array between window objects makes it easier to manage:
+                        _other5._dockedGroup = this._dockedGroup;
                     }
+
+                    //console.log("dock", thisWindow._dockedGroup);
+                    // TODO: Check if otherGroup is touching
                 };
                 Window.prototype.undock = function (other) {
                     // Check to see if window is already undocked:
@@ -2754,7 +3899,6 @@
                     }
 
                     // Undock this:
-                    var thisWindowName = this._window.name;
                     this._dockedGroup.splice(this._dockedGroup.indexOf(this), 1);
                     this._dockedGroup = [this];
 
@@ -2763,33 +3907,31 @@
                 };
 
                 Window.prototype._dragStart = function () {
-                    var _iteratorNormalCompletion23 = true;
-                    var _didIteratorError23 = false;
-                    var _iteratorError23 = undefined;
+                    if (!this.emit("drag-start")) {
+                        return;
+                    } // Allow preventing drag
+                    for (var _iterator52 = this._dockedGroup, _isArray52 = Array.isArray(_iterator52), _i52 = 0, _iterator52 = _isArray52 ? _iterator52 : _iterator52[Symbol.iterator]();;) {
+                        var _ref52;
 
-                    try {
-                        for (var _iterator23 = this._dockedGroup[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
-                            var _window15 = _step23.value;
+                        if (_isArray52) {
+                            if (_i52 >= _iterator52.length) break;
+                            _ref52 = _iterator52[_i52++];
+                        } else {
+                            _i52 = _iterator52.next();
+                            if (_i52.done) break;
+                            _ref52 = _i52.value;
+                        }
 
-                            _window15._dragStartPos = _window15.getPosition();
-                        }
-                    } catch (err) {
-                        _didIteratorError23 = true;
-                        _iteratorError23 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion23 && _iterator23.return) {
-                                _iterator23.return();
-                            }
-                        } finally {
-                            if (_didIteratorError23) {
-                                throw _iteratorError23;
-                            }
-                        }
+                        var _window26 = _ref52;
+
+                        _window26._dragStartPos = _window26.getPosition();
                     }
                 };
 
                 Window.prototype._dragBy = function (deltaLeft, deltaTop) {
+                    if (!this.emit("drag-before")) {
+                        return;
+                    } // Allow preventing drag
                     // Perform Snap:
                     var thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft, this._dragStartPos.top + deltaTop);
                     var snapDelta = new Vector(NaN, NaN);
@@ -2804,38 +3946,30 @@
                     deltaLeft += snapDelta.left || 0;
                     deltaTop += snapDelta.top || 0;
 
-                    var _iteratorNormalCompletion24 = true;
-                    var _didIteratorError24 = false;
-                    var _iteratorError24 = undefined;
+                    for (var _iterator53 = this._dockedGroup, _isArray53 = Array.isArray(_iterator53), _i53 = 0, _iterator53 = _isArray53 ? _iterator53 : _iterator53[Symbol.iterator]();;) {
+                        var _ref53;
 
-                    try {
-                        for (var _iterator24 = this._dockedGroup[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
-                            var _other4 = _step24.value;
-
-                            var pos = _other4._dragStartPos;
-
-                            // If other doesn't have a drag position, start it:
-                            if (pos === undefined) {
-                                pos = _other4._dragStartPos = _other4.getPosition();
-                                pos.left -= deltaLeft;
-                                pos.top -= deltaTop;
-                            }
-
-                            _other4._window.moveTo(pos.left + deltaLeft, pos.top + deltaTop);
+                        if (_isArray53) {
+                            if (_i53 >= _iterator53.length) break;
+                            _ref53 = _iterator53[_i53++];
+                        } else {
+                            _i53 = _iterator53.next();
+                            if (_i53.done) break;
+                            _ref53 = _i53.value;
                         }
-                    } catch (err) {
-                        _didIteratorError24 = true;
-                        _iteratorError24 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion24 && _iterator24.return) {
-                                _iterator24.return();
-                            }
-                        } finally {
-                            if (_didIteratorError24) {
-                                throw _iteratorError24;
-                            }
+
+                        var _other6 = _ref53;
+
+                        var pos = _other6._dragStartPos;
+
+                        // If other doesn't have a drag position, start it:
+                        if (pos === undefined) {
+                            pos = _other6._dragStartPos = _other6.getPosition();
+                            pos.left -= deltaLeft;
+                            pos.top -= deltaTop;
                         }
+
+                        _other6._window.moveTo(pos.left + deltaLeft, pos.top + deltaTop);
                     }
                 };
 
@@ -2851,42 +3985,45 @@
                         }
                     }
 
-                    var _iteratorNormalCompletion25 = true;
-                    var _didIteratorError25 = false;
-                    var _iteratorError25 = undefined;
+                    for (var _iterator54 = this._dockedGroup, _isArray54 = Array.isArray(_iterator54), _i54 = 0, _iterator54 = _isArray54 ? _iterator54 : _iterator54[Symbol.iterator]();;) {
+                        var _ref54;
 
-                    try {
-                        for (var _iterator25 = this._dockedGroup[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
-                            var _window16 = _step25.value;
+                        if (_isArray54) {
+                            if (_i54 >= _iterator54.length) break;
+                            _ref54 = _iterator54[_i54++];
+                        } else {
+                            _i54 = _iterator54.next();
+                            if (_i54.done) break;
+                            _ref54 = _i54.value;
+                        }
 
-                            delete _window16._dragStartPos;
-                        }
-                    } catch (err) {
-                        _didIteratorError25 = true;
-                        _iteratorError25 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion25 && _iterator25.return) {
-                                _iterator25.return();
-                            }
-                        } finally {
-                            if (_didIteratorError25) {
-                                throw _iteratorError25;
-                            }
-                        }
+                        var _window27 = _ref54;
+
+                        delete _window27._dragStartPos;
                     }
+
+                    this.emit("drag-stop");
                 };
 
                 // Handle current window in this context:
                 // TODO: Rewrite to remove setTimeout for the following:
-                var getCurrent = function getCurrent() {
-                    if (windowfactory._windows) {
-                        Window.current = windowfactory._windows[currentWin.name] || new Window(currentWin);
-                    } else {
-                        setTimeout(getCurrent, 5);
-                    }
+                fin.desktop.main(function () {
+                    currentWin = fin.desktop.Window.getCurrent();
+                    var getCurrent = function getCurrent() {
+                        if (windowfactory._windows) {
+                            Window.current = windowfactory._windows[currentWin.name] || new Window(currentWin);
+                        } else {
+                            setTimeout(getCurrent, 5);
+                        }
+                    };
+                    getCurrent();
+                });
+
+                Window.getAll = function () {
+                    return Object.keys(windowfactory._windows).map(function (name) {
+                        return windowfactory._windows[name];
+                    });
                 };
-                getCurrent();
 
                 _extends(windowfactory, {
                     Window: Window
@@ -2902,8 +4039,7 @@
 
         var Window = windowfactory.Window;
         var readyCallbacks = [];
-        var _isReady2 = false;
-        var currentWindow = void 0;
+        var _isReady3 = false;
 
         function onReady(callback) {
             // Check if callback is not a function:
@@ -2912,7 +4048,7 @@
             }
 
             // Check if already ready:
-            if (_isReady2) {
+            if (_isReady3) {
                 callback();
             }
 
@@ -2929,35 +4065,27 @@
                 Window.current.bringToFront();
             });
             Window.current._window.addEventListener("restored", function () {
-                var _iteratorNormalCompletion26 = true;
-                var _didIteratorError26 = false;
-                var _iteratorError26 = undefined;
+                for (var _iterator55 = Window.current._dockedGroup, _isArray55 = Array.isArray(_iterator55), _i55 = 0, _iterator55 = _isArray55 ? _iterator55 : _iterator55[Symbol.iterator]();;) {
+                    var _ref55;
 
-                try {
-                    for (var _iterator26 = Window.current._dockedGroup[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
-                        var other = _step26.value;
-
-                        if (other !== Window.current) {
-                            other._window.restore();
-                        }
+                    if (_isArray55) {
+                        if (_i55 >= _iterator55.length) break;
+                        _ref55 = _iterator55[_i55++];
+                    } else {
+                        _i55 = _iterator55.next();
+                        if (_i55.done) break;
+                        _ref55 = _i55.value;
                     }
-                } catch (err) {
-                    _didIteratorError26 = true;
-                    _iteratorError26 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion26 && _iterator26.return) {
-                            _iterator26.return();
-                        }
-                    } finally {
-                        if (_didIteratorError26) {
-                            throw _iteratorError26;
-                        }
+
+                    var other = _ref55;
+
+                    if (other !== Window.current) {
+                        other._window.restore();
                     }
                 }
             });
 
-            _isReady2 = true;
+            _isReady3 = true;
             for (var index = 0; index < readyCallbacks.length; index += 1) {
                 readyCallbacks[index]();
             }
@@ -3007,7 +4135,7 @@
         _extends(windowfactory, {
             onReady: onReady,
             isReady: function isReady() {
-                return _isReady2;
+                return _isReady3;
             },
             runtime: "OpenFin",
             runtimeVersion: windowfactory.openfinVersion
@@ -3023,11 +4151,22 @@
     exports.default = windowfactory;
 
 
+    function onLoadError() {
+        // Silent
+    }
+
     if (typeof define !== "undefined" && define && define.amd) {
+        // Scalejs 1.0
         require(["scalejs!core"], function (core) {
             core.registerExtension({
                 windowfactory: windowfactory
             });
-        });
+        }, onLoadError);
+        // Scalejs 2.0
+        require(["scalejs.core"], function (core) {
+            core.default.registerExtension({
+                windowfactory: windowfactory
+            });
+        }, onLoadError);
     }
 });

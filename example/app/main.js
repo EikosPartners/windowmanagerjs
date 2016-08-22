@@ -17,6 +17,10 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 600,
         height: 600,
+        minWidth: 400,
+        minHeight: 200,
+        maxWidth: 600,
+        maxHeight: 600,
         frame: false,
         resizable: true,
         hasShadow: false,
@@ -29,10 +33,10 @@ function createWindow() {
     });
 
     // Open the DevTools.
-    //mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // and load the index.html of the app.
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
+    mainWindow.loadURL(`file://${__dirname}/app/main/index.html`);
 
     // Emitted when the window is closed.
     mainWindow.on("closed", function () {

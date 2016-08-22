@@ -1,17 +1,11 @@
-﻿<div id="main_template">
+﻿<div id="other_template">
     <link rel="stylesheet" type="text/css" href="css/win.css">
     <content>
-      <titlebar class="window-drag">Hello World!</titlebar>
+      <titlebar class="window-drag" data-bind="text: title"></titlebar>
       <!-- All of the Node.js APIs are available in this renderer process. -->
       <div data-bind="text: 'Runtime: ' + windowfactory.runtime + ' ' + windowfactory.runtimeVersion"></div>
-      <button data-bind="click: moveRandom">Move</button>
-      <button data-bind="click: minimize">Minimize</button>
       <button data-bind="click: undock">Undock</button>
       <button data-bind="click: maximize">Maximize</button>
       <button data-bind="click: close">Close</button>
-      <br>
-      <button data-bind="click: openChild">Open Child</button>
-      <button data-bind="click: newWindow">New Window</button>
-      <button data-bind="click: hideShow">Hide&Show</button>
     </content>
 </div>

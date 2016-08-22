@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>WindowFactory</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        color: white;
+        overflow: hidden;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      .tile {
+        position: absolute;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="Scripts/scalejs.windowfactory.js"></script>
+    <script>
+      window.addEventListener("load", function () {
+        var gridOrder = [];
+        var transforms = ["-ms-transform", "-moz-transform", "-o-transform", "-webkit-transform", "transform"];
+        var isMoving = false;
+
+        function calculateGrid() {
+          var columns = 1;
+          var rows = 1;
+          while (columns * rows < gridOrder.length) {
+            if (window.innerWidth / columns < window.innerHeight / rows) {
+              rows += 1;
+            } else {
+              columns += 1;
+            }
+          }
+          var itemWidth = window.innerWidth / columns;
+          var itemHeight = window.innerHeight / rows;
+
+          isMoving = true; // Enable moveTo
+          for (var index = 0; index < gridOrder.length; index += 1) {
+            var win = gridOrder[index];
+            win.forceScaledSize(itemWidth, itemHeight);
+            win.moveTo(itemWidth * (index % columns) + (itemWidth - win.getWidth())/2,
+                      itemHeight * Math.floor(index / columns) + (itemHeight - win.getHeight())/2);
+          }
+          isMoving = false; // Disable moveTo
+        }
+
+        windowfactory.on("window-create", function (win) {
+          gridOrder.push(win);
+          win._window.style.transformOrigin = "0 0";
+
+          win.on("dock-before move-before", function () {
+            return isMoving; // Prevent dragging, docking and moving.
+          });
+
+          win.on("close", function () {
+            let index = gridOrder.indexOf(this);
+            if (index >= 0) { gridOrder.splice(index, 1); }
+            calculateGrid();
+          });
+
+          win.on("drag-stop", function () {
+            var pos = this.getBounds().getCenterPosition();
+            var columns = 1;
+            var rows = 1;
+            while (columns * rows < gridOrder.length) {
+              if (window.innerWidth / columns < window.innerHeight / rows) {
+                rows += 1;
+              } else {
+                columns += 1;
+              }
+            }
+            var targetIndex = Math.min(gridOrder.length - 1, Math.floor(pos.left * columns / window.innerWidth)
+                        + columns * Math.floor(pos.top * rows / window.innerHeight));
+            var other = gridOrder[targetIndex];
+            var currentIndex = gridOrder.indexOf(this);
+            gridOrder[targetIndex] = this;
+            gridOrder[currentIndex] = other;
+            calculateGrid();
+          });
+
+          function onResize() {
+            // TODO: Only resize this window. Not the entire grid.
+            calculateGrid();
+          }
+          win.on("resize", onResize);
+
+          calculateGrid();
+        });
+
+        var mainWindow = new windowfactory.Window({
+          url: "/app/main/index.html",
+          minWidth: 400,
+          minHeight: 200,
+          maxWidth: 600,
+          maxHeight: 600
+        });
+
+        window.addEventListener("resize", calculateGrid);
+      });
+    </script>
+  </body>
+</html>

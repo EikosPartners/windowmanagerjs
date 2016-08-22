@@ -1,12 +1,16 @@
 {
     "startup_app": {
         "name": "Eikos Partners - Hello World",
-        "url": "http://localhost:3000/index.html",
+        "url": "http://localhost:3000/app/main/index.html",
         "uuid": "mainwindow",
         "applicationIcon": "http://localhost:3000/favicon.ico",
         "autoShow": true,
         "defaultWidth": 600,
         "defaultHeight": 600,
+        "minWidth": 400,
+        "minHeight": 200,
+        "maxWidth": 600,
+        "maxHeight": 600,
         "defaultCentered": true,
         "alwaysOnTop": false,
         "resizable": true,
@@ -14,7 +18,7 @@
         "saveWindowState": false
     },
     "runtime": {
-        "version": "alpha-v5"
+        "version": "stable"
     },
     "shortcut": {
         "company": "Eikos Partners",

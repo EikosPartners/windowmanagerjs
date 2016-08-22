@@ -69,7 +69,7 @@ windowfactory.geometry = (function () {
         // and if they are one it will return itself.
         // This simplifies code, and prevents having to do a ton of checks.
         return this;
-    }
+    };
 
     /**
      * Returns a BoundingBox instance version of this vector similar to:
@@ -82,7 +82,7 @@ windowfactory.geometry = (function () {
         // and if they are one it will return itself.
         // This simplifies code, and prevents having to do a ton of checks.
         return new BoundingBox(this.left, this.top, this.left, this.top);
-    }
+    };
 
     /**
      * Returns a CollisionMesh instance version of this vector similar to:
@@ -102,11 +102,11 @@ windowfactory.geometry = (function () {
     };
     Vector.prototype.distance = function (left, top) {
         return Math.sqrt(this.distanceSquared(left, top));
-    }
+    };
     Vector.prototype.set = function (other) {
         if (!other) { throw "set requires argument 'other'"; }
         other = other.getVector();
-        if (other.constructor !== Vector) { throw "set requires argument 'other' to resolve to type Vector"; }
+        //if (other.constructor !== Vector) { throw "set requires argument 'other' to resolve to type Vector"; }
 
         this.left = other.left;
         this.top = other.top;
@@ -115,7 +115,7 @@ windowfactory.geometry = (function () {
     Vector.prototype.setMin = function (other) {
         if (!other) { throw "setMin requires argument 'other'"; }
         other = other.getVector();
-        if (other.constructor !== Vector) { throw "setMin requires argument 'other' to resolve to type Vector"; }
+        //if (other.constructor !== Vector) { throw "setMin requires argument 'other' to resolve to type Vector"; }
 
         if (Math.abs(other.left) < Math.abs(this.left) || isNaN(this.left)) { this.left = other.left; }
         if (Math.abs(other.top) < Math.abs(this.top) || isNaN(this.top)) { this.top = other.top; }
@@ -123,7 +123,7 @@ windowfactory.geometry = (function () {
     Vector.prototype.add = function (other) {
         if (!other) { throw "add requires argument 'other'"; }
         other = other.getVector();
-        if (other.constructor !== Vector) { throw "add requires argument 'other' to resolve to type Vector"; }
+        //if (other.constructor !== Vector) { throw "add requires argument 'other' to resolve to type Vector"; }
 
         this.left += other.left;
         this.top += other.top;
@@ -135,7 +135,7 @@ windowfactory.geometry = (function () {
     Vector.prototype.subtract = function (other) {
         if (!other) { throw "subtract requires argument 'other'"; }
         other = other.getVector();
-        if (other.constructor !== Vector) { throw "subtract requires argument 'other' to resolve to type Vector"; }
+        //if (other.constructor !== Vector) { throw "subtract requires argument 'other' to resolve to type Vector"; }
 
         this.left -= other.left;
         this.top -= other.top;
@@ -212,9 +212,9 @@ windowfactory.geometry = (function () {
     BoundingBox.prototype.difference = function (other) {
         if (!other) { throw "difference requires argument 'other'"; }
         other = other.getBoundingBox();
-        if (other.constructor !== BoundingBox) {
+        /*if (other.constructor !== BoundingBox) {
             throw "difference requires argument 'other' to resolve to type BoundingBox";
-        }
+        }*/
 
         return new BoundingBox(this.left - other.left, this.top - other.top,
                                 this.right - other.right, this.bottom - other.bottom);
@@ -222,18 +222,18 @@ windowfactory.geometry = (function () {
     BoundingBox.prototype.getCenteredOnPosition = function (other) {
         if (!other) { throw "getCenteredOnPosition requires argument 'other'"; }
         other = other.getBoundingBox();
-        if (other.constructor !== BoundingBox) {
+        /*if (other.constructor !== BoundingBox) {
             throw "getCenteredOnPosition requires argument 'other' to resolve to type BoundingBox";
-        }
+        }*/
 
         return other.getCenterPosition().subtract(this.getCenterPosition().subtract(this.getPosition()));
     };
     BoundingBox.prototype.getIntersection = function (other) {
         if (!other) { throw "getIntersection requires argument 'other'"; }
         other = other.getBoundingBox();
-        if (other.constructor !== BoundingBox) {
+        /*if (other.constructor !== BoundingBox) {
             throw "getIntersection requires argument 'other' to resolve to type BoundingBox";
-        }
+        }*/
 
         let left = Math.max(this.left, other.left),
             top = Math.max(this.top, other.top),
@@ -308,9 +308,9 @@ windowfactory.geometry = (function () {
     BoundingBox.prototype.isContains = function (other) {
         if (!other) { throw "isContains requires argument 'other'"; }
         other = other.getBoundingBox();
-        if (other.constructor !== BoundingBox) {
+        /*if (other.constructor !== BoundingBox) {
             throw "isContains requires argument 'other' to resolve to type BoundingBox";
-        }
+        }*/
 
         return other.left >= this.left && other.right <= this.right && other.top >= this.top && other.bottom <= this.bottom;
     };
@@ -326,14 +326,14 @@ windowfactory.geometry = (function () {
     BoundingBox.prototype.isTouching = function (other) {
         if (!other) { throw "isTouching requires argument 'other'"; }
         other = other.getBoundingBox();
-        if (other.constructor !== BoundingBox) {
+        /*if (other.constructor !== BoundingBox) {
             throw "isTouching requires argument 'other' to resolve to type BoundingBox";
-        }
+        }*/
 
-        return ((this.top <= other.bottom && this.bottom >= other.top)
-                && (this.left === other.right || this.right === other.left)) ||
-                ((this.left <= other.right && this.right >= other.left)
-                && (this.top === other.bottom || this.bottom === other.top));
+        return ((this.top <= other.bottom && this.bottom >= other.top) &&
+                (this.left === other.right || this.right === other.left)) ||
+                ((this.left <= other.right && this.right >= other.left) &&
+                (this.top === other.bottom || this.bottom === other.top));
     };
     BoundingBox.prototype.getEdgeTouching = function (others) {
         if (!others) { throw "getEdgeTouching requires argument 'others'"; }
@@ -370,9 +370,9 @@ windowfactory.geometry = (function () {
     BoundingBox.prototype.getEdgeClosestOrder = function (other) {
         if (!other) { throw "getEdgeClosest requires argument 'other'"; }
         other = other.getBoundingBox();
-        if (other.constructor !== BoundingBox) {
+        /*if (other.constructor !== BoundingBox) {
             throw "getEdgeClosest requires argument 'other' to resolve to type BoundingBox";
-        }
+        }*/
 
         let centerPos = this.getCenterPosition();
         let dis = [];
@@ -406,9 +406,9 @@ windowfactory.geometry = (function () {
         if (!other) { throw "getSnapDelta requires argument 'other'"; }
         other = other.getBoundingBox();
         snapDistance = snapDistance || 5;
-        if (other.constructor !== BoundingBox) {
+        /*if (other.constructor !== BoundingBox) {
             throw "getSnapDelta requires argument 'other' to resolve to type BoundingBox";
-        }
+        }*/
 
         let snapDelta = new Vector(NaN, NaN);
 
@@ -452,9 +452,9 @@ windowfactory.geometry = (function () {
     BoundingBox.prototype.isColliding = function (other) {
         if (!other) { throw "isColliding requires argument 'other'"; }
         other = other.getBoundingBox();
-        if (other.constructor !== BoundingBox) {
+        /*if (other.constructor !== BoundingBox) {
             throw "isColliding requires argument 'other' to resolve to type BoundingBox";
-        }
+        }*/
 
         return this.left < other.right && this.right > other.left && this.top < other.bottom && this.bottom > other.top;
     };
@@ -478,12 +478,12 @@ windowfactory.geometry = (function () {
     BoundingBox.prototype.isTouchingEdge = function (other) {
         if (!other) { throw "isTouchingEdge requires argument 'other'"; }
         other = other.getBoundingBox();
-        if (other.constructor !== BoundingBox) {
+        /*if (other.constructor !== BoundingBox) {
             throw "isTouchingEdge requires argument 'other' to resolve to type BoundingBox";
-        }
+        }*/
 
-        return this.left === other.right || this.right === other.left
-                || this.top === other.bottom || this.bottom === other.top;
+        return this.left === other.right || this.right === other.left ||
+                this.top === other.bottom || this.bottom === other.top;
     };
     /*BoundingBox.prototype.getXEdgeDistance = function (other) {
         if (!others) { throw "getColliding requires argument 'others'"; }
@@ -598,9 +598,9 @@ windowfactory.geometry = (function () {
         // TODO: Needs to check that all of other's boxes are contained by this's boxes. NOT check if only one is!
         if (!other) { throw "isContains requires argument 'other'"; }
         other = (other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh());
-        if (other.constructor !== CollisionMesh) {
+        /*if (other.constructor !== CollisionMesh) {
             throw "isContains requires argument 'other' to resolve to type CollisionMesh";
-        }
+        }*/
 
         for (let index = 0; index < this.boxes.length; index += 1) {
             if (this.boxes[index].someContains(other.boxes)) { return true; }
@@ -610,9 +610,9 @@ windowfactory.geometry = (function () {
     CollisionMesh.prototype.someContains = function (other) {
         if (!other) { throw "someContains requires argument 'other'"; }
         other = (other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh());
-        if (other.constructor !== CollisionMesh) {
+        /*if (other.constructor !== CollisionMesh) {
             throw "someContains requires argument 'other' to resolve to type CollisionMesh";
-        }
+        }*/
 
         for (let index = 0; index < this.boxes.length; index += 1) {
             if (this.boxes[index].someContains(other.boxes)) { return true; }
@@ -622,9 +622,9 @@ windowfactory.geometry = (function () {
     CollisionMesh.prototype.isTouching = function (other) {
         if (!other) { throw "isTouching requires argument 'other'"; }
         other = (other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh());
-        if (other.constructor !== CollisionMesh) {
+        /*if (other.constructor !== CollisionMesh) {
             throw "isTouching requires argument 'other' to resolve to type CollisionMesh";
-        }
+        }*/
 
         for (let index = 0; index < this.boxes.length; index += 1) {
             if (this.boxes[index].someTouching(other.boxes)) { return true; }
@@ -643,9 +643,9 @@ windowfactory.geometry = (function () {
     CollisionMesh.prototype.isColliding = function (other) {
         if (!other) { throw "isColliding requires argument 'other'"; }
         other = (other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh());
-        if (other.constructor !== CollisionMesh) {
+        /*if (other.constructor !== CollisionMesh) {
             throw "isColliding requires argument 'other' to resolve to type CollisionMesh";
-        }
+        }*/
 
         for (let index = 0; index < this.boxes.length; index += 1) {
             if (this.boxes[index].someColliding(other.boxes)) { return true; }
@@ -666,9 +666,9 @@ windowfactory.geometry = (function () {
     CollisionMesh.prototype.getColliding = function (other) {
         if (!other) { throw "getColliding requires argument 'other'"; }
         other = (other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh());
-        if (other.constructor !== CollisionMesh) {
+        /*if (other.constructor !== CollisionMesh) {
             throw "getColliding requires argument 'other' to resolve to type CollisionMesh";
-        }
+        }*/
 
         for (let index = 0; index < this.boxes.length; index += 1) {
             let collided = this.boxes[index].getColliding(other.boxes);

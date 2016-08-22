@@ -1,10 +1,10 @@
 /*global windowfactory,fin*/
 (function () {
-    if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.openfinVersion) { return; }
+    if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.browserVersion) { return; }
 
     const Window = windowfactory.Window;
     let readyCallbacks = [];
-    let isReady = false;
+    let isReady = true;
 
     function onReady(callback) {
         // Check if callback is not a function:
@@ -22,17 +22,6 @@
     }
 
     function ready() {
-        Window.current._window.addEventListener("focused", function () {
-            Window.current.bringToFront();
-        });
-        Window.current._window.addEventListener("restored", function () {
-            for (let other of Window.current._dockedGroup) {
-                if (other !== Window.current) {
-                    other._window.restore();
-                }
-            }
-        });
-
         isReady = true;
         for (let index = 0; index < readyCallbacks.length; index += 1) {
             readyCallbacks[index]();
@@ -40,12 +29,15 @@
         readyCallbacks = [];
     }
 
-    windowfactory._openfinOnReady(function () {
+    if (!windowfactory.isLauncher) {
         // Setup handlers on this window:
         let wX = 0;
         let wY = 0;
         let dragging = false;
-        //let titlebarEl = document.querySelector("titlebar");
+
+        window.addEventListener("focus", function () {
+            Window.current.bringToFront();
+        });
 
         window.addEventListener("mousedown", function (e) {
             if (e.target.classList.contains("window-drag")) {
@@ -67,23 +59,12 @@
             dragging = false;
             Window.current._dragStop();
         });
-
-        // TODO: Rewrite to remove setTimeout for the following:
-        function checkReady() {
-            if (Window.current && windowfactory.openfinVersion !== "pending") {
-                windowfactory.runtimeVersion = windowfactory.openfinVersion;
-                ready();
-            } else {
-                setTimeout(checkReady, 5);
-            }
-        }
-        checkReady();
-    });
+    }
 
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: function () { return isReady; },
-        runtime: "OpenFin",
-        runtimeVersion: windowfactory.openfinVersion
+        runtime: windowfactory.browserRuntime,
+        runtimeVersion: windowfactory.browserVersion
     });
 })();
