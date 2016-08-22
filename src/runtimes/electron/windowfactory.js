@@ -108,7 +108,7 @@
         label: "Reload",
         accelerator: "CmdOrCtrl+R",
         click: function () {
-            Window.current._window.reload()
+            Window.current._window.reload();
         }
     }));
     menu.append(new MenuItem({
@@ -123,7 +123,7 @@
         label: "Inspect Element",
         accelerator: "CmdOrCtrl+Shift+I",
         click: function () {
-            Window.current._window.inspectElement(rightClickPosition.x, rightClickPosition.y)
+            Window.current._window.inspectElement(rightClickPosition.x, rightClickPosition.y);
         }
     }));
 

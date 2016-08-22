@@ -6,10 +6,21 @@
 /*global windowfactory*/
 export default windowfactory;
 
+function onLoadError() {
+    // Silent
+}
+
 if (typeof define !== "undefined" && define && define.amd) {
+    // Scalejs 1.0
+    require(["scalejs!core"], function (core) {
+        core.registerExtension({
+            windowfactory: windowfactory
+        });
+    }, onLoadError);
+    // Scalejs 2.0
     require(["scalejs.core"], function (core) {
         core.default.registerExtension({
             windowfactory: windowfactory
         });
-    });
+    }, onLoadError);
 }

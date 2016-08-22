@@ -41,16 +41,16 @@
 			lut[d1&0xff]+lut[d1>>8&0xff]+"-"+lut[d1>>16&0x0f|0x40]+lut[d1>>24&0xff]+"-"+
 			lut[d2&0x3f|0x80]+lut[d2>>8&0xff]+"-"+lut[d2>>16&0xff]+lut[d2>>24&0xff]+
 			lut[d3&0xff]+lut[d3>>8&0xff]+lut[d3>>16&0xff]+lut[d3>>24&0xff];
-		}
+		};
 		const getUniqueWindowName = function () {
 			return "window" + genUIDE7() + (new Date()).getTime();
-		}
+		};
 
 		const Window = function (config) {
 			if (!(this instanceof Window)) { return new Window(config); }
 
 			config = config || {}; // If no arguments are passed, assume we are creating a default blank window
-			const isArgConfig = (config["app_uuid"] === undefined);
+			const isArgConfig = (/*jshint camelcase: false*/config.app_uuid/*jshint camelcase: true*/ === undefined);
 
 			// Call the parent constructor:
 			EventHandler.call(this, acceptedEventHandlers);
@@ -163,7 +163,7 @@
 			this._ready = true;
 			this.emit("ready");
 			windowfactory._internalBus.emit("window-create", this);
-		}
+		};
 
         Window.getCurrent = function () {
             return Window.current;

@@ -3395,7 +3395,7 @@
                     }
 
                     config = config || {}; // If no arguments are passed, assume we are creating a default blank window
-                    var isArgConfig = config["app_uuid"] === undefined;
+                    var isArgConfig = /*jshint camelcase: false*/config.app_uuid /*jshint camelcase: true*/ === undefined;
 
                     // Call the parent constructor:
                     EventHandler.call(this, acceptedEventHandlers);
@@ -4151,11 +4151,22 @@
     exports.default = windowfactory;
 
 
+    function onLoadError() {
+        // Silent
+    }
+
     if (typeof define !== "undefined" && define && define.amd) {
+        // Scalejs 1.0
+        require(["scalejs!core"], function (core) {
+            core.registerExtension({
+                windowfactory: windowfactory
+            });
+        }, onLoadError);
+        // Scalejs 2.0
         require(["scalejs.core"], function (core) {
             core.default.registerExtension({
                 windowfactory: windowfactory
             });
-        });
+        }, onLoadError);
     }
 });

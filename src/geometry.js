@@ -69,7 +69,7 @@ windowfactory.geometry = (function () {
         // and if they are one it will return itself.
         // This simplifies code, and prevents having to do a ton of checks.
         return this;
-    }
+    };
 
     /**
      * Returns a BoundingBox instance version of this vector similar to:
@@ -82,7 +82,7 @@ windowfactory.geometry = (function () {
         // and if they are one it will return itself.
         // This simplifies code, and prevents having to do a ton of checks.
         return new BoundingBox(this.left, this.top, this.left, this.top);
-    }
+    };
 
     /**
      * Returns a CollisionMesh instance version of this vector similar to:
@@ -102,7 +102,7 @@ windowfactory.geometry = (function () {
     };
     Vector.prototype.distance = function (left, top) {
         return Math.sqrt(this.distanceSquared(left, top));
-    }
+    };
     Vector.prototype.set = function (other) {
         if (!other) { throw "set requires argument 'other'"; }
         other = other.getVector();
@@ -330,10 +330,10 @@ windowfactory.geometry = (function () {
             throw "isTouching requires argument 'other' to resolve to type BoundingBox";
         }*/
 
-        return ((this.top <= other.bottom && this.bottom >= other.top)
-                && (this.left === other.right || this.right === other.left)) ||
-                ((this.left <= other.right && this.right >= other.left)
-                && (this.top === other.bottom || this.bottom === other.top));
+        return ((this.top <= other.bottom && this.bottom >= other.top) &&
+                (this.left === other.right || this.right === other.left)) ||
+                ((this.left <= other.right && this.right >= other.left) &&
+                (this.top === other.bottom || this.bottom === other.top));
     };
     BoundingBox.prototype.getEdgeTouching = function (others) {
         if (!others) { throw "getEdgeTouching requires argument 'others'"; }
@@ -482,8 +482,8 @@ windowfactory.geometry = (function () {
             throw "isTouchingEdge requires argument 'other' to resolve to type BoundingBox";
         }*/
 
-        return this.left === other.right || this.right === other.left
-                || this.top === other.bottom || this.bottom === other.top;
+        return this.left === other.right || this.right === other.left ||
+                this.top === other.bottom || this.bottom === other.top;
     };
     /*BoundingBox.prototype.getXEdgeDistance = function (other) {
         if (!others) { throw "getColliding requires argument 'others'"; }
