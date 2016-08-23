@@ -2347,13 +2347,39 @@
             })();
         }
 
+        var messagebus = {
+            sendTo: function sendTo(window, eventName) {
+                for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+                    args[_key - 2] = arguments[_key];
+                }
+
+                var _console;
+
+                (_console = console).log.apply(_console, args);
+                window.sendTo.apply(window, [eventName].concat(args));
+            },
+            sendToAll: function sendToAll(eventName) {
+                var _console2;
+
+                for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+                    args[_key2 - 1] = arguments[_key2];
+                }
+
+                (_console2 = console).log.apply(_console2, args);
+            },
+            receive: function receive(eventName, listener) {
+                console.log(eventName, listener);
+            }
+        };
+
         _extends(windowfactory, {
             onReady: onReady,
             isReady: function isReady() {
                 return _isReady;
             },
             runtime: windowfactory.browserRuntime,
-            runtimeVersion: windowfactory.browserVersion
+            runtimeVersion: windowfactory.browserVersion,
+            messagebus: messagebus
         });
     })();
 

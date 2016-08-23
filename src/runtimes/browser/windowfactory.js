@@ -61,10 +61,24 @@
         });
     }
 
+    let messagebus = {
+        sendTo: (window, eventName, ...args) => {
+            console.log(...args);
+            window.sendTo(eventName, ...args);
+        },
+        sendToAll: (eventName, ...args) => {
+            console.log(...args);
+        },
+        receive: (eventName, listener) => {
+            console.log(eventName, listener);
+        }
+    };
+
     Object.assign(windowfactory, {
         onReady: onReady,
-        isReady: function () { return isReady; },
+        isReady: () => { return isReady; },
         runtime: windowfactory.browserRuntime,
-        runtimeVersion: windowfactory.browserVersion
+        runtimeVersion: windowfactory.browserVersion,
+        messagebus: messagebus
     });
 })();

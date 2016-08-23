@@ -82,7 +82,7 @@
 
     Object.assign(windowfactory, {
         onReady: onReady,
-        isReady: function () { return isReady; },
+        isReady: () => { return isReady; },
         runtime: "OpenFin",
         runtimeVersion: windowfactory.openfinVersion
     });

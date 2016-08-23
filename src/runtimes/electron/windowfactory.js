@@ -135,7 +135,7 @@
 
     Object.assign(windowfactory, {
         onReady: onReady,
-        isReady: function () { return isReady; },
+        isReady: () => { return isReady; },
         runtime: "Electron",
         runtimeVersion: windowfactory.electronVersion
     });
