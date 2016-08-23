@@ -2547,7 +2547,8 @@
 
                 /**
                  * @callback callback
-                 * @param  {string|null} error - String on error, or null if no error
+                 * @param {string|null} error - String on error, or null if no error
+                 * @param {object|null} result - Object on success, or null if error
                  */
 
                 /**
