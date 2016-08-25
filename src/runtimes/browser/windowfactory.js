@@ -61,24 +61,21 @@
         });
     }
 
-    let messagebus = {
-        sendTo: (window, eventName, ...args) => {
-            console.log(...args);
-            window.sendTo(eventName, ...args);
-        },
-        sendToAll: (eventName, ...args) => {
-            console.log(...args);
-        },
-        receive: (eventName, listener) => {
-            console.log(eventName, listener);
-        }
-    };
-
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: () => { return isReady; },
         runtime: windowfactory.browserRuntime,
         runtimeVersion: windowfactory.browserVersion,
-        messagebus: messagebus
+        messagebus: {
+            // TODO: Utilize iframe communication? Or use messagebus that is currently shared in setup.js?
+            send: (window, eventName, ...args) => {
+            },
+            on: (window, eventName, listener) => {
+            },
+            once: (eventName, listener) => {
+            },
+            off: (eventName, listener) => {
+            }
+        }
     });
 })();

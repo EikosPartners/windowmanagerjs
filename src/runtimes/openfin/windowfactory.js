@@ -80,10 +80,54 @@
         checkReady();
     });
 
+    const messagebus = (() => {
+        let wrappedListeners = new Map();
+
+        function wrapListener(listener) {
+            return (message) => {
+                // TODO: Determine who sent it
+                const window = null;
+                const response = listener.apply(window, JSON.parse(message));
+                // TODO: Send response if response is expected
+            };
+        }
+
+        return {
+            send: (eventName, ...args) => {
+                // TODO: Check if ready? Dunno if needed
+                if (args.length > 0 && args[0] instanceof Window) {
+                    const window = args.unshift();
+                    fin.desktop.InterApplicationBus.send(Window.current._window.app_uuid, window._window.name, eventName, JSON.stringify(args));
+                } else {
+                    fin.desktop.InterApplicationBus.send(Window.current._window.app_uuid, eventName, JSON.stringify(args));
+                }
+            },
+            on: (eventName, window, listener) => {
+                if (listener == null) {
+                    listener = window;
+                    window = undefined;
+                }
+
+                if (window != null) {
+                    fin.desktop.InterApplicationBus.subscribe(Window.current._window.app_uuid, window._window.name, eventName, onMessage);
+                } else {
+                    fin.desktop.InterApplicationBus.subscribe(Window.current._window.app_uuid, eventName, onMessage);
+                }
+            },
+            once: (eventName, listener) => {
+                fin.desktop.InterApplicationBus.subscribe(Window.current._window.app_uuid, eventName, function (message) {
+                    const window = null; // TODO: Get the window who sent this
+                    const response = listener(window, ...JSON.parse(message));
+                });
+            }
+        };
+    })();
+
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: () => { return isReady; },
         runtime: "OpenFin",
-        runtimeVersion: windowfactory.openfinVersion
+        runtimeVersion: windowfactory.openfinVersion,
+        messagebus: messagebus
     });
 })();
