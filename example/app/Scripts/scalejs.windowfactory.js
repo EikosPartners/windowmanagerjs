@@ -290,7 +290,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory.isRenderer = false;
     windowfactory.isBackend = false;
-    windowfactory.version = "0.6.4";
+    windowfactory.version = "0.6.5";
 
     function getBrowserInfo() {
         // Credit: http://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
@@ -4300,22 +4300,20 @@
     exports.default = windowfactory;
 
 
-    function onLoadError() {
-        // Silent
+    function registerOnCore(core) {
+        core.registerExtension({
+            windowfactory: windowfactory
+        });
     }
 
     if (typeof define !== "undefined" && define && define.amd) {
         // Scalejs 1.0
-        require(["scalejs!core"], function (core) {
-            core.registerExtension({
-                windowfactory: windowfactory
-            });
-        }, onLoadError);
+        if (require.defined("scalejs!core")) {
+            require(["scalejs!core"], registerOnCore);
+        }
         // Scalejs 2.0
-        require(["scalejs.core"], function (core) {
-            core.default.registerExtension({
-                windowfactory: windowfactory
-            });
-        }, onLoadError);
+        if (require.defined("scalejs.core")) {
+            require(["scalejs.core"], registerOnCore);
+        }
     }
 });

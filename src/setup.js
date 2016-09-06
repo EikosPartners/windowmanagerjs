@@ -3,7 +3,7 @@ let windowfactoryEventNames = ["window-create", "window-close"];
 let windowfactory = new EventHandler(windowfactoryEventNames);
 windowfactory.isRenderer = false;
 windowfactory.isBackend = false;
-windowfactory.version = "0.6.4";
+windowfactory.version = "0.6.5";
 
 function getBrowserInfo() {
     // Credit: http://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
