@@ -6,7 +6,7 @@
 /*global windowfactory*/
 export default windowfactory;
 
-function registerOnCore(core) {
+/*function registerOnCore(core) {
     core.registerExtension({
         windowfactory: windowfactory
     });
@@ -17,4 +17,4 @@ if (typeof define !== "undefined" && define && define.amd) {
     if (require.defined("scalejs!core")) { require(["scalejs!core"], registerOnCore); }
     // Scalejs 2.0
     if (require.defined("scalejs.core")) { require(["scalejs.core"], registerOnCore); }
-}
+}*/
