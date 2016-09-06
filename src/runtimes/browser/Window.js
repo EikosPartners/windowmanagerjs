@@ -89,6 +89,8 @@
 				newWindow.style.margin = 0;
 				newWindow.style.padding = 0;
 				newWindow.style.border = 0;
+				newWindow.style.resize = "both";
+				newWindow.style.overflow = "auto";
 				windowfactory._launcher.document.body.appendChild(newWindow);
 
 				this._window = newWindow;

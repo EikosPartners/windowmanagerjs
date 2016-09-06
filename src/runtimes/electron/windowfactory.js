@@ -137,29 +137,7 @@
         onReady: onReady,
         isReady: () => { return isReady; },
         runtime: "Electron",
-        runtimeVersion: windowfactory.electronVersion,
-        messagebus: {
-            sendTo: (window, eventName, ...args) => {
-                // TODO: Check if ready? Dunno if needed
-                ipcRenderer.send(Window.current._window.app_uuid, window._window.name, eventName, JSON.stringify(args));
-            },
-            sendToAll: (eventName, ...args) => {
-                // TODO: Check if ready? Dunno if needed
-                ipcRenderer.send(Window.current._window.app_uuid, eventName, JSON.stringify(args));
-            },
-            subscribeTo: (window, eventName, listener) => {
-                ipcRenderer.on(Window.current._window.app_uuid, window._window.name, eventName, function (message) {
-                    const response = listener(window, ...JSON.parse(message));
-                    // TODO: Send response
-                });
-            },
-            subscribeToAll: (eventName, listener) => {
-                ipcRenderer.on(Window.current._window.app_uuid, eventName, function (message) {
-                    const window = null; // TODO: Get the window who sent this
-                    const response = listener(window, ...JSON.parse(message));
-                });
-            }
-        }
+        runtimeVersion: windowfactory.electronVersion
     });
 })();
 // TODO: Make scalejs.windowfactory the main.js script for Electron. Load the config.json

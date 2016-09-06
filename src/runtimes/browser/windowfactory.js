@@ -61,21 +61,76 @@
         });
     }
 
+    const messagebus = (() => {
+        // TODO: Utilize iframe communication? Or use messagebus that is currently shared in setup.js?
+        let wrappedListeners = {};
+        let windowWrappedListeners = {};
+
+        function wrapListener(listener) {
+            return (message) => {
+                // TODO: Determine who sent it
+                const window = null;
+                message = JSON.parse(message); // TODO: Should this be in a try/except?
+                const response = listener.apply(window, message.data);
+                // TODO: Send response if response is expected
+            };
+        }
+
+        return {
+            send: (eventName, ...args) => {
+                // TODO: Check if ready? Dunno if needed
+                // TODO: Do we need to add a way to identify if a return is needed?
+                if (args.length > 0 && args[0] instanceof Window) {
+                    const window = args.unshift();
+                    const message = {
+                        id: 0, // TODO: Randomly generate a unique id to avoid collision!
+                        event: eventName,
+                        // TODO: Add way for receiver to know what window sent this
+                        data: args
+                    };
+                    // TODO: Save the id of message so we can get the response
+                    window._window.contentWindow.postMessage(message, "*");
+                } else {
+                    const message = {
+                        event: eventName,
+                        // TODO: Add way for receiver to know what window sent this
+                        data: args
+                    };
+
+                    for (const window of windowfactory._windows) {
+                        window._window.contentWindow.postMessage(message, "*");
+                    }
+                }
+            },
+            on: (eventName, window, listener) => {
+                if (listener === undefined) {
+                    listener = window;
+                    window = undefined;
+                }
+
+                const onMessage = wrapListener(listener);
+
+                if (window !== undefined) {
+                    // Replace window.name with some way to identify the unique window
+                    const winLisGroup = (windowWrappedListeners[window.name] = windowWrappedListeners[window.name] || {});
+                    winLisGroup[eventName] = winLisGroup[eventName] || new Set();
+                    winLisGroup[eventName].add(listener);
+                    // TODO: On window close, clear subscriptions in windowWrappedListeners!
+                } else {
+                    wrappedListeners[eventName] = wrappedListeners[eventName] || new Set();
+                    wrappedListeners[eventName].add(listener);
+                }
+            },
+            off: (eventName, window, listener) => {
+            }
+        };
+    })();
+
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: () => { return isReady; },
         runtime: windowfactory.browserRuntime,
         runtimeVersion: windowfactory.browserVersion,
-        messagebus: {
-            // TODO: Utilize iframe communication? Or use messagebus that is currently shared in setup.js?
-            send: (window, eventName, ...args) => {
-            },
-            on: (window, eventName, listener) => {
-            },
-            once: (eventName, listener) => {
-            },
-            off: (eventName, listener) => {
-            }
-        }
+        //messagebus: messagebus
     });
 })();
