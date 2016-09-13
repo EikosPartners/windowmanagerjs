@@ -1,15 +1,15 @@
-# scalejs.windowfactory
-An extension for scalejs to manage multiple dockable HTML windows.  
-This extension is designed to support multiple different different encapsulation runtimes.  
+# scalejs.windowfactory v0.7.0
+An extension for scalejs to manage multiple dockable HTML windows.
+This extension is designed to support multiple different different encapsulation runtimes.
 
 
-Runtimes supported:  
-* [OpenFin](https://openfin.co/)  
-* [Electron](http://electron.atom.io/)  
+Runtimes supported:
+* Web Browsers (Chrome, Firefox, IE, Edge, ect.)
+* [OpenFin](https://openfin.co/)
+* [Electron](http://electron.atom.io/)
 
-Future runtimes:  
-* [NW.js](http://nwjs.io/)  
-* Web Browsers (Chrome, Firefox, IE, Edge, ect.)  
+Future runtimes:
+* [NW.js](http://nwjs.io/)
 
 ## Running the Example Demo
 See example/README.md
@@ -23,7 +23,7 @@ See example/README.md
   * [scalejs.windowfactory.min](https://raw.githubusercontent.com/EikosPartners/scalejs.windowfactory/master/dist/scalejs.windowfactory.min.js)
   * Or one of the scripts in the build folder. The build folder contains nightlies of the repository and may often be broken.
 2. Add the script to the `/Scripts/` folder in your scalejs application.
-3. [Optional] Add the script to your `config.js` paths to shorten the define. Example:  
+3. [Optional] Add the script to your `config.js` paths to shorten the define. Example:
 `"scalejs.windowfactory": "Scripts/scalejs.windowfactory",`
 
 ## API Information

@@ -3,7 +3,7 @@
     if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.electronVersion) { return; }
 
     const Window = windowfactory.Window;
-    const remote = nodeRequire("electron").remote;
+    const { remote, ipcRenderer } = nodeRequire("electron");
     let readyCallbacks = [];
     let isReady = true;
     let allWindows = {};
@@ -135,7 +135,7 @@
 
     Object.assign(windowfactory, {
         onReady: onReady,
-        isReady: function () { return isReady; },
+        isReady: () => { return isReady; },
         runtime: "Electron",
         runtimeVersion: windowfactory.electronVersion
     });

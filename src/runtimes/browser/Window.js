@@ -42,6 +42,8 @@
 			EventHandler.call(this, acceptedEventHandlers);
             this._ready = false;
             this._isClosed = false;
+			this._isHidden = false;
+			this._isMinimized = false;
 			this._isMaximized = false;
 			this._dockedGroup = [this];
 			this._children = []; // TODO: Add way to remove or change heirarchy.
@@ -89,6 +91,8 @@
 				newWindow.style.margin = 0;
 				newWindow.style.padding = 0;
 				newWindow.style.border = 0;
+				newWindow.style.resize = "both";
+				newWindow.style.overflow = "auto";
 				windowfactory._launcher.document.body.appendChild(newWindow);
 
 				this._window = newWindow;
@@ -240,6 +244,23 @@
 			child.setParent(this);
 		};
 
+		Window.prototype.isHidden = function () {
+			return this._isHidden;
+		};
+		Window.prototype.isShown = function () {
+			return !this._isHidden;
+		};
+
+		Window.prototype.isMinimized = function () {
+			return this._isMinimized;
+		};
+		Window.prototype.isRestored = function () {
+			return this.isShown() && !this.isMinimized() && !this.isMaximized();
+		};
+		Window.prototype.isMaximized = function () {
+			return this._isMaximized;
+		};
+
 
 
 
@@ -273,6 +294,7 @@
 
 			// TODO: What do we do on minimize in this runtime?
 			for (let window of this._dockedGroup) {
+				window._isMinimized = true;
 				window.emit("minimize");
 			}
 		};
@@ -294,6 +316,7 @@
 
 			for (let window of this._dockedGroup) {
 				window._window.style.display = "";
+				window._isHidden = false;
 			}
 			if (callback) { callback(); }
 		};
@@ -303,6 +326,7 @@
 
 			for (let window of this._dockedGroup) {
 				window._window.style.display = "none";
+				window._isHidden = true;
 			}
 			if (callback) { callback(); }
 		};
@@ -316,6 +340,8 @@
 					window._window.style.top = window._restoreBounds.top + "px";
 					window._window.style.width = window._restoreBounds.getWidth() + "px";
 					window._window.style.height = window._restoreBounds.getHeight() + "px";
+					window._isHidden = false;
+					window._isMinimized = false;
 					window._isMaximized = false;
 				}
 			}

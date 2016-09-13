@@ -92,6 +92,9 @@
                 // TODO: Clean up ALL listeners
             }
             this._isClosed = false;
+            this._isHidden = false;
+            this._isMinimized = false;
+            this._isMaximized = false;
             this._window.on("close", _onclose);
 
             currentWin.on("close", function () {
@@ -184,11 +187,49 @@
             return new BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
         };
 
+        /**
+         * @method
+         * @returns {Boolean}
+         */
+		Window.prototype.isHidden = function () {
+			return this._isHidden;
+		};
+        /**
+         * @method
+         * @returns {Boolean}
+         */
+		Window.prototype.isShown = function () {
+			return !this._isHidden;
+		};
+
+        /**
+         * @method
+         * @returns {Boolean}
+         */
+		Window.prototype.isMinimized = function () {
+			return this._isMinimized;
+		};
+        /** Similar to: isShown() && !isMinimized() && isMaximized()
+         * @method
+         * @returns {Boolean}
+         */
+		Window.prototype.isRestored = function () {
+			return this.isShown() && !this.isMinimized() && !this.isMaximized();
+		};
+        /**
+         * @method
+         * @returns {Boolean}
+         */
+		Window.prototype.isMaximized = function () {
+			return this._isMaximized;
+		};
+
 
 
         /**
          * @callback callback
-         * @param  {string|null} error - String on error, or null if no error
+         * @param {string|null} error - String on error, or null if no error
+         * @param {object|null} result - Object on success, or null if error
          */
 
         /**

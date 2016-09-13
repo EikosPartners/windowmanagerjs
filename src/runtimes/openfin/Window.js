@@ -57,6 +57,9 @@
 			this._bounds = new BoundingBox();
             this._ready = false;
             this._isClosed = false;
+            this._isHidden = false;
+            this._isMinimized = false;
+            this._isMaximized = false;
 			this._dockedGroup = [this];
 			this._children = [];
 			this._parent = undefined;
@@ -230,6 +233,22 @@
 		Window.prototype.addChild = function (child) {
 			child.setParent(this);
 		};
+		Window.prototype.isHidden = function () {
+			return this._isHidden;
+		};
+		Window.prototype.isShown = function () {
+			return !this._isHidden;
+		};
+
+		Window.prototype.isMinimized = function () {
+			return this._isMinimized;
+		};
+		Window.prototype.isRestored = function () {
+			return this.isShown() && !this.isMinimized() && !this.isMaximized();
+		};
+		Window.prototype.isMaximized = function () {
+			return this._isMaximized;
+		};
 
 
 
@@ -244,6 +263,7 @@
 
 			callback = new SyncCallback(callback);
 			for (let window of this._dockedGroup) {
+				window._isMinimized = true;
 				window._window.minimize(callback.ref());
 			}
 		};
@@ -251,6 +271,7 @@
 		Window.prototype.maximize = function (callback) {
 			if (!this._ready) { throw "maximize can't be called on an unready window"; }
 
+			this._isMaximized = true;
 			this._window.maximize(callback);
 		};
 
@@ -259,6 +280,7 @@
 
 			callback = new SyncCallback(callback);
 			for (let window of this._dockedGroup) {
+				window._isHidden = false;
 				window._window.show(callback.ref());
 			}
 		};
@@ -268,6 +290,7 @@
 
 			callback = new SyncCallback(callback);
 			for (let window of this._dockedGroup) {
+				window._isHidden = true;
 				window._window.hide(callback.ref());
 			}
 		};
@@ -277,6 +300,9 @@
 
 			callback = new SyncCallback(callback);
 			for (let window of this._dockedGroup) {
+				window._isHidden = false;
+				window._isMinimized = false;
+				window._isMaximized = false;
 				window._window.restore(callback.ref());
 			}
 		};

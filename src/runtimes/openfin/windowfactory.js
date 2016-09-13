@@ -3,6 +3,7 @@
     if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.openfinVersion) { return; }
 
     const Window = windowfactory.Window;
+    const APP_UUID = "app_uuid";
     let readyCallbacks = [];
     let isReady = false;
 
@@ -80,10 +81,70 @@
         checkReady();
     });
 
+    const messagebus = (() => {
+        let wrappedListeners = new Map();
+        let windowWrappedListeners = new Map();
+
+        function wrapListener(listener) {
+            return (message) => {
+                // TODO: Determine who sent it
+                const window = null;
+                const response = listener.apply(window, JSON.parse(message));
+                // TODO: Send response if response is expected
+            };
+        }
+
+        return {
+            send: (eventName, ...args) => {
+                // TODO: Check if ready? Dunno if needed
+                if (args.length > 0 && args[0] instanceof Window) {
+                    const window = args.unshift();
+                    fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], window._window.name,
+                                                         eventName, JSON.stringify(args));
+                } else {
+                    fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], eventName, JSON.stringify(args));
+                }
+            },
+            on: (eventName, window, listener) => {
+                if (listener === undefined) {
+                    listener = window;
+                    window = undefined;
+                }
+
+                const onMessage = wrapListener(listener);
+
+                if (window !== undefined) {
+                    windowWrappedListeners[window._window.name].add(listener, onMessage);
+                    fin.desktop.InterApplicationBus.subscribe(Window.current._window[APP_UUID], window._window.name,
+                                                              eventName, onMessage);
+                    // TODO: On window close, clear subscriptions in windowWrappedListeners!
+                } else {
+                    wrappedListeners.add(listener, onMessage);
+                    fin.desktop.InterApplicationBus.subscribe(Window.current._window[APP_UUID], eventName, onMessage);
+                }
+            },
+            off: (eventName, window, listener) => {
+                if (listener === undefined) {
+                    listener = window;
+                    window = undefined;
+                }
+
+                if (window !== undefined) {
+                    fin.desktop.InterApplicationBus.unsubscribe(Window.current._window[APP_UUID], window._window.name,
+                                                    eventName, windowWrappedListeners[window._window.name].get(listener));
+                } else {
+                    fin.desktop.InterApplicationBus.unsubscribe(Window.current._window[APP_UUID], eventName,
+                                                                wrappedListeners.get(listener));
+                }
+            }
+        };
+    })();
+
     Object.assign(windowfactory, {
         onReady: onReady,
-        isReady: function () { return isReady; },
+        isReady: () => { return isReady; },
         runtime: "OpenFin",
-        runtimeVersion: windowfactory.openfinVersion
+        runtimeVersion: windowfactory.openfinVersion,
+        //messagebus: messagebus
     });
 })();
