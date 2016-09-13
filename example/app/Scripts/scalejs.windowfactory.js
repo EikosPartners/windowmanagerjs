@@ -290,7 +290,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory.isRenderer = false;
     windowfactory.isBackend = false;
-    windowfactory.version = "0.6.5";
+    windowfactory.version = "0.7.0";
 
     function getBrowserInfo() {
         // Credit: http://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
@@ -1375,6 +1375,8 @@
                     EventHandler.call(this, acceptedEventHandlers);
                     this._ready = false;
                     this._isClosed = false;
+                    this._isHidden = false;
+                    this._isMinimized = false;
                     this._isMaximized = false;
                     this._dockedGroup = [this];
                     this._children = []; // TODO: Add way to remove or change heirarchy.
@@ -1580,6 +1582,23 @@
                     child.setParent(this);
                 };
 
+                Window.prototype.isHidden = function () {
+                    return this._isHidden;
+                };
+                Window.prototype.isShown = function () {
+                    return !this._isHidden;
+                };
+
+                Window.prototype.isMinimized = function () {
+                    return this._isMinimized;
+                };
+                Window.prototype.isRestored = function () {
+                    return this.isShown() && !this.isMinimized() && !this.isMaximized();
+                };
+                Window.prototype.isMaximized = function () {
+                    return this._isMaximized;
+                };
+
                 Window.prototype.close = function (callback) {
                     if (this.isClosed()) {
                         return callback && callback();
@@ -1644,6 +1663,7 @@
 
                         var _window = _ref9;
 
+                        _window._isMinimized = true;
                         _window.emit("minimize");
                     }
                 };
@@ -1684,6 +1704,7 @@
                         var _window2 = _ref10;
 
                         _window2._window.style.display = "";
+                        _window2._isHidden = false;
                     }
                     if (callback) {
                         callback();
@@ -1710,6 +1731,7 @@
                         var _window3 = _ref11;
 
                         _window3._window.style.display = "none";
+                        _window3._isHidden = true;
                     }
                     if (callback) {
                         callback();
@@ -1740,6 +1762,8 @@
                             _window4._window.style.top = _window4._restoreBounds.top + "px";
                             _window4._window.style.width = _window4._restoreBounds.getWidth() + "px";
                             _window4._window.style.height = _window4._restoreBounds.getHeight() + "px";
+                            _window4._isHidden = false;
+                            _window4._isMinimized = false;
                             _window4._isMaximized = false;
                         }
                     }
@@ -2535,6 +2559,9 @@
                         // TODO: Clean up ALL listeners
                     }
                     this._isClosed = false;
+                    this._isHidden = false;
+                    this._isMinimized = false;
+                    this._isMaximized = false;
                     this._window.on("close", _onclose);
 
                     currentWin.on("close", function () {
@@ -2626,6 +2653,43 @@
                     var bounds = this._window.getBounds();
 
                     return new BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
+                };
+
+                /**
+                 * @method
+                 * @returns {Boolean}
+                 */
+                Window.prototype.isHidden = function () {
+                    return this._isHidden;
+                };
+                /**
+                 * @method
+                 * @returns {Boolean}
+                 */
+                Window.prototype.isShown = function () {
+                    return !this._isHidden;
+                };
+
+                /**
+                 * @method
+                 * @returns {Boolean}
+                 */
+                Window.prototype.isMinimized = function () {
+                    return this._isMinimized;
+                };
+                /** Similar to: isShown() && !isMinimized() && isMaximized()
+                 * @method
+                 * @returns {Boolean}
+                 */
+                Window.prototype.isRestored = function () {
+                    return this.isShown() && !this.isMinimized() && !this.isMaximized();
+                };
+                /**
+                 * @method
+                 * @returns {Boolean}
+                 */
+                Window.prototype.isMaximized = function () {
+                    return this._isMaximized;
                 };
 
                 /**
@@ -3491,6 +3555,9 @@
                     this._bounds = new BoundingBox();
                     this._ready = false;
                     this._isClosed = false;
+                    this._isHidden = false;
+                    this._isMinimized = false;
+                    this._isMaximized = false;
                     this._dockedGroup = [this];
                     this._children = [];
                     this._parent = undefined;
@@ -3685,6 +3752,22 @@
                 Window.prototype.addChild = function (child) {
                     child.setParent(this);
                 };
+                Window.prototype.isHidden = function () {
+                    return this._isHidden;
+                };
+                Window.prototype.isShown = function () {
+                    return !this._isHidden;
+                };
+
+                Window.prototype.isMinimized = function () {
+                    return this._isMinimized;
+                };
+                Window.prototype.isRestored = function () {
+                    return this.isShown() && !this.isMinimized() && !this.isMaximized();
+                };
+                Window.prototype.isMaximized = function () {
+                    return this._isMaximized;
+                };
 
                 Window.prototype.close = function (callback) {
                     if (this.isClosed()) {
@@ -3713,6 +3796,7 @@
 
                         var _window20 = _ref44;
 
+                        _window20._isMinimized = true;
                         _window20._window.minimize(callback.ref());
                     }
                 };
@@ -3722,6 +3806,7 @@
                         throw "maximize can't be called on an unready window";
                     }
 
+                    this._isMaximized = true;
                     this._window.maximize(callback);
                 };
 
@@ -3745,6 +3830,7 @@
 
                         var _window21 = _ref45;
 
+                        _window21._isHidden = false;
                         _window21._window.show(callback.ref());
                     }
                 };
@@ -3769,6 +3855,7 @@
 
                         var _window22 = _ref46;
 
+                        _window22._isHidden = true;
                         _window22._window.hide(callback.ref());
                     }
                 };
@@ -3793,6 +3880,9 @@
 
                         var _window23 = _ref47;
 
+                        _window23._isHidden = false;
+                        _window23._isMinimized = false;
+                        _window23._isMaximized = false;
                         _window23._window.restore(callback.ref());
                     }
                 };
