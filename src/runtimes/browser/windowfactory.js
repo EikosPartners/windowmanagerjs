@@ -122,6 +122,20 @@
                 }
             },
             off: (eventName, window, listener) => {
+                if (listener === undefined) {
+                    listener = window;
+                    window = undefined;
+                }
+
+                if (window !== undefined) {
+                    // Replace window.name with some way to identify the unique window
+                    const winLisGroup = (windowWrappedListeners[window.name] = windowWrappedListeners[window.name] || {});
+                    winLisGroup[eventName] = winLisGroup[eventName] || new Set();
+                    winLisGroup[eventName].delete(listener);
+                } else {
+                    wrappedListeners[eventName] = wrappedListeners[eventName] || new Set();
+                    wrappedListeners[eventName].delete(listener);
+                }
             }
         };
     })();

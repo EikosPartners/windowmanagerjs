@@ -290,7 +290,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory.isRenderer = false;
     windowfactory.isBackend = false;
-    windowfactory.version = "0.7.0";
+    windowfactory.version = "0.7.1";
 
     function getBrowserInfo() {
         // Credit: http://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
@@ -2450,7 +2450,22 @@
                         wrappedListeners[eventName].add(listener);
                     }
                 },
-                off: function off(eventName, window, listener) {}
+                off: function off(eventName, window, listener) {
+                    if (listener === undefined) {
+                        listener = window;
+                        window = undefined;
+                    }
+
+                    if (window !== undefined) {
+                        // Replace window.name with some way to identify the unique window
+                        var winLisGroup = windowWrappedListeners[window.name] = windowWrappedListeners[window.name] || {};
+                        winLisGroup[eventName] = winLisGroup[eventName] || new Set();
+                        winLisGroup[eventName].delete(listener);
+                    } else {
+                        wrappedListeners[eventName] = wrappedListeners[eventName] || new Set();
+                        wrappedListeners[eventName].delete(listener);
+                    }
+                }
             };
         }();
 
@@ -3488,13 +3503,39 @@
             menu.popup(Window.current._window);
         }, false);
 
+        var messagebus = function () {
+            return {
+                /**
+                 * @method
+                 * @param {String} eventName - the event to send to
+                 * @param {Window} [window=undefined] - the target window to send to (if not specified, sends to all windows)
+                 */
+                send: function send() {},
+                /**
+                 * @method
+                 * @param {String} eventName - the event to listen to
+                 * @param {Window} [window=undefined] - the window to listen to events from (if not null, listens to all windows)]
+                 * @param {Function} listener - the callback function to call when event is triggered for this window
+                 */
+                on: function on() {},
+                /**
+                 * @method
+                 * @param {String} eventName - the event to remove listener from
+                 * @param {Window} [window=undefined] - the window to listen to events from (if not null, listens to all windows)]
+                 * @param {Function} listener - the callback function to call when event is triggered for this window
+                 */
+                off: function off() {}
+            };
+        }();
+
         _extends(windowfactory, {
             onReady: onReady,
             isReady: function isReady() {
                 return _isReady2;
             },
             runtime: "Electron",
-            runtimeVersion: windowfactory.electronVersion
+            runtimeVersion: windowfactory.electronVersion,
+            messagebus: messagebus
         });
     })();
     // TODO: Make scalejs.windowfactory the main.js script for Electron. Load the config.json
