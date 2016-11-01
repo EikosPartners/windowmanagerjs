@@ -48,8 +48,8 @@
         let dragging = false;
         //let titlebarEl = document.querySelector("titlebar");
 
-        window.addEventListener("mousedown", function (e) {
-            if (e.target.classList && e.target.classList.contains("window-drag")) {
+        window.addEventListener("mousedown", function (event) {
+            if (event.target.classList && event.target.classList.contains("window-drag")) {
                 dragging = true;
                 wX = event.screenX;
                 wY = event.screenY;
@@ -57,7 +57,7 @@
             }
         });
 
-        window.addEventListener("mousemove", function (e) {
+        window.addEventListener("mousemove", function (event) {
             if (dragging) {
                 //Window.current.moveTo(event.screenX - wX, event.screenY - wY);
                 Window.current._dragBy(event.screenX - wX, event.screenY - wY);

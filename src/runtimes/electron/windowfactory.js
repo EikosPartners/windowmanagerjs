@@ -77,7 +77,7 @@
     });
 
     window.addEventListener("mousedown", function (event) {
-        if (e.target.classList && event.target.classList.contains("window-drag")) {
+        if (event.target.classList && event.target.classList.contains("window-drag")) {
             dragging = true;
             wX = event.screenX;
             wY = event.screenY;
