@@ -9,6 +9,7 @@
             BoundingBox = geometry.BoundingBox;
         const remote = nodeRequire("electron").remote;
         const path = nodeRequire("path");
+        const url = nodeRequire("url");
         const BrowserWindow = remote.BrowserWindow;
         const currentWin = remote.getCurrentWindow();
         const defaultConfig = {
@@ -36,6 +37,12 @@
         let windows = {};
 
         /**
+         * @callback callback
+         * @param {string|null} error - String on error, or null if no error
+         * @param {object|null} result - Object on success, or null if error
+         */
+
+        /**
          * Wraps a window object.
          * @constructor
          * @alias Window
@@ -61,11 +68,29 @@
                         config[prop] = config[prop] || defaultConfig[prop];
                     }
                 }
-                const url = config.url;
+                let _url = config.url;
                 delete config.url;
 
                 this._window = new BrowserWindow(config);
-                this._window.loadURL(url[0] !== "/" ? url : path.join(remote.getGlobal("workingDir"), url));
+                // The following logic works like (in logical if-order):
+                //       1. If url has "http" or "file" at start, then use url, no modification.
+                //       2. If url has no "/", take location.href and remove all stuff up till last /, then append url.
+                //       3. If url has "/":
+                //          a. If location.href has "http", extract the root url (domain) and append url.
+                //          b. If location.href has "file", take remote.getGlobal("workingDir"), and then append url.
+                // Resolve url:
+                if (!/^(file|http)/i.test(_url)) {
+                    if (_url[0] !== "/") {
+                        _url = url.resolve(location.href, _url); // TODO: Is this unsafe with ".."?
+                    } else if (/^http/i.test(location.href)) {
+                        _url = location.origin + _url; // TODO: Safe?
+                    } else if (/^file/i.test(location.href)) {
+                        _url = remote.getGlobal("workingDir") + _url; // TODO: Safe?
+                    }
+                    // If can't determine url to load, then attempt to just load the url.
+                }
+                this._window.loadURL(_url);
+                //this._window.loadURL(url[0] !== "/" ? url : path.join(remote.getGlobal("workingDir"), url));
             } else {
                 this._window = config;
             }
@@ -111,7 +136,7 @@
 		// Inherit EventHandler
 		Window.prototype = Object.create(EventHandler.prototype);
 		// Correct the constructor pointer because it points to EventHandler:
-		Window.prototype.constructor = Window;
+        Window.prototype.constructor = Window;
 
         /**
          * @static
@@ -120,6 +145,18 @@
         Window.getCurrent = function () {
             return Window.current;
         };
+
+        /**
+         * Calls a callback when window is ready and setup.
+         * @method
+         * @param {callback=}
+         */
+		Window.prototype.onReady = function (callback) {
+			if (this.isClosed()) { throw "onReady can't be called on a closed window"; }
+			if (this.isReady()) { return callback.call(this); }
+
+			this.once("ready", callback);
+		};
 
         /**
          * @method
@@ -226,11 +263,6 @@
 
 
 
-        /**
-         * @callback callback
-         * @param {string|null} error - String on error, or null if no error
-         * @param {object|null} result - Object on success, or null if error
-         */
 
         /**
          * Closes the window instance.
