@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Size - Documentation</title>
+    <title>windowfactory - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Size</h1>
+    <h1 class="page-title">windowfactory</h1>
     
 
     
@@ -41,9 +41,7 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-geometry.html">geometry</a>.</span>
-        
-        Size
+        windowfactory
         </h2>
         
     
@@ -53,31 +51,17 @@
     <div class="container-overview">
     
         
+            <div class="description">A global variable exposed on windows to access the windowfactory-related API.</div>
+        
+
+        
+
+
+    <h5 class="subsection-title">Properties:</h5>
 
     
 
-    <h4 class="name" id="Size"><span class="type-signature"></span>new Size<span class="signature">(left, top)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    A Size object.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
+<table class="props">
     <thead>
     <tr>
         
@@ -99,13 +83,13 @@
 
         <tr>
             
-                <td class="name"><code>left</code></td>
+                <td class="name"><code>version</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">string</span>
 
 
             
@@ -115,20 +99,20 @@
 
             
 
-            <td class="description last">The position of the vector's x-axis.</td>
+            <td class="description last">version of windowfactory</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>top</code></td>
+                <td class="name"><code>runtime</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">object</span>
 
 
             
@@ -138,14 +122,313 @@
 
             
 
-            <td class="description last">The position of the vector's y-axis.</td>
+            <td class="description last">contains runtime-specific info
+                <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of runtime (ie. Chrome, IE, OpenFin, Electron, ect)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>version</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isBrowser</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isElectron</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isOpenFin</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
         </tr>
 
     
     </tbody>
 </table>
 
+            </td>
+        </tr>
 
+    
+
+        <tr>
+            
+                <td class="name"><code>isDesktop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is this a desktop OS</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isMobile</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is this a mobile OS</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isLauncher</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">(only available on Browser runtime) is main/launcher window</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Window</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Window.html">Window</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>geometry</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-geometry.html">module:geometry</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isReady</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">returns if windowfactory is ready for use</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onReady</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">accepts a callback which is called when isReady() is true</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -181,32 +464,12 @@
     
 
     
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="module-geometry.Vector.html">Vector</a> for further information.</li>
-        </ul>
-    </dd>
-    
 
     
 </dl>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
     
     </div>
 

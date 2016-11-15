@@ -1,5 +1,24 @@
 /* global fin,EventHandler*/
 let windowfactoryEventNames = ["window-create", "window-close"];
+
+/**
+ * A global variable exposed on windows to access the windowfactory-related API.
+ * @namespace
+ * @property {string} version - version of windowfactory
+ * @property {object} runtime - contains runtime-specific info
+ * @property {string} runtime.name - name of runtime (ie. Chrome, IE, OpenFin, Electron, ect)
+ * @property {string} runtime.version
+ * @property {boolean} runtime.isBrowser
+ * @property {boolean} runtime.isElectron
+ * @property {boolean} runtime.isOpenFin
+ * @property {boolean} isDesktop - is this a desktop OS
+ * @property {boolean} isMobile - is this a mobile OS
+ * @property {boolean} isLauncher - (only available on Browser runtime) is main/launcher window
+ * @property {Window} Window
+ * @property {module:geometry} geometry
+ * @property {function} isReady - returns if windowfactory is ready for use
+ * @property {function} onReady - accepts a callback which is called when isReady() is true
+ */
 let windowfactory = new EventHandler(windowfactoryEventNames);
 windowfactory._isRenderer = false;
 windowfactory._isBackend = false;

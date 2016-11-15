@@ -1,6 +1,7 @@
 /**
  * This module handles various geometric shapes used in calculations for windowfactory.
  * @module geometry
+ * @alias module:geometry
  */
 // TODO: Heavy refactor! Need to clean up all of these random functions. Make a simple library.
 //       And no more resolving things down! It hurts performance in some cases,
