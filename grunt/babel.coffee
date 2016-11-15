@@ -9,4 +9,4 @@ module.exports =
         ]
     dist:
         files:
-            'build/<%= package.name %>.js': ['build/<%= package.name %>.js']
+            'dist/<%= package.name %>.js': ['dist/<%= package.name %>.js']

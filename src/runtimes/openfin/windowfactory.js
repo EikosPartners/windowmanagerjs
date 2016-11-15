@@ -1,6 +1,6 @@
 /*global windowfactory,fin*/
 (function () {
-    if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.openfinVersion) { return; }
+    if (!windowfactory._isRenderer || windowfactory._isBackend || !windowfactory.runtime.isOpenFin) { return; }
 
     const Window = windowfactory.Window;
     const APP_UUID = "app_uuid";
@@ -70,15 +70,12 @@
         });
 
         // TODO: Rewrite to remove setTimeout for the following:
-        function checkReady() {
-            if (Window.current && windowfactory.openfinVersion !== "pending") {
-                windowfactory.runtimeVersion = windowfactory.openfinVersion;
+        const checkReadyInterval = setInterval(function () {
+            if (Window.current && windowfactory.runtime.version !== undefined) {
+                clearInterval(checkReadyInterval);
                 ready();
-            } else {
-                setTimeout(checkReady, 5);
             }
-        }
-        checkReady();
+        }, 5);
     });
 
     const messagebus = (() => {
@@ -143,8 +140,6 @@
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: () => { return isReady; },
-        runtime: "OpenFin",
-        runtimeVersion: windowfactory.openfinVersion,
         //messagebus: messagebus
     });
 })();

@@ -1,6 +1,6 @@
 /*global windowfactory,nodeRequire*/
 (function () {
-    if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.electronVersion) { return; }
+    if (!windowfactory._isRenderer || windowfactory._isBackend || !windowfactory.runtime.isElectron) { return; }
 
     const Window = windowfactory.Window;
     const { remote, ipcRenderer } = nodeRequire("electron");
@@ -164,8 +164,6 @@
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: () => { return isReady; },
-        runtime: "Electron",
-        runtimeVersion: windowfactory.electronVersion,
         messagebus: messagebus
     });
 })();

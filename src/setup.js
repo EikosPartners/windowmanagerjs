@@ -1,9 +1,16 @@
 /* global fin,EventHandler*/
 let windowfactoryEventNames = ["window-create", "window-close"];
 let windowfactory = new EventHandler(windowfactoryEventNames);
-windowfactory.isRenderer = false;
-windowfactory.isBackend = false;
-windowfactory.version = "0.7.4";
+windowfactory._isRenderer = false;
+windowfactory._isBackend = false;
+windowfactory.version = "0.7.5";
+windowfactory.runtime = {
+    name: undefined,
+    version: undefined,
+    isBrowser: false,
+    isElectron: false,
+    isOpenFin: false
+};
 
 // Credit: http://stackoverflow.com/a/11381730
 if (typeof navigator !== "undefined") {
@@ -36,7 +43,7 @@ function getBrowserInfo() {
 
 
 if (typeof global !== "undefined" && global) {
-    windowfactory.isBackend = true;
+    windowfactory._isBackend = true;
     if (typeof require === "function" && require.main && require.main.filename) {
         // We are running in an Electron Window Backend's Runtime:
         const path = require("path");
@@ -52,11 +59,10 @@ if (typeof global !== "undefined" && global) {
         });
     }
 } else if (typeof window !== "undefined" && window) {
-    windowfactory.isRenderer = true;
+    windowfactory._isRenderer = true;
     if (window.nodeRequire !== undefined) {
         // We are running in an Electron Window's Runtime:
-        windowfactory.electronVersion = window.nodeRequire.electronVersion;
-        windowfactory.nodeVersion = window.nodeRequire.nodeVersion;
+        windowfactory.runtime = window.nodeRequire.runtime;
 
         const ipcRenderer = window.nodeRequire("electron").ipcRenderer;
         ipcRenderer.on("window-create", function (event, otherID) {
@@ -67,16 +73,20 @@ if (typeof global !== "undefined" && global) {
 
 if (typeof process !== "undefined" && process && process.versions && process.versions.electron) {
     // We are running in an Electron Runtime:
-    global.nodeRequire.electronVersion = windowfactory.electronVersion = global.process.versions.electron;
-    global.nodeRequire.nodeVersion = windowfactory.nodeVersion = global.process.versions.node;
+    windowfactory.runtime.name = "Electron";
+    windowfactory.runtime.isElectron = true;
+    windowfactory.runtime.version = global.process.versions.electron;
+    global.nodeRequire.runtime = windowfactory.runtime;
 } else if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.main) {
     // We are running in OpenFin Runtime:
-    windowfactory.openfinVersion = "startup";
+    windowfactory.runtime.name = "OpenFin";
+    windowfactory.runtime.isOpenFin = true;
+    windowfactory.runtime.version = undefined;
 
     let openfinReadyCallbacks = [];
     windowfactory._openfinOnReady = function (callback) {
         // Check if ready:
-        if (windowfactory.openfinVersion !== "startup") {
+        if (windowfactory.runtime.version !== undefined) {
             return callback();
         }
 
@@ -93,9 +103,8 @@ if (typeof process !== "undefined" && process && process.versions && process.ver
     };
 
     fin.desktop.main(function () {
-        windowfactory.openfinVersion = "pending";
         fin.desktop.System.getVersion(function (version) {
-            windowfactory.openfinVersion = version;
+            windowfactory.runtime.version = version;
         }); // TODO: Handle errorCallback
 
         let app = fin.desktop.Application.getCurrent();
@@ -120,8 +129,9 @@ if (typeof process !== "undefined" && process && process.versions && process.ver
     // We are running in Browser Runtime:
     let browser = getBrowserInfo();
     let parentInaccessible = (window.parent === window);
-    windowfactory.browserVersion = browser.version;
-    windowfactory.browserRuntime = browser.name;
+    windowfactory.runtime.name = browser.name;
+    windowfactory.runtime.isBrowser = true;
+    windowfactory.runtime.version = browser.version;
 
     try {
         window.parent.document;

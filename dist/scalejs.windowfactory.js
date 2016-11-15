@@ -288,9 +288,16 @@
     /* global fin,EventHandler*/
     var windowfactoryEventNames = ["window-create", "window-close"];
     var windowfactory = new EventHandler(windowfactoryEventNames);
-    windowfactory.isRenderer = false;
-    windowfactory.isBackend = false;
-    windowfactory.version = "0.7.4";
+    windowfactory._isRenderer = false;
+    windowfactory._isBackend = false;
+    windowfactory.version = "0.7.5";
+    windowfactory.runtime = {
+        name: undefined,
+        version: undefined,
+        isBrowser: false,
+        isElectron: false,
+        isOpenFin: false
+    };
 
     // Credit: http://stackoverflow.com/a/11381730
     if (typeof navigator !== "undefined") {
@@ -329,7 +336,7 @@
     }
 
     if (typeof global !== "undefined" && global) {
-        windowfactory.isBackend = true;
+        windowfactory._isBackend = true;
         if (typeof require === "function" && require.main && require.main.filename) {
             (function () {
                 var _require = require;
@@ -346,11 +353,10 @@
             })();
         }
     } else if (typeof window !== "undefined" && window) {
-        windowfactory.isRenderer = true;
+        windowfactory._isRenderer = true;
         if (window.nodeRequire !== undefined) {
             // We are running in an Electron Window's Runtime:
-            windowfactory.electronVersion = window.nodeRequire.electronVersion;
-            windowfactory.nodeVersion = window.nodeRequire.nodeVersion;
+            windowfactory.runtime = window.nodeRequire.runtime;
 
             var ipcRenderer = window.nodeRequire("electron").ipcRenderer;
             ipcRenderer.on("window-create", function (event, otherID) {
@@ -361,17 +367,21 @@
 
     if (typeof process !== "undefined" && process && process.versions && process.versions.electron) {
         // We are running in an Electron Runtime:
-        global.nodeRequire.electronVersion = windowfactory.electronVersion = global.process.versions.electron;
-        global.nodeRequire.nodeVersion = windowfactory.nodeVersion = global.process.versions.node;
+        windowfactory.runtime.name = "Electron";
+        windowfactory.runtime.isElectron = true;
+        windowfactory.runtime.version = global.process.versions.electron;
+        global.nodeRequire.runtime = windowfactory.runtime;
     } else if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.main) {
         (function () {
             // We are running in OpenFin Runtime:
-            windowfactory.openfinVersion = "startup";
+            windowfactory.runtime.name = "OpenFin";
+            windowfactory.runtime.isOpenFin = true;
+            windowfactory.runtime.version = undefined;
 
             var openfinReadyCallbacks = [];
             windowfactory._openfinOnReady = function (callback) {
                 // Check if ready:
-                if (windowfactory.openfinVersion !== "startup") {
+                if (windowfactory.runtime.version !== undefined) {
                     return callback();
                 }
 
@@ -390,9 +400,8 @@
             };
 
             fin.desktop.main(function () {
-                windowfactory.openfinVersion = "pending";
                 fin.desktop.System.getVersion(function (version) {
-                    windowfactory.openfinVersion = version;
+                    windowfactory.runtime.version = version;
                 }); // TODO: Handle errorCallback
 
                 var app = fin.desktop.Application.getCurrent();
@@ -431,8 +440,9 @@
         // We are running in Browser Runtime:
         var browser = getBrowserInfo();
         var parentInaccessible = window.parent === window;
-        windowfactory.browserVersion = browser.version;
-        windowfactory.browserRuntime = browser.name;
+        windowfactory.runtime.name = browser.name;
+        windowfactory.runtime.isBrowser = true;
+        windowfactory.runtime.version = browser.version;
 
         try {
             window.parent.document;
@@ -1363,7 +1373,7 @@
     /*global windowfactory,fin,SyncCallback,EventHandler*/
     /*jshint bitwise: false*/
     (function () {
-        if (windowfactory.isRenderer && !windowfactory.isBackend && windowfactory.browserVersion) {
+        if (windowfactory._isRenderer && !windowfactory._isBackend && windowfactory.runtime.isBrowser) {
             (function () {
                 var geometry = windowfactory.geometry;
                 var Vector = geometry.Vector;
@@ -2330,7 +2340,7 @@
     })();
     /*global windowfactory,fin*/
     (function () {
-        if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.browserVersion) {
+        if (!windowfactory._isRenderer || windowfactory._isBackend || !windowfactory.runtime.isBrowser) {
             return;
         }
 
@@ -2499,18 +2509,16 @@
             onReady: onReady,
             isReady: function isReady() {
                 return _isReady;
-            },
-            runtime: windowfactory.browserRuntime,
-            runtimeVersion: windowfactory.browserVersion
+            }
         });
     })();
 
     /*global windowfactory,nodeRequire,EventHandler*/
     (function () {
-        if (!windowfactory.electronVersion) {
+        if (!windowfactory.runtime.isElectron) {
             return;
         }
-        if (windowfactory.isRenderer) {
+        if (windowfactory._isRenderer) {
             (function () {
                 var geometry = windowfactory.geometry;
                 var Vector = geometry.Vector,
@@ -3012,7 +3020,7 @@
                     }
                 });
             })();
-        } else if (windowfactory.isBackend) {
+        } else if (windowfactory._isBackend) {
             (function () {
                 var _global$nodeRequire = global.nodeRequire("electron");
 
@@ -3421,7 +3429,7 @@
     })();
     /*global windowfactory,nodeRequire*/
     (function () {
-        if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.electronVersion) {
+        if (!windowfactory._isRenderer || windowfactory._isBackend || !windowfactory.runtime.isElectron) {
             return;
         }
 
@@ -3594,8 +3602,6 @@
             isReady: function isReady() {
                 return _isReady2;
             },
-            runtime: "Electron",
-            runtimeVersion: windowfactory.electronVersion,
             messagebus: messagebus
         });
     })();
@@ -3604,7 +3610,7 @@
     /*global windowfactory,fin,SyncCallback,EventHandler*/
     /*jshint bitwise: false*/
     (function () {
-        if (windowfactory.isRenderer && !windowfactory.isBackend && windowfactory.openfinVersion) {
+        if (windowfactory._isRenderer && !windowfactory._isBackend && windowfactory.runtime.isOpenFin) {
             (function () {
                 var geometry = windowfactory.geometry;
                 var Vector = geometry.Vector;
@@ -4314,7 +4320,7 @@
     })();
     /*global windowfactory,fin*/
     (function () {
-        if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.openfinVersion) {
+        if (!windowfactory._isRenderer || windowfactory._isBackend || !windowfactory.runtime.isOpenFin) {
             return;
         }
 
@@ -4403,15 +4409,12 @@
             });
 
             // TODO: Rewrite to remove setTimeout for the following:
-            function checkReady() {
-                if (Window.current && windowfactory.openfinVersion !== "pending") {
-                    windowfactory.runtimeVersion = windowfactory.openfinVersion;
+            var checkReadyInterval = setInterval(function () {
+                if (Window.current && windowfactory.runtime.version !== undefined) {
+                    clearInterval(checkReadyInterval);
                     ready();
-                } else {
-                    setTimeout(checkReady, 5);
                 }
-            }
-            checkReady();
+            }, 5);
         });
 
         var messagebus = function () {
@@ -4477,9 +4480,7 @@
             onReady: onReady,
             isReady: function isReady() {
                 return _isReady3;
-            },
-            runtime: "OpenFin",
-            runtimeVersion: windowfactory.openfinVersion
+            }
         });
     })();
 

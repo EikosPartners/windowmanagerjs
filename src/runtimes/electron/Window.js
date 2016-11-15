@@ -1,7 +1,7 @@
 /*global windowfactory,nodeRequire,EventHandler*/
 (function () {
-    if (!windowfactory.electronVersion) { return; }
-    if (windowfactory.isRenderer) {
+    if (!windowfactory.runtime.isElectron) { return; }
+    if (windowfactory._isRenderer) {
         const geometry = windowfactory.geometry;
         const Vector = geometry.Vector,
             Position = geometry.Position,
@@ -455,7 +455,7 @@
                 return windows[id] || new Window(BrowserWindow.fromId(id));
             }
         });
-    } else if (windowfactory.isBackend) {
+    } else if (windowfactory._isBackend) {
         // This is Electron's main process:
         const {BrowserWindow, ipcMain} = global.nodeRequire("electron");
 

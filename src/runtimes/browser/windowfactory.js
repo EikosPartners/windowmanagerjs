@@ -1,6 +1,6 @@
 /*global windowfactory,fin*/
 (function () {
-    if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.browserVersion) { return; }
+    if (!windowfactory._isRenderer || windowfactory._isBackend || !windowfactory.runtime.isBrowser) { return; }
 
     const Window = windowfactory.Window;
     let readyCallbacks = [];
@@ -143,8 +143,6 @@
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: () => { return isReady; },
-        runtime: windowfactory.browserRuntime,
-        runtimeVersion: windowfactory.browserVersion,
         //messagebus: messagebus
     });
 })();

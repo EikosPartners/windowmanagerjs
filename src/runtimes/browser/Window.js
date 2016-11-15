@@ -1,7 +1,7 @@
 /*global windowfactory,fin,SyncCallback,EventHandler*/
 /*jshint bitwise: false*/
 (function () {
-    if (windowfactory.isRenderer && !windowfactory.isBackend && windowfactory.browserVersion) {
+    if (windowfactory._isRenderer && !windowfactory._isBackend && windowfactory.runtime.isBrowser) {
         const geometry = windowfactory.geometry;
 		const Vector = geometry.Vector;
 		const Position = geometry.Position;
