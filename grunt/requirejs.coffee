@@ -3,13 +3,13 @@ module.exports = ( grunt ) ->
 
     analysis = require 'rjs-build-analysis'
 
-    build:
+    dist:
         options:
             baseUrl: 'src'
             include: '<%=package.name%>'
             exclude: ['scalejs']
             mainConfigFile: 'rjsconfig.js'
-            out: 'build/<%=package.name%>.js'
+            out: 'dist/<%=package.name%>.js'
             optimize: 'none'
             done: ( done, output ) ->
                 duplicates = analysis.duplicates output

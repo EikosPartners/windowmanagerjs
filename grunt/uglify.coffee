@@ -2,4 +2,4 @@ module.exports =
 
     dist:
         files:
-            'build/<%= package.name %>.min.js': ['build/<%= package.name %>.js']
+            'dist/<%= package.name %>.min.js': ['dist/<%= package.name %>.js']

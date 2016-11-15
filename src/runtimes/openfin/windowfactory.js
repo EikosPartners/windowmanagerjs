@@ -1,6 +1,6 @@
 /*global windowfactory,fin*/
 (function () {
-    if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.openfinVersion) { return; }
+    if (!windowfactory._isRenderer || windowfactory._isBackend || !windowfactory.runtime.isOpenFin) { return; }
 
     const Window = windowfactory.Window;
     const APP_UUID = "app_uuid";
@@ -48,8 +48,8 @@
         let dragging = false;
         //let titlebarEl = document.querySelector("titlebar");
 
-        window.addEventListener("mousedown", function (e) {
-            if (e.target.classList.contains("window-drag")) {
+        window.addEventListener("mousedown", function (event) {
+            if (event.target.classList && event.target.classList.contains("window-drag")) {
                 dragging = true;
                 wX = event.screenX;
                 wY = event.screenY;
@@ -57,7 +57,7 @@
             }
         });
 
-        window.addEventListener("mousemove", function (e) {
+        window.addEventListener("mousemove", function (event) {
             if (dragging) {
                 //Window.current.moveTo(event.screenX - wX, event.screenY - wY);
                 Window.current._dragBy(event.screenX - wX, event.screenY - wY);
@@ -70,15 +70,12 @@
         });
 
         // TODO: Rewrite to remove setTimeout for the following:
-        function checkReady() {
-            if (Window.current && windowfactory.openfinVersion !== "pending") {
-                windowfactory.runtimeVersion = windowfactory.openfinVersion;
+        const checkReadyInterval = setInterval(function () {
+            if (Window.current && windowfactory.runtime.version !== undefined) {
+                clearInterval(checkReadyInterval);
                 ready();
-            } else {
-                setTimeout(checkReady, 5);
             }
-        }
-        checkReady();
+        }, 5);
     });
 
     const messagebus = (() => {
@@ -143,8 +140,6 @@
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: () => { return isReady; },
-        runtime: "OpenFin",
-        runtimeVersion: windowfactory.openfinVersion,
         //messagebus: messagebus
     });
 })();

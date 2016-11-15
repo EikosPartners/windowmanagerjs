@@ -1,6 +1,6 @@
 /*global windowfactory,fin*/
 (function () {
-    if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.browserVersion) { return; }
+    if (!windowfactory._isRenderer || windowfactory._isBackend || !windowfactory.runtime.isBrowser) { return; }
 
     const Window = windowfactory.Window;
     let readyCallbacks = [];
@@ -39,8 +39,8 @@
             Window.current.bringToFront();
         });
 
-        window.addEventListener("mousedown", function (e) {
-            if (e.target.classList.contains("window-drag")) {
+        window.addEventListener("mousedown", function (event) {
+            if (event.target.classList && event.target.classList.contains("window-drag")) {
                 dragging = true;
                 wX = event.screenX;
                 wY = event.screenY;
@@ -48,7 +48,7 @@
             }
         });
 
-        window.addEventListener("mousemove", function (e) {
+        window.addEventListener("mousemove", function (event) {
             if (dragging) {
                 //Window.current.moveTo(event.screenX - wX, event.screenY - wY);
                 Window.current._dragBy(event.screenX - wX, event.screenY - wY);
@@ -122,6 +122,20 @@
                 }
             },
             off: (eventName, window, listener) => {
+                if (listener === undefined) {
+                    listener = window;
+                    window = undefined;
+                }
+
+                if (window !== undefined) {
+                    // Replace window.name with some way to identify the unique window
+                    const winLisGroup = (windowWrappedListeners[window.name] = windowWrappedListeners[window.name] || {});
+                    winLisGroup[eventName] = winLisGroup[eventName] || new Set();
+                    winLisGroup[eventName].delete(listener);
+                } else {
+                    wrappedListeners[eventName] = wrappedListeners[eventName] || new Set();
+                    wrappedListeners[eventName].delete(listener);
+                }
             }
         };
     })();
@@ -129,8 +143,6 @@
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: () => { return isReady; },
-        runtime: windowfactory.browserRuntime,
-        runtimeVersion: windowfactory.browserVersion,
         //messagebus: messagebus
     });
 })();

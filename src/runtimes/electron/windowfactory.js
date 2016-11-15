@@ -1,6 +1,6 @@
 /*global windowfactory,nodeRequire*/
 (function () {
-    if (!windowfactory.isRenderer || windowfactory.isBackend || !windowfactory.electronVersion) { return; }
+    if (!windowfactory._isRenderer || windowfactory._isBackend || !windowfactory.runtime.isElectron) { return; }
 
     const Window = windowfactory.Window;
     const { remote, ipcRenderer } = nodeRequire("electron");
@@ -77,7 +77,7 @@
     });
 
     window.addEventListener("mousedown", function (event) {
-        if (event.target.classList.contains("window-drag")) {
+        if (event.target.classList && event.target.classList.contains("window-drag")) {
             dragging = true;
             wX = event.screenX;
             wY = event.screenY;
@@ -133,11 +133,38 @@
         menu.popup(Window.current._window);
     }, false);
 
+    const messagebus = (() => {
+        return {
+            /**
+             * @method
+             * @param {String} eventName - the event to send to
+             * @param {Window} [window=undefined] - the target window to send to (if not specified, sends to all windows)
+             */
+            send: () => {
+            },
+            /**
+             * @method
+             * @param {String} eventName - the event to listen to
+             * @param {Window} [window=undefined] - the window to listen to events from (if not null, listens to all windows)]
+             * @param {Function} listener - the callback function to call when event is triggered for this window
+             */
+            on: () => {
+            },
+            /**
+             * @method
+             * @param {String} eventName - the event to remove listener from
+             * @param {Window} [window=undefined] - the window to listen to events from (if not null, listens to all windows)]
+             * @param {Function} listener - the callback function to call when event is triggered for this window
+             */
+            off: () => {
+            }
+        };
+    })();
+
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: () => { return isReady; },
-        runtime: "Electron",
-        runtimeVersion: windowfactory.electronVersion
+        messagebus: messagebus
     });
 })();
 // TODO: Make scalejs.windowfactory the main.js script for Electron. Load the config.json
