@@ -12,7 +12,7 @@ Future runtimes:
 * [NW.js](http://nwjs.io/)
 
 ## Running the Example Demo
-See example/README.md
+TODO
 
 ## Installing via Bower Install
 `bower install https://github.com/EikosPartners/scalejs.windowfactory.git`
