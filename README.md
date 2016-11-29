@@ -4,15 +4,16 @@ This extension is designed to support multiple different different encapsulation
 
 
 Runtimes supported:
-* Web Browsers (Chrome, Firefox, IE, Edge, ect.)
+* Modern Web Browsers (Chrome, Firefox, IE, Edge, Safari)
 * [OpenFin](https://openfin.co/)
 * [Electron](http://electron.atom.io/)
 
 Future runtimes:
 * [NW.js](http://nwjs.io/)
 
-## Running the Example Demo
-TODO
+## Live Example
+You can see a live demo at [Eikos Partners Blotter Demonstration](http://blotter.eikospartners.com/install).  
+An open source example will be available soon.
 
 ## Installing via Bower Install
 `bower install https://github.com/EikosPartners/scalejs.windowfactory.git`
