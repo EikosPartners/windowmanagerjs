@@ -600,6 +600,9 @@
 			return windowfactory._windows.splice();
 		};
 
+		// Add launcher to list of windows:
+		if (windowfactory.isLauncher) { let _ = new Window(window); }
+
         Object.assign(windowfactory, {
             Window: Window
         });
