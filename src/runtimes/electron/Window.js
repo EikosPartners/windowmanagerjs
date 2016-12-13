@@ -56,6 +56,8 @@
 
 			// Call the parent constructor:
 			EventHandler.call(this, acceptedEventHandlers);
+            this._id = windowfactory.getUniqueWindowName();
+
             if (isArgConfig) {
                 for (const prop in config) {
                     if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
@@ -68,6 +70,7 @@
                         config[prop] = config[prop] || defaultConfig[prop];
                     }
                 }
+                config.title = config.title || this._id;
                 let _url = config.url;
                 delete config.url;
 
@@ -90,6 +93,7 @@
                     // If can't determine url to load, then attempt to just load the url.
                 }
                 this._window.loadURL(_url);
+                this._window.setTitle(config.title);
                 //this._window.loadURL(url[0] !== "/" ? url : path.join(remote.getGlobal("workingDir"), url));
             } else {
                 this._window = config;
@@ -223,6 +227,23 @@
 
             return new BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
         };
+
+        /**
+         * @method
+         * @returns {String}
+         */
+		Window.prototype.getTitle = function () {
+			return this._title;
+        };
+
+        /**
+         * @method
+         * @param {String}
+         */
+		Window.prototype.setTitle = function (newTitle) {
+            if (!newTitle) { throw "setTitle requires one argument of type String"; }
+			this._window.setTitle(newTitle);
+		};
 
         /**
          * @method

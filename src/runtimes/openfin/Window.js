@@ -1,5 +1,4 @@
 /*global windowfactory,fin,SyncCallback,EventHandler*/
-/*jshint bitwise: false*/
 (function () {
     if (windowfactory._isRenderer && !windowfactory._isBackend && windowfactory.runtime.isOpenFin) {
         const geometry = windowfactory.geometry;
@@ -18,6 +17,7 @@
 			icon: location.href + "favicon.ico"
 		};
 		const configMap = {
+			title: "name",
 			left: "defaultLeft",
 			top: "defaultTop",
 			width: "defaultWidth",
@@ -29,22 +29,6 @@
 			"dock-before",
 			"move", "move-before",
 			"resize-before", "close", "minimize"];
-
-		let lut = [];
-		for (let i = 0; i < 256; i += 1) { lut[i] = (i < 16 ? "0" : "") + (i).toString(16); }
-		const genUIDE7 = function () {
-			let d0 = Math.random()*0xffffffff|0;
-			let d1 = Math.random()*0xffffffff|0;
-			let d2 = Math.random()*0xffffffff|0;
-			let d3 = Math.random()*0xffffffff|0;
-			return lut[d0&0xff]+lut[d0>>8&0xff]+lut[d0>>16&0xff]+lut[d0>>24&0xff]+"-"+
-			lut[d1&0xff]+lut[d1>>8&0xff]+"-"+lut[d1>>16&0x0f|0x40]+lut[d1>>24&0xff]+"-"+
-			lut[d2&0x3f|0x80]+lut[d2>>8&0xff]+"-"+lut[d2>>16&0xff]+lut[d2>>24&0xff]+
-			lut[d3&0xff]+lut[d3>>8&0xff]+lut[d3>>16&0xff]+lut[d3>>24&0xff];
-		};
-		const getUniqueWindowName = function () {
-			return "window" + genUIDE7() + (new Date()).getTime();
-		};
 
 		const Window = function (config) {
 			if (!(this instanceof Window)) { return new Window(config); }
@@ -63,6 +47,8 @@
 			this._dockedGroup = [this];
 			this._children = [];
 			this._parent = undefined;
+			this._title = undefined;
+			this._id = windowfactory.getUniqueWindowName();
 
 			if (isArgConfig) {
 				for (const prop in config) {
@@ -76,7 +62,8 @@
 						config[prop] = config[prop] || defaultConfig[prop];
 					}
 				}
-				config.name = getUniqueWindowName();
+				this._title = config.name || this._id;
+				config.name = this._id; // Need name to be unique
 
 				if (config.parent) {
 					config.parent._children.push(this);
@@ -163,6 +150,11 @@
 			}
 			this._window.addEventListener("minimized", onMinimized);
 
+			// Setup title element:
+			this._titleEl = this._window.document.createElement("title");
+			this._titleEl.innerText = this._title;
+			this._window.document.head.appendChild(this._titleEl);
+
 			this._ready = true;
 			this.emit("ready");
 			windowfactory._internalBus.emit("window-create", this);
@@ -233,6 +225,15 @@
 		Window.prototype.addChild = function (child) {
 			child.setParent(this);
 		};
+
+		Window.prototype.getTitle = function () {
+			return this._title;
+		};
+		Window.prototype.setTitle = function (newTitle) {
+            if (!newTitle) { throw "setTitle requires one argument of type String"; }
+			this._titleEl.innerText = this._title = newTitle;
+		};
+
 		Window.prototype.isHidden = function () {
 			return this._isHidden;
 		};

@@ -309,7 +309,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
-    windowfactory.version = "0.7.7";
+    windowfactory.version = "0.7.8";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -507,6 +507,25 @@
     if (typeof window !== "undefined" && window) {
         window.windowfactory = windowfactory;
     }
+
+    /*jshint bitwise: false*/
+    var genUIDE7 = function () {
+        var lut = [];
+        for (var i = 0; i < 256; i += 1) {
+            lut[i] = (i < 16 ? "0" : "") + i.toString(16);
+        }
+
+        return function () {
+            var d0 = Math.random() * 0xffffffff | 0;
+            var d1 = Math.random() * 0xffffffff | 0;
+            var d2 = Math.random() * 0xffffffff | 0;
+            var d3 = Math.random() * 0xffffffff | 0;
+            return lut[d0 & 0xff] + lut[d0 >> 8 & 0xff] + lut[d0 >> 16 & 0xff] + lut[d0 >> 24 & 0xff] + "-" + lut[d1 & 0xff] + lut[d1 >> 8 & 0xff] + "-" + lut[d1 >> 16 & 0x0f | 0x40] + lut[d1 >> 24 & 0xff] + "-" + lut[d2 & 0x3f | 0x80] + lut[d2 >> 8 & 0xff] + "-" + lut[d2 >> 16 & 0xff] + lut[d2 >> 24 & 0xff] + lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
+        };
+    }();
+    windowfactory.getUniqueWindowName = function () {
+        return "window" + genUIDE7() + new Date().getTime();
+    };
 
     function SyncCallback(callback) {
         if (!(this instanceof SyncCallback)) {
@@ -1437,6 +1456,8 @@
                     this._dockedGroup = [this];
                     this._children = []; // TODO: Add way to remove or change heirarchy.
                     this._parent = undefined;
+                    this._title = undefined;
+                    this._id = windowfactory.getUniqueWindowName();
 
                     if (isArgConfig) {
                         for (var prop in config) {
@@ -1450,6 +1471,7 @@
                                 config[_prop] = config[_prop] || defaultConfig[_prop];
                             }
                         }
+                        this._title = config.title || this._id;
 
                         if (config.parent) {
                             config.parent._children.push(this);
@@ -1636,6 +1658,16 @@
                 };
                 Window.prototype.addChild = function (child) {
                     child.setParent(this);
+                };
+
+                Window.prototype.getTitle = function () {
+                    return this._title;
+                };
+                Window.prototype.setTitle = function (newTitle) {
+                    if (!newTitle) {
+                        throw "setTitle requires one argument of type String";
+                    }
+                    this._title = newTitle;
                 };
 
                 Window.prototype.isHidden = function () {
@@ -2597,6 +2629,8 @@
 
                     // Call the parent constructor:
                     EventHandler.call(this, acceptedEventHandlers);
+                    this._id = windowfactory.getUniqueWindowName();
+
                     if (isArgConfig) {
                         for (var prop in config) {
                             if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
@@ -2609,6 +2643,7 @@
                                 config[_prop2] = config[_prop2] || defaultConfig[_prop2];
                             }
                         }
+                        config.title = config.title || this._id;
                         var _url = config.url;
                         delete config.url;
 
@@ -2631,6 +2666,7 @@
                             // If can't determine url to load, then attempt to just load the url.
                         }
                         this._window.loadURL(_url);
+                        this._window.setTitle(config.title);
                         //this._window.loadURL(url[0] !== "/" ? url : path.join(remote.getGlobal("workingDir"), url));
                     } else {
                         this._window = config;
@@ -2768,6 +2804,25 @@
                     var bounds = this._window.getBounds();
 
                     return new BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
+                };
+
+                /**
+                 * @method
+                 * @returns {String}
+                 */
+                Window.prototype.getTitle = function () {
+                    return this._title;
+                };
+
+                /**
+                 * @method
+                 * @param {String}
+                 */
+                Window.prototype.setTitle = function (newTitle) {
+                    if (!newTitle) {
+                        throw "setTitle requires one argument of type String";
+                    }
+                    this._window.setTitle(newTitle);
                 };
 
                 /**
@@ -3633,7 +3688,6 @@
     // TODO: Make scalejs.windowfactory the main.js script for Electron. Load the config.json
 
     /*global windowfactory,fin,SyncCallback,EventHandler*/
-    /*jshint bitwise: false*/
     (function () {
         if (windowfactory._isRenderer && !windowfactory._isBackend && windowfactory.runtime.isOpenFin) {
             (function () {
@@ -3653,27 +3707,13 @@
                     icon: location.href + "favicon.ico"
                 };
                 var configMap = {
+                    title: "name",
                     left: "defaultLeft",
                     top: "defaultTop",
                     width: "defaultWidth",
                     height: "defaultHeight"
                 };
                 var acceptedEventHandlers = ["ready", "drag-start", "drag-before", "drag-stop", "dock-before", "move", "move-before", "resize-before", "close", "minimize"];
-
-                var lut = [];
-                for (var i = 0; i < 256; i += 1) {
-                    lut[i] = (i < 16 ? "0" : "") + i.toString(16);
-                }
-                var genUIDE7 = function genUIDE7() {
-                    var d0 = Math.random() * 0xffffffff | 0;
-                    var d1 = Math.random() * 0xffffffff | 0;
-                    var d2 = Math.random() * 0xffffffff | 0;
-                    var d3 = Math.random() * 0xffffffff | 0;
-                    return lut[d0 & 0xff] + lut[d0 >> 8 & 0xff] + lut[d0 >> 16 & 0xff] + lut[d0 >> 24 & 0xff] + "-" + lut[d1 & 0xff] + lut[d1 >> 8 & 0xff] + "-" + lut[d1 >> 16 & 0x0f | 0x40] + lut[d1 >> 24 & 0xff] + "-" + lut[d2 & 0x3f | 0x80] + lut[d2 >> 8 & 0xff] + "-" + lut[d2 >> 16 & 0xff] + lut[d2 >> 24 & 0xff] + lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
-                };
-                var getUniqueWindowName = function getUniqueWindowName() {
-                    return "window" + genUIDE7() + new Date().getTime();
-                };
 
                 var Window = function Window(config) {
                     if (!(this instanceof Window)) {
@@ -3694,6 +3734,8 @@
                     this._dockedGroup = [this];
                     this._children = [];
                     this._parent = undefined;
+                    this._title = undefined;
+                    this._id = windowfactory.getUniqueWindowName();
 
                     if (isArgConfig) {
                         for (var prop in config) {
@@ -3707,7 +3749,8 @@
                                 config[_prop3] = config[_prop3] || defaultConfig[_prop3];
                             }
                         }
-                        config.name = getUniqueWindowName();
+                        this._title = config.name || this._id;
+                        config.name = this._id; // Need name to be unique
 
                         if (config.parent) {
                             config.parent._children.push(this);
@@ -3807,6 +3850,11 @@
                     }
                     this._window.addEventListener("minimized", onMinimized);
 
+                    // Setup title element:
+                    this._titleEl = this._window.document.createElement("title");
+                    this._titleEl.innerText = this._title;
+                    this._window.document.head.appendChild(this._titleEl);
+
                     this._ready = true;
                     this.emit("ready");
                     windowfactory._internalBus.emit("window-create", this);
@@ -3885,6 +3933,17 @@
                 Window.prototype.addChild = function (child) {
                     child.setParent(this);
                 };
+
+                Window.prototype.getTitle = function () {
+                    return this._title;
+                };
+                Window.prototype.setTitle = function (newTitle) {
+                    if (!newTitle) {
+                        throw "setTitle requires one argument of type String";
+                    }
+                    this._titleEl.innerText = this._title = newTitle;
+                };
+
                 Window.prototype.isHidden = function () {
                     return this._isHidden;
                 };

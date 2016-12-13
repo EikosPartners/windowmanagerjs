@@ -48,6 +48,8 @@
 			this._dockedGroup = [this];
 			this._children = []; // TODO: Add way to remove or change heirarchy.
 			this._parent = undefined;
+			this._title = undefined;
+			this._id = windowfactory.getUniqueWindowName();
 
 			if (isArgConfig) {
 				for (const prop in config) {
@@ -61,6 +63,7 @@
 						config[prop] = config[prop] || defaultConfig[prop];
 					}
 				}
+				this._title = config.title || this._id;
 
 				if (config.parent) {
 					config.parent._children.push(this);
@@ -242,6 +245,14 @@
 		};
 		Window.prototype.addChild = function (child) {
 			child.setParent(this);
+		};
+
+		Window.prototype.getTitle = function () {
+			return this._title;
+		};
+		Window.prototype.setTitle = function (newTitle) {
+            if (!newTitle) { throw "setTitle requires one argument of type String"; }
+			this._title = newTitle;
 		};
 
 		Window.prototype.isHidden = function () {
