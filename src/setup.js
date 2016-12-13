@@ -22,7 +22,7 @@ let windowfactoryEventNames = ["window-create", "window-close"];
 let windowfactory = new EventHandler(windowfactoryEventNames);
 windowfactory._isRenderer = false;
 windowfactory._isBackend = false;
-windowfactory.version = "0.7.6";
+windowfactory.version = "0.7.7";
 windowfactory.runtime = {
     name: undefined,
     version: undefined,

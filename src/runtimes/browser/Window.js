@@ -597,7 +597,7 @@
 		})();
 
 		Window.getAll = function () {
-			return windowfactory._windows.splice();
+			return windowfactory._windows.slice();
 		};
 
 		// Add launcher to list of windows:
