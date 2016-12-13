@@ -85,8 +85,15 @@
         function wrapListener(listener) {
             return (message) => {
                 // TODO: Determine who sent it
+                try {
+                    message = JSON.parse(message);
+                } catch (e) {
+                    console.error("Unable to parse message:", message);
+                    return;
+                }
+
                 const window = null;
-                const response = listener.apply(window, JSON.parse(message));
+                const response = listener.apply(window, message);
                 // TODO: Send response if response is expected
             };
         }
@@ -140,6 +147,6 @@
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: () => { return isReady; },
-        //messagebus: messagebus
+        messagebus: messagebus
     });
 })();

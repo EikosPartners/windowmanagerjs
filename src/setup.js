@@ -18,11 +18,12 @@ let windowfactoryEventNames = ["window-create", "window-close"];
  * @property {module:geometry} geometry
  * @property {function} isReady - returns if windowfactory is ready for use
  * @property {function} onReady - accepts a callback which is called when isReady() is true
+ * @property {MessageBus} messagebus - message bus for application
  */
 let windowfactory = new EventHandler(windowfactoryEventNames);
 windowfactory._isRenderer = false;
 windowfactory._isBackend = false;
-windowfactory.version = "0.7.9";
+windowfactory.version = "0.8.0";
 windowfactory.runtime = {
     name: undefined,
     version: undefined,

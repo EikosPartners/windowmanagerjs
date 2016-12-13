@@ -76,6 +76,22 @@
             };
         }
 
+        window.addEventListener("message", function (event) {
+            let message;
+            try {
+                message = JSON.parse(event.data);
+            } catch (e) {
+                console.error("Unable to parse message:", event.data);
+                return;
+            }
+
+            if (windowWrappedListeners[message.event] != null) {
+                for (const listener of windowWrappedListeners[message.event]) {
+                    listener.apply(null, message.args); // TODO: Make apply's this point to window who sent messsage
+                }
+            }
+        }, false);
+
         return {
             send: (eventName, ...args) => {
                 // TODO: Check if ready? Dunno if needed
@@ -143,6 +159,6 @@
     Object.assign(windowfactory, {
         onReady: onReady,
         isReady: () => { return isReady; },
-        //messagebus: messagebus
+        messagebus: messagebus
     });
 })();

@@ -133,17 +133,25 @@
         menu.popup(Window.current._window);
     }, false);
 
+    /**
+     * Message bus for application.
+     * @class
+     * @alias MessageBus
+     */
     const messagebus = (() => {
         return {
             /**
              * @method
+             * @alias MessageBus.send
              * @param {String} eventName - the event to send to
              * @param {Window} [window=undefined] - the target window to send to (if not specified, sends to all windows)
+             * @param {...*} args Arguments to send to listeners
              */
             send: () => {
             },
             /**
              * @method
+             * @alias MessageBus.on
              * @param {String} eventName - the event to listen to
              * @param {Window} [window=undefined] - the window to listen to events from (if not null, listens to all windows)]
              * @param {Function} listener - the callback function to call when event is triggered for this window
@@ -152,6 +160,7 @@
             },
             /**
              * @method
+             * @alias MessageBus.off
              * @param {String} eventName - the event to remove listener from
              * @param {Window} [window=undefined] - the window to listen to events from (if not null, listens to all windows)]
              * @param {Function} listener - the callback function to call when event is triggered for this window
