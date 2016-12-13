@@ -309,7 +309,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
-    windowfactory.version = "0.7.8";
+    windowfactory.version = "0.7.9";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -1411,6 +1411,7 @@
 
     /*global windowfactory,fin,SyncCallback,EventHandler*/
     /*jshint bitwise: false*/
+    /*jshint eqnull: true*/
     (function () {
         if (windowfactory._isRenderer && !windowfactory._isBackend && windowfactory.runtime.isBrowser) {
             (function () {
@@ -1471,7 +1472,7 @@
                                 config[_prop] = config[_prop] || defaultConfig[_prop];
                             }
                         }
-                        this._title = config.title || this._id;
+                        this._title = config.title == null ? this._id : config.title;
 
                         if (config.parent) {
                             config.parent._children.push(this);
@@ -2571,6 +2572,7 @@
     })();
 
     /*global windowfactory,nodeRequire,EventHandler*/
+    /*jshint eqnull: true*/
     (function () {
         if (!windowfactory.runtime.isElectron) {
             return;
@@ -2643,7 +2645,7 @@
                                 config[_prop2] = config[_prop2] || defaultConfig[_prop2];
                             }
                         }
-                        config.title = config.title || this._id;
+                        config.title = config.title == null ? this._id : config.title;
                         var _url = config.url;
                         delete config.url;
 
@@ -3688,6 +3690,7 @@
     // TODO: Make scalejs.windowfactory the main.js script for Electron. Load the config.json
 
     /*global windowfactory,fin,SyncCallback,EventHandler*/
+    /*jshint eqnull: true*/
     (function () {
         if (windowfactory._isRenderer && !windowfactory._isBackend && windowfactory.runtime.isOpenFin) {
             (function () {
@@ -3749,7 +3752,7 @@
                                 config[_prop3] = config[_prop3] || defaultConfig[_prop3];
                             }
                         }
-                        this._title = config.name || this._id;
+                        this._title = config.title == null ? this._id : config.title;
                         config.name = this._id; // Need name to be unique
 
                         if (config.parent) {

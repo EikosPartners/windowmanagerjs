@@ -1,4 +1,5 @@
 /*global windowfactory,nodeRequire,EventHandler*/
+/*jshint eqnull: true*/
 (function () {
     if (!windowfactory.runtime.isElectron) { return; }
     if (windowfactory._isRenderer) {
@@ -70,7 +71,7 @@
                         config[prop] = config[prop] || defaultConfig[prop];
                     }
                 }
-                config.title = config.title || this._id;
+				config.title = config.title == null ? this._id : config.title;
                 let _url = config.url;
                 delete config.url;
 

@@ -1,4 +1,5 @@
 /*global windowfactory,fin,SyncCallback,EventHandler*/
+/*jshint eqnull: true*/
 (function () {
     if (windowfactory._isRenderer && !windowfactory._isBackend && windowfactory.runtime.isOpenFin) {
         const geometry = windowfactory.geometry;
@@ -62,7 +63,7 @@
 						config[prop] = config[prop] || defaultConfig[prop];
 					}
 				}
-				this._title = config.name || this._id;
+				this._title = config.title == null ? this._id : config.title;
 				config.name = this._id; // Need name to be unique
 
 				if (config.parent) {

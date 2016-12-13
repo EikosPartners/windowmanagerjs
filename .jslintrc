@@ -9,6 +9,7 @@
     "debug":"false",
     "devel":"false",
     "dojo":"false",
+    "eqnull":"true",
     "eqeqeq":"true",
     "esversion":6,
     "evil":"false",

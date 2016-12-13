@@ -1,5 +1,6 @@
 /*global windowfactory,fin,SyncCallback,EventHandler*/
 /*jshint bitwise: false*/
+/*jshint eqnull: true*/
 (function () {
     if (windowfactory._isRenderer && !windowfactory._isBackend && windowfactory.runtime.isBrowser) {
         const geometry = windowfactory.geometry;
@@ -63,7 +64,7 @@
 						config[prop] = config[prop] || defaultConfig[prop];
 					}
 				}
-				this._title = config.title || this._id;
+				this._title = config.title == null ? this._id : config.title;
 
 				if (config.parent) {
 					config.parent._children.push(this);
