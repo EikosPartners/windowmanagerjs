@@ -310,7 +310,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
-    windowfactory.version = "0.8.6";
+    windowfactory.version = "0.8.7";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -2360,8 +2360,11 @@
                     this.emit("drag-stop");
                 };
 
-                // Handle current window in this context:
-                Window.current = function () {
+                Window.getAll = function () {
+                    return windowfactory._windows.slice();
+                };
+
+                Window.getByID = function (id) {
                     for (var _iterator28 = windowfactory._windows, _isArray28 = Array.isArray(_iterator28), _i28 = 0, _iterator28 = _isArray28 ? _iterator28 : _iterator28[Symbol.iterator]();;) {
                         var _ref28;
 
@@ -2376,17 +2379,20 @@
 
                         var win = _ref28;
 
-                        if (win._window.contentWindow === window) {
+                        if (win._id === id) {
                             return win;
                         }
                     }
-                }();
-
-                Window.getAll = function () {
-                    return windowfactory._windows.slice();
                 };
 
-                Window.getByID = function (id) {
+                // Add launcher to list of windows:
+                if (windowfactory.isLauncher) {
+                    window.document.body.contentWindow = window;
+                    var _ = new Window(window);
+                }
+
+                // Handle current window in this context:
+                Window.current = function () {
                     for (var _iterator29 = windowfactory._windows, _isArray29 = Array.isArray(_iterator29), _i29 = 0, _iterator29 = _isArray29 ? _iterator29 : _iterator29[Symbol.iterator]();;) {
                         var _ref29;
 
@@ -2401,17 +2407,11 @@
 
                         var win = _ref29;
 
-                        if (win._id === id) {
+                        if (win._window.contentWindow === window) {
                             return win;
                         }
                     }
-                };
-
-                // Add launcher to list of windows:
-                if (windowfactory.isLauncher) {
-                    window.document.body.contentWindow = window;
-                    var _ = new Window(window);
-                }
+                }();
 
                 _extends(windowfactory, {
                     Window: Window
@@ -4461,6 +4461,16 @@
                     this.emit("drag-stop");
                 };
 
+                Window.getAll = function () {
+                    return Object.keys(windowfactory._windows).map(function (name) {
+                        return windowfactory._windows[name];
+                    });
+                };
+
+                Window.getByID = function (id) {
+                    return windowfactory._windows[id];
+                };
+
                 // Handle current window in this context:
                 // TODO: Rewrite to remove setTimeout for the following:
                 fin.desktop.main(function () {
@@ -4474,16 +4484,6 @@
                     };
                     getCurrent();
                 });
-
-                Window.getAll = function () {
-                    return Object.keys(windowfactory._windows).map(function (name) {
-                        return windowfactory._windows[name];
-                    });
-                };
-
-                Window.getByID = function (id) {
-                    return windowfactory._windows[id];
-                };
 
                 _extends(windowfactory, {
                     Window: Window

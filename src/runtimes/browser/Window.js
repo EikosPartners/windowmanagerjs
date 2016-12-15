@@ -601,13 +601,6 @@
 			this.emit("drag-stop");
 		};
 
-        // Handle current window in this context:
-		Window.current = (function () {
-			for (let win of windowfactory._windows) {
-				if (win._window.contentWindow === window) { return win; }
-			}
-		})();
-
 		Window.getAll = function () {
 			return windowfactory._windows.slice();
 		};
@@ -623,6 +616,13 @@
 			window.document.body.contentWindow = window;
 			let _ = new Window(window);
 		}
+
+        // Handle current window in this context:
+		Window.current = (function () {
+			for (let win of windowfactory._windows) {
+				if (win._window.contentWindow === window) { return win; }
+			}
+		})();
 
         Object.assign(windowfactory, {
             Window: Window

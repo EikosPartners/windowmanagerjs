@@ -472,6 +472,14 @@
 			this.emit("drag-stop");
 		};
 
+        Window.getAll = function () {
+			return Object.keys(windowfactory._windows).map(function (name) { return windowfactory._windows[name]; });
+		};
+
+		Window.getByID = (id) => {
+			return windowfactory._windows[id];
+		};
+
         // Handle current window in this context:
 		// TODO: Rewrite to remove setTimeout for the following:
 		fin.desktop.main(function () {
@@ -485,14 +493,6 @@
 			};
 			getCurrent();
 		});
-
-        Window.getAll = function () {
-			return Object.keys(windowfactory._windows).map(function (name) { return windowfactory._windows[name]; });
-		};
-
-		Window.getByID = (id) => {
-			return windowfactory._windows[id];
-		};
 
         Object.assign(windowfactory, {
             Window: Window

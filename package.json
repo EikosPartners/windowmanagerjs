@@ -1,6 +1,6 @@
 {
   "name": "scalejs.windowfactory",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-umd": "^6.8.0",
     "babel-plugin-transform-object-assign": "^6.8.0",
