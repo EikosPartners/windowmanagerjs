@@ -49,7 +49,6 @@
 			this._children = [];
 			this._parent = undefined;
 			this._title = undefined;
-			this._id = windowfactory.getUniqueWindowName();
 
 			if (isArgConfig) {
 				for (const prop in config) {
@@ -63,6 +62,7 @@
 						config[prop] = config[prop] || defaultConfig[prop];
 					}
 				}
+				this._id = windowfactory.getUniqueWindowName();
 				this._title = config.title == null ? this._id : config.title;
 				config.name = this._id; // Need name to be unique
 
@@ -78,6 +78,7 @@
 					console.error(err, config);
 				});
 			} else {
+				this._id = config._id || config.name;
 				this._window = config;
 				windowfactory._windows[this._window.name] = this;
 				this._setupDOM();
@@ -487,6 +488,10 @@
 
         Window.getAll = function () {
 			return Object.keys(windowfactory._windows).map(function (name) { return windowfactory._windows[name]; });
+		};
+
+		Window.getByID = (id) => {
+			return windowfactory._windows[id];
 		};
 
         Object.assign(windowfactory, {

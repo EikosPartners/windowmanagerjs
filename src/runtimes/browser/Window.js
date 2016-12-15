@@ -165,7 +165,7 @@
 
         Window.getCurrent = function () {
             return Window.current;
-        };
+		};
 
         Window.prototype.isReady = function () {
             return this._ready;
@@ -610,6 +610,12 @@
 
 		Window.getAll = function () {
 			return windowfactory._windows.slice();
+		};
+
+		Window.getByID = (id) => {
+			for (let win of windowfactory._windows) {
+				if (win._id === id) { return win; }
+			}
 		};
 
 		// Add launcher to list of windows:

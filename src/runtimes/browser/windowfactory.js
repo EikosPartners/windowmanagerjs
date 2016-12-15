@@ -78,10 +78,19 @@
 
         window.addEventListener("message", function (event) {
             let message = event.data;
+            const win = windowfactory.Window.getByID(message.winID);
 
             if (windowWrappedListeners[message.event] != null) {
-                for (const listener of windowWrappedListeners[message.event]) {
-                    listener.apply(null, message.args); // TODO: Make apply's this point to window who sent messsage
+                // Check to see if the called window is being listened to directly:
+                if (windowWrappedListeners[message.event][message.winID] != null) {
+                    for (const listener of windowWrappedListeners[message.event][message.winID]) {
+                        listener.apply(win, message.args); // TODO: Make apply's this point to window who sent messsage
+                    }
+                }
+            }
+            if (wrappedListeners[message.event] != null) {
+                for (const listener of wrappedListeners[message.event]) {
+                    listener.apply(win, message.args); // TODO: Make apply's this point to window who sent messsage
                 }
             }
         }, false);
@@ -90,25 +99,23 @@
             send: (eventName, ...args) => {
                 // TODO: Check if ready? Dunno if needed
                 // TODO: Do we need to add a way to identify if a return is needed?
+                const curWin = windowfactory.Window.current();
+                const message = {
+                    id: 0, // TODO: Randomly generate a unique id to avoid collision!
+                    winID: curWin._id,
+                    event: eventName,
+                    // TODO: Add way for receiver to know what window sent this
+                    data: args
+                };
                 if (args.length > 0 && args[0] instanceof Window) {
                     const window = args.unshift();
-                    const message = {
-                        id: 0, // TODO: Randomly generate a unique id to avoid collision!
-                        event: eventName,
-                        // TODO: Add way for receiver to know what window sent this
-                        data: args
-                    };
                     // TODO: Save the id of message so we can get the response
                     window._window.contentWindow.postMessage(message, "*");
                 } else {
-                    const message = {
-                        event: eventName,
-                        // TODO: Add way for receiver to know what window sent this
-                        data: args
-                    };
-
                     for (const window of windowfactory._windows) {
-                        window._window.contentWindow.postMessage(message, "*");
+                        if (curWin !== window) { // Don't send to current window
+                            window._window.contentWindow.postMessage(message, "*");
+                        }
                     }
                 }
             },
@@ -118,11 +125,11 @@
                     window = undefined;
                 }
 
-                const onMessage = wrapListener(listener);
+                //const onMessage = wrapListener(listener);
 
                 if (window !== undefined) {
                     // Replace window.name with some way to identify the unique window
-                    const winLisGroup = (windowWrappedListeners[window.name] = windowWrappedListeners[window.name] || {});
+                    const winLisGroup = (windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {});
                     winLisGroup[eventName] = winLisGroup[eventName] || new Set();
                     winLisGroup[eventName].add(listener);
                     // TODO: On window close, clear subscriptions in windowWrappedListeners!
@@ -139,7 +146,7 @@
 
                 if (window !== undefined) {
                     // Replace window.name with some way to identify the unique window
-                    const winLisGroup = (windowWrappedListeners[window.name] = windowWrappedListeners[window.name] || {});
+                    const winLisGroup = (windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {});
                     winLisGroup[eventName] = winLisGroup[eventName] || new Set();
                     winLisGroup[eventName].delete(listener);
                 } else {

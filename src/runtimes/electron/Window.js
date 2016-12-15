@@ -469,7 +469,11 @@
         Window.getAll = function () {
             // TODO: Finish
 			//return windowfactory._windows.splice();
-		};
+        };
+
+        Window.getByID = (id) => {
+            // TODO: Finish
+        };
 
         Object.assign(windowfactory, {
             Window: Window,

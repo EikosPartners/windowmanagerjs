@@ -92,7 +92,7 @@
                     return;
                 }
 
-                const window = null;
+                const window = windowfactory.Window.getByID(message.winID);
                 const response = listener.apply(window, message);
                 // TODO: Send response if response is expected
             };
@@ -103,7 +103,7 @@
                 // TODO: Check if ready? Dunno if needed
                 if (args.length > 0 && args[0] instanceof Window) {
                     const window = args.unshift();
-                    fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], window._window.name,
+                    fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], window._window._id,
                                                          eventName, JSON.stringify(args));
                 } else {
                     fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], eventName, JSON.stringify(args));
@@ -119,7 +119,7 @@
 
                 if (window !== undefined) {
                     windowWrappedListeners[window._window.name].add(listener, onMessage);
-                    fin.desktop.InterApplicationBus.subscribe(Window.current._window[APP_UUID], window._window.name,
+                    fin.desktop.InterApplicationBus.subscribe(Window.current._window[APP_UUID], window._window._id,
                                                               eventName, onMessage);
                     // TODO: On window close, clear subscriptions in windowWrappedListeners!
                 } else {
@@ -134,7 +134,7 @@
                 }
 
                 if (window !== undefined) {
-                    fin.desktop.InterApplicationBus.unsubscribe(Window.current._window[APP_UUID], window._window.name,
+                    fin.desktop.InterApplicationBus.unsubscribe(Window.current._window[APP_UUID], window._window._id,
                                                     eventName, windowWrappedListeners[window._window.name].get(listener));
                 } else {
                     fin.desktop.InterApplicationBus.unsubscribe(Window.current._window[APP_UUID], eventName,
