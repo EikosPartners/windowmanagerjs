@@ -109,7 +109,7 @@
 			} else {
 				this._minSize = new BoundingBox(defaultConfig.minWidth, defaultConfig.minHeight);
 				this._maxSize = new BoundingBox(defaultConfig.maxWidth, defaultConfig.maxHeight);
-				this._window = config;
+				this._window = config.document.body;
 				windowfactory._windows.push(this);
 				this._ready = true;
 				//this._setupDOM();
@@ -615,7 +615,7 @@
 		// Add launcher to list of windows:
 		if (windowfactory.isLauncher) {
 			window.document.body.contentWindow = window;
-			windowfactory._windows.push(new Window(window.document.body));
+			let _ = new Window(window.document.body);
 		}
 
         Object.assign(windowfactory, {

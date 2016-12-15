@@ -310,7 +310,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
-    windowfactory.version = "0.8.1";
+    windowfactory.version = "0.8.2";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -1518,7 +1518,7 @@
                     } else {
                         this._minSize = new BoundingBox(defaultConfig.minWidth, defaultConfig.minHeight);
                         this._maxSize = new BoundingBox(defaultConfig.maxWidth, defaultConfig.maxHeight);
-                        this._window = config;
+                        this._window = config.document.body;
                         windowfactory._windows.push(this);
                         this._ready = true;
                         //this._setupDOM();
@@ -2389,7 +2389,7 @@
                 // Add launcher to list of windows:
                 if (windowfactory.isLauncher) {
                     window.document.body.contentWindow = window;
-                    windowfactory._windows.push(new Window(window.document.body));
+                    var _ = new Window(window.document.body);
                 }
 
                 _extends(windowfactory, {
