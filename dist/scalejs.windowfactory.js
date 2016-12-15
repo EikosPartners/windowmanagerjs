@@ -310,7 +310,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
-    windowfactory.version = "0.8.5";
+    windowfactory.version = "0.8.6";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -2564,7 +2564,7 @@
                         winID: curWin._id,
                         event: eventName,
                         // TODO: Add way for receiver to know what window sent this
-                        data: args
+                        args: args
                     };
                     if (args.length > 0 && args[0] instanceof Window) {
                         var _window12 = args.unshift();

@@ -105,7 +105,7 @@
                     winID: curWin._id,
                     event: eventName,
                     // TODO: Add way for receiver to know what window sent this
-                    data: args
+                    args: args
                 };
                 if (args.length > 0 && args[0] instanceof Window) {
                     const window = args.unshift();
