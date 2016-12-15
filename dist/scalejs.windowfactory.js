@@ -300,7 +300,8 @@
      * @property {boolean} runtime.isOpenFin
      * @property {boolean} isDesktop - is this a desktop OS
      * @property {boolean} isMobile - is this a mobile OS
-     * @property {boolean} isLauncher - (only available on Browser runtime) is main/launcher window
+     * @property {boolean} isLauncher - is window the launcher (true if it is the Browser's launch window)
+     * @property {boolean} isMain - is window the main (true if window started app, Electron doesn't have one atm)
      * @property {Window} Window
      * @property {module:geometry} geometry
      * @property {function} isReady - returns if windowfactory is ready for use
@@ -310,7 +311,8 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
-    windowfactory.version = "0.8.7";
+    windowfactory.isMain = false;
+    windowfactory.version = "0.8.8";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -428,6 +430,7 @@
                 var mainWindow = app.getWindow().contentWindow;
 
                 if (mainWindow === window) {
+                    windowfactory.isMain = true;
                     windowfactory._windows = {};
                     windowfactory._internalBus = new EventHandler(windowfactoryEventNames);
                 } else {
@@ -476,6 +479,7 @@
             (function () {
                 // This is the root window:
                 // TODO: What happens if a website uses an iframe to a site that has an app with this extension?
+                windowfactory.isMain = true;
                 windowfactory._windows = [];
                 windowfactory._launcher = window;
                 windowfactory._internalBus = new EventHandler(windowfactoryEventNames);
