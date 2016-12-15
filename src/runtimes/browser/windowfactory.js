@@ -99,7 +99,7 @@
             send: (eventName, ...args) => {
                 // TODO: Check if ready? Dunno if needed
                 // TODO: Do we need to add a way to identify if a return is needed?
-                const curWin = windowfactory.Window.current();
+                const curWin = windowfactory.Window.current;
                 const message = {
                     id: 0, // TODO: Randomly generate a unique id to avoid collision!
                     winID: curWin._id,

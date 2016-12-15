@@ -310,7 +310,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
-    windowfactory.version = "0.8.4";
+    windowfactory.version = "0.8.5";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -2558,7 +2558,7 @@
 
                     // TODO: Check if ready? Dunno if needed
                     // TODO: Do we need to add a way to identify if a return is needed?
-                    var curWin = windowfactory.Window.current();
+                    var curWin = windowfactory.Window.current;
                     var message = {
                         id: 0, // TODO: Randomly generate a unique id to avoid collision!
                         winID: curWin._id,
