@@ -613,7 +613,10 @@
 		};
 
 		// Add launcher to list of windows:
-		if (windowfactory.isLauncher) { let _ = new Window(window); }
+		if (windowfactory.isLauncher) {
+			window.document.body.contentWindow = window;
+			windowfactory._windows.push(new Window(window.document.body));
+		}
 
         Object.assign(windowfactory, {
             Window: Window

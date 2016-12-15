@@ -310,7 +310,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
-    windowfactory.version = "0.8.0";
+    windowfactory.version = "0.8.1";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -2388,7 +2388,8 @@
 
                 // Add launcher to list of windows:
                 if (windowfactory.isLauncher) {
-                    var _ = new Window(window);
+                    window.document.body.contentWindow = window;
+                    windowfactory._windows.push(new Window(window.document.body));
                 }
 
                 _extends(windowfactory, {
@@ -2484,13 +2485,7 @@
             }
 
             window.addEventListener("message", function (event) {
-                var message = void 0;
-                try {
-                    message = JSON.parse(event.data);
-                } catch (e) {
-                    console.error("Unable to parse message:", event.data);
-                    return;
-                }
+                var message = event.data;
 
                 if (windowWrappedListeners[message.event] != null) {
                     for (var _iterator29 = windowWrappedListeners[message.event], _isArray29 = Array.isArray(_iterator29), _i29 = 0, _iterator29 = _isArray29 ? _iterator29 : _iterator29[Symbol.iterator]();;) {

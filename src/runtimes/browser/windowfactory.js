@@ -77,13 +77,7 @@
         }
 
         window.addEventListener("message", function (event) {
-            let message;
-            try {
-                message = JSON.parse(event.data);
-            } catch (e) {
-                console.error("Unable to parse message:", event.data);
-                return;
-            }
+            let message = event.data;
 
             if (windowWrappedListeners[message.event] != null) {
                 for (const listener of windowWrappedListeners[message.event]) {
