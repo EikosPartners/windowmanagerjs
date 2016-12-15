@@ -310,7 +310,7 @@
     var windowfactory = new EventHandler(windowfactoryEventNames);
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
-    windowfactory.version = "0.8.2";
+    windowfactory.version = "0.8.3";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -2389,7 +2389,7 @@
                 // Add launcher to list of windows:
                 if (windowfactory.isLauncher) {
                     window.document.body.contentWindow = window;
-                    var _ = new Window(window.document.body);
+                    var _ = new Window(window);
                 }
 
                 _extends(windowfactory, {
