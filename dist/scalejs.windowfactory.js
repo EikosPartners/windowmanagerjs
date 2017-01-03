@@ -312,7 +312,7 @@
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
     windowfactory.isMain = false;
-    windowfactory.version = "0.9.2";
+    windowfactory.version = "0.9.3";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -376,6 +376,7 @@
         }
     } else if (typeof window !== "undefined" && window) {
         windowfactory._isRenderer = true;
+        windowfactory._windows = {};
         if (window.nodeRequire !== undefined) {
             // We are running in an Electron Window's Runtime:
             windowfactory.runtime = window.nodeRequire.runtime;
@@ -393,7 +394,6 @@
         windowfactory.runtime.isElectron = true;
         windowfactory.runtime.version = global.process.versions.electron;
         global.nodeRequire.runtime = windowfactory.runtime;
-        windowfactory._windows = {};
     } else if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.main) {
         (function () {
             // We are running in OpenFin Runtime:
