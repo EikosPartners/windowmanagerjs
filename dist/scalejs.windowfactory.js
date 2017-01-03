@@ -312,7 +312,7 @@
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
     windowfactory.isMain = false;
-    windowfactory.version = "0.8.8";
+    windowfactory.version = "0.9.0";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -393,6 +393,7 @@
         windowfactory.runtime.isElectron = true;
         windowfactory.runtime.version = global.process.versions.electron;
         global.nodeRequire.runtime = windowfactory.runtime;
+        windowfactory._windows = {};
     } else if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.main) {
         (function () {
             // We are running in OpenFin Runtime:
@@ -2499,16 +2500,6 @@
             var wrappedListeners = {};
             var windowWrappedListeners = {};
 
-            function wrapListener(listener) {
-                return function (message) {
-                    // TODO: Determine who sent it
-                    var window = null;
-                    message = JSON.parse(message); // TODO: Should this be in a try/except?
-                    var response = listener.apply(window, message.data);
-                    // TODO: Send response if response is expected
-                };
-            }
-
             window.addEventListener("message", function (event) {
                 var message = event.data;
                 var win = windowfactory.Window.getByID(message.winID);
@@ -2567,11 +2558,11 @@
                         id: 0, // TODO: Randomly generate a unique id to avoid collision!
                         winID: curWin._id,
                         event: eventName,
-                        // TODO: Add way for receiver to know what window sent this
-                        args: args
+                        args: args // If the first arg is a window, it gets removed later.
                     };
                     if (args.length > 0 && args[0] instanceof Window) {
-                        var _window12 = args.unshift();
+                        // Remove window from args in message:
+                        var _window12 = args.shift(); // args is by reference in message currently
                         // TODO: Save the id of message so we can get the response
                         _window12._window.contentWindow.postMessage(message, "*");
                     } else {
@@ -2601,8 +2592,6 @@
                         listener = window;
                         window = undefined;
                     }
-
-                    //const onMessage = wrapListener(listener);
 
                     if (window !== undefined) {
                         // Replace window.name with some way to identify the unique window
@@ -2679,7 +2668,6 @@
                     top: "y"
                 };
                 var acceptedEventHandlers = ["drag-start", "drag-before", "drag-stop", "dock-before", "move", "move-before", "resize-before", "close", "minimize"];
-                var windows = {};
 
                 /**
                  * @callback callback
@@ -2703,7 +2691,7 @@
 
                     // Call the parent constructor:
                     EventHandler.call(this, acceptedEventHandlers);
-                    this._id = windowfactory.getUniqueWindowName();
+                    //this._id = windowfactory.getUniqueWindowName();
 
                     if (isArgConfig) {
                         for (var prop in config) {
@@ -2717,11 +2705,12 @@
                                 config[_prop2] = config[_prop2] || defaultConfig[_prop2];
                             }
                         }
-                        config.title = config.title == null ? this._id : config.title;
                         var _url = config.url;
                         delete config.url;
 
                         this._window = new BrowserWindow(config);
+                        this._id = this._window.id;
+                        config.title = config.title == null ? this._id : config.title;
                         // The following logic works like (in logical if-order):
                         //       1. If url has "http" or "file" at start, then use url, no modification.
                         //       2. If url has no "/", take location.href and remove all stuff up till last /, then append url.
@@ -2744,8 +2733,9 @@
                         //this._window.loadURL(url[0] !== "/" ? url : path.join(remote.getGlobal("workingDir"), url));
                     } else {
                         this._window = config;
+                        this._id = this._window.id;
                     }
-                    windows[this._window.id] = this;
+                    windowfactory._windows[this._id] = this;
                     this._window._ensureDockSystem();
 
                     // Setup _window event listeners:
@@ -2774,7 +2764,7 @@
                     this._window.on("close", _onclose);
 
                     currentWin.on("close", function () {
-                        delete windows[this._window.id];
+                        delete windowfactory._windows[this._window.id];
                         thisWindow.off("move", _onmove);
                         thisWindow.off("close", _onclose);
                         thisWindow.off("minimize", _onminimize);
@@ -3163,18 +3153,19 @@
                 Window.current = new Window(currentWin);
 
                 Window.getAll = function () {
-                    // TODO: Finish
-                    //return windowfactory._windows.splice();
+                    return Object.keys(windowfactory._windows).map(function (name) {
+                        return windowfactory._windows[name];
+                    });
                 };
 
                 Window.getByID = function (id) {
-                    // TODO: Finish
+                    return windowfactory._windows[id];
                 };
 
                 _extends(windowfactory, {
                     Window: Window,
                     _resolveWindowWithID: function _resolveWindowWithID(id) {
-                        return windows[id] || new Window(BrowserWindow.fromId(id));
+                        return windowfactory._windows[id] || new Window(BrowserWindow.fromId(id));
                     }
                 });
             })();
@@ -3736,6 +3727,25 @@
          * @alias MessageBus
          */
         var messagebus = function () {
+            // TODO: Optimize Electron's messagebus by keeping track of listeners
+            //       in the main process for early termination.
+            // TODO: Listener cleanup on this window, or other window close.
+            var wrappedListeners = new Map();
+            var windowWrappedListeners = new Map();
+
+            function wrapListener(window, listener) {
+                return function (message) {
+                    // If listener only listens from a specific window, check that this message is from that window:
+                    if (window && window._id !== message.winID) {
+                        return;
+                    }
+
+                    var fromWindow = windowfactory.Window.getByID(message.winID);
+                    var response = listener.apply(fromWindow, message.args);
+                    // TODO: Send response if response is expected
+                };
+            }
+
             return {
                 /**
                  * @method
@@ -3744,7 +3754,26 @@
                  * @param {Window} [window=undefined] - the target window to send to (if not specified, sends to all windows)
                  * @param {...*} args Arguments to send to listeners
                  */
-                send: function send() {},
+                send: function send(eventName) {
+                    for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+                        args[_key2 - 1] = arguments[_key2];
+                    }
+
+                    var curWin = windowfactory.Window.current;
+                    var message = {
+                        id: 0, // TODO: Randomly generate a unique id to avoid collision!
+                        winID: curWin._id,
+                        event: eventName,
+                        args: args // If the first arg is a window, it gets removed later.
+                    };
+                    if (args.length > 0 && args[0] instanceof Window) {
+                        // Remove window from args in message:
+                        var _window20 = args.shift(); // args is by reference in message currently
+                        _window20._window.webContents.send(eventName, message);
+                    } else {
+                        ipcRenderer.send(eventName, message);
+                    }
+                },
                 /**
                  * @method
                  * @alias MessageBus.on
@@ -3752,7 +3781,25 @@
                  * @param {Window} [window=undefined] - the window to listen to events from (if not null, listens to all windows)]
                  * @param {Function} listener - the callback function to call when event is triggered for this window
                  */
-                on: function on() {},
+                on: function on(eventName, window, listener) {
+                    if (listener === undefined) {
+                        listener = window;
+                        window = undefined;
+                    }
+
+                    var onMessage = wrapListener(window, listener);
+
+                    if (window !== undefined) {
+                        var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
+                        winLisGroup[eventName] = winLisGroup[eventName] || new Map();
+                        winLisGroup[eventName].set(listener, onMessage);
+                        // TODO: On window close, clear subscriptions in windowWrappedListeners!
+                    } else {
+                        wrappedListeners[eventName] = wrappedListeners[eventName] || new Map();
+                        wrappedListeners[eventName].set(listener, onMessage);
+                    }
+                    ipcRenderer.on(eventName, onMessage);
+                },
                 /**
                  * @method
                  * @alias MessageBus.off
@@ -3760,7 +3807,23 @@
                  * @param {Window} [window=undefined] - the window to listen to events from (if not null, listens to all windows)]
                  * @param {Function} listener - the callback function to call when event is triggered for this window
                  */
-                off: function off() {}
+                off: function off(eventName, window, listener) {
+                    if (listener === undefined) {
+                        listener = window;
+                        window = undefined;
+                    }
+
+                    if (window !== undefined) {
+                        var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
+                        winLisGroup[eventName] = winLisGroup[eventName] || new Map();
+                        // delete on a Map returns the deleted value (desired onMessage):
+                        ipcRenderer.removeListener(eventName, winLisGroup[eventName].delete(listener));
+                    } else {
+                        wrappedListeners[eventName] = wrappedListeners[eventName] || new Set();
+                        // delete on a Map returns the deleted value (desired onMessage):
+                        ipcRenderer.removeListener(eventName, wrappedListeners.get(listener));
+                    }
+                }
             };
         }();
 
@@ -4075,10 +4138,10 @@
                             _ref47 = _i47.value;
                         }
 
-                        var _window20 = _ref47;
+                        var _window21 = _ref47;
 
-                        _window20._isMinimized = true;
-                        _window20._window.minimize(callback.ref());
+                        _window21._isMinimized = true;
+                        _window21._window.minimize(callback.ref());
                     }
                 };
 
@@ -4109,10 +4172,10 @@
                             _ref48 = _i48.value;
                         }
 
-                        var _window21 = _ref48;
+                        var _window22 = _ref48;
 
-                        _window21._isHidden = false;
-                        _window21._window.show(callback.ref());
+                        _window22._isHidden = false;
+                        _window22._window.show(callback.ref());
                     }
                 };
 
@@ -4134,10 +4197,10 @@
                             _ref49 = _i49.value;
                         }
 
-                        var _window22 = _ref49;
+                        var _window23 = _ref49;
 
-                        _window22._isHidden = true;
-                        _window22._window.hide(callback.ref());
+                        _window23._isHidden = true;
+                        _window23._window.hide(callback.ref());
                     }
                 };
 
@@ -4159,12 +4222,12 @@
                             _ref50 = _i50.value;
                         }
 
-                        var _window23 = _ref50;
+                        var _window24 = _ref50;
 
-                        _window23._isHidden = false;
-                        _window23._isMinimized = false;
-                        _window23._isMaximized = false;
-                        _window23._window.restore(callback.ref());
+                        _window24._isHidden = false;
+                        _window24._isMinimized = false;
+                        _window24._isMaximized = false;
+                        _window24._window.restore(callback.ref());
                     }
                 };
 
@@ -4189,10 +4252,10 @@
                             _ref51 = _i51.value;
                         }
 
-                        var _window24 = _ref51;
+                        var _window25 = _ref51;
 
-                        if (_window24 !== this) {
-                            _window24._window.bringToFront(beforeCallback.ref());
+                        if (_window25 !== this) {
+                            _window25._window.bringToFront(beforeCallback.ref());
                         }
                     }
                 };
@@ -4218,10 +4281,10 @@
                             _ref52 = _i52.value;
                         }
 
-                        var _window25 = _ref52;
+                        var _window26 = _ref52;
 
-                        if (_window25 !== this) {
-                            _window25._window.focus(beforeCallback.ref());
+                        if (_window26 !== this) {
+                            _window26._window.focus(beforeCallback.ref());
                         }
                     }
                 };
@@ -4260,11 +4323,11 @@
                             _ref53 = _i53.value;
                         }
 
-                        var _window26 = _ref53;
+                        var _window27 = _ref53;
 
-                        var pos = _window26.getPosition().add(deltaPos);
-                        _window26._bounds.moveTo(pos);
-                        _window26._window.moveTo(pos.left, pos.top, callback.ref());
+                        var pos = _window27.getPosition().add(deltaPos);
+                        _window27._bounds.moveTo(pos);
+                        _window27._window.moveTo(pos.left, pos.top, callback.ref());
                     }
                 };
 
@@ -4290,11 +4353,11 @@
                             _ref54 = _i54.value;
                         }
 
-                        var _window27 = _ref54;
+                        var _window28 = _ref54;
 
-                        var pos = _window27.getPosition().add(deltaPos);
-                        _window27._bounds.moveTo(pos);
-                        _window27._window.moveTo(pos.left, pos.top, callback.ref());
+                        var pos = _window28.getPosition().add(deltaPos);
+                        _window28._bounds.moveTo(pos);
+                        _window28._window.moveTo(pos.left, pos.top, callback.ref());
                     }
                 };
 
@@ -4382,9 +4445,9 @@
                             _ref56 = _i56.value;
                         }
 
-                        var _window28 = _ref56;
+                        var _window29 = _ref56;
 
-                        _window28._dragStartPos = _window28.getPosition();
+                        _window29._dragStartPos = _window29.getPosition();
                     }
                 };
 
@@ -4457,9 +4520,9 @@
                             _ref58 = _i58.value;
                         }
 
-                        var _window29 = _ref58;
+                        var _window30 = _ref58;
 
-                        delete _window29._dragStartPos;
+                        delete _window30._dragStartPos;
                     }
 
                     this.emit("drag-stop");
@@ -4595,37 +4658,37 @@
         });
 
         var messagebus = function () {
-            var wrappedListeners = new Map();
-            var windowWrappedListeners = new Map();
+            var wrappedListeners = {};
+            var windowWrappedListeners = {};
 
             function wrapListener(listener) {
                 return function (message) {
-                    // TODO: Determine who sent it
-                    try {
-                        message = JSON.parse(message);
-                    } catch (e) {
-                        console.error("Unable to parse message:", message);
-                        return;
-                    }
-
                     var window = windowfactory.Window.getByID(message.winID);
-                    var response = listener.apply(window, message);
+                    var response = listener.apply(window, message.args);
                     // TODO: Send response if response is expected
                 };
             }
 
             return {
                 send: function send(eventName) {
-                    for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-                        args[_key2 - 1] = arguments[_key2];
+                    for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+                        args[_key3 - 1] = arguments[_key3];
                     }
 
                     // TODO: Check if ready? Dunno if needed
+                    var curWin = windowfactory.Window.current;
+                    var message = {
+                        id: 0, // TODO: Randomly generate a unique id to avoid collision!
+                        winID: curWin._id,
+                        event: eventName,
+                        args: args // If the first arg is a window, it gets removed later.
+                    };
                     if (args.length > 0 && args[0] instanceof Window) {
-                        var _window30 = args.unshift();
-                        fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], _window30._window._id, eventName, JSON.stringify(args));
+                        // Remove window from args in message:
+                        var _window31 = args.shift(); // args is by reference in message currently
+                        fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], _window31._id, eventName, message);
                     } else {
-                        fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], eventName, JSON.stringify(args));
+                        fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], eventName, message);
                     }
                 },
                 on: function on(eventName, window, listener) {
@@ -4637,11 +4700,14 @@
                     var onMessage = wrapListener(listener);
 
                     if (window !== undefined) {
-                        windowWrappedListeners[window._window.name].add(listener, onMessage);
-                        fin.desktop.InterApplicationBus.subscribe(Window.current._window[APP_UUID], window._window._id, eventName, onMessage);
+                        var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
+                        winLisGroup[eventName] = winLisGroup[eventName] || new Map();
+                        winLisGroup[eventName].set(listener, onMessage);
+                        fin.desktop.InterApplicationBus.subscribe(Window.current._window[APP_UUID], window._id, eventName, onMessage);
                         // TODO: On window close, clear subscriptions in windowWrappedListeners!
                     } else {
-                        wrappedListeners.add(listener, onMessage);
+                        wrappedListeners[eventName] = wrappedListeners[eventName] || new Map();
+                        wrappedListeners[eventName].set(listener, onMessage);
                         fin.desktop.InterApplicationBus.subscribe(Window.current._window[APP_UUID], eventName, onMessage);
                     }
                 },
@@ -4652,9 +4718,14 @@
                     }
 
                     if (window !== undefined) {
-                        fin.desktop.InterApplicationBus.unsubscribe(Window.current._window[APP_UUID], window._window._id, eventName, windowWrappedListeners[window._window.name].get(listener));
+                        var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
+                        winLisGroup[eventName] = winLisGroup[eventName] || new Map();
+                        // delete on a Map returns the deleted value (desired onMessage):
+                        fin.desktop.InterApplicationBus.unsubscribe(Window.current._window[APP_UUID], window._window._id, eventName, winLisGroup[eventName].delete(listener));
                     } else {
-                        fin.desktop.InterApplicationBus.unsubscribe(Window.current._window[APP_UUID], eventName, wrappedListeners.get(listener));
+                        wrappedListeners[eventName] = wrappedListeners[eventName] || new Set();
+                        // delete on a Map returns the deleted value (desired onMessage):
+                        fin.desktop.InterApplicationBus.unsubscribe(Window.current._window[APP_UUID], eventName, wrappedListeners[eventName].delete(listener));
                     }
                 }
             };

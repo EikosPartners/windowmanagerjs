@@ -35,7 +35,6 @@
 			"dock-before",
 			"move", "move-before",
 			"resize-before", "close", "minimize"];
-        let windows = {};
 
         /**
          * @callback callback
@@ -57,7 +56,7 @@
 
 			// Call the parent constructor:
 			EventHandler.call(this, acceptedEventHandlers);
-            this._id = windowfactory.getUniqueWindowName();
+            //this._id = windowfactory.getUniqueWindowName();
 
             if (isArgConfig) {
                 for (const prop in config) {
@@ -71,11 +70,12 @@
                         config[prop] = config[prop] || defaultConfig[prop];
                     }
                 }
-				config.title = config.title == null ? this._id : config.title;
                 let _url = config.url;
                 delete config.url;
 
                 this._window = new BrowserWindow(config);
+                this._id = this._window.id;
+				config.title = config.title == null ? this._id : config.title;
                 // The following logic works like (in logical if-order):
                 //       1. If url has "http" or "file" at start, then use url, no modification.
                 //       2. If url has no "/", take location.href and remove all stuff up till last /, then append url.
@@ -98,8 +98,9 @@
                 //this._window.loadURL(url[0] !== "/" ? url : path.join(remote.getGlobal("workingDir"), url));
             } else {
                 this._window = config;
+                this._id = this._window.id;
             }
-            windows[this._window.id] = this;
+            windowfactory._windows[this._id] = this;
             this._window._ensureDockSystem();
 
             // Setup _window event listeners:
@@ -128,7 +129,7 @@
             this._window.on("close", _onclose);
 
             currentWin.on("close", function () {
-                delete windows[this._window.id];
+                delete windowfactory._windows[this._window.id];
                 thisWindow.off("move", _onmove);
                 thisWindow.off("close", _onclose);
                 thisWindow.off("minimize", _onminimize);
@@ -467,18 +468,17 @@
         Window.current = new Window(currentWin);
 
         Window.getAll = function () {
-            // TODO: Finish
-			//return windowfactory._windows.splice();
+			return Object.keys(windowfactory._windows).map(function (name) { return windowfactory._windows[name]; });
         };
 
         Window.getByID = (id) => {
-            // TODO: Finish
+			return windowfactory._windows[id];
         };
 
         Object.assign(windowfactory, {
             Window: Window,
             _resolveWindowWithID: function (id) {
-                return windows[id] || new Window(BrowserWindow.fromId(id));
+                return windowfactory._windows[id] || new Window(BrowserWindow.fromId(id));
             }
         });
     } else if (windowfactory._isBackend) {

@@ -25,7 +25,7 @@ let windowfactory = new EventHandler(windowfactoryEventNames);
 windowfactory._isRenderer = false;
 windowfactory._isBackend = false;
 windowfactory.isMain = false;
-windowfactory.version = "0.8.8";
+windowfactory.version = "0.9.0";
 windowfactory.runtime = {
     name: undefined,
     version: undefined,
@@ -99,6 +99,7 @@ if (typeof process !== "undefined" && process && process.versions && process.ver
     windowfactory.runtime.isElectron = true;
     windowfactory.runtime.version = global.process.versions.electron;
     global.nodeRequire.runtime = windowfactory.runtime;
+    windowfactory._windows = {};
 } else if (typeof fin !== "undefined" && fin && fin.desktop && fin.desktop.main) {
     // We are running in OpenFin Runtime:
     windowfactory.runtime.name = "OpenFin";

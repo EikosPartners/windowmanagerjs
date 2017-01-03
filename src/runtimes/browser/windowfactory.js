@@ -66,16 +66,6 @@
         let wrappedListeners = {};
         let windowWrappedListeners = {};
 
-        function wrapListener(listener) {
-            return (message) => {
-                // TODO: Determine who sent it
-                const window = null;
-                message = JSON.parse(message); // TODO: Should this be in a try/except?
-                const response = listener.apply(window, message.data);
-                // TODO: Send response if response is expected
-            };
-        }
-
         window.addEventListener("message", function (event) {
             let message = event.data;
             const win = windowfactory.Window.getByID(message.winID);
@@ -104,11 +94,11 @@
                     id: 0, // TODO: Randomly generate a unique id to avoid collision!
                     winID: curWin._id,
                     event: eventName,
-                    // TODO: Add way for receiver to know what window sent this
-                    args: args
+                    args: args // If the first arg is a window, it gets removed later.
                 };
                 if (args.length > 0 && args[0] instanceof Window) {
-                    const window = args.unshift();
+                    // Remove window from args in message:
+                    const window = args.shift(); // args is by reference in message currently
                     // TODO: Save the id of message so we can get the response
                     window._window.contentWindow.postMessage(message, "*");
                 } else {
@@ -124,8 +114,6 @@
                     listener = window;
                     window = undefined;
                 }
-
-                //const onMessage = wrapListener(listener);
 
                 if (window !== undefined) {
                     // Replace window.name with some way to identify the unique window
