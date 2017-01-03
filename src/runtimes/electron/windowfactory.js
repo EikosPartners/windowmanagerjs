@@ -183,7 +183,7 @@
 
                     window._window.webContents.send(eventName, message);
                 } else {
-                    for (const window of windowfactory.Window.getAllWindows()) {
+                    for (const window of windowfactory.Window.getAll()) {
                         if (window !== curWin) {
                             window._window.webContents.send(eventName, message);
                         }

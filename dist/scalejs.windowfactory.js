@@ -312,7 +312,7 @@
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
     windowfactory.isMain = false;
-    windowfactory.version = "0.9.5";
+    windowfactory.version = "0.9.6";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -3793,7 +3793,7 @@
 
                         _window20._window.webContents.send(eventName, message);
                     } else {
-                        for (var _iterator46 = windowfactory.Window.getAllWindows(), _isArray46 = Array.isArray(_iterator46), _i46 = 0, _iterator46 = _isArray46 ? _iterator46 : _iterator46[Symbol.iterator]();;) {
+                        for (var _iterator46 = windowfactory.Window.getAll(), _isArray46 = Array.isArray(_iterator46), _i46 = 0, _iterator46 = _isArray46 ? _iterator46 : _iterator46[Symbol.iterator]();;) {
                             var _ref46;
 
                             if (_isArray46) {
