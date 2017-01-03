@@ -85,6 +85,10 @@
         function wrapListener(listener) {
             return (message) => {
                 const window = windowfactory.Window.getByID(message.winID);
+
+                // Don't execute listeners when the sender is the same as the listener:
+                if (window._id === windowfactory.Window.current._id) { return; }
+
                 const response = listener.apply(window, message.args);
                 // TODO: Send response if response is expected
             };
@@ -103,6 +107,9 @@
                 if (args.length > 0 && args[0] instanceof Window) {
                     // Remove window from args in message:
                     const window = args.shift(); // args is by reference in message currently
+                    // Don't execute listeners when the sender is the same as the listener:
+                    if (window._id === curWin._id) { return; }
+
                     fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], window._id,
                                                          eventName, message);
                 } else {
@@ -118,6 +125,9 @@
                 const onMessage = wrapListener(listener);
 
                 if (window !== undefined) {
+                    // Don't execute listeners when the sender is the same as the listener:
+                    if (window._id === windowfactory.Window.current._id) { return; }
+
                     const winLisGroup = (windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {});
                     winLisGroup[eventName] = winLisGroup[eventName] || new Map();
                     winLisGroup[eventName].set(listener, onMessage);

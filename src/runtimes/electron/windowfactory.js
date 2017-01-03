@@ -151,6 +151,9 @@
                 if (window && window._id !== message.winID) { return; }
 
                 const fromWindow = windowfactory.Window.getByID(message.winID);
+                // Don't execute listeners when the sender is the same as the listener:
+                if (fromWindow._id === windowfactory.Window.current._id) { return; }
+
                 const response = listener.apply(fromWindow, message.args);
                 // TODO: Send response if response is expected
             };
@@ -175,6 +178,9 @@
                 if (args.length > 0 && args[0] instanceof Window) {
                     // Remove window from args in message:
                     const window = args.shift(); // args is by reference in message currently
+                    // Don't execute listeners when the sender is the same as the listener:
+                    if (window._id === curWin._id) { return; }
+
                     window._window.webContents.send(eventName, message);
                 } else {
                     ipcRenderer.send(eventName, message);
@@ -196,6 +202,9 @@
                 const onMessage = wrapListener(window, listener);
 
                 if (window !== undefined) {
+                    // Don't execute listeners when the sender is the same as the listener:
+                    if (window._id === windowfactory.Window.current._id) { return; }
+
                     const winLisGroup = (windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {});
                     winLisGroup[eventName] = winLisGroup[eventName] || new Map();
                     winLisGroup[eventName].set(listener, onMessage);

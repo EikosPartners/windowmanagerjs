@@ -69,6 +69,8 @@
         window.addEventListener("message", function (event) {
             let message = event.data;
             const win = windowfactory.Window.getByID(message.winID);
+            // Don't execute listeners when the sender is the same as the listener:
+            if (win._id === windowfactory.Window.current._id) { return; }
 
             if (windowWrappedListeners[message.event] != null) {
                 // Check to see if the called window is being listened to directly:
@@ -99,6 +101,8 @@
                 if (args.length > 0 && args[0] instanceof Window) {
                     // Remove window from args in message:
                     const window = args.shift(); // args is by reference in message currently
+                    // Don't execute listeners when the sender is the same as the listener:
+                    if (window._id === curWin._id) { return; }
                     // TODO: Save the id of message so we can get the response
                     window._window.contentWindow.postMessage(message, "*");
                 } else {
@@ -116,6 +120,8 @@
                 }
 
                 if (window !== undefined) {
+                    // Don't execute listeners when the sender is the same as the listener:
+                    if (window._id === windowfactory.Window.current._id) { return; }
                     // Replace window.name with some way to identify the unique window
                     const winLisGroup = (windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {});
                     winLisGroup[eventName] = winLisGroup[eventName] || new Set();

@@ -2503,6 +2503,10 @@
             window.addEventListener("message", function (event) {
                 var message = event.data;
                 var win = windowfactory.Window.getByID(message.winID);
+                // Don't execute listeners when the sender is the same as the listener:
+                if (win._id === windowfactory.Window.current._id) {
+                    return;
+                }
 
                 if (windowWrappedListeners[message.event] != null) {
                     // Check to see if the called window is being listened to directly:
@@ -2563,6 +2567,10 @@
                     if (args.length > 0 && args[0] instanceof Window) {
                         // Remove window from args in message:
                         var _window12 = args.shift(); // args is by reference in message currently
+                        // Don't execute listeners when the sender is the same as the listener:
+                        if (_window12._id === curWin._id) {
+                            return;
+                        }
                         // TODO: Save the id of message so we can get the response
                         _window12._window.contentWindow.postMessage(message, "*");
                     } else {
@@ -2594,6 +2602,10 @@
                     }
 
                     if (window !== undefined) {
+                        // Don't execute listeners when the sender is the same as the listener:
+                        if (window._id === windowfactory.Window.current._id) {
+                            return;
+                        }
                         // Replace window.name with some way to identify the unique window
                         var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
                         winLisGroup[eventName] = winLisGroup[eventName] || new Set();
@@ -3741,6 +3753,11 @@
                     }
 
                     var fromWindow = windowfactory.Window.getByID(message.winID);
+                    // Don't execute listeners when the sender is the same as the listener:
+                    if (fromWindow._id === windowfactory.Window.current._id) {
+                        return;
+                    }
+
                     var response = listener.apply(fromWindow, message.args);
                     // TODO: Send response if response is expected
                 };
@@ -3769,6 +3786,11 @@
                     if (args.length > 0 && args[0] instanceof Window) {
                         // Remove window from args in message:
                         var _window20 = args.shift(); // args is by reference in message currently
+                        // Don't execute listeners when the sender is the same as the listener:
+                        if (_window20._id === curWin._id) {
+                            return;
+                        }
+
                         _window20._window.webContents.send(eventName, message);
                     } else {
                         ipcRenderer.send(eventName, message);
@@ -3790,6 +3812,11 @@
                     var onMessage = wrapListener(window, listener);
 
                     if (window !== undefined) {
+                        // Don't execute listeners when the sender is the same as the listener:
+                        if (window._id === windowfactory.Window.current._id) {
+                            return;
+                        }
+
                         var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
                         winLisGroup[eventName] = winLisGroup[eventName] || new Map();
                         winLisGroup[eventName].set(listener, onMessage);
@@ -4664,6 +4691,12 @@
             function wrapListener(listener) {
                 return function (message) {
                     var window = windowfactory.Window.getByID(message.winID);
+
+                    // Don't execute listeners when the sender is the same as the listener:
+                    if (window._id === windowfactory.Window.current._id) {
+                        return;
+                    }
+
                     var response = listener.apply(window, message.args);
                     // TODO: Send response if response is expected
                 };
@@ -4686,6 +4719,11 @@
                     if (args.length > 0 && args[0] instanceof Window) {
                         // Remove window from args in message:
                         var _window31 = args.shift(); // args is by reference in message currently
+                        // Don't execute listeners when the sender is the same as the listener:
+                        if (_window31._id === curWin._id) {
+                            return;
+                        }
+
                         fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], _window31._id, eventName, message);
                     } else {
                         fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], eventName, message);
@@ -4700,6 +4738,11 @@
                     var onMessage = wrapListener(listener);
 
                     if (window !== undefined) {
+                        // Don't execute listeners when the sender is the same as the listener:
+                        if (window._id === windowfactory.Window.current._id) {
+                            return;
+                        }
+
                         var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
                         winLisGroup[eventName] = winLisGroup[eventName] || new Map();
                         winLisGroup[eventName].set(listener, onMessage);
