@@ -183,7 +183,11 @@
 
                     window._window.webContents.send(eventName, message);
                 } else {
-                    ipcRenderer.send(eventName, message);
+                    for (const window of windowfactory.Window.getAllWindows()) {
+                        if (window !== curWin) {
+                            window._window.webContents.send(eventName, message);
+                        }
+                    }
                 }
             },
             /**

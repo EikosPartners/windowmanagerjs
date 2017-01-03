@@ -113,6 +113,7 @@
                     fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], window._id,
                                                          eventName, message);
                 } else {
+                    // TODO: Possibly switch the below out for a loop through all windows?
                     fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], eventName, message);
                 }
             },
