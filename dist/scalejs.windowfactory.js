@@ -312,7 +312,7 @@
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
     windowfactory.isMain = false;
-    windowfactory.version = "0.9.0";
+    windowfactory.version = "0.9.1";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -4003,9 +4003,9 @@
                     this._window.addEventListener("minimized", onMinimized);
 
                     // Setup title element:
-                    this._titleEl = this._window.document.createElement("title");
+                    this._titleEl = this._window.contentWindow.document.createElement("title");
                     this._titleEl.innerText = this._title;
-                    this._window.document.head.appendChild(this._titleEl);
+                    this._window.contentWindow.document.head.appendChild(this._titleEl);
 
                     this._ready = true;
                     this.emit("ready");

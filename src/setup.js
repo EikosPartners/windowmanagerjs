@@ -25,7 +25,7 @@ let windowfactory = new EventHandler(windowfactoryEventNames);
 windowfactory._isRenderer = false;
 windowfactory._isBackend = false;
 windowfactory.isMain = false;
-windowfactory.version = "0.9.0";
+windowfactory.version = "0.9.1";
 windowfactory.runtime = {
     name: undefined,
     version: undefined,
