@@ -312,7 +312,7 @@
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
     windowfactory.isMain = false;
-    windowfactory.version = "0.9.1";
+    windowfactory.version = "0.9.2";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -3927,7 +3927,7 @@
                             }
                         }
                         this._id = windowfactory.getUniqueWindowName();
-                        this._title = config.title == null ? this._id : config.title;
+                        this._title = config.name == null ? this._id : config.name;
                         config.name = this._id; // Need name to be unique
 
                         if (config.parent) {
@@ -3943,6 +3943,7 @@
                         });
                     } else {
                         this._id = config._id || config.name;
+                        this._title = this._id;
                         this._window = config;
                         windowfactory._windows[this._window.name] = this;
                         this._setupDOM();

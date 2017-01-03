@@ -1,4 +1,4 @@
-# scalejs.windowfactory v0.9.1
+# scalejs.windowfactory v0.9.2
 An extension for scalejs to manage multiple dockable HTML windows.
 This extension is designed to support multiple different different encapsulation runtimes.
 
