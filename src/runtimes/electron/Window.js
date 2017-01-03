@@ -235,7 +235,7 @@
          * @returns {String}
          */
 		Window.prototype.getTitle = function () {
-			return this._title;
+            return this._window.getTitle();
         };
 
         /**
