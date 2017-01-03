@@ -117,6 +117,7 @@
             this._window.on("minimize", _onmove);
 
             function _onclose() {
+                delete windowfactory._windows[thisWindow._id];
                 thisWindow._isClosed = true;
                 thisWindow.emit("close");
                 thisWindow._window = undefined;
@@ -126,13 +127,13 @@
             this._isHidden = false;
             this._isMinimized = false;
             this._isMaximized = false;
-            this._window.on("close", _onclose);
+            this._window.on("closed", _onclose);
 
             currentWin.on("close", function () {
-                delete windowfactory._windows[this._window.id];
-                thisWindow.off("move", _onmove);
-                thisWindow.off("close", _onclose);
-                thisWindow.off("minimize", _onminimize);
+                delete windowfactory._windows[thisWindow._id];
+                thisWindow._window.off("move", _onmove);
+                thisWindow._window.off("closed", _onclose);
+                thisWindow._window.off("minimize", _onminimize);
             });
 
 
@@ -481,6 +482,11 @@
                 return windowfactory._windows[id] || new Window(BrowserWindow.fromId(id));
             }
         });
+
+        // Add other browser windows to global windows:
+        for (let other of BrowserWindow.getAllWindows()) {
+            windowfactory._resolveWindowWithID(other.id);
+        }
     } else if (windowfactory._isBackend) {
         // This is Electron's main process:
         const {BrowserWindow, ipcMain} = global.nodeRequire("electron");
@@ -504,7 +510,7 @@
             // TODO: Solve event syncing between windows
             BrowserWindow.prototype._notifyReady = function () {
                 for (let other of BrowserWindow.getAllWindows()) {
-                    other.webContents.send("window-create", other.id);
+                    other.webContents.send("window-create", this.id);
                 }
             };
             BrowserWindow.prototype._ensureDockSystem = function () {
@@ -574,10 +580,10 @@
                 other._ensureDockSystem();
 
                 // Loop through all windows in otherGroup and add them to this's group:
-                for (let other of other._dockedGroup) {
-                    this._dockedGroup.push(other);
+                for (let otherWin of other._dockedGroup) {
+                    this._dockedGroup.push(otherWin);
                     // Sharing the array between window objects makes it easier to manage:
-                    other._dockedGroup = this._dockedGroup;
+                    otherWin._dockedGroup = this._dockedGroup;
                 }
 
                 //console.log("dock", this._dockedGroup);

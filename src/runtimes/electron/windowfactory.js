@@ -6,37 +6,6 @@
     const { remote, ipcRenderer } = nodeRequire("electron");
     let readyCallbacks = [];
     let isReady = true;
-    let allWindows = {};
-
-    function registerWindow(window) {
-        // Register window:
-        allWindows[window.id] = window;
-
-        // Generate function for onclose:
-        function _removeWindowEvent() {
-            delete allWindows[window.id];
-        }
-
-        // Register onclose event handler:
-        window.on("close", _removeWindowEvent);
-
-        // If currentWindow closes before the above handler is called, remove handler to prevent leak:
-        Window.current._window.on("close", function () {
-            window.off("close", _removeWindowEvent);
-        });
-    }
-
-    //remote.BrowserWindow.getAllWindows().forEach(registerWindow);
-
-    function _newWindowEvent(event, window) {
-        registerWindow(window);
-    }
-    //remote.app.on("browser-window-created", _newWindowEvent);
-    // If currentWindow closes before the above handler is called, remove handler to prevent leak:
-    /*Window.current._window.on("close", function () {
-        remote.app.off("browser-window-created", _newWindowEvent);
-    });*/
-
 
     // TODO: Window Manager, so instances are saved and returned, rather than making copies.
     // TODO: Make use the remote.getGlobal to share between renderers.
@@ -56,23 +25,14 @@
         readyCallbacks.push(callback);
     }
 
-    function getAllWindows() {
-        let windows = [];
-        for (let id in allWindows) {
-            if (allWindows.hasOwnProperty(id)) {
-                windows.push(allWindows[id]);
-            }
-        }
-
-        return windows;
-    }
-
     // Setup handlers on this window:
     let wX = 0;
     let wY = 0;
     let dragging = false;
 
     Window.current._window.on("focus", function () {
+        if (Window.current._window == null) { return; }
+
         Window.current._window._dockFocus();
     });
 
@@ -142,11 +102,12 @@
         // TODO: Optimize Electron's messagebus by keeping track of listeners
         //       in the main process for early termination.
         // TODO: Listener cleanup on this window, or other window close.
+        // TODO: Use a custom eventName, so to not collide with current ones.
         let wrappedListeners = new Map();
         let windowWrappedListeners = new Map();
 
         function wrapListener(window, listener) {
-            return (message) => {
+            return (_, message) => {
                 // If listener only listens from a specific window, check that this message is from that window:
                 if (window && window._id !== message.winID) { return; }
 

@@ -25,7 +25,7 @@ let windowfactory = new EventHandler(windowfactoryEventNames);
 windowfactory._isRenderer = false;
 windowfactory._isBackend = false;
 windowfactory.isMain = false;
-windowfactory.version = "0.9.6";
+windowfactory.version = "0.9.8";
 windowfactory.runtime = {
     name: undefined,
     version: undefined,
@@ -82,10 +82,10 @@ if (typeof global !== "undefined" && global) {
     }
 } else if (typeof window !== "undefined" && window) {
     windowfactory._isRenderer = true;
-    windowfactory._windows = {};
     if (window.nodeRequire !== undefined) {
         // We are running in an Electron Window's Runtime:
         windowfactory.runtime = window.nodeRequire.runtime;
+        windowfactory._windows = {};
 
         const ipcRenderer = window.nodeRequire("electron").ipcRenderer;
         ipcRenderer.on("window-create", function (event, otherID) {

@@ -38,7 +38,7 @@
      * @param {string[]} [acceptedEventHandlers=[]] - String of allowed events.
      */
     function EventHandler() {
-        var acceptedEventHandlers = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+        var acceptedEventHandlers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
         this._eventListeners = {};
         this._eventPipes = [];
@@ -312,7 +312,7 @@
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
     windowfactory.isMain = false;
-    windowfactory.version = "0.9.6";
+    windowfactory.version = "0.9.8";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -363,6 +363,7 @@
             (function () {
                 var _require = require;
                 // We are running in an Electron Window Backend's Runtime:
+
                 var _workingDir = path.dirname(require.main.filename);
                 _require.windowfactoryPath = __filename; // Used so new windows know where to load windowfactory from.
                 global.nodeRequire = _require; // Used so windowfactory in a window can access electron.
@@ -376,10 +377,10 @@
         }
     } else if (typeof window !== "undefined" && window) {
         windowfactory._isRenderer = true;
-        windowfactory._windows = {};
         if (window.nodeRequire !== undefined) {
             // We are running in an Electron Window's Runtime:
             windowfactory.runtime = window.nodeRequire.runtime;
+            windowfactory._windows = {};
 
             var ipcRenderer = window.nodeRequire("electron").ipcRenderer;
             ipcRenderer.on("window-create", function (event, otherID) {
@@ -2216,11 +2217,11 @@
                             _ref22 = _i22.value;
                         }
 
-                        var _other = _ref22;
+                        var otherWin = _ref22;
 
-                        this._dockedGroup.push(_other);
+                        this._dockedGroup.push(otherWin);
                         // Sharing the array between window objects makes it easier to manage:
-                        _other._dockedGroup = this._dockedGroup;
+                        otherWin._dockedGroup = otherWin._dockedGroup;
                     }
 
                     //console.log("dock", thisWindow._dockedGroup);
@@ -2303,23 +2304,23 @@
                             _ref25 = _i25.value;
                         }
 
-                        var _other2 = _ref25;
+                        var _other = _ref25;
 
-                        var pos = _other2._dragStartPos;
+                        var pos = _other._dragStartPos;
 
                         // If other doesn't have a drag position, start it:
                         if (pos === undefined) {
-                            pos = _other2._dragStartPos = _other2.getPosition();
+                            pos = _other._dragStartPos = _other.getPosition();
                             pos.left -= deltaLeft;
                             pos.top -= deltaTop;
                         }
 
-                        _other2._window.style.left = pos.left + deltaLeft + "px";
-                        _other2._window.style.top = pos.top + deltaTop + "px";
+                        _other._window.style.left = pos.left + deltaLeft + "px";
+                        _other._window.style.top = pos.top + deltaTop + "px";
                         //let transformMatrix = [1, 0, 0, 1, pos.left + deltaLeft, pos.top + deltaTop];
                         //other._window.style.transform = "matrix(" + transformMatrix.join() + ")";
                         //other._window.style.transform = "translate(" + (pos.left + deltaLeft) + "px," + (pos.top + deltaTop) + "px)";
-                        _other2.emit("move");
+                        _other.emit("move");
                     }
                 };
 
@@ -2764,6 +2765,7 @@
                     this._window.on("minimize", _onmove);
 
                     function _onclose() {
+                        delete windowfactory._windows[thisWindow._id];
                         thisWindow._isClosed = true;
                         thisWindow.emit("close");
                         thisWindow._window = undefined;
@@ -2773,13 +2775,13 @@
                     this._isHidden = false;
                     this._isMinimized = false;
                     this._isMaximized = false;
-                    this._window.on("close", _onclose);
+                    this._window.on("closed", _onclose);
 
                     currentWin.on("close", function () {
-                        delete windowfactory._windows[this._window.id];
-                        thisWindow.off("move", _onmove);
-                        thisWindow.off("close", _onclose);
-                        thisWindow.off("minimize", _onminimize);
+                        delete windowfactory._windows[thisWindow._id];
+                        thisWindow._window.off("move", _onmove);
+                        thisWindow._window.off("closed", _onclose);
+                        thisWindow._window.off("minimize", _onminimize);
                     });
 
                     this._ready = true;
@@ -3180,20 +3182,36 @@
                         return windowfactory._windows[id] || new Window(BrowserWindow.fromId(id));
                     }
                 });
+
+                // Add other browser windows to global windows:
+                for (var _iterator33 = BrowserWindow.getAllWindows(), _isArray33 = Array.isArray(_iterator33), _i33 = 0, _iterator33 = _isArray33 ? _iterator33 : _iterator33[Symbol.iterator]();;) {
+                    var _ref33;
+
+                    if (_isArray33) {
+                        if (_i33 >= _iterator33.length) break;
+                        _ref33 = _iterator33[_i33++];
+                    } else {
+                        _i33 = _iterator33.next();
+                        if (_i33.done) break;
+                        _ref33 = _i33.value;
+                    }
+
+                    var other = _ref33;
+
+                    windowfactory._resolveWindowWithID(other.id);
+                }
             })();
         } else if (windowfactory._isBackend) {
             (function () {
-                var _global$nodeRequire = global.nodeRequire("electron");
-
-                var BrowserWindow = _global$nodeRequire.BrowserWindow;
-                var ipcMain = _global$nodeRequire.ipcMain;
-
+                var _global$nodeRequire = global.nodeRequire("electron"),
+                    BrowserWindow = _global$nodeRequire.BrowserWindow,
+                    ipcMain = _global$nodeRequire.ipcMain;
 
                 if (BrowserWindow) {
                     (function () {
-                        var _windowfactory$geomet = windowfactory.geometry;
-                        var Vector = _windowfactory$geomet.Vector;
-                        var BoundingBox = _windowfactory$geomet.BoundingBox;
+                        var _windowfactory$geomet = windowfactory.geometry,
+                            Vector = _windowfactory$geomet.Vector,
+                            BoundingBox = _windowfactory$geomet.BoundingBox;
 
                         /*let nextMessageID = 0;
                         BrowserWindow.prototype._emit = function (event, args, _callback) {
@@ -3211,21 +3229,21 @@
                         };*/
                         // TODO: Solve event syncing between windows
                         BrowserWindow.prototype._notifyReady = function () {
-                            for (var _iterator33 = BrowserWindow.getAllWindows(), _isArray33 = Array.isArray(_iterator33), _i33 = 0, _iterator33 = _isArray33 ? _iterator33 : _iterator33[Symbol.iterator]();;) {
-                                var _ref33;
+                            for (var _iterator34 = BrowserWindow.getAllWindows(), _isArray34 = Array.isArray(_iterator34), _i34 = 0, _iterator34 = _isArray34 ? _iterator34 : _iterator34[Symbol.iterator]();;) {
+                                var _ref34;
 
-                                if (_isArray33) {
-                                    if (_i33 >= _iterator33.length) break;
-                                    _ref33 = _iterator33[_i33++];
+                                if (_isArray34) {
+                                    if (_i34 >= _iterator34.length) break;
+                                    _ref34 = _iterator34[_i34++];
                                 } else {
-                                    _i33 = _iterator33.next();
-                                    if (_i33.done) break;
-                                    _ref33 = _i33.value;
+                                    _i34 = _iterator34.next();
+                                    if (_i34.done) break;
+                                    _ref34 = _i34.value;
                                 }
 
-                                var other = _ref33;
+                                var other = _ref34;
 
-                                other.webContents.send("window-create", other.id);
+                                other.webContents.send("window-create", this.id);
                             }
                         };
                         BrowserWindow.prototype._ensureDockSystem = function () {
@@ -3249,19 +3267,19 @@
                                     });
 
                                     _this.on("restore", function () {
-                                        for (var _iterator34 = this._dockedGroup, _isArray34 = Array.isArray(_iterator34), _i34 = 0, _iterator34 = _isArray34 ? _iterator34 : _iterator34[Symbol.iterator]();;) {
-                                            var _ref34;
+                                        for (var _iterator35 = this._dockedGroup, _isArray35 = Array.isArray(_iterator35), _i35 = 0, _iterator35 = _isArray35 ? _iterator35 : _iterator35[Symbol.iterator]();;) {
+                                            var _ref35;
 
-                                            if (_isArray34) {
-                                                if (_i34 >= _iterator34.length) break;
-                                                _ref34 = _iterator34[_i34++];
+                                            if (_isArray35) {
+                                                if (_i35 >= _iterator35.length) break;
+                                                _ref35 = _iterator35[_i35++];
                                             } else {
-                                                _i34 = _iterator34.next();
-                                                if (_i34.done) break;
-                                                _ref34 = _i34.value;
+                                                _i35 = _iterator35.next();
+                                                if (_i35.done) break;
+                                                _ref35 = _i35.value;
                                             }
 
-                                            var other = _ref34;
+                                            var other = _ref35;
 
                                             if (other !== this) {
                                                 other.restore();
@@ -3314,23 +3332,23 @@
                             other._ensureDockSystem();
 
                             // Loop through all windows in otherGroup and add them to this's group:
-                            for (var _iterator35 = other._dockedGroup, _isArray35 = Array.isArray(_iterator35), _i35 = 0, _iterator35 = _isArray35 ? _iterator35 : _iterator35[Symbol.iterator]();;) {
-                                var _ref35;
+                            for (var _iterator36 = other._dockedGroup, _isArray36 = Array.isArray(_iterator36), _i36 = 0, _iterator36 = _isArray36 ? _iterator36 : _iterator36[Symbol.iterator]();;) {
+                                var _ref36;
 
-                                if (_isArray35) {
-                                    if (_i35 >= _iterator35.length) break;
-                                    _ref35 = _iterator35[_i35++];
+                                if (_isArray36) {
+                                    if (_i36 >= _iterator36.length) break;
+                                    _ref36 = _iterator36[_i36++];
                                 } else {
-                                    _i35 = _iterator35.next();
-                                    if (_i35.done) break;
-                                    _ref35 = _i35.value;
+                                    _i36 = _iterator36.next();
+                                    if (_i36.done) break;
+                                    _ref36 = _i36.value;
                                 }
 
-                                var _other3 = _ref35;
+                                var otherWin = _ref36;
 
-                                this._dockedGroup.push(_other3);
+                                this._dockedGroup.push(otherWin);
                                 // Sharing the array between window objects makes it easier to manage:
-                                _other3._dockedGroup = this._dockedGroup;
+                                otherWin._dockedGroup = this._dockedGroup;
                             }
 
                             //console.log("dock", this._dockedGroup);
@@ -3354,19 +3372,19 @@
                         BrowserWindow.prototype._dockFocus = function () {
                             this._ensureDockSystem();
 
-                            for (var _iterator36 = this._dockedGroup, _isArray36 = Array.isArray(_iterator36), _i36 = 0, _iterator36 = _isArray36 ? _iterator36 : _iterator36[Symbol.iterator]();;) {
-                                var _ref36;
+                            for (var _iterator37 = this._dockedGroup, _isArray37 = Array.isArray(_iterator37), _i37 = 0, _iterator37 = _isArray37 ? _iterator37 : _iterator37[Symbol.iterator]();;) {
+                                var _ref37;
 
-                                if (_isArray36) {
-                                    if (_i36 >= _iterator36.length) break;
-                                    _ref36 = _iterator36[_i36++];
+                                if (_isArray37) {
+                                    if (_i37 >= _iterator37.length) break;
+                                    _ref37 = _iterator37[_i37++];
                                 } else {
-                                    _i36 = _iterator36.next();
-                                    if (_i36.done) break;
-                                    _ref36 = _i36.value;
+                                    _i37 = _iterator37.next();
+                                    if (_i37.done) break;
+                                    _ref37 = _i37.value;
                                 }
 
-                                var _window14 = _ref36;
+                                var _window14 = _ref37;
 
                                 if (_window14 !== this) {
                                     _window14.setAlwaysOnTop(true);
@@ -3382,19 +3400,19 @@
 
                             this.restore();
 
-                            for (var _iterator37 = this._dockedGroup, _isArray37 = Array.isArray(_iterator37), _i37 = 0, _iterator37 = _isArray37 ? _iterator37 : _iterator37[Symbol.iterator]();;) {
-                                var _ref37;
+                            for (var _iterator38 = this._dockedGroup, _isArray38 = Array.isArray(_iterator38), _i38 = 0, _iterator38 = _isArray38 ? _iterator38 : _iterator38[Symbol.iterator]();;) {
+                                var _ref38;
 
-                                if (_isArray37) {
-                                    if (_i37 >= _iterator37.length) break;
-                                    _ref37 = _iterator37[_i37++];
+                                if (_isArray38) {
+                                    if (_i38 >= _iterator38.length) break;
+                                    _ref38 = _iterator38[_i38++];
                                 } else {
-                                    _i37 = _iterator37.next();
-                                    if (_i37.done) break;
-                                    _ref37 = _i37.value;
+                                    _i38 = _iterator38.next();
+                                    if (_i38.done) break;
+                                    _ref38 = _i38.value;
                                 }
 
-                                var _window15 = _ref37;
+                                var _window15 = _ref38;
 
                                 _window15._dragStartPos = _window15.getPosition();
                             }
@@ -3409,28 +3427,7 @@
                             // Perform Snap:
                             var thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft, this._dragStartPos[1] + deltaTop);
                             var snapDelta = new Vector(NaN, NaN);
-                            for (var _iterator38 = BrowserWindow.getAllWindows(), _isArray38 = Array.isArray(_iterator38), _i38 = 0, _iterator38 = _isArray38 ? _iterator38 : _iterator38[Symbol.iterator]();;) {
-                                var _ref38;
-
-                                if (_isArray38) {
-                                    if (_i38 >= _iterator38.length) break;
-                                    _ref38 = _iterator38[_i38++];
-                                } else {
-                                    _i38 = _iterator38.next();
-                                    if (_i38.done) break;
-                                    _ref38 = _i38.value;
-                                }
-
-                                var other = _ref38;
-
-                                if (other._dockedGroup !== this._dockedGroup) {
-                                    snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
-                                }
-                            }
-                            deltaLeft += snapDelta.left || 0;
-                            deltaTop += snapDelta.top || 0;
-
-                            for (var _iterator39 = this._dockedGroup, _isArray39 = Array.isArray(_iterator39), _i39 = 0, _iterator39 = _isArray39 ? _iterator39 : _iterator39[Symbol.iterator]();;) {
+                            for (var _iterator39 = BrowserWindow.getAllWindows(), _isArray39 = Array.isArray(_iterator39), _i39 = 0, _iterator39 = _isArray39 ? _iterator39 : _iterator39[Symbol.iterator]();;) {
                                 var _ref39;
 
                                 if (_isArray39) {
@@ -3442,26 +3439,16 @@
                                     _ref39 = _i39.value;
                                 }
 
-                                var _other4 = _ref39;
+                                var other = _ref39;
 
-                                var pos = _other4._dragStartPos;
-
-                                // If other doesn't have a drag position, start it:
-                                if (pos === undefined) {
-                                    pos = _other4._dragStartPos = _other4.getPosition();
-                                    pos[0] -= deltaLeft;
-                                    pos[1] -= deltaTop;
+                                if (other._dockedGroup !== this._dockedGroup) {
+                                    snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
                                 }
-
-                                _other4.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
                             }
-                        };
-                        BrowserWindow.prototype._dragStop = function () {
-                            this._ensureDockSystem();
+                            deltaLeft += snapDelta.left || 0;
+                            deltaTop += snapDelta.top || 0;
 
-                            // Dock to those it snapped to:
-                            var thisBounds = this._getBounds();
-                            for (var _iterator40 = BrowserWindow.getAllWindows(), _isArray40 = Array.isArray(_iterator40), _i40 = 0, _iterator40 = _isArray40 ? _iterator40 : _iterator40[Symbol.iterator]();;) {
+                            for (var _iterator40 = this._dockedGroup, _isArray40 = Array.isArray(_iterator40), _i40 = 0, _iterator40 = _isArray40 ? _iterator40 : _iterator40[Symbol.iterator]();;) {
                                 var _ref40;
 
                                 if (_isArray40) {
@@ -3473,14 +3460,26 @@
                                     _ref40 = _i40.value;
                                 }
 
-                                var other = _ref40;
+                                var _other2 = _ref40;
 
-                                if (thisBounds.isTouching(other._getBounds())) {
-                                    this.dock(other.id);
+                                var pos = _other2._dragStartPos;
+
+                                // If other doesn't have a drag position, start it:
+                                if (pos === undefined) {
+                                    pos = _other2._dragStartPos = _other2.getPosition();
+                                    pos[0] -= deltaLeft;
+                                    pos[1] -= deltaTop;
                                 }
-                            }
 
-                            for (var _iterator41 = this._dockedGroup, _isArray41 = Array.isArray(_iterator41), _i41 = 0, _iterator41 = _isArray41 ? _iterator41 : _iterator41[Symbol.iterator]();;) {
+                                _other2.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
+                            }
+                        };
+                        BrowserWindow.prototype._dragStop = function () {
+                            this._ensureDockSystem();
+
+                            // Dock to those it snapped to:
+                            var thisBounds = this._getBounds();
+                            for (var _iterator41 = BrowserWindow.getAllWindows(), _isArray41 = Array.isArray(_iterator41), _i41 = 0, _iterator41 = _isArray41 ? _iterator41 : _iterator41[Symbol.iterator]();;) {
                                 var _ref41;
 
                                 if (_isArray41) {
@@ -3492,17 +3491,12 @@
                                     _ref41 = _i41.value;
                                 }
 
-                                var _window16 = _ref41;
+                                var other = _ref41;
 
-                                delete _window16._dragStartPos;
+                                if (thisBounds.isTouching(other._getBounds())) {
+                                    this.dock(other.id);
+                                }
                             }
-                        };
-                        BrowserWindow.prototype._dockMoveTo = function (left, top) {
-                            this._ensureDockSystem();
-
-                            var oldPos = this.getPosition();
-                            var deltaLeft = left - oldPos[0];
-                            var deltaTop = top - oldPos[1];
 
                             for (var _iterator42 = this._dockedGroup, _isArray42 = Array.isArray(_iterator42), _i42 = 0, _iterator42 = _isArray42 ? _iterator42 : _iterator42[Symbol.iterator]();;) {
                                 var _ref42;
@@ -3516,15 +3510,17 @@
                                     _ref42 = _i42.value;
                                 }
 
-                                var other = _ref42;
+                                var _window16 = _ref42;
 
-                                var pos = other.getPosition();
-
-                                other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
+                                delete _window16._dragStartPos;
                             }
                         };
-                        BrowserWindow.prototype._dockMinimize = function (left, top) {
+                        BrowserWindow.prototype._dockMoveTo = function (left, top) {
                             this._ensureDockSystem();
+
+                            var oldPos = this.getPosition();
+                            var deltaLeft = left - oldPos[0];
+                            var deltaTop = top - oldPos[1];
 
                             for (var _iterator43 = this._dockedGroup, _isArray43 = Array.isArray(_iterator43), _i43 = 0, _iterator43 = _isArray43 ? _iterator43 : _iterator43[Symbol.iterator]();;) {
                                 var _ref43;
@@ -3538,12 +3534,14 @@
                                     _ref43 = _i43.value;
                                 }
 
-                                var _window17 = _ref43;
+                                var other = _ref43;
 
-                                _window17.minimize();
+                                var pos = other.getPosition();
+
+                                other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
                             }
                         };
-                        BrowserWindow.prototype._dockHide = function (left, top) {
+                        BrowserWindow.prototype._dockMinimize = function (left, top) {
                             this._ensureDockSystem();
 
                             for (var _iterator44 = this._dockedGroup, _isArray44 = Array.isArray(_iterator44), _i44 = 0, _iterator44 = _isArray44 ? _iterator44 : _iterator44[Symbol.iterator]();;) {
@@ -3558,12 +3556,12 @@
                                     _ref44 = _i44.value;
                                 }
 
-                                var _window18 = _ref44;
+                                var _window17 = _ref44;
 
-                                _window18.hide();
+                                _window17.minimize();
                             }
                         };
-                        BrowserWindow.prototype._dockShow = function (left, top) {
+                        BrowserWindow.prototype._dockHide = function (left, top) {
                             this._ensureDockSystem();
 
                             for (var _iterator45 = this._dockedGroup, _isArray45 = Array.isArray(_iterator45), _i45 = 0, _iterator45 = _isArray45 ? _iterator45 : _iterator45[Symbol.iterator]();;) {
@@ -3578,7 +3576,27 @@
                                     _ref45 = _i45.value;
                                 }
 
-                                var _window19 = _ref45;
+                                var _window18 = _ref45;
+
+                                _window18.hide();
+                            }
+                        };
+                        BrowserWindow.prototype._dockShow = function (left, top) {
+                            this._ensureDockSystem();
+
+                            for (var _iterator46 = this._dockedGroup, _isArray46 = Array.isArray(_iterator46), _i46 = 0, _iterator46 = _isArray46 ? _iterator46 : _iterator46[Symbol.iterator]();;) {
+                                var _ref46;
+
+                                if (_isArray46) {
+                                    if (_i46 >= _iterator46.length) break;
+                                    _ref46 = _iterator46[_i46++];
+                                } else {
+                                    _i46 = _iterator46.next();
+                                    if (_i46.done) break;
+                                    _ref46 = _i46.value;
+                                }
+
+                                var _window19 = _ref46;
 
                                 _window19.show();
                             }
@@ -3596,43 +3614,12 @@
 
         var Window = windowfactory.Window;
 
-        var _nodeRequire = nodeRequire("electron");
-
-        var remote = _nodeRequire.remote;
-        var ipcRenderer = _nodeRequire.ipcRenderer;
+        var _nodeRequire = nodeRequire("electron"),
+            remote = _nodeRequire.remote,
+            ipcRenderer = _nodeRequire.ipcRenderer;
 
         var readyCallbacks = [];
         var _isReady2 = true;
-        var allWindows = {};
-
-        function registerWindow(window) {
-            // Register window:
-            allWindows[window.id] = window;
-
-            // Generate function for onclose:
-            function _removeWindowEvent() {
-                delete allWindows[window.id];
-            }
-
-            // Register onclose event handler:
-            window.on("close", _removeWindowEvent);
-
-            // If currentWindow closes before the above handler is called, remove handler to prevent leak:
-            Window.current._window.on("close", function () {
-                window.off("close", _removeWindowEvent);
-            });
-        }
-
-        //remote.BrowserWindow.getAllWindows().forEach(registerWindow);
-
-        function _newWindowEvent(event, window) {
-            registerWindow(window);
-        }
-        //remote.app.on("browser-window-created", _newWindowEvent);
-        // If currentWindow closes before the above handler is called, remove handler to prevent leak:
-        /*Window.current._window.on("close", function () {
-            remote.app.off("browser-window-created", _newWindowEvent);
-        });*/
 
         // TODO: Window Manager, so instances are saved and returned, rather than making copies.
         // TODO: Make use the remote.getGlobal to share between renderers.
@@ -3656,23 +3643,16 @@
             readyCallbacks.push(callback);
         }
 
-        function getAllWindows() {
-            var windows = [];
-            for (var id in allWindows) {
-                if (allWindows.hasOwnProperty(id)) {
-                    windows.push(allWindows[id]);
-                }
-            }
-
-            return windows;
-        }
-
         // Setup handlers on this window:
         var wX = 0;
         var wY = 0;
         var dragging = false;
 
         Window.current._window.on("focus", function () {
+            if (Window.current._window == null) {
+                return;
+            }
+
             Window.current._window._dockFocus();
         });
 
@@ -3742,11 +3722,12 @@
             // TODO: Optimize Electron's messagebus by keeping track of listeners
             //       in the main process for early termination.
             // TODO: Listener cleanup on this window, or other window close.
+            // TODO: Use a custom eventName, so to not collide with current ones.
             var wrappedListeners = new Map();
             var windowWrappedListeners = new Map();
 
             function wrapListener(window, listener) {
-                return function (message) {
+                return function (_, message) {
                     // If listener only listens from a specific window, check that this message is from that window:
                     if (window && window._id !== message.winID) {
                         return;
@@ -3793,19 +3774,19 @@
 
                         _window20._window.webContents.send(eventName, message);
                     } else {
-                        for (var _iterator46 = windowfactory.Window.getAll(), _isArray46 = Array.isArray(_iterator46), _i46 = 0, _iterator46 = _isArray46 ? _iterator46 : _iterator46[Symbol.iterator]();;) {
-                            var _ref46;
+                        for (var _iterator47 = windowfactory.Window.getAll(), _isArray47 = Array.isArray(_iterator47), _i47 = 0, _iterator47 = _isArray47 ? _iterator47 : _iterator47[Symbol.iterator]();;) {
+                            var _ref47;
 
-                            if (_isArray46) {
-                                if (_i46 >= _iterator46.length) break;
-                                _ref46 = _iterator46[_i46++];
+                            if (_isArray47) {
+                                if (_i47 >= _iterator47.length) break;
+                                _ref47 = _iterator47[_i47++];
                             } else {
-                                _i46 = _iterator46.next();
-                                if (_i46.done) break;
-                                _ref46 = _i46.value;
+                                _i47 = _iterator47.next();
+                                if (_i47.done) break;
+                                _ref47 = _i47.value;
                             }
 
-                            var _window21 = _ref46;
+                            var _window21 = _ref47;
 
                             if (_window21 !== curWin) {
                                 _window21._window.webContents.send(eventName, message);
@@ -4015,19 +3996,19 @@
 
                         // Move children to parent:
                         var parent = thisWindow.getParent();
-                        for (var _iterator47 = thisWindow.getChildren(), _isArray47 = Array.isArray(_iterator47), _i47 = 0, _iterator47 = _isArray47 ? _iterator47 : _iterator47[Symbol.iterator]();;) {
-                            var _ref47;
+                        for (var _iterator48 = thisWindow.getChildren(), _isArray48 = Array.isArray(_iterator48), _i48 = 0, _iterator48 = _isArray48 ? _iterator48 : _iterator48[Symbol.iterator]();;) {
+                            var _ref48;
 
-                            if (_isArray47) {
-                                if (_i47 >= _iterator47.length) break;
-                                _ref47 = _iterator47[_i47++];
+                            if (_isArray48) {
+                                if (_i48 >= _iterator48.length) break;
+                                _ref48 = _iterator48[_i48++];
                             } else {
-                                _i47 = _iterator47.next();
-                                if (_i47.done) break;
-                                _ref47 = _i47.value;
+                                _i48 = _iterator48.next();
+                                if (_i48.done) break;
+                                _ref48 = _i48.value;
                             }
 
-                            var child = _ref47;
+                            var child = _ref48;
 
                             // We use getChildren to have a copy of the list, so child.setParent doesn't modify this loop's list!
                             // TODO: Optimize this loop, by not making a copy of children, and not executing splice in each setParent!
@@ -4171,19 +4152,19 @@
                     }
 
                     callback = new SyncCallback(callback);
-                    for (var _iterator48 = this._dockedGroup, _isArray48 = Array.isArray(_iterator48), _i48 = 0, _iterator48 = _isArray48 ? _iterator48 : _iterator48[Symbol.iterator]();;) {
-                        var _ref48;
+                    for (var _iterator49 = this._dockedGroup, _isArray49 = Array.isArray(_iterator49), _i49 = 0, _iterator49 = _isArray49 ? _iterator49 : _iterator49[Symbol.iterator]();;) {
+                        var _ref49;
 
-                        if (_isArray48) {
-                            if (_i48 >= _iterator48.length) break;
-                            _ref48 = _iterator48[_i48++];
+                        if (_isArray49) {
+                            if (_i49 >= _iterator49.length) break;
+                            _ref49 = _iterator49[_i49++];
                         } else {
-                            _i48 = _iterator48.next();
-                            if (_i48.done) break;
-                            _ref48 = _i48.value;
+                            _i49 = _iterator49.next();
+                            if (_i49.done) break;
+                            _ref49 = _i49.value;
                         }
 
-                        var _window22 = _ref48;
+                        var _window22 = _ref49;
 
                         _window22._isMinimized = true;
                         _window22._window.minimize(callback.ref());
@@ -4205,31 +4186,6 @@
                     }
 
                     callback = new SyncCallback(callback);
-                    for (var _iterator49 = this._dockedGroup, _isArray49 = Array.isArray(_iterator49), _i49 = 0, _iterator49 = _isArray49 ? _iterator49 : _iterator49[Symbol.iterator]();;) {
-                        var _ref49;
-
-                        if (_isArray49) {
-                            if (_i49 >= _iterator49.length) break;
-                            _ref49 = _iterator49[_i49++];
-                        } else {
-                            _i49 = _iterator49.next();
-                            if (_i49.done) break;
-                            _ref49 = _i49.value;
-                        }
-
-                        var _window23 = _ref49;
-
-                        _window23._isHidden = false;
-                        _window23._window.show(callback.ref());
-                    }
-                };
-
-                Window.prototype.hide = function (callback) {
-                    if (!this._ready) {
-                        throw "hide can't be called on an unready window";
-                    }
-
-                    callback = new SyncCallback(callback);
                     for (var _iterator50 = this._dockedGroup, _isArray50 = Array.isArray(_iterator50), _i50 = 0, _iterator50 = _isArray50 ? _iterator50 : _iterator50[Symbol.iterator]();;) {
                         var _ref50;
 
@@ -4242,16 +4198,16 @@
                             _ref50 = _i50.value;
                         }
 
-                        var _window24 = _ref50;
+                        var _window23 = _ref50;
 
-                        _window24._isHidden = true;
-                        _window24._window.hide(callback.ref());
+                        _window23._isHidden = false;
+                        _window23._window.show(callback.ref());
                     }
                 };
 
-                Window.prototype.restore = function (callback) {
+                Window.prototype.hide = function (callback) {
                     if (!this._ready) {
-                        throw "restore can't be called on an unready window";
+                        throw "hide can't be called on an unready window";
                     }
 
                     callback = new SyncCallback(callback);
@@ -4267,7 +4223,32 @@
                             _ref51 = _i51.value;
                         }
 
-                        var _window25 = _ref51;
+                        var _window24 = _ref51;
+
+                        _window24._isHidden = true;
+                        _window24._window.hide(callback.ref());
+                    }
+                };
+
+                Window.prototype.restore = function (callback) {
+                    if (!this._ready) {
+                        throw "restore can't be called on an unready window";
+                    }
+
+                    callback = new SyncCallback(callback);
+                    for (var _iterator52 = this._dockedGroup, _isArray52 = Array.isArray(_iterator52), _i52 = 0, _iterator52 = _isArray52 ? _iterator52 : _iterator52[Symbol.iterator]();;) {
+                        var _ref52;
+
+                        if (_isArray52) {
+                            if (_i52 >= _iterator52.length) break;
+                            _ref52 = _iterator52[_i52++];
+                        } else {
+                            _i52 = _iterator52.next();
+                            if (_i52.done) break;
+                            _ref52 = _i52.value;
+                        }
+
+                        var _window25 = _ref52;
 
                         _window25._isHidden = false;
                         _window25._isMinimized = false;
@@ -4285,19 +4266,19 @@
                     var beforeCallback = new SyncCallback(function () {
                         thisWindow._window.bringToFront(callback);
                     });
-                    for (var _iterator52 = this._dockedGroup, _isArray52 = Array.isArray(_iterator52), _i52 = 0, _iterator52 = _isArray52 ? _iterator52 : _iterator52[Symbol.iterator]();;) {
-                        var _ref52;
+                    for (var _iterator53 = this._dockedGroup, _isArray53 = Array.isArray(_iterator53), _i53 = 0, _iterator53 = _isArray53 ? _iterator53 : _iterator53[Symbol.iterator]();;) {
+                        var _ref53;
 
-                        if (_isArray52) {
-                            if (_i52 >= _iterator52.length) break;
-                            _ref52 = _iterator52[_i52++];
+                        if (_isArray53) {
+                            if (_i53 >= _iterator53.length) break;
+                            _ref53 = _iterator53[_i53++];
                         } else {
-                            _i52 = _iterator52.next();
-                            if (_i52.done) break;
-                            _ref52 = _i52.value;
+                            _i53 = _iterator53.next();
+                            if (_i53.done) break;
+                            _ref53 = _i53.value;
                         }
 
-                        var _window26 = _ref52;
+                        var _window26 = _ref53;
 
                         if (_window26 !== this) {
                             _window26._window.bringToFront(beforeCallback.ref());
@@ -4314,19 +4295,19 @@
                     var beforeCallback = new SyncCallback(function () {
                         thisWindow._window.focus(callback);
                     });
-                    for (var _iterator53 = this._dockedGroup, _isArray53 = Array.isArray(_iterator53), _i53 = 0, _iterator53 = _isArray53 ? _iterator53 : _iterator53[Symbol.iterator]();;) {
-                        var _ref53;
+                    for (var _iterator54 = this._dockedGroup, _isArray54 = Array.isArray(_iterator54), _i54 = 0, _iterator54 = _isArray54 ? _iterator54 : _iterator54[Symbol.iterator]();;) {
+                        var _ref54;
 
-                        if (_isArray53) {
-                            if (_i53 >= _iterator53.length) break;
-                            _ref53 = _iterator53[_i53++];
+                        if (_isArray54) {
+                            if (_i54 >= _iterator54.length) break;
+                            _ref54 = _iterator54[_i54++];
                         } else {
-                            _i53 = _iterator53.next();
-                            if (_i53.done) break;
-                            _ref53 = _i53.value;
+                            _i54 = _iterator54.next();
+                            if (_i54.done) break;
+                            _ref54 = _i54.value;
                         }
 
-                        var _window27 = _ref53;
+                        var _window27 = _ref54;
 
                         if (_window27 !== this) {
                             _window27._window.focus(beforeCallback.ref());
@@ -4356,19 +4337,19 @@
                     var deltaPos = new Position(left, top).subtract(this.getPosition());
 
                     callback = new SyncCallback(callback);
-                    for (var _iterator54 = this._dockedGroup, _isArray54 = Array.isArray(_iterator54), _i54 = 0, _iterator54 = _isArray54 ? _iterator54 : _iterator54[Symbol.iterator]();;) {
-                        var _ref54;
+                    for (var _iterator55 = this._dockedGroup, _isArray55 = Array.isArray(_iterator55), _i55 = 0, _iterator55 = _isArray55 ? _iterator55 : _iterator55[Symbol.iterator]();;) {
+                        var _ref55;
 
-                        if (_isArray54) {
-                            if (_i54 >= _iterator54.length) break;
-                            _ref54 = _iterator54[_i54++];
+                        if (_isArray55) {
+                            if (_i55 >= _iterator55.length) break;
+                            _ref55 = _iterator55[_i55++];
                         } else {
-                            _i54 = _iterator54.next();
-                            if (_i54.done) break;
-                            _ref54 = _i54.value;
+                            _i55 = _iterator55.next();
+                            if (_i55.done) break;
+                            _ref55 = _i55.value;
                         }
 
-                        var _window28 = _ref54;
+                        var _window28 = _ref55;
 
                         var pos = _window28.getPosition().add(deltaPos);
                         _window28._bounds.moveTo(pos);
@@ -4386,19 +4367,19 @@
                     var deltaPos = new Position(deltaLeft, deltaTop);
 
                     callback = new SyncCallback(callback);
-                    for (var _iterator55 = this._dockedGroup, _isArray55 = Array.isArray(_iterator55), _i55 = 0, _iterator55 = _isArray55 ? _iterator55 : _iterator55[Symbol.iterator]();;) {
-                        var _ref55;
+                    for (var _iterator56 = this._dockedGroup, _isArray56 = Array.isArray(_iterator56), _i56 = 0, _iterator56 = _isArray56 ? _iterator56 : _iterator56[Symbol.iterator]();;) {
+                        var _ref56;
 
-                        if (_isArray55) {
-                            if (_i55 >= _iterator55.length) break;
-                            _ref55 = _iterator55[_i55++];
+                        if (_isArray56) {
+                            if (_i56 >= _iterator56.length) break;
+                            _ref56 = _iterator56[_i56++];
                         } else {
-                            _i55 = _iterator55.next();
-                            if (_i55.done) break;
-                            _ref55 = _i55.value;
+                            _i56 = _iterator56.next();
+                            if (_i56.done) break;
+                            _ref56 = _i56.value;
                         }
 
-                        var _window29 = _ref55;
+                        var _window29 = _ref56;
 
                         var pos = _window29.getPosition().add(deltaPos);
                         _window29._bounds.moveTo(pos);
@@ -4438,23 +4419,23 @@
                     }
 
                     // Loop through all windows in otherGroup and add them to this's group:
-                    for (var _iterator56 = other._dockedGroup, _isArray56 = Array.isArray(_iterator56), _i56 = 0, _iterator56 = _isArray56 ? _iterator56 : _iterator56[Symbol.iterator]();;) {
-                        var _ref56;
+                    for (var _iterator57 = other._dockedGroup, _isArray57 = Array.isArray(_iterator57), _i57 = 0, _iterator57 = _isArray57 ? _iterator57 : _iterator57[Symbol.iterator]();;) {
+                        var _ref57;
 
-                        if (_isArray56) {
-                            if (_i56 >= _iterator56.length) break;
-                            _ref56 = _iterator56[_i56++];
+                        if (_isArray57) {
+                            if (_i57 >= _iterator57.length) break;
+                            _ref57 = _iterator57[_i57++];
                         } else {
-                            _i56 = _iterator56.next();
-                            if (_i56.done) break;
-                            _ref56 = _i56.value;
+                            _i57 = _iterator57.next();
+                            if (_i57.done) break;
+                            _ref57 = _i57.value;
                         }
 
-                        var _other5 = _ref56;
+                        var otherWin = _ref57;
 
-                        this._dockedGroup.push(_other5);
+                        this._dockedGroup.push(otherWin);
                         // Sharing the array between window objects makes it easier to manage:
-                        _other5._dockedGroup = this._dockedGroup;
+                        otherWin._dockedGroup = this._dockedGroup;
                     }
 
                     //console.log("dock", thisWindow._dockedGroup);
@@ -4478,19 +4459,19 @@
                     if (!this.emit("drag-start")) {
                         return;
                     } // Allow preventing drag
-                    for (var _iterator57 = this._dockedGroup, _isArray57 = Array.isArray(_iterator57), _i57 = 0, _iterator57 = _isArray57 ? _iterator57 : _iterator57[Symbol.iterator]();;) {
-                        var _ref57;
+                    for (var _iterator58 = this._dockedGroup, _isArray58 = Array.isArray(_iterator58), _i58 = 0, _iterator58 = _isArray58 ? _iterator58 : _iterator58[Symbol.iterator]();;) {
+                        var _ref58;
 
-                        if (_isArray57) {
-                            if (_i57 >= _iterator57.length) break;
-                            _ref57 = _iterator57[_i57++];
+                        if (_isArray58) {
+                            if (_i58 >= _iterator58.length) break;
+                            _ref58 = _iterator58[_i58++];
                         } else {
-                            _i57 = _iterator57.next();
-                            if (_i57.done) break;
-                            _ref57 = _i57.value;
+                            _i58 = _iterator58.next();
+                            if (_i58.done) break;
+                            _ref58 = _i58.value;
                         }
 
-                        var _window30 = _ref57;
+                        var _window30 = _ref58;
 
                         _window30._dragStartPos = _window30.getPosition();
                     }
@@ -4514,30 +4495,30 @@
                     deltaLeft += snapDelta.left || 0;
                     deltaTop += snapDelta.top || 0;
 
-                    for (var _iterator58 = this._dockedGroup, _isArray58 = Array.isArray(_iterator58), _i58 = 0, _iterator58 = _isArray58 ? _iterator58 : _iterator58[Symbol.iterator]();;) {
-                        var _ref58;
+                    for (var _iterator59 = this._dockedGroup, _isArray59 = Array.isArray(_iterator59), _i59 = 0, _iterator59 = _isArray59 ? _iterator59 : _iterator59[Symbol.iterator]();;) {
+                        var _ref59;
 
-                        if (_isArray58) {
-                            if (_i58 >= _iterator58.length) break;
-                            _ref58 = _iterator58[_i58++];
+                        if (_isArray59) {
+                            if (_i59 >= _iterator59.length) break;
+                            _ref59 = _iterator59[_i59++];
                         } else {
-                            _i58 = _iterator58.next();
-                            if (_i58.done) break;
-                            _ref58 = _i58.value;
+                            _i59 = _iterator59.next();
+                            if (_i59.done) break;
+                            _ref59 = _i59.value;
                         }
 
-                        var _other6 = _ref58;
+                        var _other3 = _ref59;
 
-                        var pos = _other6._dragStartPos;
+                        var pos = _other3._dragStartPos;
 
                         // If other doesn't have a drag position, start it:
                         if (pos === undefined) {
-                            pos = _other6._dragStartPos = _other6.getPosition();
+                            pos = _other3._dragStartPos = _other3.getPosition();
                             pos.left -= deltaLeft;
                             pos.top -= deltaTop;
                         }
 
-                        _other6._window.moveTo(pos.left + deltaLeft, pos.top + deltaTop);
+                        _other3._window.moveTo(pos.left + deltaLeft, pos.top + deltaTop);
                     }
                 };
 
@@ -4553,19 +4534,19 @@
                         }
                     }
 
-                    for (var _iterator59 = this._dockedGroup, _isArray59 = Array.isArray(_iterator59), _i59 = 0, _iterator59 = _isArray59 ? _iterator59 : _iterator59[Symbol.iterator]();;) {
-                        var _ref59;
+                    for (var _iterator60 = this._dockedGroup, _isArray60 = Array.isArray(_iterator60), _i60 = 0, _iterator60 = _isArray60 ? _iterator60 : _iterator60[Symbol.iterator]();;) {
+                        var _ref60;
 
-                        if (_isArray59) {
-                            if (_i59 >= _iterator59.length) break;
-                            _ref59 = _iterator59[_i59++];
+                        if (_isArray60) {
+                            if (_i60 >= _iterator60.length) break;
+                            _ref60 = _iterator60[_i60++];
                         } else {
-                            _i59 = _iterator59.next();
-                            if (_i59.done) break;
-                            _ref59 = _i59.value;
+                            _i60 = _iterator60.next();
+                            if (_i60.done) break;
+                            _ref60 = _i60.value;
                         }
 
-                        var _window31 = _ref59;
+                        var _window31 = _ref60;
 
                         delete _window31._dragStartPos;
                     }
@@ -4638,19 +4619,19 @@
                 Window.current.bringToFront();
             });
             Window.current._window.addEventListener("restored", function () {
-                for (var _iterator60 = Window.current._dockedGroup, _isArray60 = Array.isArray(_iterator60), _i60 = 0, _iterator60 = _isArray60 ? _iterator60 : _iterator60[Symbol.iterator]();;) {
-                    var _ref60;
+                for (var _iterator61 = Window.current._dockedGroup, _isArray61 = Array.isArray(_iterator61), _i61 = 0, _iterator61 = _isArray61 ? _iterator61 : _iterator61[Symbol.iterator]();;) {
+                    var _ref61;
 
-                    if (_isArray60) {
-                        if (_i60 >= _iterator60.length) break;
-                        _ref60 = _iterator60[_i60++];
+                    if (_isArray61) {
+                        if (_i61 >= _iterator61.length) break;
+                        _ref61 = _iterator61[_i61++];
                     } else {
-                        _i60 = _iterator60.next();
-                        if (_i60.done) break;
-                        _ref60 = _i60.value;
+                        _i61 = _iterator61.next();
+                        if (_i61.done) break;
+                        _ref61 = _i61.value;
                     }
 
-                    var other = _ref60;
+                    var other = _ref61;
 
                     if (other !== Window.current) {
                         other._window.restore();

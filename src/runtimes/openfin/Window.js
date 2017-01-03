@@ -395,10 +395,10 @@
 			if (this._dockedGroup.indexOf(other) >= 0) { return; }
 
 			// Loop through all windows in otherGroup and add them to this's group:
-			for (let other of other._dockedGroup) {
-				this._dockedGroup.push(other);
+			for (let otherWin of other._dockedGroup) {
+				this._dockedGroup.push(otherWin);
 				// Sharing the array between window objects makes it easier to manage:
-				other._dockedGroup = this._dockedGroup;
+				otherWin._dockedGroup = this._dockedGroup;
 			}
 
 			//console.log("dock", thisWindow._dockedGroup);
