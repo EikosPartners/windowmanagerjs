@@ -38,7 +38,7 @@
      * @param {string[]} [acceptedEventHandlers=[]] - String of allowed events.
      */
     function EventHandler() {
-        var acceptedEventHandlers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+        var acceptedEventHandlers = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 
         this._eventListeners = {};
         this._eventPipes = [];
@@ -367,7 +367,6 @@
             (function () {
                 var _require = require;
                 // We are running in an Electron Window Backend's Runtime:
-
                 var _workingDir = path.dirname(require.main.filename);
                 _require.windowfactoryPath = __filename; // Used so new windows know where to load windowfactory from.
                 global.nodeRequire = _require; // Used so windowfactory in a window can access electron.
@@ -1150,7 +1149,7 @@
         /*BoundingBox.prototype.getXEdgeDistance = function (other) {
             if (!others) { throw "getColliding requires argument 'others'"; }
             if (others.constructor !== Array) { throw "getColliding requires argument 'others' of type Array"; }
-             let distance = 1000000; // Arbitrary distance
+              let distance = 1000000; // Arbitrary distance
             for (let index = 0; index < this.boxes.length; index += 1) {
                 for (let j = 0; j < other.boxes.length; j += 1) {
                     distance = Math.min(distance, this.boxes[index].getXEdgeDistance(other.boxes[j]));
@@ -1386,7 +1385,7 @@
             if (other.constructor !== CollisionMesh) {
                 throw "isTouching requires argument 'other' to resolve to type CollisionMesh";
             }
-             let distance = 1000000; // Arbitrary distance
+              let distance = 1000000; // Arbitrary distance
             for (let index = 0; index < this.boxes.length; index += 1) {
                 for (let j = 0; j < other.boxes.length; j += 1) {
                     distance = Math.min(distance, this.boxes[index].getXEdgeDistance(other.boxes[j]));
@@ -1550,10 +1549,10 @@
                 		}
                 	}
                 	setWindows();
-                		this._window.getBounds(function (bounds) {
+                			this._window.getBounds(function (bounds) {
                 		thisWindow._bounds.set(bounds.left, bounds.top, bounds.left + bounds.width, bounds.top + bounds.height);
                 	});
-                           // Setup _window event listeners:
+                            // Setup _window event listeners:
                           // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.
                 	function onBoundsChange(event) {
                 		thisWindow._bounds.set(event.left, event.top, event.left + event.width, event.top + event.height);
@@ -1566,7 +1565,7 @@
                 	}
                 	this._window.addEventListener("bounds-changing", onBoundsChange);
                 	this._window.addEventListener("bounds-changed", onBoundsChange);
-                           function onClose() {
+                            function onClose() {
                               thisWindow._isClosed = true;
                 		delete windowfactory._windows[thisWindow._window.name];
                 		thisWindow.undock();
@@ -3207,15 +3206,17 @@
             })();
         } else if (windowfactory._isBackend) {
             (function () {
-                var _global$nodeRequire = global.nodeRequire("electron"),
-                    BrowserWindow = _global$nodeRequire.BrowserWindow,
-                    ipcMain = _global$nodeRequire.ipcMain;
+                var _global$nodeRequire = global.nodeRequire("electron");
+
+                var BrowserWindow = _global$nodeRequire.BrowserWindow;
+                var ipcMain = _global$nodeRequire.ipcMain;
+
 
                 if (BrowserWindow) {
                     (function () {
-                        var _windowfactory$geomet = windowfactory.geometry,
-                            Vector = _windowfactory$geomet.Vector,
-                            BoundingBox = _windowfactory$geomet.BoundingBox;
+                        var _windowfactory$geomet = windowfactory.geometry;
+                        var Vector = _windowfactory$geomet.Vector;
+                        var BoundingBox = _windowfactory$geomet.BoundingBox;
 
                         /*let nextMessageID = 0;
                         BrowserWindow.prototype._emit = function (event, args, _callback) {
@@ -3308,7 +3309,7 @@
                                         //       (they must be docked to edges of windows, not the windows themselves)
                                         /*for (let index = 0; index < this._dockedGroup.length; index += 1) {
                                             const other = this._dockedGroup[index];
-                                             if (other !== this) {
+                                              if (other !== this) {
                                                 other.setPosition()
                                             }
                                         }*/
@@ -3618,9 +3619,10 @@
 
         var Window = windowfactory.Window;
 
-        var _nodeRequire = nodeRequire("electron"),
-            remote = _nodeRequire.remote,
-            ipcRenderer = _nodeRequire.ipcRenderer;
+        var _nodeRequire = nodeRequire("electron");
+
+        var remote = _nodeRequire.remote;
+        var ipcRenderer = _nodeRequire.ipcRenderer;
 
         var readyCallbacks = [];
         var _isReady2 = true;
