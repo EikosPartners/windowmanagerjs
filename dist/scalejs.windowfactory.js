@@ -312,7 +312,7 @@
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
     windowfactory.isMain = false;
-    windowfactory.version = "0.9.8";
+    windowfactory.version = "0.9.9";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -339,12 +339,16 @@
             M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
         if (/trident/i.test(M[1])) {
             tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
-            return { name: "IE ", version: tem[1] || "" };
+            return { name: "IE", version: tem[1] || "" };
         }
         if (M[1] === "Chrome") {
             tem = ua.match(/\bOPR\/(\d+)/);
             if (tem !== null) {
                 return { name: "Opera", version: tem[1] };
+            }
+            tem = ua.match(/\bedge\/(\d+)/i);
+            if (tem !== null) {
+                return { name: "Edge", version: tem[1] };
             }
         }
         M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, "-?"];
@@ -1146,7 +1150,7 @@
         /*BoundingBox.prototype.getXEdgeDistance = function (other) {
             if (!others) { throw "getColliding requires argument 'others'"; }
             if (others.constructor !== Array) { throw "getColliding requires argument 'others' of type Array"; }
-              let distance = 1000000; // Arbitrary distance
+             let distance = 1000000; // Arbitrary distance
             for (let index = 0; index < this.boxes.length; index += 1) {
                 for (let j = 0; j < other.boxes.length; j += 1) {
                     distance = Math.min(distance, this.boxes[index].getXEdgeDistance(other.boxes[j]));
@@ -1382,7 +1386,7 @@
             if (other.constructor !== CollisionMesh) {
                 throw "isTouching requires argument 'other' to resolve to type CollisionMesh";
             }
-              let distance = 1000000; // Arbitrary distance
+             let distance = 1000000; // Arbitrary distance
             for (let index = 0; index < this.boxes.length; index += 1) {
                 for (let j = 0; j < other.boxes.length; j += 1) {
                     distance = Math.min(distance, this.boxes[index].getXEdgeDistance(other.boxes[j]));
@@ -1546,10 +1550,10 @@
                 		}
                 	}
                 	setWindows();
-                			this._window.getBounds(function (bounds) {
+                		this._window.getBounds(function (bounds) {
                 		thisWindow._bounds.set(bounds.left, bounds.top, bounds.left + bounds.width, bounds.top + bounds.height);
                 	});
-                            // Setup _window event listeners:
+                           // Setup _window event listeners:
                           // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.
                 	function onBoundsChange(event) {
                 		thisWindow._bounds.set(event.left, event.top, event.left + event.width, event.top + event.height);
@@ -1562,7 +1566,7 @@
                 	}
                 	this._window.addEventListener("bounds-changing", onBoundsChange);
                 	this._window.addEventListener("bounds-changed", onBoundsChange);
-                            function onClose() {
+                           function onClose() {
                               thisWindow._isClosed = true;
                 		delete windowfactory._windows[thisWindow._window.name];
                 		thisWindow.undock();
@@ -3304,7 +3308,7 @@
                                         //       (they must be docked to edges of windows, not the windows themselves)
                                         /*for (let index = 0; index < this._dockedGroup.length; index += 1) {
                                             const other = this._dockedGroup[index];
-                                              if (other !== this) {
+                                             if (other !== this) {
                                                 other.setPosition()
                                             }
                                         }*/
