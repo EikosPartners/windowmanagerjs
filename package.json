@@ -1,23 +1,21 @@
 {
-  "name": "scalejs.windowfactory",
-  "version": "0.9.9",
-  "homepage": "https://eikospartners.github.io/scalejs.windowfactory/",
+  "name": "windowmanager",
+  "version": "0.10.0",
+  "homepage": "https://eikospartners.github.io/windowmanagerjs/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/EikosPartners/scalejs.windowfactory.git"
+    "url": "https://github.com/EikosPartners/windowmanagerjs.git"
   },
-  "main": "dist/scalejs.windowfactory.min.js",
+  "main": "dist/windowmanager.min.js",
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-umd": "^6.8.0",
     "babel-plugin-transform-object-assign": "^6.8.0",
     "babel-preset-es2015": "^6.13.2",
     "babel-preset-es2015-loose": "^7.0.0",
-    "bower": "^1.7.9",
     "coffeelint": "^1.15.7",
     "coffeelint-newline-at-eof": "^0.4.1",
     "grunt": "^1.0.1",
     "grunt-babel": "^6.0.0",
-    "grunt-bower-requirejs": "^2.0.0",
     "grunt-coffeelint": "0.0.16",
     "grunt-contrib-coffee": "^1.0.0",
     "grunt-contrib-concat": "^1.0.1",
@@ -35,7 +33,6 @@
     "load-grunt-config": "~0.19.2",
     "minami": "^1.1.1",
     "pre-commit": "^1.2.2",
-    "rjs-build-analysis": "0.0.3",
     "time-grunt": "~1.3.0"
   },
   "jshintConfig": {

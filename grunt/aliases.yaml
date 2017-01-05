@@ -6,9 +6,6 @@ lint:
 compile:
     - 'lint'
 
-config:
-    - 'bowerRequirejs'
-
 build:
     - 'compile'
     - 'concat'

@@ -1,7 +1,7 @@
 module.exports = () ->
     api:
-        src: ['src/setup.js']
+        src: ['src/header.js']
     readme:
         src: ['README.md']
         options:
-            prefix: '\\# scalejs\\.windowfactory v'
+            prefix: '\\# windowmanager\\.js v'

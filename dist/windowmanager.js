@@ -8,7 +8,7 @@
             exports: {}
         };
         factory(mod.exports, global.path);
-        global.scalejsWindowfactory = mod.exports;
+        global.windowmanager = mod.exports;
     }
 })(this, function (exports, path) {
     "use strict";
@@ -38,7 +38,7 @@
      * @param {string[]} [acceptedEventHandlers=[]] - String of allowed events.
      */
     function EventHandler() {
-        var acceptedEventHandlers = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+        var acceptedEventHandlers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
         this._eventListeners = {};
         this._eventPipes = [];
@@ -312,7 +312,7 @@
     windowfactory._isRenderer = false;
     windowfactory._isBackend = false;
     windowfactory.isMain = false;
-    windowfactory.version = "0.9.9";
+    windowfactory.version = "0.10.0";
     windowfactory.runtime = {
         name: undefined,
         version: undefined,
@@ -367,6 +367,7 @@
             (function () {
                 var _require = require;
                 // We are running in an Electron Window Backend's Runtime:
+
                 var _workingDir = path.dirname(require.main.filename);
                 _require.windowfactoryPath = __filename; // Used so new windows know where to load windowfactory from.
                 global.nodeRequire = _require; // Used so windowfactory in a window can access electron.
@@ -3206,17 +3207,15 @@
             })();
         } else if (windowfactory._isBackend) {
             (function () {
-                var _global$nodeRequire = global.nodeRequire("electron");
-
-                var BrowserWindow = _global$nodeRequire.BrowserWindow;
-                var ipcMain = _global$nodeRequire.ipcMain;
-
+                var _global$nodeRequire = global.nodeRequire("electron"),
+                    BrowserWindow = _global$nodeRequire.BrowserWindow,
+                    ipcMain = _global$nodeRequire.ipcMain;
 
                 if (BrowserWindow) {
                     (function () {
-                        var _windowfactory$geomet = windowfactory.geometry;
-                        var Vector = _windowfactory$geomet.Vector;
-                        var BoundingBox = _windowfactory$geomet.BoundingBox;
+                        var _windowfactory$geomet = windowfactory.geometry,
+                            Vector = _windowfactory$geomet.Vector,
+                            BoundingBox = _windowfactory$geomet.BoundingBox;
 
                         /*let nextMessageID = 0;
                         BrowserWindow.prototype._emit = function (event, args, _callback) {
@@ -3619,10 +3618,9 @@
 
         var Window = windowfactory.Window;
 
-        var _nodeRequire = nodeRequire("electron");
-
-        var remote = _nodeRequire.remote;
-        var ipcRenderer = _nodeRequire.ipcRenderer;
+        var _nodeRequire = nodeRequire("electron"),
+            remote = _nodeRequire.remote,
+            ipcRenderer = _nodeRequire.ipcRenderer;
 
         var readyCallbacks = [];
         var _isReady2 = true;

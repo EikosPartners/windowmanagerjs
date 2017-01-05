@@ -1,5 +1,5 @@
-# scalejs.windowfactory v0.9.9
-An extension for scalejs to manage multiple dockable HTML windows.
+# windowmanager.js v0.10.0
+An extension for scalejs to manage multiple dockable HTML windows.  
 This extension is designed to support multiple different different encapsulation runtimes.
 
 
@@ -15,17 +15,17 @@ Future runtimes:
 You can see a live demo at [Eikos Partners Blotter Demonstration](http://blotter.eikospartners.com/install).  
 An open source example will be available soon.
 
-## Installing via Bower Install
-`bower install https://github.com/EikosPartners/scalejs.windowfactory.git`
+## Installing via npm
+`npm install --save https://github.com/EikosPartners/windowmanagerjs.git`
 
 ## Installing in Script Folder
 1. Download either one of the following scripts from the dist folder (which contains the latest stable version):
-  * [scalejs.windowfactory](https://raw.githubusercontent.com/EikosPartners/scalejs.windowfactory/master/dist/scalejs.windowfactory.js)
-  * [scalejs.windowfactory.min](https://raw.githubusercontent.com/EikosPartners/scalejs.windowfactory/master/dist/scalejs.windowfactory.min.js)
+  * [windowmanager](https://raw.githubusercontent.com/EikosPartners/windowmanagerjs/master/dist/windowmanager.js)
+  * [windowmanager.min](https://raw.githubusercontent.com/EikosPartners/windowmanagerjs/master/dist/windowmanager.min.js)
   * Or one of the scripts in the build folder. The build folder contains nightlies of the repository and may often be broken.
 2. Add the script to the `/Scripts/` folder in your scalejs application.
 3. [Optional] Add the script to your `config.js` paths to shorten the define. Example:
-`"scalejs.windowfactory": "Scripts/scalejs.windowfactory",`
+`"windowmanager": "Scripts/windowmanager",`
 
 ## API Information
-[API Wiki](https://eikospartners.github.io/scalejs.windowfactory/)
+[API Wiki](https://eikospartners.github.io/windowmanagerjs/)
