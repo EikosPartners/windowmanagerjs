@@ -8,6 +8,7 @@
             "outputSourceFiles": false
         }
     },
+    "plugins": ["plugins/markdown"],
     "opts": {
         "private": true,
         "recurse": true,
