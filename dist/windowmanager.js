@@ -3696,8 +3696,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        Window.current._window._dockFocus();
 	    });
 	
-	    window.addEventListener('mousedown', function (event) {
+	    window.addEventListener('mousedown', function onDragStart(event) {
 	        if (event.target.classList && event.target.classList.contains('window-drag')) {
+	            event.preventDefault();
 	            dragging = true;
 	            wX = event.screenX;
 	            wY = event.screenY;
@@ -3705,16 +3706,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 	
+	    window.addEventListener('touchstart', function (event) {
+	        if (event.target.classList && event.target.classList.contains('window-drag')) {
+	            event.preventDefault();
+	            dragging = true;
+	            wX = event.touches[0].screenX;
+	            wY = event.touches[0].screenY;
+	            Window.current._window._dragStart();
+	        }
+	    });
+	
 	    window.addEventListener('mousemove', function (event) {
 	        if (dragging) {
+	            event.preventDefault();
 	            Window.current._window._dragBy(event.screenX - wX, event.screenY - wY);
 	        }
 	    });
 	
-	    window.addEventListener('mouseup', function () {
-	        dragging = false;
-	        Window.current._window._dragStop();
+	    window.addEventListener('touchmove', function (event) {
+	        if (dragging) {
+	            event.preventDefault();
+	            Window.current._window._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
+	        }
 	    });
+	
+	    function onDragEnd() {
+	        if (dragging) {
+	            event.preventDefault();
+	            dragging = false;
+	            Window.current._window._dragStop();
+	        }
+	    }
+	    window.addEventListener('mouseup', onDragEnd);
+	    window.addEventListener('touchend', onDragEnd);
 	
 	    // Add context menu:
 	    var Menu = remote.Menu;
@@ -4932,8 +4956,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var wY = 0;
 	    var dragging = false;
 	
-	    window.addEventListener('mousedown', function (event) {
+	    window.addEventListener('mousedown', function onDragStart(event) {
 	        if (event.target.classList && event.target.classList.contains('window-drag')) {
+	            event.preventDefault();
 	            dragging = true;
 	            wX = event.screenX;
 	            wY = event.screenY;
@@ -4941,16 +4966,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 	
+	    window.addEventListener('touchstart', function (event) {
+	        if (event.target.classList && event.target.classList.contains('window-drag')) {
+	            event.preventDefault();
+	            dragging = true;
+	            wX = event.touches[0].screenX;
+	            wY = event.touches[0].screenY;
+	            Window.current._dragStart();
+	        }
+	    });
+	
 	    window.addEventListener('mousemove', function (event) {
 	        if (dragging) {
+	            event.preventDefault();
 	            Window.current._dragBy(event.screenX - wX, event.screenY - wY);
 	        }
 	    });
 	
-	    window.addEventListener('mouseup', function () {
-	        dragging = false;
-	        Window.current._dragStop();
+	    window.addEventListener('touchmove', function (event) {
+	        if (dragging) {
+	            event.preventDefault();
+	            Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
+	        }
 	    });
+	
+	    function onDragEnd() {
+	        if (dragging) {
+	            event.preventDefault();
+	            dragging = false;
+	            Window.current._dragStop();
+	        }
+	    }
+	    window.addEventListener('mouseup', onDragEnd);
+	    window.addEventListener('touchend', onDragEnd);
 	}
 	
 	// Handle current window in this context:
@@ -6778,8 +6826,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            Window.current.bringToFront();
 	        });
 	
-	        window.addEventListener('mousedown', function (event) {
+	        window.addEventListener('mousedown', function onDragStart(event) {
 	            if (event.target.classList && event.target.classList.contains('window-drag')) {
+	                event.preventDefault();
 	                dragging = true;
 	                wX = event.screenX;
 	                wY = event.screenY;
@@ -6787,16 +6836,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        });
 	
+	        window.addEventListener('touchstart', function (event) {
+	            if (event.target.classList && event.target.classList.contains('window-drag')) {
+	                event.preventDefault();
+	                dragging = true;
+	                wX = event.touches[0].screenX;
+	                wY = event.touches[0].screenY;
+	                Window.current._dragStart();
+	            }
+	        });
+	
 	        window.addEventListener('mousemove', function (event) {
 	            if (dragging) {
+	                event.preventDefault();
 	                Window.current._dragBy(event.screenX - wX, event.screenY - wY);
 	            }
 	        });
 	
-	        window.addEventListener('mouseup', function () {
-	            dragging = false;
-	            Window.current._dragStop();
+	        window.addEventListener('touchmove', function (event) {
+	            if (dragging) {
+	                event.preventDefault();
+	                Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
+	            }
 	        });
+	
+	        var onDragEnd = function onDragEnd() {
+	            if (dragging) {
+	                event.preventDefault();
+	                dragging = false;
+	                Window.current._dragStop();
+	            }
+	        };
+	
+	        window.addEventListener('mouseup', onDragEnd);
+	        window.addEventListener('touchend', onDragEnd);
 	    })();
 	}
 	
