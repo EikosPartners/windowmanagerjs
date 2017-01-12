@@ -29,8 +29,8 @@ const transformPropNames = ['-ms-transform', '-moz-transform', '-o-transform',
 
 /**
  * @callback Callback
- * @param {string|null} error - String on error, or null if no error
- * @param {object|null} result - Object on success, or null if error
+ * @param {String|null} error - String on error, or null if no error
+ * @param {Object|null} result - Object on success, or null if error
  */
 
 /**
@@ -447,8 +447,8 @@ class Window extends EventHandler {
 
     /**
      * Resizes the window instance.
-     * @param {number} width
-     * @param {number} height
+     * @param {Number} width
+     * @param {Number} height
      * @param {Callback=}
      */
     resizeTo(width, height, callback) {
@@ -464,8 +464,8 @@ class Window extends EventHandler {
 
     /**
      * Moves the window instance.
-     * @param {number} left
-     * @param {number} top
+     * @param {Number} left
+     * @param {Number} top
      * @param {Callback=}
      */
     moveTo(left, top, callback) {
@@ -484,8 +484,8 @@ class Window extends EventHandler {
 
     /**
      * Moves the window instance relative to its current position.
-     * @param {number} deltaLeft
-     * @param {number} deltaTop
+     * @param {Number} deltaLeft
+     * @param {Number} deltaTop
      * @param {Callback=}
      */
     moveBy(deltaLeft, deltaTop, callback) {
@@ -586,10 +586,10 @@ class Window extends EventHandler {
 
     /**
      * Sets the bounds of the window instance.
-     * @param {number} left
-     * @param {number} top
-     * @param {number} right
-     * @param {number} bottom
+     * @param {Number} left
+     * @param {Number} top
+     * @param {Number} right
+     * @param {Number} bottom
      * @param {Callback=}
      */
     setBounds(left, top, right, bottom, callback) {

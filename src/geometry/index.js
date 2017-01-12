@@ -8,20 +8,32 @@ import Vector from './Vector';
 import BoundingBox from './BoundingBox';
 import CollisionMesh from './CollisionMesh';
 
+/**
+ * A library to handler geometry calculations.
+ * @namespace
+ * @alias geometry
+ * @property {BoundingBox}
+ * @property {CollisionMesh}
+ * @property {Position}
+ * @property {Size}
+ * @property {Vector}
+ */
 export default {
-    Vector,
     BoundingBox,
     CollisionMesh,
     /**
      * A Position object. Alias of {@link Vector}.
      * @class
+     * @alias Position
      * @see {@link Vector} for further information.
      */
     Position: Vector,
     /**
      * A Size object. Alias of {@link Vector}.
      * @class
+     * @alias Size
      * @see {@link Vector} for further information.
      */
-    Size: Vector
+    Size: Vector,
+    Vector
 };

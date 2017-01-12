@@ -8,19 +8,19 @@ const windowmanagerEventNames = ['window-create', 'window-close'];
  * A global variable exposed on windows to access the windowmanager-related API.
  * @namespace
  * @extends EventHandler
- * @property {string} version - version of windowmanager
- * @property {object} runtime - contains runtime-specific info
- * @property {string} runtime.name - name of runtime (ie. Chrome, IE, OpenFin, Electron, ect)
- * @property {string} runtime.version
- * @property {boolean} runtime.isBrowser - is this running in a browser
- * @property {boolean} runtime.isElectron - is this running in Electron
- * @property {boolean} runtime.isOpenFin - is this running in OpenFin
- * @property {boolean} runtime.isDesktop - is this a desktop OS
- * @property {boolean} runtime.isMobile - is this a mobile OS
- * @property {boolean} runtime.isMain - is this the main/startup window (Electron doesn't have one atm)
+ * @property {String} version - version of windowmanager
+ * @property {Object} runtime - contains runtime-specific info
+ * @property {String} runtime.name - name of runtime (ie. Chrome, IE, OpenFin, Electron, ect)
+ * @property {String} runtime.version
+ * @property {Boolean} runtime.isBrowser - is this running in a browser
+ * @property {Boolean} runtime.isElectron - is this running in Electron
+ * @property {Boolean} runtime.isOpenFin - is this running in OpenFin
+ * @property {Boolean} runtime.isDesktop - is this a desktop OS
+ * @property {Boolean} runtime.isMobile - is this a mobile OS
+ * @property {Boolean} runtime.isMain - is this the main/startup window (Electron doesn't have one atm)
  * @property {Window} Window
- * @property {module:geometry} geometry
- * @property {MessageBus} messagebus - message bus for application
+ * @property {geometry} geometry
+ * @property {messagebus} messagebus - message bus for application
  */
 let windowmanager = new EventHandler(windowmanagerEventNames);
 

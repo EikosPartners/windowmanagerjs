@@ -1,3 +1,4 @@
+// TODO: Utilize ES6 features (like for loops)
 import Vector from './Vector';
 import CollisionMesh from './CollisionMesh';
 
@@ -25,10 +26,10 @@ function minAbs(min, ...vals) {
  */
 class BoundingBox {
     /**
-     * @param {number} left - The left position of x-axis.
-     * @param {number} top - The top position of y-axis.
-     * @param {number} right - The right position of x-axis.
-     * @param {number} bottom - The bottom position of y-axis.
+     * @param {Number} left - The left position of x-axis.
+     * @param {Number} top - The top position of y-axis.
+     * @param {Number} right - The right position of x-axis.
+     * @param {Number} bottom - The bottom position of y-axis.
      */
     constructor(left, top, right, bottom) {
         let obj = left;
@@ -50,7 +51,7 @@ class BoundingBox {
     }
 
     /**
-     * Clone the current vector to a new object.
+     * Clone the current boundingbox to a new object.
      * @returns {BoundingBox} A clone of this instance
      */
     clone() {
@@ -108,7 +109,7 @@ class BoundingBox {
     /**
      * Resolve this object down to a {@link BoundingBox} instance.
      * Since this instance is already a boundingbox, it returns itself.
-     * @returns {Vector} self
+     * @returns {BoundingBox} self
      */
     getBoundingBox() {
         // We have this method, so any prototype in this script will return their bounding box,

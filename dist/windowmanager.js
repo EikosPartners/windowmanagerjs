@@ -104,19 +104,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * A global variable exposed on windows to access the windowmanager-related API.
 	 * @namespace
 	 * @extends EventHandler
-	 * @property {string} version - version of windowmanager
-	 * @property {object} runtime - contains runtime-specific info
-	 * @property {string} runtime.name - name of runtime (ie. Chrome, IE, OpenFin, Electron, ect)
-	 * @property {string} runtime.version
-	 * @property {boolean} runtime.isBrowser - is this running in a browser
-	 * @property {boolean} runtime.isElectron - is this running in Electron
-	 * @property {boolean} runtime.isOpenFin - is this running in OpenFin
-	 * @property {boolean} runtime.isDesktop - is this a desktop OS
-	 * @property {boolean} runtime.isMobile - is this a mobile OS
-	 * @property {boolean} runtime.isMain - is this the main/startup window (Electron doesn't have one atm)
+	 * @property {String} version - version of windowmanager
+	 * @property {Object} runtime - contains runtime-specific info
+	 * @property {String} runtime.name - name of runtime (ie. Chrome, IE, OpenFin, Electron, ect)
+	 * @property {String} runtime.version
+	 * @property {Boolean} runtime.isBrowser - is this running in a browser
+	 * @property {Boolean} runtime.isElectron - is this running in Electron
+	 * @property {Boolean} runtime.isOpenFin - is this running in OpenFin
+	 * @property {Boolean} runtime.isDesktop - is this a desktop OS
+	 * @property {Boolean} runtime.isMobile - is this a mobile OS
+	 * @property {Boolean} runtime.isMain - is this the main/startup window (Electron doesn't have one atm)
 	 * @property {Window} Window
-	 * @property {module:geometry} geometry
-	 * @property {MessageBus} messagebus - message bus for application
+	 * @property {geometry} geometry
+	 * @property {messagebus} messagebus - message bus for application
 	 */
 	var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 	
@@ -215,7 +215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * An EventHandler
 	 * @constructor
 	 * @alias EventHandler
-	 * @param {string[]} [acceptedEventHandlers=[]] - String of allowed events.
+	 * @param {String[]} [acceptedEventHandlers=[]] - String of allowed events.
 	 */
 	function EventHandler() {
 	    var acceptedEventHandlers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
@@ -251,7 +251,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * @method
-	 * @param {string}
+	 * @param {String}
 	 * @param {callback}
 	 */
 	EventHandler.prototype.on = function (eventNames, eventListener) {
@@ -301,7 +301,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * @method
-	 * @param {string}
+	 * @param {String}
 	 * @param {callback}
 	 */
 	EventHandler.prototype.once = function (eventName, eventListener) {
@@ -314,7 +314,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * @method
-	 * @param {string}
+	 * @param {String}
 	 * @param {callback}
 	 */
 	EventHandler.prototype.off = function (eventNames, eventListener) {
@@ -363,7 +363,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * @method
-	 * @param {string}
+	 * @param {String}
 	 */
 	EventHandler.prototype.clearEvent = function (eventNames) {
 	    eventNames = eventNames.toLowerCase();
@@ -401,7 +401,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * @method
-	 * @param {string}
+	 * @param {String}
 	 * @param {...*} args - Arguments to pass to listeners
 	 * @returns {Boolean} true if all handlers return true, else false
 	 */
@@ -583,22 +583,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	/**
+	 * A library to handler geometry calculations.
+	 * @namespace
+	 * @alias geometry
+	 * @property {BoundingBox}
+	 * @property {CollisionMesh}
+	 * @property {Position}
+	 * @property {Size}
+	 * @property {Vector}
+	 */
 	exports.default = {
-	  Vector: _Vector2.default,
 	  BoundingBox: _BoundingBox2.default,
 	  CollisionMesh: _CollisionMesh2.default,
 	  /**
 	   * A Position object. Alias of {@link Vector}.
 	   * @class
+	   * @alias Position
 	   * @see {@link Vector} for further information.
 	   */
 	  Position: _Vector2.default,
 	  /**
 	   * A Size object. Alias of {@link Vector}.
 	   * @class
+	   * @alias Size
 	   * @see {@link Vector} for further information.
 	   */
-	  Size: _Vector2.default
+	  Size: _Vector2.default,
+	  Vector: _Vector2.default
 	}; // TODO: Rewrite in class form, so can make use of get/set, and private.
 	// TODO: Add asVector, asBoundingBox, asCollisionMesh to all classes (as a get),
 	//       to easily coerce types!
@@ -918,7 +930,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // TODO: Utilize ES6 features (like for loops)
+	
 	
 	var _Vector = __webpack_require__(6);
 	
@@ -982,10 +995,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var BoundingBox = function () {
 	    /**
-	     * @param {number} left - The left position of x-axis.
-	     * @param {number} top - The top position of y-axis.
-	     * @param {number} right - The right position of x-axis.
-	     * @param {number} bottom - The bottom position of y-axis.
+	     * @param {Number} left - The left position of x-axis.
+	     * @param {Number} top - The top position of y-axis.
+	     * @param {Number} right - The right position of x-axis.
+	     * @param {Number} bottom - The bottom position of y-axis.
 	     */
 	    function BoundingBox(left, top, right, bottom) {
 	        _classCallCheck(this, BoundingBox);
@@ -1011,7 +1024,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	     * Clone the current vector to a new object.
+	     * Clone the current boundingbox to a new object.
 	     * @returns {BoundingBox} A clone of this instance
 	     */
 	
@@ -1101,7 +1114,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /**
 	         * Resolve this object down to a {@link BoundingBox} instance.
 	         * Since this instance is already a boundingbox, it returns itself.
-	         * @returns {Vector} self
+	         * @returns {BoundingBox} self
 	         */
 	
 	    }, {
@@ -1672,9 +1685,626 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 8 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _Vector = __webpack_require__(6);
+	
+	var _Vector2 = _interopRequireDefault(_Vector);
+	
+	var _BoundingBox = __webpack_require__(7);
+	
+	var _BoundingBox2 = _interopRequireDefault(_BoundingBox);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	/**
+	 * A CollisionMesh class.
+	 */
+	var CollisionMesh = function () {
+	    /**
+	     * @param {BoundingBox[]} boxes - An array of objects thatg resolve to BoundingBox.
+	     */
+	    function CollisionMesh(boxes) {
+	        var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	
+	        _classCallCheck(this, CollisionMesh);
+	
+	        if (!boxes) {
+	            throw new Error('CollisionMesh constructor requires argument \'boxes\'');
+	        }
+	        if (boxes.constructor !== Array) {
+	            boxes = [boxes];
+	        }
+	        this.boxes = [];
+	
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
+	
+	        try {
+	            for (var _iterator = boxes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                var box = _step.value;
+	
+	                if (box.constructor === _BoundingBox2.default) {
+	                    this.boxes.push(box);
+	                } else if (box.constructor === CollisionMesh) {
+	                    this.boxes = this.boxes.concat(box.boxes);
+	                } else {
+	                    this.boxes = this.boxes.concat(box.getCollisionMesh(opts).boxes);
+	                }
+	            }
+	        } catch (err) {
+	            _didIteratorError = true;
+	            _iteratorError = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion && _iterator.return) {
+	                    _iterator.return();
+	                }
+	            } finally {
+	                if (_didIteratorError) {
+	                    throw _iteratorError;
+	                }
+	            }
+	        }
+	    }
+	
+	    /**
+	     * Clone the current collisionmesh to a new object.
+	     * @returns {CollisionMesh} A clone of this instance
+	     */
+	
+	
+	    _createClass(CollisionMesh, [{
+	        key: 'clone',
+	        value: function clone() {
+	            var boxes = new Array(this.boxes.length);
+	
+	            for (var index = 0; index < this.boxes.length; index += 1) {
+	                boxes[index] = this.boxes[index].clone();
+	            }
+	
+	            return new CollisionMesh(boxes);
+	        }
+	
+	        /**
+	         * Returns the width of `this`.
+	         * @returns {Number} width
+	         */
+	
+	    }, {
+	        key: 'getWidth',
+	        value: function getWidth() {
+	            if (this.boxes.length === 0) {
+	                return 0;
+	            }
+	            var left = this.boxes[0].left;
+	            var right = this.boxes[0].right;
+	
+	            for (var index = 1; index < this.boxes.length; index += 1) {
+	                // This assumes left is least, and right is most in terms of value:
+	                left = Math.min(left, this.boxes[index].left);
+	                right = Math.max(right, this.boxes[index].right);
+	            }
+	
+	            return right - left;
+	        }
+	
+	        /**
+	         * Returns the height of `this`.
+	         * @returns {Number} height
+	         */
+	
+	    }, {
+	        key: 'getHeight',
+	        value: function getHeight() {
+	            if (this.boxes.length === 0) {
+	                return 0;
+	            }
+	
+	            var top = this.boxes[0].top;
+	            var bottom = this.boxes[0].bottom;
+	
+	            for (var index = 1; index < this.boxes.length; index += 1) {
+	                // This assumes top is least, and bottom is most in terms of value:
+	                top = Math.min(top, this.boxes[index].top);
+	                bottom = Math.max(bottom, this.boxes[index].bottom);
+	            }
+	
+	            return bottom - top;
+	        }
+	
+	        /**
+	         * Returns the size of `this`.
+	         * @returns {Vector} size
+	         */
+	
+	    }, {
+	        key: 'getSize',
+	        value: function getSize() {
+	            return this.getBoundingBox().getSize();
+	        }
+	
+	        /**
+	         * Returns the position of `this`.
+	         * @returns {Vector} position
+	         */
+	
+	    }, {
+	        key: 'getPosition',
+	        value: function getPosition() {
+	            return this.getBoundingBox().getPosition();
+	        }
+	
+	        /**
+	         * Returns a BoundingBox instance version of this collisionmesh, which encapsulates all of it's internal boxes.
+	         * @returns {BoundingBox}
+	         */
+	
+	    }, {
+	        key: 'getBoundingBox',
+	        value: function getBoundingBox() {
+	            if (this.boxes.length === 0) {
+	                return new _BoundingBox2.default(NaN, NaN, NaN, NaN);
+	            }
+	
+	            var box = this.boxes[0].clone();
+	
+	            for (var index = 1; index < this.boxes.length; index += 1) {
+	                box.left = Math.min(box.left, this.boxes[index].left);
+	                box.top = Math.min(box.top, this.boxes[index].top);
+	                box.right = Math.max(box.right, this.boxes[index].right);
+	                box.bottom = Math.max(box.bottom, this.boxes[index].bottom);
+	            }
+	
+	            return box;
+	        }
+	
+	        /**
+	         * Resolve this object down to a {@link CollisionMesh} instance.
+	         * Since this instance is already a collisionmesh, it returns itself.
+	         * @returns {CollisionMesh} self
+	         */
+	
+	    }, {
+	        key: 'getCollisionMesh',
+	        value: function getCollisionMesh() {
+	            return this;
+	        }
+	
+	        /**
+	         * Move `this` to position at `left` and/or `top`.
+	         * @param {Number} [left=null]
+	         * @param {Number} [top=null]
+	         * @returns {BoundingBox} self
+	         */
+	
+	    }, {
+	        key: 'moveTo',
+	        value: function moveTo(left, top) {
+	            var newPosition = new _Vector2.default(left, top);
+	
+	            this.moveBy(newPosition.subtract(this.getPosition()));
+	            return this;
+	        }
+	
+	        /**
+	         * Move `this` relatively to position by `deltaLeft` and/or `deltaTop`.
+	         * @param {Number} [deltaLeft=null]
+	         * @param {Number} [deltaTop=null]
+	         * @returns {BoundingBox} self
+	         */
+	
+	    }, {
+	        key: 'moveBy',
+	        value: function moveBy(left, top) {
+	            var newPosition = new _Vector2.default(left || 0, top || 0);
+	
+	            var _iteratorNormalCompletion2 = true;
+	            var _didIteratorError2 = false;
+	            var _iteratorError2 = undefined;
+	
+	            try {
+	                for (var _iterator2 = this.boxes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                    var box = _step2.value;
+	
+	                    box.moveBy(newPosition);
+	                }
+	            } catch (err) {
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                        _iterator2.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError2) {
+	                        throw _iteratorError2;
+	                    }
+	                }
+	            }
+	
+	            return this;
+	        }
+	
+	        /**
+	         * Determines if `this` encapsulates all of `other`.
+	         * @param {CollisionMesh|BoundingBox[]}
+	         * @returns {Boolean}
+	         */
+	
+	    }, {
+	        key: 'isContains',
+	        value: function isContains(other) {
+	            if (!other) {
+	                throw new Error('isContains requires argument \'other\'');
+	            }
+	            other = other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh();
+	
+	            var _iteratorNormalCompletion3 = true;
+	            var _didIteratorError3 = false;
+	            var _iteratorError3 = undefined;
+	
+	            try {
+	                for (var _iterator3 = other.boxes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                    var otherBox = _step3.value;
+	
+	                    var contained = false;
+	
+	                    var _iteratorNormalCompletion4 = true;
+	                    var _didIteratorError4 = false;
+	                    var _iteratorError4 = undefined;
+	
+	                    try {
+	                        for (var _iterator4 = this.boxes[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                            var thisBox = _step4.value;
+	
+	                            contained |= thisBox.isContains(otherBox);
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError4 = true;
+	                        _iteratorError4 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                                _iterator4.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError4) {
+	                                throw _iteratorError4;
+	                            }
+	                        }
+	                    }
+	
+	                    if (!contained) {
+	                        return false;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError3 = true;
+	                _iteratorError3 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                        _iterator3.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError3) {
+	                        throw _iteratorError3;
+	                    }
+	                }
+	            }
+	
+	            return true;
+	        }
+	
+	        /**
+	         * Determines if `this` encapsulates at least one of `other`.
+	         * @param {CollisionMesh|BoundingBox[]}
+	         * @returns {Boolean}
+	         */
+	
+	    }, {
+	        key: 'someContains',
+	        value: function someContains(other) {
+	            if (!other) {
+	                throw new Error('someContains requires argument \'other\'');
+	            }
+	            other = other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh();
+	
+	            var _iteratorNormalCompletion5 = true;
+	            var _didIteratorError5 = false;
+	            var _iteratorError5 = undefined;
+	
+	            try {
+	                for (var _iterator5 = this.boxes[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                    var box = _step5.value;
+	
+	                    if (box.someContains(other.boxes)) {
+	                        return true;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError5 = true;
+	                _iteratorError5 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                        _iterator5.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError5) {
+	                        throw _iteratorError5;
+	                    }
+	                }
+	            }
+	
+	            return false;
+	        }
+	
+	        /**
+	         * Determines if `this` touches an edge of `other`, but does not intersect area.
+	         * @param {CollisionMesh|BoundingBox[]}
+	         * @returns {Boolean}
+	         */
+	
+	    }, {
+	        key: 'isTouching',
+	        value: function isTouching(other) {
+	            if (!other) {
+	                throw new Error('isTouching requires argument \'other\'');
+	            }
+	            other = other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh();
+	
+	            var _iteratorNormalCompletion6 = true;
+	            var _didIteratorError6 = false;
+	            var _iteratorError6 = undefined;
+	
+	            try {
+	                for (var _iterator6 = this.boxes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                    var box = _step6.value;
+	
+	                    if (box.someTouching(other.boxes)) {
+	                        return true;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError6 = true;
+	                _iteratorError6 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                        _iterator6.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError6) {
+	                        throw _iteratorError6;
+	                    }
+	                }
+	            }
+	
+	            return false;
+	        }
+	
+	        /**
+	         * Determines if `this` touches an edge of one of `others`, but does not intersect area.
+	         * @param {CollisionMesh[]}
+	         * @returns {Boolean}
+	         */
+	
+	    }, {
+	        key: 'someTouching',
+	        value: function someTouching(others) {
+	            if (!others) {
+	                throw new Error('someTouching requires argument \'others\'');
+	            }
+	            if (others.constructor !== Array) {
+	                throw new Error('someTouching requires argument \'others\' to resolve to type Array');
+	            }
+	
+	            var _iteratorNormalCompletion7 = true;
+	            var _didIteratorError7 = false;
+	            var _iteratorError7 = undefined;
+	
+	            try {
+	                for (var _iterator7 = others[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                    var other = _step7.value;
+	
+	                    if (this.isTouching(other)) {
+	                        return true;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError7 = true;
+	                _iteratorError7 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                        _iterator7.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError7) {
+	                        throw _iteratorError7;
+	                    }
+	                }
+	            }
+	
+	            return false;
+	        }
+	
+	        /**
+	         * Determines if `this` intersects an area of `other`, not an edge.
+	         * @param {CollisionMesh|BoundingBox[]}
+	         * @returns {Boolean}
+	         */
+	
+	    }, {
+	        key: 'isColliding',
+	        value: function isColliding(other) {
+	            if (!other) {
+	                throw new Error('isColliding requires argument \'other\'');
+	            }
+	            other = other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh();
+	
+	            var _iteratorNormalCompletion8 = true;
+	            var _didIteratorError8 = false;
+	            var _iteratorError8 = undefined;
+	
+	            try {
+	                for (var _iterator8 = this.boxes[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	                    var box = _step8.value;
+	
+	                    if (box.someColliding(other.boxes)) {
+	                        return true;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError8 = true;
+	                _iteratorError8 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
+	                        _iterator8.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError8) {
+	                        throw _iteratorError8;
+	                    }
+	                }
+	            }
+	
+	            return false;
+	        }
+	
+	        /**
+	         * Determines if `this` intersects an area of one of `others`, not an edge.
+	         * @param {CollisionMesh[]}
+	         * @returns {Boolean}
+	         */
+	
+	    }, {
+	        key: 'someColliding',
+	        value: function someColliding(others) {
+	            if (!others) {
+	                throw new Error('someColliding requires argument \'others\'');
+	            }
+	            if (others.constructor !== Array) {
+	                throw new Error('someColliding requires argument \'others\' to resolve to type Array');
+	            }
+	
+	            var _iteratorNormalCompletion9 = true;
+	            var _didIteratorError9 = false;
+	            var _iteratorError9 = undefined;
+	
+	            try {
+	                for (var _iterator9 = others[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+	                    var other = _step9.value;
+	                    var _iteratorNormalCompletion10 = true;
+	                    var _didIteratorError10 = false;
+	                    var _iteratorError10 = undefined;
+	
+	                    try {
+	                        for (var _iterator10 = this.boxes[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+	                            var box = _step10.value;
+	
+	                            if (box.isColliding(other)) {
+	                                return true;
+	                            }
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError10 = true;
+	                        _iteratorError10 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion10 && _iterator10.return) {
+	                                _iterator10.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError10) {
+	                                throw _iteratorError10;
+	                            }
+	                        }
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError9 = true;
+	                _iteratorError9 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
+	                        _iterator9.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError9) {
+	                        throw _iteratorError9;
+	                    }
+	                }
+	            }
+	
+	            return false;
+	        }
+	
+	        /**
+	         * Returns which box of `other` that `this` intersects an area of, not an edge.
+	         * @param {CollisionMesh|BoundingBox[]}
+	         * @returns {BoundingBox|undefined}
+	         */
+	
+	    }, {
+	        key: 'getColliding',
+	        value: function getColliding(other) {
+	            if (!other) {
+	                throw new Error('getColliding requires argument \'other\'');
+	            }
+	            other = other.constructor === Array ? new CollisionMesh(other) : other.getCollisionMesh();
+	
+	            var _iteratorNormalCompletion11 = true;
+	            var _didIteratorError11 = false;
+	            var _iteratorError11 = undefined;
+	
+	            try {
+	                for (var _iterator11 = this.boxes[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+	                    var box = _step11.value;
+	
+	                    var collided = box.getColliding(other.boxes);
+	
+	                    if (collided) {
+	                        return collided;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError11 = true;
+	                _iteratorError11 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
+	                        _iterator11.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError11) {
+	                        throw _iteratorError11;
+	                    }
+	                }
+	            }
+	        }
+	    }]);
+	
+	    return CollisionMesh;
+	}();
+	
+	exports.default = CollisionMesh;
+	module.exports = exports['default'];
 
 /***/ },
 /* 9 */
@@ -4370,7 +5000,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Message bus for application.
 	 * @namespace
-	 * @alias MessageBus
+	 * @alias messagebus
 	 */
 	_global2.default.messagebus = function () {
 	    // TODO: Utilize iframe communication? Or use messagebus that is currently shared in setup.js?
@@ -4446,7 +5076,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return {
 	        /**
 	         * @method
-	         * @alias MessageBus.send
+	         * @alias messagebus.send
 	         * @param {String} eventName - the event to send to
 	         * @param {Window} [window=undefined] - the target window to send to (if not specified, sends to all windows)
 	         * @param {...*} args Arguments to send to listeners
@@ -4508,7 +5138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        /**
 	         * @method
-	         * @alias MessageBus.on
+	         * @alias messagebus.on
 	         * @param {String} eventName - the event to listen to
 	         * @param {Window} [window=undefined] - the window to listen to events from (if null, listens to all windows)
 	         * @param {Function} listener - the callback function to call when event is triggered for this window
@@ -4537,7 +5167,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        /**
 	         * @method
-	         * @alias MessageBus.off
+	         * @alias messagebus.off
 	         * @param {String} eventName - the event to remove listener from
 	         * @param {Window} [window=undefined] - the window to listen to events from (if null, listens to all windows)
 	         * @param {Function} listener - the callback function to call when event is triggered for this window
@@ -4706,8 +5336,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * @callback Callback
-	 * @param {string|null} error - String on error, or null if no error
-	 * @param {object|null} result - Object on success, or null if error
+	 * @param {String|null} error - String on error, or null if no error
+	 * @param {Object|null} result - Object on success, or null if error
 	 */
 	
 	/**
@@ -5406,8 +6036,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        /**
 	         * Resizes the window instance.
-	         * @param {number} width
-	         * @param {number} height
+	         * @param {Number} width
+	         * @param {Number} height
 	         * @param {Callback=}
 	         */
 	
@@ -5432,8 +6062,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        /**
 	         * Moves the window instance.
-	         * @param {number} left
-	         * @param {number} top
+	         * @param {Number} left
+	         * @param {Number} top
 	         * @param {Callback=}
 	         */
 	
@@ -5483,8 +6113,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        /**
 	         * Moves the window instance relative to its current position.
-	         * @param {number} deltaLeft
-	         * @param {number} deltaTop
+	         * @param {Number} deltaLeft
+	         * @param {Number} deltaTop
 	         * @param {Callback=}
 	         */
 	
@@ -5726,10 +6356,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        /**
 	         * Sets the bounds of the window instance.
-	         * @param {number} left
-	         * @param {number} top
-	         * @param {number} right
-	         * @param {number} bottom
+	         * @param {Number} left
+	         * @param {Number} top
+	         * @param {Number} right
+	         * @param {Number} bottom
 	         * @param {Callback=}
 	         */
 	

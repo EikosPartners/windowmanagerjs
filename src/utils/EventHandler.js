@@ -4,7 +4,7 @@
  * An EventHandler
  * @constructor
  * @alias EventHandler
- * @param {string[]} [acceptedEventHandlers=[]] - String of allowed events.
+ * @param {String[]} [acceptedEventHandlers=[]] - String of allowed events.
  */
 function EventHandler(acceptedEventHandlers = []) {
     this._eventListeners = {};
@@ -17,7 +17,7 @@ function EventHandler(acceptedEventHandlers = []) {
 
 /**
  * @method
- * @param {string}
+ * @param {String}
  * @param {callback}
  */
 EventHandler.prototype.on = function (eventNames, eventListener) {
@@ -42,7 +42,7 @@ EventHandler.prototype.on = function (eventNames, eventListener) {
 
 /**
  * @method
- * @param {string}
+ * @param {String}
  * @param {callback}
  */
 EventHandler.prototype.once = function (eventName, eventListener) {
@@ -55,7 +55,7 @@ EventHandler.prototype.once = function (eventName, eventListener) {
 
 /**
  * @method
- * @param {string}
+ * @param {String}
  * @param {callback}
  */
 EventHandler.prototype.off = function (eventNames, eventListener) {
@@ -79,7 +79,7 @@ EventHandler.prototype.off = function (eventNames, eventListener) {
 
 /**
  * @method
- * @param {string}
+ * @param {String}
  */
 EventHandler.prototype.clearEvent = function (eventNames) {
     eventNames = eventNames.toLowerCase();
@@ -94,7 +94,7 @@ EventHandler.prototype.clearEvent = function (eventNames) {
 
 /**
  * @method
- * @param {string}
+ * @param {String}
  * @param {...*} args - Arguments to pass to listeners
  * @returns {Boolean} true if all handlers return true, else false
  */

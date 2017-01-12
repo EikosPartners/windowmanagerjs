@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>EventHandler - Documentation</title>
+    <title>CollisionMesh - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">EventHandler</h1>
+    <h1 class="page-title">CollisionMesh</h1>
     
 
     
@@ -41,8 +41,10 @@
 <header>
     
         <h2>
-        EventHandler
+        CollisionMesh
         </h2>
+        
+            <div class="class-description"><p>A CollisionMesh class.</p></div>
         
     
 </header>
@@ -53,16 +55,14 @@
         
 
     
+    <h2>Constructor</h2>
+    
 
-    <h4 class="name" id="EventHandler"><span class="type-signature"></span>new EventHandler<span class="signature">(acceptedEventHandlers<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="CollisionMesh"><span class="type-signature"></span>new CollisionMesh<span class="signature">(boxes)</span><span class="type-signature"></span></h4>
 
     
 
 
-
-<div class="description">
-    <p>An EventHandler</p>
-</div>
 
 
 
@@ -85,11 +85,7 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
-        
-        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -101,39 +97,23 @@
 
         <tr>
             
-                <td class="name"><code>acceptedEventHandlers</code></td>
+                <td class="name"><code>boxes</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;String></span>
+<span class="param-type">Array.&lt;<a href="BoundingBox.html">BoundingBox</a>></span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
-                <td class="default">
-                
-                    []
-                
-                </td>
-            
 
-            <td class="description last"><p>String of allowed events.</p></td>
+            <td class="description last"><p>An array of objects thatg resolve to BoundingBox.</p></td>
         </tr>
 
     
@@ -218,11 +198,209 @@
 
     
 
-    <h4 class="name" id="addPipe"><span class="type-signature"></span>addPipe<span class="signature">(eventHandler)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="clone"><span class="type-signature"></span>clone<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="CollisionMesh.html">CollisionMesh</a>}</span></h4>
 
     
 
 
+
+<div class="description">
+    <p>Clone the current collisionmesh to a new object.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>A clone of this instance</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="CollisionMesh.html">CollisionMesh</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getBoundingBox"><span class="type-signature"></span>getBoundingBox<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="BoundingBox.html">BoundingBox</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Returns a BoundingBox instance version of this collisionmesh, which encapsulates all of it's internal boxes.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BoundingBox.html">BoundingBox</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getColliding"><span class="type-signature"></span>getColliding<span class="signature">(other)</span><span class="type-signature"> &rarr; {<a href="BoundingBox.html">BoundingBox</a>|undefined}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Returns which box of <code>other</code> that <code>this</code> intersects an area of, not an edge.</p>
+</div>
 
 
 
@@ -257,13 +435,16 @@
 
         <tr>
             
-                <td class="name"><code>eventHandler</code></td>
+                <td class="name"><code>other</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="EventHandler.html">EventHandler</a></span>
+<span class="param-type"><a href="CollisionMesh.html">CollisionMesh</a></span>
+|
+
+<span class="param-type">Array.&lt;<a href="BoundingBox.html">BoundingBox</a>></span>
 
 
             
@@ -332,6 +513,27 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BoundingBox.html">BoundingBox</a></span>
+|
+
+<span class="param-type">undefined</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -340,11 +542,511 @@
 
     
 
-    <h4 class="name" id="clearEvent"><span class="type-signature"></span>clearEvent<span class="signature">(eventNames)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getCollisionMesh"><span class="type-signature"></span>getCollisionMesh<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="CollisionMesh.html">CollisionMesh</a>}</span></h4>
 
     
 
 
+
+<div class="description">
+    <p>Resolve this object down to a <a href="CollisionMesh.html">CollisionMesh</a> instance.
+Since this instance is already a collisionmesh, it returns itself.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>self</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="CollisionMesh.html">CollisionMesh</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getHeight"><span class="type-signature"></span>getHeight<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Returns the height of <code>this</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>height</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getPosition"><span class="type-signature"></span>getPosition<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Vector.html">Vector</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Returns the position of <code>this</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>position</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getSize"><span class="type-signature"></span>getSize<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Vector.html">Vector</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Returns the size of <code>this</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>size</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getWidth"><span class="type-signature"></span>getWidth<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Returns the width of <code>this</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>width</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="isColliding"><span class="type-signature"></span>isColliding<span class="signature">(other)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Determines if <code>this</code> intersects an area of <code>other</code>, not an edge.</p>
+</div>
 
 
 
@@ -379,13 +1081,16 @@
 
         <tr>
             
-                <td class="name"><code>eventNames</code></td>
+                <td class="name"><code>other</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type"><a href="CollisionMesh.html">CollisionMesh</a></span>
+|
+
+<span class="param-type">Array.&lt;<a href="BoundingBox.html">BoundingBox</a>></span>
 
 
             
@@ -454,6 +1159,24 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -462,11 +1185,309 @@
 
     
 
-    <h4 class="name" id="emit"><span class="type-signature"></span>emit<span class="signature">(eventName, &hellip;args)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    <h4 class="name" id="isContains"><span class="type-signature"></span>isContains<span class="signature">(other)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
 
     
 
 
+
+<div class="description">
+    <p>Determines if <code>this</code> encapsulates all of <code>other</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>other</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="CollisionMesh.html">CollisionMesh</a></span>
+|
+
+<span class="param-type">Array.&lt;<a href="BoundingBox.html">BoundingBox</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="isTouching"><span class="type-signature"></span>isTouching<span class="signature">(other)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Determines if <code>this</code> touches an edge of <code>other</code>, but does not intersect area.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>other</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="CollisionMesh.html">CollisionMesh</a></span>
+|
+
+<span class="param-type">Array.&lt;<a href="BoundingBox.html">BoundingBox</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="moveBy"><span class="type-signature"></span>moveBy<span class="signature">(deltaLeft<span class="signature-attributes">opt</span>, deltaTop<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="BoundingBox.html">BoundingBox</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Move <code>this</code> relatively to position by <code>deltaLeft</code> and/or <code>deltaTop</code>.</p>
+</div>
 
 
 
@@ -493,6 +1514,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -503,13 +1526,13 @@
 
         <tr>
             
-                <td class="name"><code>eventName</code></td>
+                <td class="name"><code>deltaLeft</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Number</span>
 
 
             
@@ -518,6 +1541,8 @@
             
                 <td class="attributes">
                 
+                    &lt;optional><br>
+                
 
                 
 
@@ -525,6 +1550,12 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -534,13 +1565,13 @@
 
         <tr>
             
-                <td class="name"><code>args</code></td>
+                <td class="name"><code>deltaTop</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type">Number</span>
 
 
             
@@ -549,18 +1580,24 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
 
                 
-                    &lt;repeatable><br>
+
                 
                 </td>
             
 
             
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
 
-            <td class="description last"><p>Arguments to pass to listeners</p></td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -623,9 +1660,360 @@
 
         
 <div class="param-desc">
-    <p>true if all handlers return true, else false</p>
+    <p>self</p>
 </div>
 
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BoundingBox.html">BoundingBox</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="moveTo"><span class="type-signature"></span>moveTo<span class="signature">(left<span class="signature-attributes">opt</span>, top<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="BoundingBox.html">BoundingBox</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Move <code>this</code> to position at <code>left</code> and/or <code>top</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>left</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>top</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>self</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BoundingBox.html">BoundingBox</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="someColliding"><span class="type-signature"></span>someColliding<span class="signature">(others)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Determines if <code>this</code> intersects an area of one of <code>others</code>, not an edge.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>others</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="CollisionMesh.html">CollisionMesh</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 
 
 <dl class="param-type">
@@ -649,11 +2037,15 @@
 
     
 
-    <h4 class="name" id="off"><span class="type-signature"></span>off<span class="signature">(eventNames, eventListener)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="someContains"><span class="type-signature"></span>someContains<span class="signature">(other)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
 
     
 
 
+
+<div class="description">
+    <p>Determines if <code>this</code> encapsulates at least one of <code>other</code>.</p>
+</div>
 
 
 
@@ -688,36 +2080,16 @@
 
         <tr>
             
-                <td class="name"><code>eventNames</code></td>
+                <td class="name"><code>other</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type"><a href="CollisionMesh.html">CollisionMesh</a></span>
+|
 
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>eventListener</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">callback</span>
+<span class="param-type">Array.&lt;<a href="BoundingBox.html">BoundingBox</a>></span>
 
 
             
@@ -786,6 +2158,24 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -794,11 +2184,15 @@
 
     
 
-    <h4 class="name" id="on"><span class="type-signature"></span>on<span class="signature">(eventNames, eventListener)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="someTouching"><span class="type-signature"></span>someTouching<span class="signature">(others)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
 
     
 
 
+
+<div class="description">
+    <p>Determines if <code>this</code> touches an edge of one of <code>others</code>, but does not intersect area.</p>
+</div>
 
 
 
@@ -833,36 +2227,13 @@
 
         <tr>
             
-                <td class="name"><code>eventNames</code></td>
+                <td class="name"><code>others</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>eventListener</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">callback</span>
+<span class="param-type">Array.&lt;<a href="CollisionMesh.html">CollisionMesh</a>></span>
 
 
             
@@ -931,273 +2302,24 @@
 
 
 
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="once"><span class="type-signature"></span>once<span class="signature">(eventName, eventListener)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
+<h5>Returns:</h5>
 
         
 
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
         
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>eventName</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
+<span class="param-type">Boolean</span>
 
 
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>eventListener</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">callback</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
+    </dd>
 </dl>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
     
-
-    <h4 class="name" id="removePipe"><span class="type-signature"></span>removePipe<span class="signature">(eventHandler)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>eventHandler</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="EventHandler.html">EventHandler</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
