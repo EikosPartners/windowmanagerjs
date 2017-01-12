@@ -19,7 +19,7 @@
     "build": "webpack --mode=dev && webpack --mode=build",
     "build-docs": "jsdoc --configure jsdoc.json",
     "dev": "webpack --progress --colors --watch --mode=dev",
-    "prepublish": "npm run build && npm run build-docs && git add .",
+    "prepublish": "npm run build && npm run build-docs",
     "release": "release-it --dry-run",
     "test": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js"
   },
@@ -42,6 +42,5 @@
     "yargs": "^6.6.0"
   },
   "precommit": [
-    "prepublish"
   ]
 }

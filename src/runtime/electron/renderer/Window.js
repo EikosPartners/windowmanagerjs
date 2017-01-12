@@ -97,7 +97,7 @@ class Window extends EventHandler {
         this._window.on('minimize', _onminimize);
 
         function _onclose() {
-            window.removeEventListener('unload', _oncurrclose); // eslint-disable-line no-use-before-define
+            window.removeEventListener('beforeunload', _oncurrclose); // eslint-disable-line no-use-before-define
             windowmanager._windows.delete(thisWindow._id);
             thisWindow._isClosed = true;
             thisWindow.emit('close');
@@ -113,7 +113,7 @@ class Window extends EventHandler {
         }
 
         // Register _oncurrclose when page changes or window closes to clean up listeners:
-        window.addEventListener('unload', _oncurrclose);
+        window.addEventListener('beforeunload', _oncurrclose);
 
         // If window isn't currentWin, execute local event listeners:
         if (this._window !== currentWin) {
@@ -332,9 +332,7 @@ Window.current = new Window(currentWin);
     let wY = 0;
     let dragging = false;
 
-    Window.current._window.on('focus', function () {
-        if (Window.current._window == null) { return; }
-
+    window.addEventListener('focus', function () {
         Window.current._window._dockFocus();
     });
 

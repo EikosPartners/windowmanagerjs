@@ -3357,7 +3357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this._window.on('minimize', _onminimize);
 	
 	        function _onclose() {
-	            window.removeEventListener('unload', _oncurrclose); // eslint-disable-line no-use-before-define
+	            window.removeEventListener('beforeunload', _oncurrclose); // eslint-disable-line no-use-before-define
 	            _global2.default._windows.delete(thisWindow._id);
 	            thisWindow._isClosed = true;
 	            thisWindow.emit('close');
@@ -3373,7 +3373,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        // Register _oncurrclose when page changes or window closes to clean up listeners:
-	        window.addEventListener('unload', _oncurrclose);
+	        window.addEventListener('beforeunload', _oncurrclose);
 	
 	        // If window isn't currentWin, execute local event listeners:
 	        if (_this._window !== currentWin) {
@@ -3692,11 +3692,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var wY = 0;
 	    var dragging = false;
 	
-	    Window.current._window.on('focus', function () {
-	        if (Window.current._window == null) {
-	            return;
-	        }
-	
+	    window.addEventListener('focus', function () {
 	        Window.current._window._dockFocus();
 	    });
 	
