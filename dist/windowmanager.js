@@ -5205,6 +5205,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	var _global = __webpack_require__(1);
 	
 	var _global2 = _interopRequireDefault(_global);
@@ -5212,6 +5214,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _index = __webpack_require__(2);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	function getBrowserInfo() {
 	    // Credit: http://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
@@ -5263,9 +5267,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // This is the main/root window!
 	        var nextZIndex = 1000; // TODO: Recycle Z-Indexes! In case of a (probably never) overflow!
 	
+	        // The following is to fix Edge not sharing Map values across windows:
+	
+	        var _Map = function () {
+	            function _Map() {
+	                _classCallCheck(this, _Map);
+	
+	                this._map = Object.create(null);
+	            }
+	
+	            _createClass(_Map, [{
+	                key: 'values',
+	                value: function values() {
+	                    var values = Object.keys(this._map);
+	
+	                    for (var index = 0; index < values.length; index += 1) {
+	                        values[index] = this._map[values[index]];
+	                    }
+	
+	                    return values;
+	                }
+	            }, {
+	                key: 'set',
+	                value: function set(key, value) {
+	                    this._map[key] = value;
+	                }
+	            }, {
+	                key: 'get',
+	                value: function get(key) {
+	                    return this._map[key];
+	                }
+	            }, {
+	                key: 'delete',
+	                value: function _delete(key) {
+	                    delete this._map[key];
+	                }
+	            }]);
+	
+	            return _Map;
+	        }();
+	
 	        _global2.default._launcher = window;
 	        _global2.default._internalBus = new _index.EventHandler(Object.keys(_global2.default._eventListeners));
-	        _global2.default._windows = new Map();
+	        _global2.default._windows = new _Map();
 	
 	        _global2.default._getNextZIndex = function () {
 	            nextZIndex += 1;

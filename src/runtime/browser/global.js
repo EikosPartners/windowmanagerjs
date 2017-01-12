@@ -44,9 +44,38 @@ if (windowmanager.runtime.isMain) {
     // This is the main/root window!
     let nextZIndex = 1000; // TODO: Recycle Z-Indexes! In case of a (probably never) overflow!
 
+    // The following is to fix Edge not sharing Map values across windows:
+    class _Map {
+        constructor() {
+            this._map = Object.create(null);
+        }
+
+        values() {
+            let values = Object.keys(this._map);
+
+            for (let index = 0; index < values.length; index += 1) {
+                values[index] = this._map[values[index]];
+            }
+
+            return values;
+        }
+
+        set(key, value) {
+            this._map[key] = value;
+        }
+
+        get(key) {
+            return this._map[key];
+        }
+
+        delete(key) {
+            delete this._map[key];
+        }
+    }
+
     windowmanager._launcher = window;
     windowmanager._internalBus = new EventHandler(Object.keys(windowmanager._eventListeners));
-    windowmanager._windows = new Map();
+    windowmanager._windows = new _Map();
 
     windowmanager._getNextZIndex = () => {
         nextZIndex += 1;
