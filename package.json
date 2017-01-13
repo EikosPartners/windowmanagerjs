@@ -6,6 +6,7 @@
     "window",
     "manager"
   ],
+  "license": "MIT",
   "main": "dist/windowmanager.js",
   "homepage": "https://eikospartners.github.io/windowmanagerjs/",
   "bugs": {
