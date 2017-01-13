@@ -1,7 +1,7 @@
 {
     "non-interactive": true,
     "verbose": true,
-    "buildCommand": "npm run build",
+    "buildCommand": "npm run build && git add .",
     "npm": {
         "publish": true
     }
