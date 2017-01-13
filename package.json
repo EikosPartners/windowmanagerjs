@@ -1,6 +1,6 @@
 {
   "name": "windowmanager",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "description": "A framework to manage multiple dockable, HTML windows",
   "keywords": [
     "window",
@@ -21,7 +21,7 @@
     "build-docs": "jsdoc --configure jsdoc.json",
     "dev": "webpack --progress --colors --watch --mode=dev",
     "prepublish": "npm run build && npm run build-docs",
-    "release": "release-it --dry-run",
+    "release": "release-it",
     "test": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js"
   },
   "devDependencies": {
