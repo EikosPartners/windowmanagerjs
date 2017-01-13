@@ -788,7 +788,7 @@ if (!windowmanager.runtime.isMain) {
         }
     });
 
-    const onDragEnd = function () {
+    const onDragEnd = function (event) {
         if (dragging) {
             event.preventDefault();
             dragging = false;

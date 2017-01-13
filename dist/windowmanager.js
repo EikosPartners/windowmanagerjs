@@ -120,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 	
-	windowmanager.version = ("0.11.0");
+	windowmanager.version = ("0.11.1");
 	// runtime is set in the respective runtime
 	windowmanager.runtime = {
 	    name: undefined,
@@ -2678,7 +2678,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                //       (they must be docked to edges of windows, not the windows themselves)
 	                /* for (let index = 0; index < this._dockedGroup.length; index += 1) {
 	                    const other = this._dockedGroup[index];
-	                      if (other !== this) {
+	                     if (other !== this) {
 	                        other.setPosition()
 	                    }
 	                }*/
@@ -6860,7 +6860,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        });
 	
-	        var onDragEnd = function onDragEnd() {
+	        var onDragEnd = function onDragEnd(event) {
 	            if (dragging) {
 	                event.preventDefault();
 	                dragging = false;
