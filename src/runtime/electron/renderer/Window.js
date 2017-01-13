@@ -244,8 +244,7 @@ class Window extends EventHandler {
     bringToFront(callback) {
         if (!this._ready) { throw new Error('bringToFront can\'t be called on an unready window'); }
 
-        this._window.setAlwaysOnTop(true);
-        this._window.setAlwaysOnTop(false);
+        this._window._dockFocus();
         if (callback) { callback(); }
     }
 
@@ -333,12 +332,11 @@ Window.current = new Window(currentWin);
     let dragging = false;
 
     window.addEventListener('focus', function () {
-        Window.current._window._dockFocus();
+        Window.current.bringToFront();
     });
 
     window.addEventListener('mousedown', function onDragStart(event) {
         if (event.target.classList && event.target.classList.contains('window-drag')) {
-            event.preventDefault();
             dragging = true;
             wX = event.screenX;
             wY = event.screenY;
@@ -358,7 +356,6 @@ Window.current = new Window(currentWin);
 
     window.addEventListener('mousemove', function (event) {
         if (dragging) {
-            event.preventDefault();
             Window.current._window._dragBy(event.screenX - wX, event.screenY - wY);
         }
     });
@@ -370,15 +367,20 @@ Window.current = new Window(currentWin);
         }
     });
 
-    function onDragEnd() {
+    window.addEventListener('mouseup', function (event) {
+        if (dragging) {
+            dragging = false;
+            Window.current._window._dragStop();
+        }
+    });
+
+    window.addEventListener('touchend', function (event) {
         if (dragging) {
             event.preventDefault();
             dragging = false;
             Window.current._window._dragStop();
         }
-    }
-    window.addEventListener('mouseup', onDragEnd);
-    window.addEventListener('touchend', onDragEnd);
+    });
 
     // Add context menu:
     let Menu = remote.Menu;

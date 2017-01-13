@@ -23,7 +23,7 @@ if (env === 'build') {
 }
 
 config = {
-    entry: __dirname + '/src/index.js',
+    entry: [__dirname + '/src/index.js'],
     devtool: 'source-map',
     output: {
         path: __dirname + '/dist',

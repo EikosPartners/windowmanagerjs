@@ -756,7 +756,6 @@ if (!windowmanager.runtime.isMain) {
 
     window.addEventListener('mousedown', function onDragStart(event) {
         if (event.target.classList && event.target.classList.contains('window-drag')) {
-            event.preventDefault();
             dragging = true;
             wX = event.screenX;
             wY = event.screenY;
@@ -776,7 +775,6 @@ if (!windowmanager.runtime.isMain) {
 
     window.addEventListener('mousemove', function (event) {
         if (dragging) {
-            event.preventDefault();
             Window.current._dragBy(event.screenX - wX, event.screenY - wY);
         }
     });
@@ -788,16 +786,20 @@ if (!windowmanager.runtime.isMain) {
         }
     });
 
-    const onDragEnd = function (event) {
+    window.addEventListener('mouseup', function (event) {
+        if (dragging) {
+            dragging = false;
+            Window.current._dragStop();
+        }
+    });
+
+    window.addEventListener('touchend', function (event) {
         if (dragging) {
             event.preventDefault();
             dragging = false;
             Window.current._dragStop();
         }
-    };
-
-    window.addEventListener('mouseup', onDragEnd);
-    window.addEventListener('touchend', onDragEnd);
+    });
 }
 
 windowmanager.Window = Window;

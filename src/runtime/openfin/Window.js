@@ -496,9 +496,12 @@ function setupCurrentWindow() {
     let wY = 0;
     let dragging = false;
 
+    window.addEventListener('focus', function () {
+        Window.current.bringToFront();
+    });
+
     window.addEventListener('mousedown', function onDragStart(event) {
         if (event.target.classList && event.target.classList.contains('window-drag')) {
-            event.preventDefault();
             dragging = true;
             wX = event.screenX;
             wY = event.screenY;
@@ -518,7 +521,6 @@ function setupCurrentWindow() {
 
     window.addEventListener('mousemove', function (event) {
         if (dragging) {
-            event.preventDefault();
             Window.current._dragBy(event.screenX - wX, event.screenY - wY);
         }
     });
@@ -530,15 +532,20 @@ function setupCurrentWindow() {
         }
     });
 
-    function onDragEnd() {
+    window.addEventListener('mouseup', function (event) {
+        if (dragging) {
+            dragging = false;
+            Window.current._dragStop();
+        }
+    });
+
+    window.addEventListener('touchend', function (event) {
         if (dragging) {
             event.preventDefault();
             dragging = false;
             Window.current._dragStop();
         }
-    }
-    window.addEventListener('mouseup', onDragEnd);
-    window.addEventListener('touchend', onDragEnd);
+    });
 }
 
 // Handle current window in this context:
