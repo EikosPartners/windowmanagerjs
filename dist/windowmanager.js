@@ -4041,7 +4041,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	// Setup window backend
 	
-	// TODO: Make scalejs.windowmanager the main.js script for Electron. Load the config.json
+	// TODO: Make windowmanager the main.js script for Electron. Load the config.json
 	
 	_ready2.default._deref();
 
