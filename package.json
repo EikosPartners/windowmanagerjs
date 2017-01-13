@@ -1,6 +1,6 @@
 {
   "name": "windowmanager",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "description": "A framework to manage multiple dockable, HTML windows",
   "keywords": [
     "window",
@@ -17,10 +17,10 @@
     "url": "https://github.com/EikosPartners/windowmanagerjs.git"
   },
   "scripts": {
-    "build": "webpack --mode=dev && webpack --mode=build",
+    "build": "npm run build-dist && npm run build-docs",
+    "build-dist": "webpack --mode=dev && webpack --mode=build",
     "build-docs": "jsdoc --configure jsdoc.json",
     "dev": "webpack --progress --colors --watch --mode=dev",
-    "prepublish": "npm run build && npm run build-docs",
     "release": "release-it",
     "test": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js"
   },

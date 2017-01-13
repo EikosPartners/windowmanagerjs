@@ -1,6 +1,7 @@
 {
     "non-interactive": true,
     "verbose": true,
+    "buildCommand": "npm run build",
     "npm": {
         "publish": true
     }
