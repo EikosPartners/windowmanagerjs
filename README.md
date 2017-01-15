@@ -1,4 +1,4 @@
-# windowmanager.js v0.10.0
+# windowmanager.js
 A framework to manage multiple dockable HTML windows.<br>
 This extension is designed to support multiple different different encapsulation runtimes.
 
