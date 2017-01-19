@@ -49,6 +49,7 @@ config = {
     node: {
         global: false,
         process: false,
+        __dirname: false,
         __filename: false
     },
     resolve: {

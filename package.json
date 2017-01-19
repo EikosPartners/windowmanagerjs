@@ -22,6 +22,8 @@
     "build-docs": "jsdoc --configure jsdoc.json",
     "dev": "webpack --progress --colors --watch --mode=dev",
     "release": "release-it",
+    "release-minor": "release-it minor",
+    "release-major": "release-it major",
     "test": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js"
   },
   "devDependencies": {

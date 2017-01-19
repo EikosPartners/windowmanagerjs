@@ -4,7 +4,8 @@ import './ready';
 // TODO: Add runtime checks here for OpenFin and Electron
 let runtime;
 
-if ((typeof process !== 'undefined' && process && process.versions && process.versions.electron) ||
+if ((typeof process !== 'undefined' && process && process.versions &&
+    (process.versions.electron || process.versions.node)) ||
     (typeof window !== 'undefined' && window && window.nodeRequire && window.nodeRequire.runtime)) {
     // We are running in an Electron Runtime:
     runtime = require('./electron/index');

@@ -127,7 +127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 	
-	windowmanager.version = ("0.11.5");
+	windowmanager.version = ("0.12.0");
 	// runtime is set in the respective runtime
 	windowmanager.runtime = {
 	    name: undefined,
@@ -3265,7 +3265,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var runtime = void 0; /* global fin */
 	
 	
-	if (typeof process !== 'undefined' && process && process.versions && process.versions.electron || typeof window !== 'undefined' && window && window.nodeRequire && window.nodeRequire.runtime) {
+	if (typeof process !== 'undefined' && process && process.versions && (process.versions.electron || process.versions.node) || typeof window !== 'undefined' && window && window.nodeRequire && window.nodeRequire.runtime) {
 	    // We are running in an Electron Runtime:
 	    runtime = __webpack_require__(70);
 	} else if (typeof fin !== 'undefined' && fin && fin.desktop && fin.desktop.main) {
@@ -4035,15 +4035,137 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _ready2 = _interopRequireDefault(_ready);
 	
+	var _require = __webpack_require__(92);
+	
+	var _require2 = _interopRequireDefault(_require);
+	
 	__webpack_require__(94);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	// Setup window backend
+	var _nodeRequire = (0, _require2.default)('electron'),
+	    app = _nodeRequire.app,
+	    BrowserWindow = _nodeRequire.BrowserWindow;
 	
-	// TODO: Make windowmanager the main.js script for Electron. Load the config.json
+	var http = (0, _require2.default)('http');
+	var url = (0, _require2.default)('url');
 	
-	_ready2.default._deref();
+	// TODO: Add support for an app.json packaged with this script.
+	// TODO: Add support for local file loading for window url.
+	
+	// Determine the endpoint:
+	var epArg = process.argv.find(function (arg) {
+	    return arg.indexOf('--endpoint') >= 0;
+	});
+	var ep = epArg ? epArg.substr(epArg.indexOf('=') + 1) : (0, _require2.default)('./package.json').endPoint;
+	var configUrl = url.resolve(ep, 'app.json');
+	// Setup defaults:
+	var defaultConfig = {
+	    url: ep,
+	    width: 800,
+	    height: 500,
+	    frame: true,
+	    resizable: true,
+	    show: false,
+	    hasShadow: false,
+	    icon: 'favicon.ico',
+	    webPreferences: {
+	        nodeIntegration: false,
+	        // Windowmanager path should be absolute:
+	        preload: __filename
+	    }
+	};
+	// Setup openfin to electron mappings:
+	var configMap = {
+	    name: 'title',
+	    autoShow: 'show',
+	    defaultLeft: 'x',
+	    defaultTop: 'y',
+	    defaultWidth: 'width',
+	    defaultHeight: 'height'
+	};
+	var mainWindow = void 0;
+	
+	function createWindow() {
+	    // Get app.json:
+	    http.get(configUrl, function (res) {
+	        var json = '';
+	
+	        res.setEncoding('utf8');
+	        res.on('data', function (chunk) {
+	            json += chunk;
+	        });
+	        res.on('end', function () {
+	            if (res.statusCode === 200) {
+	                var config = void 0;
+	
+	                try {
+	                    config = JSON.parse(json).startup_app || {};
+	                } catch (e) {
+	                    console.error('ERROR: Failed to parse json from', configUrl);
+	                    config = {};
+	                }
+	
+	                // Map options to electron options:
+	                for (var prop in config) {
+	                    if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
+	                        config[configMap[prop]] = config[prop];
+	                        delete config[prop];
+	                    }
+	                }
+	                // Set defaults:
+	                for (var _prop in defaultConfig) {
+	                    if (defaultConfig.hasOwnProperty(_prop)) {
+	                        config[_prop] = config[_prop] || defaultConfig[_prop];
+	                    }
+	                }
+	
+	                var _url = config.url;
+	
+	                delete config.url;
+	
+	                // Start main window:
+	                mainWindow = new BrowserWindow(config);
+	                config.title = config.title == null ? mainWindow.id : config.title;
+	
+	                // load the index.html of the app:
+	                mainWindow.loadURL(_url);
+	                mainWindow.setTitle(config.title);
+	
+	                mainWindow.on('closed', function () {
+	                    mainWindow = null;
+	                    app.quit();
+	                });
+	
+	                // Open the DevTools.
+	                // mainWindow.webContents.openDevTools();
+	
+	                // Notify windowmanager is setup:
+	                _ready2.default._deref();
+	            } else {
+	                console.error('ERROR: Server returned code', res.statusCode);
+	                app.quit();
+	            }
+	        });
+	    });
+	}
+	
+	// When app starts, load main window:
+	app.on('ready', createWindow);
+	
+	// When app closes all windows, end app:
+	app.on('window-all-closed', function () {
+	    if (process.platform !== 'darwin') {
+	        app.quit();
+	    }
+	});
+	
+	app.on('activate', function () {
+	    if (mainWindow === null) {
+	        createWindow();
+	    }
+	});
 
 /***/ },
 /* 94 */
