@@ -4,7 +4,8 @@
   "description": "A framework to manage multiple dockable, HTML windows",
   "keywords": [
     "window",
-    "manager"
+    "manager",
+    "windowmanager"
   ],
   "license": "MIT",
   "main": "dist/windowmanager.js",
