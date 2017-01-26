@@ -127,7 +127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 	
-	windowmanager.version = ("0.12.1");
+	windowmanager.version = ("0.12.0");
 	// runtime is set in the respective runtime
 	windowmanager.runtime = {
 	    name: undefined,
@@ -2140,10 +2140,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            other = other.getBoundingBox();
 	
-	            var left = Math.max(this.left, other.left),
-	                top = Math.max(this.top, other.top),
-	                right = Math.min(this.right, other.right),
-	                bottom = Math.min(this.bottom, other.bottom);
+	            var left = Math.max(this.left, other.left);
+	            var top = Math.max(this.top, other.top);
+	            var right = Math.min(this.right, other.right);
+	            var bottom = Math.min(this.bottom, other.bottom);
 	
 	            if (left === right && top === bottom) {
 	                return new _Vector2.default(left, top);
@@ -4061,7 +4061,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return arg.indexOf('--endpoint') >= 0;
 	});
 	var ep = epArg ? epArg.substr(epArg.indexOf('=') + 1) : (0, _require2.default)('./package.json').endPoint;
-	var configUrl = url.resolve(ep, 'app.json');
+	var configUrl = ep && url.resolve(ep, 'app.json'); // If ep is null, then configUrl is null
 	// Setup defaults (similar to OpenFin):
 	var defaultConfig = {
 	    url: ep,
@@ -4162,16 +4162,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // Get app.json:
 	    if (configUrl == null) {
-	        // Load defaults:
-	        _start(defaultConfig);
+	        var err = 'No endpoint provided to start the app.';
+	
+	        dialog.showErrorBox('ERROR', err);
+	        app.quit();
 	    } else if (configUrl.indexOf('https') === 0) {
 	        https.get(configUrl, _response);
 	    } else if (configUrl.indexOf('http') === 0) {
 	        http.get(configUrl, _response);
 	    } else {
-	        var err = 'Server doesn\'t support endpoint for app.json (' + configUrl + ').';
+	        // Unsupported protocol:
+	        var _err2 = 'Server doesn\'t support endpoint for app.json (' + configUrl + ').';
 	
-	        dialog.showErrorBox('ERROR', err);
+	        dialog.showErrorBox('ERROR', _err2);
 	        app.quit();
 	    }
 	}
