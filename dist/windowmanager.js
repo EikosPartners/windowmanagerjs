@@ -4056,15 +4056,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	// TODO: Add support for an app.json packaged with this script.
 	// TODO: Add support for local file loading for window url.
 	
+	function getArg(argName) {
+	    return process.argv.find(function (arg) {
+	        return arg.indexOf('--' + argName) >= 0;
+	    });
+	}
+	
+	function extractArg(argName) {
+	    var arg = getArg(argName);
+	
+	    return arg && arg.substr(arg.indexOf('=') + 1); // If arg is null, then return null
+	}
+	
 	// Determine the endpoint:
-	var epArg = process.argv.find(function (arg) {
-	    return arg.indexOf('--endpoint') >= 0;
-	});
-	var ep = epArg ? epArg.substr(epArg.indexOf('=') + 1) : (0, _require2.default)('./package.json').endPoint;
-	var configUrl = ep && url.resolve(ep, 'app.json'); // If ep is null, then configUrl is null
+	var packageJson = (0, _require2.default)('./package.json');
+	var endpoint = extractArg('endpoint') || packageJson.endPoint;
+	var ignoreConfig = getArg('ignore-config') || packageJson.ignoreConfig;
+	var configPath = getArg('config') || packageJson.configPath || 'app.json';
+	var configUrl = endpoint && !ignoreConfig ? url.resolve(endpoint, configPath) : null;
 	// Setup defaults (similar to OpenFin):
 	var defaultConfig = {
-	    url: ep,
+	    url: endpoint,
 	    width: 800,
 	    height: 500,
 	    frame: true,
@@ -4161,18 +4173,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    // Get app.json:
-	    if (configUrl == null) {
-	        var err = 'No endpoint provided to start the app.';
+	    if (configUrl != null) {
+	        if (configUrl.indexOf('https') === 0) {
+	            https.get(configUrl, _response);
+	        } else if (configUrl.indexOf('http') === 0) {
+	            http.get(configUrl, _response);
+	        } else {
+	            // Unsupported protocol:
+	            var err = 'Server doesn\'t support endpoint for app.json (' + configUrl + ').';
 	
-	        dialog.showErrorBox('ERROR', err);
-	        app.quit();
-	    } else if (configUrl.indexOf('https') === 0) {
-	        https.get(configUrl, _response);
-	    } else if (configUrl.indexOf('http') === 0) {
-	        http.get(configUrl, _response);
+	            dialog.showErrorBox('ERROR', err);
+	            app.quit();
+	        }
+	    } else if (endpoint != null) {
+	        // Load defaults:
+	        _start(defaultConfig);
 	    } else {
-	        // Unsupported protocol:
-	        var _err2 = 'Server doesn\'t support endpoint for app.json (' + configUrl + ').';
+	        var _err2 = 'No endpoint provided to start the app.';
 	
 	        dialog.showErrorBox('ERROR', _err2);
 	        app.quit();
