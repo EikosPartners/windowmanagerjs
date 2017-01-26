@@ -1,7 +1,8 @@
 # windowmanager.js
 [![npm version](https://badge.fury.io/js/windowmanager.svg)](https://badge.fury.io/js/windowmanager)<br>
 A framework to manage multiple dockable HTML windows.<br>
-This extension is designed to support multiple different different encapsulation runtimes.
+This extension is designed to support multiple different different encapsulation runtimes.<br>
+See [API Documentation](https://eikospartners.github.io/windowmanagerjs/) for more information.
 
 Runtimes supported:
 * Modern Web Browsers (Chrome, Firefox, IE, Edge, Safari)
@@ -24,6 +25,3 @@ The windowmanager script is located in `node_modules/windowmanager/dist/windowma
   * [windowmanager](https://raw.githubusercontent.com/EikosPartners/windowmanagerjs/master/dist/windowmanager.js)
   * [windowmanager.min](https://raw.githubusercontent.com/EikosPartners/windowmanagerjs/master/dist/windowmanager.min.js)
 2. Add the script to the your application. Do not add it to a builder, since bundling or compiling with babelify will break the script.
-
-## API Information
-[API Wiki](https://eikospartners.github.io/windowmanagerjs/)

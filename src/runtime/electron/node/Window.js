@@ -2,7 +2,9 @@ import windowmanager from '../global';
 import nodeRequire from '../require';
 const { BrowserWindow } = nodeRequire('electron');
 
-// TODO: Give the node backend access to windowmanager Window-like functionality
+// TODO: Give the node backend access to windowmanager Window-like functionality.
+//       This will automatically setup windowmanager on each window if added.
+
 // This is Electron's main process:
 const { Vector, BoundingBox } = windowmanager.geometry;
 

@@ -1,15 +1,16 @@
 // TODO: Determine which auto release system like:
 //       https://github.com/semantic-release/semantic-release
 //       https://github.com/webpro/release-it
-var webpack = require('webpack');
-var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
-var path = require('path');
-var env = require('yargs').argv.mode;
-var packageJson = require('./package.json');
+const webpack = require('webpack');
+const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
+const path = require('path');
+const env = require('yargs').argv.mode;
+const packageJson = require('./package.json');
 
-var libraryName = 'windowmanager';
-
-var plugins = [], outputFile, config;
+const libraryName = 'windowmanager';
+let plugins = [];
+let outputFile;
+let config;
 
 plugins.push(new webpack.DefinePlugin({
     VERSION: JSON.stringify(packageJson.version)
@@ -17,16 +18,16 @@ plugins.push(new webpack.DefinePlugin({
 
 if (env === 'build') {
     plugins.push(new UglifyJsPlugin({ minimize: true }));
-    outputFile = libraryName + '.min.js';
+    outputFile = `${libraryName}.min.js`;
 } else {
-    outputFile = libraryName + '.js';
+    outputFile = `${libraryName}.min.js`;
 }
 
 config = {
-    entry: [__dirname + '/src/index.js'],
+    entry: [`${__dirname}/src/index.js`],
     devtool: 'source-map',
     output: {
-        path: __dirname + '/dist',
+        path: `${__dirname}/dist`,
         filename: outputFile,
         library: libraryName,
         libraryTarget: 'umd',

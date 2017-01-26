@@ -127,7 +127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 	
-	windowmanager.version = ("0.12.0");
+	windowmanager.version = ("0.12.1");
 	// runtime is set in the respective runtime
 	windowmanager.runtime = {
 	    name: undefined,
@@ -4046,9 +4046,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Setup window backend
 	var _nodeRequire = (0, _require2.default)('electron'),
 	    app = _nodeRequire.app,
-	    BrowserWindow = _nodeRequire.BrowserWindow;
+	    BrowserWindow = _nodeRequire.BrowserWindow,
+	    dialog = _nodeRequire.dialog;
 	
 	var http = (0, _require2.default)('http');
+	var https = (0, _require2.default)('https');
 	var url = (0, _require2.default)('url');
 	
 	// TODO: Add support for an app.json packaged with this script.
@@ -4060,7 +4062,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	var ep = epArg ? epArg.substr(epArg.indexOf('=') + 1) : (0, _require2.default)('./package.json').endPoint;
 	var configUrl = url.resolve(ep, 'app.json');
-	// Setup defaults:
+	// Setup defaults (similar to OpenFin):
 	var defaultConfig = {
 	    url: ep,
 	    width: 800,
@@ -4088,8 +4090,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	var mainWindow = void 0;
 	
 	function createWindow() {
-	    // Get app.json:
-	    http.get(configUrl, function (res) {
+	    function _start(config) {
+	        var _url = config.url;
+	
+	        delete config.url;
+	
+	        // Start main window:
+	        mainWindow = new BrowserWindow(config);
+	        config.title = config.title == null ? mainWindow.id : config.title;
+	
+	        // load the index.html of the app:
+	        mainWindow.loadURL(_url);
+	        mainWindow.setTitle(config.title);
+	
+	        mainWindow.on('closed', function () {
+	            mainWindow = null;
+	            app.quit();
+	        });
+	
+	        // Open the DevTools.
+	        // mainWindow.webContents.openDevTools();
+	
+	        // Notify windowmanager is setup:
+	        _ready2.default._deref();
+	    }
+	
+	    function _response(res) {
 	        var json = '';
 	
 	        res.setEncoding('utf8');
@@ -4103,8 +4129,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                try {
 	                    config = JSON.parse(json).startup_app || {};
 	                } catch (e) {
-	                    console.error('ERROR: Failed to parse json from', configUrl);
-	                    config = {};
+	                    var err = 'Server failed to parse app.json (' + configUrl + ').';
+	
+	                    dialog.showErrorBox('ERROR', err);
+	                    return app.quit();
 	                }
 	
 	                // Map options to electron options:
@@ -4121,34 +4149,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
-	                var _url = config.url;
-	
-	                delete config.url;
-	
 	                // Start main window:
-	                mainWindow = new BrowserWindow(config);
-	                config.title = config.title == null ? mainWindow.id : config.title;
-	
-	                // load the index.html of the app:
-	                mainWindow.loadURL(_url);
-	                mainWindow.setTitle(config.title);
-	
-	                mainWindow.on('closed', function () {
-	                    mainWindow = null;
-	                    app.quit();
-	                });
-	
-	                // Open the DevTools.
-	                // mainWindow.webContents.openDevTools();
-	
-	                // Notify windowmanager is setup:
-	                _ready2.default._deref();
+	                _start(config);
 	            } else {
-	                console.error('ERROR: Server returned code', res.statusCode);
+	                var _err = 'Server failed to load app.json (' + configUrl + '). Status code: ' + res.statusCode;
+	
+	                dialog.showErrorBox('ERROR', _err);
 	                app.quit();
 	            }
 	        });
-	    });
+	    }
+	
+	    // Get app.json:
+	    if (configUrl == null) {
+	        // Load defaults:
+	        _start(defaultConfig);
+	    } else if (configUrl.indexOf('https') === 0) {
+	        https.get(configUrl, _response);
+	    } else if (configUrl.indexOf('http') === 0) {
+	        http.get(configUrl, _response);
+	    } else {
+	        var err = 'Server doesn\'t support endpoint for app.json (' + configUrl + ').';
+	
+	        dialog.showErrorBox('ERROR', err);
+	        app.quit();
+	    }
 	}
 	
 	// When app starts, load main window:
@@ -4190,7 +4215,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _nodeRequire = (0, _require2.default)('electron'),
 	    BrowserWindow = _nodeRequire.BrowserWindow;
 	
-	// TODO: Give the node backend access to windowmanager Window-like functionality
+	// TODO: Give the node backend access to windowmanager Window-like functionality.
+	//       This will automatically setup windowmanager on each window if added.
+	
 	// This is Electron's main process:
 	
 	

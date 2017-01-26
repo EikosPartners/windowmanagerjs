@@ -5,7 +5,10 @@
   "keywords": [
     "window",
     "manager",
-    "windowmanager"
+    "windowmanager",
+    "electron",
+    "openfin",
+    "browser"
   ],
   "license": "MIT",
   "main": "dist/windowmanager.js",

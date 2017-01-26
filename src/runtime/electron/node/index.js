@@ -1,8 +1,9 @@
 import readySync from '../../ready';
 import nodeRequire from '../require';
 import './Window'; // Setup window backend
-const { app, BrowserWindow } = nodeRequire('electron');
+const { app, BrowserWindow, dialog } = nodeRequire('electron');
 const http = nodeRequire('http');
+const https = nodeRequire('https');
 const url = nodeRequire('url');
 
 // TODO: Add support for an app.json packaged with this script.
@@ -12,7 +13,7 @@ const url = nodeRequire('url');
 const epArg = process.argv.find(arg => arg.indexOf('--endpoint') >= 0);
 const ep = epArg ? epArg.substr(epArg.indexOf('=') + 1) : nodeRequire('./package.json').endPoint;
 const configUrl = url.resolve(ep, 'app.json');
-// Setup defaults:
+// Setup defaults (similar to OpenFin):
 const defaultConfig = {
     url: ep,
     width: 800,
@@ -40,8 +41,32 @@ const configMap = {
 let mainWindow;
 
 function createWindow() {
-    // Get app.json:
-    http.get(configUrl, function (res) {
+    function _start(config) {
+        let _url = config.url;
+
+        delete config.url;
+
+        // Start main window:
+        mainWindow = new BrowserWindow(config);
+        config.title = config.title == null ? mainWindow.id : config.title;
+
+        // load the index.html of the app:
+        mainWindow.loadURL(_url);
+        mainWindow.setTitle(config.title);
+
+        mainWindow.on('closed', function () {
+            mainWindow = null;
+            app.quit();
+        });
+
+        // Open the DevTools.
+        // mainWindow.webContents.openDevTools();
+
+        // Notify windowmanager is setup:
+        readySync._deref();
+    }
+
+    function _response(res) {
         let json = '';
 
         res.setEncoding('utf8');
@@ -55,8 +80,10 @@ function createWindow() {
                 try {
                     config = JSON.parse(json).startup_app || {};
                 } catch (e) {
-                    console.error('ERROR: Failed to parse json from', configUrl);
-                    config = {};
+                    const err = `Server failed to parse app.json (${configUrl}).`;
+
+                    dialog.showErrorBox('ERROR', err);
+                    return app.quit();
                 }
 
                 // Map options to electron options:
@@ -73,34 +100,31 @@ function createWindow() {
                     }
                 }
 
-                let _url = config.url;
-
-                delete config.url;
-
                 // Start main window:
-                mainWindow = new BrowserWindow(config);
-                config.title = config.title == null ? mainWindow.id : config.title;
-
-                // load the index.html of the app:
-                mainWindow.loadURL(_url);
-                mainWindow.setTitle(config.title);
-
-                mainWindow.on('closed', function () {
-                    mainWindow = null;
-                    app.quit();
-                });
-
-                // Open the DevTools.
-                // mainWindow.webContents.openDevTools();
-
-                // Notify windowmanager is setup:
-                readySync._deref();
+                _start(config);
             } else {
-                console.error('ERROR: Server returned code', res.statusCode);
+                const err = `Server failed to load app.json (${configUrl}). Status code: ${res.statusCode}`;
+
+                dialog.showErrorBox('ERROR', err);
                 app.quit();
             }
         });
-    });
+    }
+
+    // Get app.json:
+    if (configUrl == null) {
+        // Load defaults:
+        _start(defaultConfig);
+    } else if (configUrl.indexOf('https') === 0) {
+        https.get(configUrl, _response);
+    } else if (configUrl.indexOf('http') === 0) {
+        http.get(configUrl, _response);
+    } else {
+        const err = `Server doesn't support endpoint for app.json (${configUrl}).`;
+
+        dialog.showErrorBox('ERROR', err);
+        app.quit();
+    }
 }
 
 // When app starts, load main window:

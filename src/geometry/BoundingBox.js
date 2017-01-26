@@ -174,10 +174,10 @@ class BoundingBox {
         if (!other) { throw new Error("getIntersection requires argument 'other'"); }
         other = other.getBoundingBox();
 
-        let left = Math.max(this.left, other.left),
-            top = Math.max(this.top, other.top),
-            right = Math.min(this.right, other.right),
-            bottom = Math.min(this.bottom, other.bottom);
+        let left = Math.max(this.left, other.left);
+        let top = Math.max(this.top, other.top);
+        let right = Math.min(this.right, other.right);
+        let bottom = Math.min(this.bottom, other.bottom);
 
         if (left === right && top === bottom) {
             return new Vector(left, top);
