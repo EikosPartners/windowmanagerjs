@@ -14,7 +14,21 @@ Future runtimes:
 
 ## Live Example
 You can see a live demo at [Eikos Partners Blotter Demonstration](http://blotter.eikospartners.com/install).<br>
-An open source example can be found at: https://github.com/aesalazar/windowmanagerjsdemo
+An open source example can be found at: https://github.com/aesalazar/windowmanagerjsdemo<br>
+A basic example to get started:
+```javascript
+// Create a new window:
+let childWindow = new windowmanager.Window({
+    url: "child.html", // Loads "child.html" based on the current window's url.
+    width: 500,
+    height: 500
+});
+
+// Execute code when window is ready for commands:
+childWindow.onReady(() => {
+    childWindow.focus(); // Set focus to childWindow.
+});
+```
 
 ## Installing via npm
 Run `npm install --save windowmanager`<br>
