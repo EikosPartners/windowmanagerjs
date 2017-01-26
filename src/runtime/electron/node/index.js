@@ -12,7 +12,7 @@ const url = nodeRequire('url');
 // Determine the endpoint:
 const epArg = process.argv.find(arg => arg.indexOf('--endpoint') >= 0);
 const ep = epArg ? epArg.substr(epArg.indexOf('=') + 1) : nodeRequire('./package.json').endPoint;
-const configUrl = url.resolve(ep, 'app.json');
+const configUrl = ep && url.resolve(ep, 'app.json'); // If ep is null, then configUrl is null
 // Setup defaults (similar to OpenFin):
 const defaultConfig = {
     url: ep,
@@ -113,8 +113,6 @@ function createWindow() {
 
     // Get app.json:
     if (configUrl == null) {
-        // Load defaults:
-        // _start(defaultConfig);
         const err = 'No endpoint provided to start the app.';
 
         dialog.showErrorBox('ERROR', err);
@@ -124,6 +122,7 @@ function createWindow() {
     } else if (configUrl.indexOf('http') === 0) {
         http.get(configUrl, _response);
     } else {
+        // Unsupported protocol:
         const err = `Server doesn't support endpoint for app.json (${configUrl}).`;
 
         dialog.showErrorBox('ERROR', err);
