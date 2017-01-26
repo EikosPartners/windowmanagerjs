@@ -1,6 +1,6 @@
 {
   "name": "windowmanager",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "A framework to manage multiple dockable, HTML windows",
   "keywords": [
     "window",
