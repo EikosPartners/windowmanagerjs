@@ -4076,7 +4076,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	// Determine the endpoint:
 	var packageJson = (0, _require2.default)('./package.json');
-	var endpoint = extractArg('endpoint') || packageJson.endPoint;
+	var endpoint = extractArg('endpoint') || packageJson.endpoint;
 	var configUrl = extractArg('config') || packageJson.config;
 	// Setup defaults (similar to OpenFin):
 	var defaultConfig = {
@@ -4114,7 +4114,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        // Start main window:
 	        mainWindow = new BrowserWindow(config);
-	        config.title = config.title == null ? mainWindow.id : config.title;
+	        config.title = config.title == null ? String(mainWindow.id) : config.title;
 	
 	        // load the index.html of the app:
 	        mainWindow.loadURL(_url);
@@ -5062,7 +5062,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            _this._window = new BrowserWindow(config);
 	            _this._id = _this._window.id;
-	            config.title = config.title == null ? _this._id : config.title;
+	            config.title = config.title == null ? String(_this._id) : config.title;
 	            // The following logic works like (in logical if-order):
 	            //       1. If url has 'http' or 'file' at start, then use url, no modification.
 	            //       2. If url has no '/', take location.href and remove all stuff up till last /, then append url.

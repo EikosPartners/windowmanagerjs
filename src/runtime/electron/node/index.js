@@ -25,7 +25,7 @@ function extractArg(argName) {
 
 // Determine the endpoint:
 const packageJson = nodeRequire('./package.json');
-const endpoint = extractArg('endpoint') || packageJson.endPoint;
+const endpoint = extractArg('endpoint') || packageJson.endpoint;
 const configUrl = extractArg('config') || packageJson.config;
 // Setup defaults (similar to OpenFin):
 const defaultConfig = {
@@ -63,7 +63,7 @@ function createWindow() {
 
         // Start main window:
         mainWindow = new BrowserWindow(config);
-        config.title = config.title == null ? mainWindow.id : config.title;
+        config.title = config.title == null ? String(mainWindow.id) : config.title;
 
         // load the index.html of the app:
         mainWindow.loadURL(_url);

@@ -56,7 +56,7 @@ class Window extends EventHandler {
 
             this._window = new BrowserWindow(config);
             this._id = this._window.id;
-            config.title = config.title == null ? this._id : config.title;
+            config.title = config.title == null ? String(this._id) : config.title;
             // The following logic works like (in logical if-order):
             //       1. If url has 'http' or 'file' at start, then use url, no modification.
             //       2. If url has no '/', take location.href and remove all stuff up till last /, then append url.
