@@ -4051,6 +4051,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var http = (0, _require2.default)('http');
 	var https = (0, _require2.default)('https');
+	var url = (0, _require2.default)('url');
 	
 	// TODO: Add support for an app.json packaged with this script.
 	// TODO: Add support for local file loading for window url.
@@ -4077,7 +4078,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Determine the endpoint:
 	var packageJson = (0, _require2.default)('./package.json');
 	var endpoint = extractArg('endpoint') || packageJson.endpoint;
-	var configUrl = extractArg('config') || packageJson.config;
+	var configPath = extractArg('config') || packageJson.config;
+	// If configPath is null, url.resolve doesn't execute:
+	var configUrl = configPath && url.resolve(endpoint, configPath);
 	// Setup defaults (similar to OpenFin):
 	var defaultConfig = {
 	    url: endpoint,

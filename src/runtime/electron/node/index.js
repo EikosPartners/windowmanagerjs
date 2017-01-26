@@ -4,6 +4,7 @@ import './Window'; // Setup window backend
 const { app, BrowserWindow, dialog } = nodeRequire('electron');
 const http = nodeRequire('http');
 const https = nodeRequire('https');
+const url = nodeRequire('url');
 
 // TODO: Add support for an app.json packaged with this script.
 // TODO: Add support for local file loading for window url.
@@ -26,7 +27,9 @@ function extractArg(argName) {
 // Determine the endpoint:
 const packageJson = nodeRequire('./package.json');
 const endpoint = extractArg('endpoint') || packageJson.endpoint;
-const configUrl = extractArg('config') || packageJson.config;
+const configPath = extractArg('config') || packageJson.config;
+// If configPath is null, url.resolve doesn't execute:
+const configUrl = configPath && url.resolve(endpoint, configPath);
 // Setup defaults (similar to OpenFin):
 const defaultConfig = {
     url: endpoint,
