@@ -30,11 +30,11 @@ childWindow.onReady(() => {
 });
 ```
 
-## Installing via npm
+## Installing via NPM
 Run `npm install --save windowmanager`<br>
 The windowmanager script is located in `node_modules/windowmanager/dist/windowmanager.js`.
 
-## Installing in Script Folder
+## Download Packaged Script
 1. Download either one of the following scripts from the dist folder (which contains the latest nightly version):
   * [windowmanager](https://raw.githubusercontent.com/EikosPartners/windowmanagerjs/master/dist/windowmanager.js)
   * [windowmanager.min](https://raw.githubusercontent.com/EikosPartners/windowmanagerjs/master/dist/windowmanager.min.js)
