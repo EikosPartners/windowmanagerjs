@@ -114,7 +114,11 @@ function createWindow() {
     // Get app.json:
     if (configUrl == null) {
         // Load defaults:
-        _start(defaultConfig);
+        // _start(defaultConfig);
+        const err = 'No endpoint provided to start the app.';
+
+        dialog.showErrorBox('ERROR', err);
+        app.quit();
     } else if (configUrl.indexOf('https') === 0) {
         https.get(configUrl, _response);
     } else if (configUrl.indexOf('http') === 0) {
