@@ -4,7 +4,6 @@ import './Window'; // Setup window backend
 const { app, BrowserWindow, dialog } = nodeRequire('electron');
 const http = nodeRequire('http');
 const https = nodeRequire('https');
-const url = nodeRequire('url');
 
 // TODO: Add support for an app.json packaged with this script.
 // TODO: Add support for local file loading for window url.
@@ -16,15 +15,18 @@ function getArg(argName) {
 function extractArg(argName) {
     const arg = getArg(argName);
 
-    return arg && arg.substr(arg.indexOf('=') + 1); // If arg is null, then return null
+    if (arg) {
+        const index = arg.indexOf('=') + 1;
+
+        if (index < arg.length) { return arg.substr(index); }
+    }
+    // Return falsey value
 }
 
 // Determine the endpoint:
 const packageJson = nodeRequire('./package.json');
 const endpoint = extractArg('endpoint') || packageJson.endPoint;
-const ignoreConfig = getArg('ignore-config') || packageJson.ignoreConfig;
-const configPath = getArg('config') || packageJson.configPath || 'app.json';
-const configUrl = (endpoint && !ignoreConfig ? url.resolve(endpoint, configPath) : null);
+const configUrl = extractArg('config') || packageJson.config;
 // Setup defaults (similar to OpenFin):
 const defaultConfig = {
     url: endpoint,
@@ -32,8 +34,9 @@ const defaultConfig = {
     height: 500,
     frame: true,
     resizable: true,
-    show: false,
+    show: true,
     hasShadow: false,
+    autoHideMenuBar: true,
     icon: 'favicon.ico',
     webPreferences: {
         nodeIntegration: false,

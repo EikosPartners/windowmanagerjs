@@ -4051,7 +4051,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var http = (0, _require2.default)('http');
 	var https = (0, _require2.default)('https');
-	var url = (0, _require2.default)('url');
 	
 	// TODO: Add support for an app.json packaged with this script.
 	// TODO: Add support for local file loading for window url.
@@ -4065,15 +4064,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	function extractArg(argName) {
 	    var arg = getArg(argName);
 	
-	    return arg && arg.substr(arg.indexOf('=') + 1); // If arg is null, then return null
+	    if (arg) {
+	        var index = arg.indexOf('=') + 1;
+	
+	        if (index < arg.length) {
+	            return arg.substr(index);
+	        }
+	    }
+	    // Return falsey value
 	}
 	
 	// Determine the endpoint:
 	var packageJson = (0, _require2.default)('./package.json');
 	var endpoint = extractArg('endpoint') || packageJson.endPoint;
-	var ignoreConfig = getArg('ignore-config') || packageJson.ignoreConfig;
-	var configPath = getArg('config') || packageJson.configPath || 'app.json';
-	var configUrl = endpoint && !ignoreConfig ? url.resolve(endpoint, configPath) : null;
+	var configUrl = extractArg('config') || packageJson.config;
 	// Setup defaults (similar to OpenFin):
 	var defaultConfig = {
 	    url: endpoint,
@@ -4081,8 +4085,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    height: 500,
 	    frame: true,
 	    resizable: true,
-	    show: false,
+	    show: true,
 	    hasShadow: false,
+	    autoHideMenuBar: true,
 	    icon: 'favicon.ico',
 	    webPreferences: {
 	        nodeIntegration: false,
@@ -5013,6 +5018,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    frame: false,
 	    resizable: true,
 	    hasShadow: false,
+	    autoHideMenuBar: true,
 	    icon: 'favicon.ico',
 	    webPreferences: {
 	        nodeIntegration: false,

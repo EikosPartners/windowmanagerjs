@@ -12,6 +12,7 @@ const defaultConfig = {
     frame: false,
     resizable: true,
     hasShadow: false,
+    autoHideMenuBar: true,
     icon: 'favicon.ico',
     webPreferences: {
         nodeIntegration: false,
