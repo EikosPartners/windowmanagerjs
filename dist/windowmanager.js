@@ -4039,6 +4039,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _require2 = _interopRequireDefault(_require);
 	
+	var _global = __webpack_require__(71);
+	
+	var _global2 = _interopRequireDefault(_global);
+	
 	__webpack_require__(94);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -4127,6 +4131,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            mainWindow = null;
 	            app.quit();
 	        });
+	
+	        // Store this as the main window:
+	        _global2.default._launcher = mainWindow;
 	
 	        // Open the DevTools.
 	        // mainWindow.webContents.openDevTools();
@@ -4751,6 +4758,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }
 	    }
+	};
+	
+	BrowserWindow._getMainID = function () {
+	    return _global2.default._launcher.id;
 	};
 
 /***/ },
@@ -5419,6 +5430,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'getByID',
 	        value: function getByID(id) {
 	            return _global2.default._windows.get(id);
+	        }
+	    }, {
+	        key: 'getMain',
+	        value: function getMain(id) {
+	            return _global2.default._windows.get(BrowserWindow._getMainID());
 	        }
 	    }, {
 	        key: 'getCurrent',
@@ -6439,13 +6455,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
-	var _map = __webpack_require__(72);
-	
-	var _map2 = _interopRequireDefault(_map);
-	
 	var _keys = __webpack_require__(138);
 	
 	var _keys2 = _interopRequireDefault(_keys);
+	
+	var _map = __webpack_require__(72);
+	
+	var _map2 = _interopRequireDefault(_map);
 	
 	var _global = __webpack_require__(2);
 	
@@ -6476,8 +6492,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (mainWindow === window) {
 	        _global2.default.runtime.isMain = true;
-	        _global2.default._internalBus = new _index.EventHandler((0, _keys2.default)(_global2.default._eventListeners));
+	        _global2.default._launcher = mainWindow;
 	        _global2.default._windows = new _map2.default();
+	        _global2.default._internalBus = new _index.EventHandler((0, _keys2.default)(_global2.default._eventListeners));
 	    } // children get the above in the constructor of the Window.
 	
 	    // Wire the internal bus to emit events on windowmanager:
@@ -6594,6 +6611,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // TODO: Rewrite to remove setTimeout for the following:
 	    function setWindows() {
 	        if (thisWindow._window.contentWindow.windowmanager) {
+	            thisWindow._window.contentWindow.windowmanager._launcher = _global2.default._launcher;
 	            thisWindow._window.contentWindow.windowmanager._windows = _global2.default._windows;
 	            thisWindow._window.contentWindow.windowmanager._internalBus = _global2.default._internalBus;
 	        } else {
@@ -7457,6 +7475,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'getByID',
 	        value: function getByID(id) {
 	            return _global2.default._windows.get(id);
+	        }
+	    }, {
+	        key: 'getMain',
+	        value: function getMain(id) {
+	            return _global2.default._windows.get(_global2.default._launcher.name);
 	        }
 	    }, {
 	        key: 'getCurrent',
@@ -9328,6 +9351,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'getByID',
 	        value: function getByID(id) {
 	            return _global2.default._windows.get(id);
+	        }
+	
+	        /**
+	         * Returns the {@link Window} instance that is the main window.
+	         * @returns {Window}
+	         */
+	
+	    }, {
+	        key: 'getMain',
+	        value: function getMain() {
+	            return _global2.default._launcher.windowmanager.Window.getCurrent();
 	        }
 	
 	        /**

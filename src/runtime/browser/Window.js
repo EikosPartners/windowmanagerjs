@@ -722,6 +722,14 @@ class Window extends EventHandler {
     }
 
     /**
+     * Returns the {@link Window} instance that is the main window.
+     * @returns {Window}
+     */
+    static getMain() {
+        return windowmanager._launcher.windowmanager.Window.getCurrent();
+    }
+
+    /**
      * Returns the {@link Window} instance that calls this function.
      * @returns {Window}
      */

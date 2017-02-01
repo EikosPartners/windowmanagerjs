@@ -1,5 +1,6 @@
 import readySync from '../../ready';
 import nodeRequire from '../require';
+import windowmanager from '../global';
 import './Window'; // Setup window backend
 const { app, BrowserWindow, dialog } = nodeRequire('electron');
 const http = nodeRequire('http');
@@ -76,6 +77,9 @@ function createWindow() {
             mainWindow = null;
             app.quit();
         });
+
+        // Store this as the main window:
+        windowmanager._launcher = mainWindow;
 
         // Open the DevTools.
         // mainWindow.webContents.openDevTools();

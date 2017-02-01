@@ -19,8 +19,9 @@ fin.desktop.main(readySync.ref(function () {
 
     if (mainWindow === window) {
         windowmanager.runtime.isMain = true;
-        windowmanager._internalBus = new EventHandler(Object.keys(windowmanager._eventListeners));
+        windowmanager._launcher = mainWindow;
         windowmanager._windows = new Map();
+        windowmanager._internalBus = new EventHandler(Object.keys(windowmanager._eventListeners));
     } // children get the above in the constructor of the Window.
 
     // Wire the internal bus to emit events on windowmanager:

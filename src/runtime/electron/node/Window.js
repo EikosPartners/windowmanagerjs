@@ -223,3 +223,7 @@ BrowserWindow.prototype._dockShow = function (left, top) {
         window.show();
     }
 };
+
+BrowserWindow._getMainID = function () {
+    return windowmanager._launcher.id;
+};

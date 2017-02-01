@@ -318,6 +318,10 @@ class Window extends EventHandler {
         return windowmanager._windows.get(id);
     }
 
+    static getMain(id) {
+        return windowmanager._windows.get(BrowserWindow._getMainID());
+    }
+
     static getCurrent() {
         return Window.current;
     }

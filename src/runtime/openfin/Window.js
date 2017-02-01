@@ -34,6 +34,7 @@ function _setupDOM() {
     // TODO: Rewrite to remove setTimeout for the following:
     function setWindows() {
         if (thisWindow._window.contentWindow.windowmanager) {
+            thisWindow._window.contentWindow.windowmanager._launcher = windowmanager._launcher;
             thisWindow._window.contentWindow.windowmanager._windows = windowmanager._windows;
             thisWindow._window.contentWindow.windowmanager._internalBus = windowmanager._internalBus;
         } else {
@@ -481,6 +482,10 @@ class Window extends EventHandler {
 
     static getByID(id) {
         return windowmanager._windows.get(id);
+    }
+
+    static getMain(id) {
+        return windowmanager._windows.get(windowmanager._launcher.name);
     }
 
     static getCurrent() {
