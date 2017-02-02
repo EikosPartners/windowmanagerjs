@@ -31,7 +31,7 @@ childWindow.onReady(() => {
 ```
 
 ## Installation
-```javascript
+```bash
 npm install --save windowmanager
 ```
 You can then access the script paths by using require:
