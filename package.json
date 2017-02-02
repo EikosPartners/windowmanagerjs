@@ -3,15 +3,16 @@
   "version": "0.12.5",
   "description": "A framework to manage multiple dockable, HTML windows",
   "keywords": [
-    "window",
-    "manager",
-    "windowmanager",
+    "browser",
+    "desktop",
     "electron",
+    "manager",
     "openfin",
-    "browser"
+    "window",
+    "windowmanager"
   ],
   "license": "MIT",
-  "main": "dist/windowmanager.js",
+  "main": "index.js",
   "homepage": "https://eikospartners.github.io/windowmanagerjs/",
   "bugs": {
     "url": "https://github.com/EikosPartners/windowmanagerjs/issues"

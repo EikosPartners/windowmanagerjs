@@ -12,7 +12,7 @@ Runtimes supported:
 Future runtimes:
 * [NW.js](http://nwjs.io/)
 
-## Live Example
+## Examples
 You can see a live demo at [Eikos Partners Blotter Demonstration](http://blotter.eikospartners.com/install).<br>
 An open source example can be found at: https://github.com/aesalazar/windowmanagerjsdemo<br>
 A basic example to get started:
@@ -30,12 +30,26 @@ childWindow.onReady(() => {
 });
 ```
 
-## Installing via NPM
-Run `npm install --save windowmanager`<br>
-The windowmanager script is located in `node_modules/windowmanager/dist/windowmanager.js`.
+## Installation
+```javascript
+npm install --save windowmanager
+```
+You can then access the script paths by using require:
+```javascript
+const windowmanager = require('windowmanager');
+...
+// Set up to access windowmanager debug, minified and map scripts via root url:
+app.use('/', express.static(windowmanager.distPath, { index: false })); // Can access windowmanager through: example.com/windowmanager.js
 
-## Download Packaged Script
-1. Download either one of the following scripts from the dist folder (which contains the latest nightly version):
+// Set up access to windowmanager.js via get:
+app.get('/js/windowmanager.js', function (req, res) {
+    res.sendFile(windowmanager.debug.scriptPath);
+});
+app.get('/js/windowmanager.min.js', function (req, res) {
+    res.sendFile(windowmanager.min.scriptPath);
+});
+```
+Or manually download either one of the following scripts from the dist folder (which contains the latest nightly version), and add it to the your application.<br>
+<b>NOTE:</b> Do not add it to a builder, since bundling or compiling with babelify will break the script.
   * [windowmanager](https://raw.githubusercontent.com/EikosPartners/windowmanagerjs/master/dist/windowmanager.js)
-  * [windowmanager.min](https://raw.githubusercontent.com/EikosPartners/windowmanagerjs/master/dist/windowmanager.min.js)
-2. Add the script to the your application. Do not add it to a builder, since bundling or compiling with babelify will break the script.
+  * [windowmanager.min](https://raw.githubusercontent.com/EikosPartners/windowmanagerjs/master/dist/windowmanager.min.js)<br>
