@@ -39,7 +39,8 @@ You can then access the script paths by using require:
 const windowmanager = require('windowmanager');
 ...
 // Set up to access windowmanager debug, minified and map scripts via root url:
-app.use('/', express.static(windowmanager.distPath, { index: false })); // Can access windowmanager through: example.com/windowmanager.js
+// Will give access to windowmanager through: example.com/windowmanager.js
+app.use('/', express.static(windowmanager.distPath, { index: false }));
 
 // Set up access to windowmanager.js via get:
 app.get('/js/windowmanager.js', function (req, res) {
