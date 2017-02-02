@@ -10,4 +10,4 @@ exports.min = {
     sourceMapPath: path.join(__dirname, './dist/windowmanager.min.js.map')
 };
 
-exports.distPath = path.join(__dirname, './dist/windowmanager.min.js');
+exports.distPath = path.join(__dirname, './dist');
