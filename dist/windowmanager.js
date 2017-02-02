@@ -4172,7 +4172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // Set defaults:
 	                for (var _prop in defaultConfig) {
 	                    if (defaultConfig.hasOwnProperty(_prop)) {
-	                        config[_prop] = config[_prop] || defaultConfig[_prop];
+	                        config[_prop] = config[_prop] != null ? config[_prop] : defaultConfig[_prop];
 	                    }
 	                }
 	
@@ -5067,7 +5067,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            for (var _prop in defaultConfig) {
 	                if (defaultConfig.hasOwnProperty(_prop)) {
-	                    config[_prop] = config[_prop] || defaultConfig[_prop];
+	                    config[_prop] = config[_prop] != null ? config[_prop] : defaultConfig[_prop];
 	                }
 	            }
 	            var _url = config.url;
@@ -6741,7 +6741,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            for (var _prop in defaultConfig) {
 	                if (defaultConfig.hasOwnProperty(_prop)) {
-	                    config[_prop] = config[_prop] || defaultConfig[_prop];
+	                    config[_prop] = config[_prop] != null ? config[_prop] : defaultConfig[_prop];
 	                }
 	            }
 	            _this._id = (0, _index.getUniqueWindowName)();
@@ -8064,7 +8064,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            for (var _prop in defaultConfig) {
 	                if (defaultConfig.hasOwnProperty(_prop)) {
-	                    config[_prop] = config[_prop] || defaultConfig[_prop];
+	                    config[_prop] = config[_prop] != null ? config[_prop] : defaultConfig[_prop];
 	                }
 	            }
 	            _this._title = config.title == null ? _this._id : config.title;

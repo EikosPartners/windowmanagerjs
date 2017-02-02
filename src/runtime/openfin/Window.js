@@ -137,7 +137,7 @@ class Window extends EventHandler {
             }
             for (const prop in defaultConfig) {
                 if (defaultConfig.hasOwnProperty(prop)) {
-                    config[prop] = config[prop] || defaultConfig[prop];
+                    config[prop] = (config[prop] != null ? config[prop] : defaultConfig[prop]);
                 }
             }
             this._id = getUniqueWindowName();

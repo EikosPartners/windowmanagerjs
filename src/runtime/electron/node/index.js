@@ -118,7 +118,7 @@ function createWindow() {
                 // Set defaults:
                 for (const prop in defaultConfig) {
                     if (defaultConfig.hasOwnProperty(prop)) {
-                        config[prop] = config[prop] || defaultConfig[prop];
+                        config[prop] = (config[prop] != null ? config[prop] : defaultConfig[prop]);
                     }
                 }
 
