@@ -73,7 +73,12 @@ function createWindow() {
         mainWindow.loadURL(_url);
         mainWindow.setTitle(config.title);
 
-        mainWindow.on('closed', function () {
+        mainWindow.webContents.on('did-fail-load', () => {
+            // Failed to load url, close window:
+            mainWindow.close();
+        });
+
+        mainWindow.on('closed', () => {
             mainWindow = null;
             app.quit();
         });
@@ -94,6 +99,13 @@ function createWindow() {
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
             json += chunk;
+        });
+        res.on('error', (error) => {
+            // Had error, handle it:
+            const err = `Server failed to load app.json (${configUrl}). Error: ${error}`;
+
+            dialog.showErrorBox('ERROR', err);
+            app.quit();
         });
         res.on('end', () => {
             if (res.statusCode === 200) {
@@ -136,9 +148,23 @@ function createWindow() {
     // Get app.json:
     if (configUrl != null) {
         if (configUrl.indexOf('https') === 0) {
-            https.get(configUrl, _response);
+            // Use https to load app.json:
+            https.get(configUrl, _response).on('error', (error) => {
+                // Had error, handle it:
+                const err = `Server failed to load app.json (${configUrl}). Error: ${error}`;
+
+                dialog.showErrorBox('ERROR', err);
+                app.quit();
+            });
         } else if (configUrl.indexOf('http') === 0) {
-            http.get(configUrl, _response);
+            // Use http to load app.json:
+            http.get(configUrl, _response).on('error', (error) => {
+                // Had error, handle it:
+                const err = `Server failed to load app.json (${configUrl}). Error: ${error}`;
+
+                dialog.showErrorBox('ERROR', err);
+                app.quit();
+            });
         } else {
             // Unsupported protocol:
             const err = `Server doesn't support endpoint for app.json (${configUrl}).`;

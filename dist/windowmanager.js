@@ -4127,6 +4127,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        mainWindow.loadURL(_url);
 	        mainWindow.setTitle(config.title);
 	
+	        mainWindow.webContents.on('did-fail-load', function () {
+	            // Failed to load url, close window:
+	            mainWindow.close();
+	        });
+	
 	        mainWindow.on('closed', function () {
 	            mainWindow = null;
 	            app.quit();
@@ -4148,6 +4153,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        res.setEncoding('utf8');
 	        res.on('data', function (chunk) {
 	            json += chunk;
+	        });
+	        res.on('error', function (error) {
+	            // Had error, handle it:
+	            var err = 'Server failed to load app.json (' + configUrl + '). Error: ' + error;
+	
+	            dialog.showErrorBox('ERROR', err);
+	            app.quit();
 	        });
 	        res.on('end', function () {
 	            if (res.statusCode === 200) {
@@ -4190,9 +4202,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Get app.json:
 	    if (configUrl != null) {
 	        if (configUrl.indexOf('https') === 0) {
-	            https.get(configUrl, _response);
+	            // Use https to load app.json:
+	            https.get(configUrl, _response).on('error', function (error) {
+	                // Had error, handle it:
+	                var err = 'Server failed to load app.json (' + configUrl + '). Error: ' + error;
+	
+	                dialog.showErrorBox('ERROR', err);
+	                app.quit();
+	            });
 	        } else if (configUrl.indexOf('http') === 0) {
-	            http.get(configUrl, _response);
+	            // Use http to load app.json:
+	            http.get(configUrl, _response).on('error', function (error) {
+	                // Had error, handle it:
+	                var err = 'Server failed to load app.json (' + configUrl + '). Error: ' + error;
+	
+	                dialog.showErrorBox('ERROR', err);
+	                app.quit();
+	            });
 	        } else {
 	            // Unsupported protocol:
 	            var err = 'Server doesn\'t support endpoint for app.json (' + configUrl + ').';
