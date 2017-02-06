@@ -127,7 +127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 	
-	windowmanager.version = ("0.12.9");
+	windowmanager.version = ("0.12.10");
 	// runtime is set in the respective runtime
 	windowmanager.runtime = {
 	    name: undefined,
