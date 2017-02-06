@@ -34,7 +34,7 @@ childWindow.onReady(() => {
 ```bash
 npm install --save windowmanager
 ```
-You can then access the script paths by using require:
+Loading the package via `require` in node only gives you access to the script paths to make it easier to serve up the script:
 ```javascript
 const windowmanager = require('windowmanager');
 ...
