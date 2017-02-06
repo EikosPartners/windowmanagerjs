@@ -15,7 +15,7 @@ BrowserWindow.prototype._notifyReady = function () {
     }
 };
 
-BrowserWindow.prototype._ensureDockSystem = function () {
+BrowserWindow.prototype._ensureSetup = function () {
     // Make sure docked group exists:
     if (this._dockedGroup === undefined) {
         this._dockedGroup = [this];
@@ -72,8 +72,15 @@ BrowserWindow.prototype._ensureDockSystem = function () {
     }
 };
 
+BrowserWindow.prototype._setFrameInit = function (isFramed) {
+    this._ensureSetup();
+
+    this._isFramed = isFramed;
+};
+
 BrowserWindow.prototype.dock = function (otherID) {
-    this._ensureDockSystem();
+    this._ensureSetup();
+    if (this._isFramed) return; // If window is framed, don't support dock system.
 
     // Resolve otherID, and fail if otherID doesn't exist.
     const other = BrowserWindow.fromId(otherID);
@@ -84,7 +91,8 @@ BrowserWindow.prototype.dock = function (otherID) {
     if (this._dockedGroup.indexOf(other) >= 0) { return; }
 
     // Make sure docked group exists:
-    other._ensureDockSystem();
+    other._ensureSetup();
+    if (other._isFramed) return; // If window is framed, don't support dock system.
 
     // Loop through all windows in otherGroup and add them to this's group:
     for (let otherWin of other._dockedGroup) {
@@ -97,7 +105,7 @@ BrowserWindow.prototype.dock = function (otherID) {
 };
 
 BrowserWindow.prototype.undock = function () {
-    this._ensureDockSystem();
+    this._ensureSetup();
 
     // Check to see if window is already undocked:
     if (this._dockedGroup.length === 1) { return; }
@@ -110,7 +118,7 @@ BrowserWindow.prototype.undock = function () {
 };
 
 BrowserWindow.prototype._dockFocus = function () {
-    this._ensureDockSystem();
+    this._ensureSetup();
 
     for (let window of this._dockedGroup) {
         if (window !== this) {
@@ -124,7 +132,7 @@ BrowserWindow.prototype._dockFocus = function () {
 
 BrowserWindow.prototype._dragStart = function () {
     // if (!this.emit('drag-start')) { return; } // Allow preventing drag
-    this._ensureDockSystem();
+    this._ensureSetup();
 
     this.restore();
 
@@ -140,16 +148,19 @@ BrowserWindow.prototype._getBounds = function () {
 };
 
 BrowserWindow.prototype._dragBy = function (deltaLeft, deltaTop) {
-    this._ensureDockSystem();
+    this._ensureSetup();
 
     // Perform Snap:
     const thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft,
                                                 this._dragStartPos[1] + deltaTop);
     let snapDelta = new Vector(NaN, NaN);
 
-    for (let other of BrowserWindow.getAllWindows()) {
-        if (other._dockedGroup !== this._dockedGroup) {
-            snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
+    if (!this._isFramed) {
+        // If window is framed, don't support snap system.
+        for (let other of BrowserWindow.getAllWindows()) {
+            if (!other._isFramed && other._dockedGroup !== this._dockedGroup) {
+                snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
+            }
         }
     }
     deltaLeft += snapDelta.left || 0;
@@ -170,14 +181,17 @@ BrowserWindow.prototype._dragBy = function (deltaLeft, deltaTop) {
 };
 
 BrowserWindow.prototype._dragStop = function () {
-    this._ensureDockSystem();
+    this._ensureSetup();
 
-    // Dock to those it snapped to:
-    const thisBounds = this._getBounds();
+    if (!this._isFramed) {
+        // If window is framed, don't support dock system.
+        // Dock to those it snapped to:
+        const thisBounds = this._getBounds();
 
-    for (let other of BrowserWindow.getAllWindows()) {
-        if (thisBounds.isTouching(other._getBounds())) {
-            this.dock(other.id);
+        for (let other of BrowserWindow.getAllWindows()) {
+            if (!other._isFramed && thisBounds.isTouching(other._getBounds())) {
+                this.dock(other.id);
+            }
         }
     }
 
@@ -187,7 +201,7 @@ BrowserWindow.prototype._dragStop = function () {
 };
 
 BrowserWindow.prototype._dockMoveTo = function (left, top) {
-    this._ensureDockSystem();
+    this._ensureSetup();
 
     const oldPos = this.getPosition();
     const deltaLeft = left - oldPos[0];
@@ -201,7 +215,7 @@ BrowserWindow.prototype._dockMoveTo = function (left, top) {
 };
 
 BrowserWindow.prototype._dockMinimize = function (left, top) {
-    this._ensureDockSystem();
+    this._ensureSetup();
 
     for (let window of this._dockedGroup) {
         window.minimize();
@@ -209,7 +223,7 @@ BrowserWindow.prototype._dockMinimize = function (left, top) {
 };
 
 BrowserWindow.prototype._dockHide = function (left, top) {
-    this._ensureDockSystem();
+    this._ensureSetup();
 
     for (let window of this._dockedGroup) {
         window.hide();
@@ -217,7 +231,7 @@ BrowserWindow.prototype._dockHide = function (left, top) {
 };
 
 BrowserWindow.prototype._dockShow = function (left, top) {
-    this._ensureDockSystem();
+    this._ensureSetup();
 
     for (let window of this._dockedGroup) {
         window.show();

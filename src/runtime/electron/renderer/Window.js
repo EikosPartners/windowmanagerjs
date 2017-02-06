@@ -7,10 +7,11 @@ const BrowserWindow = remote.BrowserWindow;
 
 const currentWin = remote.getCurrentWindow();
 const defaultConfig = {
-    width: 600,
-    height: 600,
-    frame: false,
+    width: 800,
+    height: 500,
+    frame: true,
     resizable: true,
+    show: true,
     hasShadow: false,
     autoHideMenuBar: true,
     icon: 'favicon.ico',
@@ -74,6 +75,7 @@ class Window extends EventHandler {
                 }
                 // If can\'t determine url to load, then attempt to just load the url.
             }
+            this._window._setFrameInit(config.frame);
             this._window.loadURL(_url);
             this._window.setTitle(config.title);
         } else {
@@ -81,7 +83,6 @@ class Window extends EventHandler {
             this._id = this._window.id;
         }
         windowmanager._windows.set(this._id, this);
-        this._window._ensureDockSystem();
 
         // Setup _window event listeners:
         // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.

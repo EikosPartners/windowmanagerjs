@@ -70,6 +70,7 @@ function createWindow() {
         config.title = config.title == null ? String(mainWindow.id) : config.title;
 
         // load the index.html of the app:
+        mainWindow._setFrameInit(config.frame);
         mainWindow.loadURL(_url);
         mainWindow.setTitle(config.title);
 

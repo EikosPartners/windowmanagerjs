@@ -4124,6 +4124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        config.title = config.title == null ? String(mainWindow.id) : config.title;
 	
 	        // load the index.html of the app:
+	        mainWindow._setFrameInit(config.frame);
 	        mainWindow.loadURL(_url);
 	        mainWindow.setTitle(config.title);
 	
@@ -4315,7 +4316,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
-	BrowserWindow.prototype._ensureDockSystem = function () {
+	BrowserWindow.prototype._ensureSetup = function () {
 	    var _this = this;
 	
 	    // Make sure docked group exists:
@@ -4396,8 +4397,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
+	BrowserWindow.prototype._setFrameInit = function (isFramed) {
+	    this._ensureSetup();
+	
+	    this._isFramed = isFramed;
+	};
+	
 	BrowserWindow.prototype.dock = function (otherID) {
-	    this._ensureDockSystem();
+	    this._ensureSetup();
+	    if (this._isFramed) return; // If window is framed, don't support dock system.
 	
 	    // Resolve otherID, and fail if otherID doesn't exist.
 	    var other = BrowserWindow.fromId(otherID);
@@ -4412,7 +4420,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    // Make sure docked group exists:
-	    other._ensureDockSystem();
+	    other._ensureSetup();
+	    if (other._isFramed) return; // If window is framed, don't support dock system.
 	
 	    // Loop through all windows in otherGroup and add them to this's group:
 	    var _iteratorNormalCompletion3 = true;
@@ -4446,7 +4455,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	BrowserWindow.prototype.undock = function () {
-	    this._ensureDockSystem();
+	    this._ensureSetup();
 	
 	    // Check to see if window is already undocked:
 	    if (this._dockedGroup.length === 1) {
@@ -4461,7 +4470,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	BrowserWindow.prototype._dockFocus = function () {
-	    this._ensureDockSystem();
+	    this._ensureSetup();
 	
 	    var _iteratorNormalCompletion4 = true;
 	    var _didIteratorError4 = false;
@@ -4497,7 +4506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	BrowserWindow.prototype._dragStart = function () {
 	    // if (!this.emit('drag-start')) { return; } // Allow preventing drag
-	    this._ensureDockSystem();
+	    this._ensureSetup();
 	
 	    this.restore();
 	
@@ -4534,39 +4543,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	BrowserWindow.prototype._dragBy = function (deltaLeft, deltaTop) {
-	    this._ensureDockSystem();
+	    this._ensureSetup();
 	
 	    // Perform Snap:
 	    var thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft, this._dragStartPos[1] + deltaTop);
 	    var snapDelta = new Vector(NaN, NaN);
 	
-	    var _iteratorNormalCompletion6 = true;
-	    var _didIteratorError6 = false;
-	    var _iteratorError6 = undefined;
+	    if (!this._isFramed) {
+	        // If window is framed, don't support snap system.
+	        var _iteratorNormalCompletion6 = true;
+	        var _didIteratorError6 = false;
+	        var _iteratorError6 = undefined;
 	
-	    try {
-	        for (var _iterator6 = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	            var other = _step6.value;
-	
-	            if (other._dockedGroup !== this._dockedGroup) {
-	                snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
-	            }
-	        }
-	    } catch (err) {
-	        _didIteratorError6 = true;
-	        _iteratorError6 = err;
-	    } finally {
 	        try {
-	            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                _iterator6.return();
+	            for (var _iterator6 = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                var other = _step6.value;
+	
+	                if (!other._isFramed && other._dockedGroup !== this._dockedGroup) {
+	                    snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
+	                }
 	            }
+	        } catch (err) {
+	            _didIteratorError6 = true;
+	            _iteratorError6 = err;
 	        } finally {
-	            if (_didIteratorError6) {
-	                throw _iteratorError6;
+	            try {
+	                if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                    _iterator6.return();
+	                }
+	            } finally {
+	                if (_didIteratorError6) {
+	                    throw _iteratorError6;
+	                }
 	            }
 	        }
 	    }
-	
 	    deltaLeft += snapDelta.left || 0;
 	    deltaTop += snapDelta.top || 0;
 	
@@ -4606,34 +4617,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	BrowserWindow.prototype._dragStop = function () {
-	    this._ensureDockSystem();
+	    this._ensureSetup();
 	
-	    // Dock to those it snapped to:
-	    var thisBounds = this._getBounds();
+	    if (!this._isFramed) {
+	        // If window is framed, don't support dock system.
+	        // Dock to those it snapped to:
+	        var thisBounds = this._getBounds();
 	
-	    var _iteratorNormalCompletion8 = true;
-	    var _didIteratorError8 = false;
-	    var _iteratorError8 = undefined;
+	        var _iteratorNormalCompletion8 = true;
+	        var _didIteratorError8 = false;
+	        var _iteratorError8 = undefined;
 	
-	    try {
-	        for (var _iterator8 = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-	            var other = _step8.value;
-	
-	            if (thisBounds.isTouching(other._getBounds())) {
-	                this.dock(other.id);
-	            }
-	        }
-	    } catch (err) {
-	        _didIteratorError8 = true;
-	        _iteratorError8 = err;
-	    } finally {
 	        try {
-	            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-	                _iterator8.return();
+	            for (var _iterator8 = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	                var other = _step8.value;
+	
+	                if (!other._isFramed && thisBounds.isTouching(other._getBounds())) {
+	                    this.dock(other.id);
+	                }
 	            }
+	        } catch (err) {
+	            _didIteratorError8 = true;
+	            _iteratorError8 = err;
 	        } finally {
-	            if (_didIteratorError8) {
-	                throw _iteratorError8;
+	            try {
+	                if (!_iteratorNormalCompletion8 && _iterator8.return) {
+	                    _iterator8.return();
+	                }
+	            } finally {
+	                if (_didIteratorError8) {
+	                    throw _iteratorError8;
+	                }
 	            }
 	        }
 	    }
@@ -4665,7 +4679,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	BrowserWindow.prototype._dockMoveTo = function (left, top) {
-	    this._ensureDockSystem();
+	    this._ensureSetup();
 	
 	    var oldPos = this.getPosition();
 	    var deltaLeft = left - oldPos[0];
@@ -4700,7 +4714,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	BrowserWindow.prototype._dockMinimize = function (left, top) {
-	    this._ensureDockSystem();
+	    this._ensureSetup();
 	
 	    var _iteratorNormalCompletion11 = true;
 	    var _didIteratorError11 = false;
@@ -4729,7 +4743,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	BrowserWindow.prototype._dockHide = function (left, top) {
-	    this._ensureDockSystem();
+	    this._ensureSetup();
 	
 	    var _iteratorNormalCompletion12 = true;
 	    var _didIteratorError12 = false;
@@ -4758,7 +4772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	BrowserWindow.prototype._dockShow = function (left, top) {
-	    this._ensureDockSystem();
+	    this._ensureSetup();
 	
 	    var _iteratorNormalCompletion13 = true;
 	    var _didIteratorError13 = false;
@@ -5053,10 +5067,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var currentWin = remote.getCurrentWindow();
 	var defaultConfig = {
-	    width: 600,
-	    height: 600,
-	    frame: false,
+	    width: 800,
+	    height: 500,
+	    frame: true,
 	    resizable: true,
+	    show: true,
 	    hasShadow: false,
 	    autoHideMenuBar: true,
 	    icon: 'favicon.ico',
@@ -5120,6 +5135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	                // If can\'t determine url to load, then attempt to just load the url.
 	            }
+	            _this._window._setFrameInit(config.frame);
 	            _this._window.loadURL(_url);
 	            _this._window.setTitle(config.title);
 	        } else {
@@ -5127,7 +5143,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _this._id = _this._window.id;
 	        }
 	        _global2.default._windows.set(_this._id, _this);
-	        _this._window._ensureDockSystem();
 	
 	        // Setup _window event listeners:
 	        // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.
@@ -6631,7 +6646,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var acceptedEventHandlers = ['ready', 'drag-start', 'drag-before', 'drag-stop', 'dock-before', 'move', 'move-before', 'resize-before', 'close', 'minimize'];
 	var currentWin = void 0;
 	
-	function _setupDOM() {
+	function _setupDOM(config) {
 	    var thisWindow = this;
 	
 	    // TODO: Rewrite to remove setTimeout for the following:
@@ -6727,6 +6742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._titleEl.innerText = this._title;
 	    this._window.contentWindow.document.head.appendChild(this._titleEl);
 	
+	    this._isFramed = config.frame;
 	    this._ready = true;
 	    this.emit('ready');
 	    _global2.default._internalBus.emit('window-create', this);
@@ -6782,7 +6798,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	
 	            _global2.default._windows.set(_this._id, _this);
-	            _this._window = new fin.desktop.Window(config, _setupDOM.bind(_this), function (err) {
+	            _this._window = new fin.desktop.Window(config, _setupDOM.bind(_this, config), function (err) {
 	                console.error(err, config);
 	            });
 	        } else {
@@ -6790,7 +6806,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _this._title = _this._id;
 	            _this._window = config;
 	            _global2.default._windows.set(_this._id, _this);
-	            _setupDOM.call(_this);
+	            _this._window.getOptions(_setupDOM.bind(_this), function (err) {
+	                console.error(err);
+	            });
 	        }
 	
 	        // TODO: Ensure docking system
@@ -7274,9 +7292,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (!this.emit('dock-before')) {
 	                return;
 	            } // Allow preventing dock
-	            if (other === undefined) {
+	            if (other == null) {
 	                return;
 	            } // Failed to find other. TODO: Return error
+	            if (this._isFramed || other._isFramed) return; // If window is framed, don't support dock system.
 	
 	            // If other is already in the group, return:
 	            if (this._dockedGroup.indexOf(other) >= 0) {
@@ -7368,33 +7387,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft, this._dragStartPos.top + deltaTop);
 	            var snapDelta = new _index2.Vector(NaN, NaN);
 	
-	            var _iteratorNormalCompletion12 = true;
-	            var _didIteratorError12 = false;
-	            var _iteratorError12 = undefined;
+	            if (!this._isFramed) {
+	                // If window is framed, don't support snap system.
+	                var _iteratorNormalCompletion12 = true;
+	                var _didIteratorError12 = false;
+	                var _iteratorError12 = undefined;
 	
-	            try {
-	                for (var _iterator12 = (0, _getIterator3.default)(_global2.default._windows.values()), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-	                    var other = _step12.value;
-	
-	                    if (other._dockedGroup !== this._dockedGroup) {
-	                        snapDelta.setMin(thisBounds.getSnapDelta(other.getBounds()));
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError12 = true;
-	                _iteratorError12 = err;
-	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion12 && _iterator12.return) {
-	                        _iterator12.return();
+	                    for (var _iterator12 = (0, _getIterator3.default)(_global2.default._windows.values()), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+	                        var other = _step12.value;
+	
+	                        if (!other._isFramed && other._dockedGroup !== this._dockedGroup) {
+	                            snapDelta.setMin(thisBounds.getSnapDelta(other.getBounds()));
+	                        }
 	                    }
+	                } catch (err) {
+	                    _didIteratorError12 = true;
+	                    _iteratorError12 = err;
 	                } finally {
-	                    if (_didIteratorError12) {
-	                        throw _iteratorError12;
+	                    try {
+	                        if (!_iteratorNormalCompletion12 && _iterator12.return) {
+	                            _iterator12.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError12) {
+	                            throw _iteratorError12;
+	                        }
 	                    }
 	                }
 	            }
-	
 	            deltaLeft += snapDelta.left || 0;
 	            deltaTop += snapDelta.top || 0;
 	
@@ -7438,29 +7459,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // Dock to those it snapped to:
 	            var thisBounds = this.getBounds();
 	
-	            var _iteratorNormalCompletion14 = true;
-	            var _didIteratorError14 = false;
-	            var _iteratorError14 = undefined;
+	            if (!this._isFramed) {
+	                // If window is framed, don't support dock system.
+	                var _iteratorNormalCompletion14 = true;
+	                var _didIteratorError14 = false;
+	                var _iteratorError14 = undefined;
 	
-	            try {
-	                for (var _iterator14 = (0, _getIterator3.default)(_global2.default._windows.values()), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-	                    var other = _step14.value;
-	
-	                    if (thisBounds.isTouching(other.getBounds())) {
-	                        this.dock(other);
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError14 = true;
-	                _iteratorError14 = err;
-	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion14 && _iterator14.return) {
-	                        _iterator14.return();
+	                    for (var _iterator14 = (0, _getIterator3.default)(_global2.default._windows.values()), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+	                        var other = _step14.value;
+	
+	                        if (!other._isFramed && thisBounds.isTouching(other.getBounds())) {
+	                            this.dock(other);
+	                        }
 	                    }
+	                } catch (err) {
+	                    _didIteratorError14 = true;
+	                    _iteratorError14 = err;
 	                } finally {
-	                    if (_didIteratorError14) {
-	                        throw _iteratorError14;
+	                    try {
+	                        if (!_iteratorNormalCompletion14 && _iterator14.return) {
+	                            _iterator14.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError14) {
+	                            throw _iteratorError14;
+	                        }
 	                    }
 	                }
 	            }
@@ -8023,12 +8047,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var defaultConfig = {
-	    width: 600,
-	    height: 600,
-	    frame: false,
+	    width: 800,
+	    height: 500,
+	    frame: true,
 	    resizable: true,
-	    saveWindowState: false,
-	    autoShow: true,
+	    show: true,
 	    icon: location.href + 'favicon.ico',
 	    url: '.',
 	    minWidth: 100,

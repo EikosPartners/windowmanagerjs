@@ -28,7 +28,7 @@ const acceptedEventHandlers = [
     'resize-before', 'close', 'minimize'];
 let currentWin;
 
-function _setupDOM() {
+function _setupDOM(config) {
     let thisWindow = this;
 
     // TODO: Rewrite to remove setTimeout for the following:
@@ -102,6 +102,7 @@ function _setupDOM() {
     this._titleEl.innerText = this._title;
     this._window.contentWindow.document.head.appendChild(this._titleEl);
 
+    this._isFramed = config.frame;
     this._ready = true;
     this.emit('ready');
     windowmanager._internalBus.emit('window-create', this);
@@ -152,7 +153,7 @@ class Window extends EventHandler {
             }
 
             windowmanager._windows.set(this._id, this);
-            this._window = new fin.desktop.Window(config, _setupDOM.bind(this), function (err) {
+            this._window = new fin.desktop.Window(config, _setupDOM.bind(this, config), function (err) {
                 console.error(err, config);
             });
         } else {
@@ -160,7 +161,9 @@ class Window extends EventHandler {
             this._title = this._id;
             this._window = config;
             windowmanager._windows.set(this._id, this);
-            _setupDOM.call(this);
+            this._window.getOptions(_setupDOM.bind(this), function (err) {
+                console.error(err);
+            });
         }
 
         // TODO: Ensure docking system
@@ -397,7 +400,8 @@ class Window extends EventHandler {
 
     dock(other) {
         if (!this.emit('dock-before')) { return; } // Allow preventing dock
-        if (other === undefined) { return; } // Failed to find other. TODO: Return error
+        if (other == null) { return; } // Failed to find other. TODO: Return error
+        if (this._isFramed || other._isFramed) return; // If window is framed, don't support dock system.
 
         // If other is already in the group, return:
         if (this._dockedGroup.indexOf(other) >= 0) { return; }
@@ -437,9 +441,12 @@ class Window extends EventHandler {
                                                     this._dragStartPos.top + deltaTop);
         let snapDelta = new Vector(NaN, NaN);
 
-        for (const other of windowmanager._windows.values()) {
-            if (other._dockedGroup !== this._dockedGroup) {
-                snapDelta.setMin(thisBounds.getSnapDelta(other.getBounds()));
+        if (!this._isFramed) {
+            // If window is framed, don't support snap system.
+            for (const other of windowmanager._windows.values()) {
+                if (!other._isFramed && other._dockedGroup !== this._dockedGroup) {
+                    snapDelta.setMin(thisBounds.getSnapDelta(other.getBounds()));
+                }
             }
         }
         deltaLeft += snapDelta.left || 0;
@@ -463,9 +470,12 @@ class Window extends EventHandler {
         // Dock to those it snapped to:
         const thisBounds = this.getBounds();
 
-        for (const other of windowmanager._windows.values()) {
-            if (thisBounds.isTouching(other.getBounds())) {
-                this.dock(other);
+        if (!this._isFramed) {
+            // If window is framed, don't support dock system.
+            for (const other of windowmanager._windows.values()) {
+                if (!other._isFramed && thisBounds.isTouching(other.getBounds())) {
+                    this.dock(other);
+                }
             }
         }
 

@@ -3,12 +3,11 @@ import { EventHandler, getUniqueWindowName } from '../../utils/index';
 import { BoundingBox, Position, Size, Vector } from '../../geometry/index';
 
 const defaultConfig = {
-    width: 600,
-    height: 600,
-    frame: false,
+    width: 800,
+    height: 500,
+    frame: true,
     resizable: true,
-    saveWindowState: false,
-    autoShow: true,
+    show: true,
     icon: location.href + 'favicon.ico',
     url: '.',
     minWidth: 100,
