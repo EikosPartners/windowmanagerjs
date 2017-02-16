@@ -21,17 +21,21 @@ if (typeof global !== 'undefined' && global) {
 
     // If is a window startup script:
     if (windowmanager._isStartup) {
-        let _require = nodeRequire;
+        const { remote } = nodeRequire('electron');
 
-        _require.runtime = windowmanager.runtime;
-        _require.workingDir = _require('path').dirname(_require.main.filename);
-        _require.windowmanagerPath = __filename; // Used so new windows know where to load windowmanager from.
-        global.nodeRequire = _require; // Used so windowmanager in a window can access electron.
-        // TODO: Determine if window can be set directly here.
+        // Determine if this is the main window:
+        windowmanager.runtime.isMain = (remote.getCurrentWindow().id === remote.BrowserWindow._getMainID());
+
+        // Store runtime details in nodeRequire:
+        nodeRequire.runtime = windowmanager.runtime;
+        nodeRequire.workingDir = nodeRequire('path').dirname(nodeRequire.main.filename);
+        nodeRequire.windowmanagerPath = __filename; // Used so new windows know where to load windowmanager from.
+        global.nodeRequire = nodeRequire; // Used so windowmanager in a window can access electron.
+        // TODO: Determine if window object can be set directly here.
 
         process.once('loaded', function () {
-            // TODO: Is this needed?
-            global.nodeRequire = _require;
+            // TODO: Determine if this is needed
+            global.nodeRequire = nodeRequire;
         });
     }
 } else if (typeof window !== 'undefined' && window) {

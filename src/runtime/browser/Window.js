@@ -39,7 +39,14 @@ const transformPropNames = ['-ms-transform', '-moz-transform', '-o-transform',
 class Window extends EventHandler {
     /**
      * Wraps a window object.
-     * @param {Object} config - Configuration
+     * @param {Object} [config] - Window Configuration
+     * @param {Number} [config.width=800]
+     * @param {Number} [config.height=500]
+     * @param {Boolean} [config.frame=true] - When true, enables standard OS framing around the window
+     * @param {Boolean} [config.resizable=true] - When true, allows user to resize window by dragging edges
+     * @param {Boolean} [config.show=true] - When true, starts the window in the "show" state rather than "hidden"
+     * @param {String} [config.icon='favicon.ico'] - Location to favicon
+     * @param {String} [config.url='.'] - Location to page that the window should load
      */
     constructor(config) {
         // Call the parent constructor:

@@ -12,11 +12,11 @@ import CollisionMesh from './CollisionMesh';
  * A library to handler geometry calculations.
  * @namespace
  * @alias geometry
- * @property {BoundingBox}
- * @property {CollisionMesh}
- * @property {Position}
- * @property {Size}
- * @property {Vector}
+ * @property {BoundingBox} - boundingbox class
+ * @property {CollisionMesh} - collisionmesh class
+ * @property {Position} - alias of Vector
+ * @property {Size} - alias of Vector
+ * @property {Vector} - vector class
  */
 export default {
     BoundingBox,

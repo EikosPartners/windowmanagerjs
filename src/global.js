@@ -11,15 +11,15 @@ const windowmanagerEventNames = ['window-create', 'window-close'];
  * @property {String} version - version of windowmanager
  * @property {Object} runtime - contains runtime-specific info
  * @property {String} runtime.name - name of runtime (ie. Chrome, IE, OpenFin, Electron, ect)
- * @property {String} runtime.version
+ * @property {String} runtime.version - version of runtime (ie. Chrome, IE, OpenFin, Electron, ect)
  * @property {Boolean} runtime.isBrowser - is this running in a browser
  * @property {Boolean} runtime.isElectron - is this running in Electron
  * @property {Boolean} runtime.isOpenFin - is this running in OpenFin
  * @property {Boolean} runtime.isDesktop - is this a desktop OS
  * @property {Boolean} runtime.isMobile - is this a mobile OS
- * @property {Boolean} runtime.isMain - is this the main/startup window (Electron doesn't have one atm)
- * @property {Window} Window
- * @property {geometry} geometry
+ * @property {Boolean} runtime.isMain - is this the main/startup window
+ * @property {Window} Window - window class
+ * @property {geometry} geometry - geometry library
  * @property {messagebus} messagebus - message bus for application
  */
 let windowmanager = new EventHandler(windowmanagerEventNames);

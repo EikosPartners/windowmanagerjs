@@ -114,15 +114,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @property {String} version - version of windowmanager
 	 * @property {Object} runtime - contains runtime-specific info
 	 * @property {String} runtime.name - name of runtime (ie. Chrome, IE, OpenFin, Electron, ect)
-	 * @property {String} runtime.version
+	 * @property {String} runtime.version - version of runtime (ie. Chrome, IE, OpenFin, Electron, ect)
 	 * @property {Boolean} runtime.isBrowser - is this running in a browser
 	 * @property {Boolean} runtime.isElectron - is this running in Electron
 	 * @property {Boolean} runtime.isOpenFin - is this running in OpenFin
 	 * @property {Boolean} runtime.isDesktop - is this a desktop OS
 	 * @property {Boolean} runtime.isMobile - is this a mobile OS
-	 * @property {Boolean} runtime.isMain - is this the main/startup window (Electron doesn't have one atm)
-	 * @property {Window} Window
-	 * @property {geometry} geometry
+	 * @property {Boolean} runtime.isMain - is this the main/startup window
+	 * @property {Window} Window - window class
+	 * @property {geometry} geometry - geometry library
 	 * @property {messagebus} messagebus - message bus for application
 	 */
 	var windowmanager = new _index.EventHandler(windowmanagerEventNames);
@@ -1444,11 +1444,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * A library to handler geometry calculations.
 	 * @namespace
 	 * @alias geometry
-	 * @property {BoundingBox}
-	 * @property {CollisionMesh}
-	 * @property {Position}
-	 * @property {Size}
-	 * @property {Vector}
+	 * @property {BoundingBox} - boundingbox class
+	 * @property {CollisionMesh} - collisionmesh class
+	 * @property {Position} - alias of Vector
+	 * @property {Size} - alias of Vector
+	 * @property {Vector} - vector class
 	 */
 	exports.default = {
 	  BoundingBox: _BoundingBox2.default,
@@ -3410,9 +3410,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _global2 = _interopRequireDefault(_global);
 	
-	var _require2 = __webpack_require__(92);
+	var _require = __webpack_require__(92);
 	
-	var _require3 = _interopRequireDefault(_require2);
+	var _require2 = _interopRequireDefault(_require);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -3427,7 +3427,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// TODO: Clean up the following code to clearly identify the three potential states: node, startup, renderer
 	if (typeof global !== 'undefined' && global) {
 	    // We are running in an Electron Window Backend's Runtime:
-	    var _nodeRequire = (0, _require3.default)('electron'),
+	    var _nodeRequire = (0, _require2.default)('electron'),
 	        BrowserWindow = _nodeRequire.BrowserWindow;
 	
 	    // The following check works because BrowserWindow is not exposed to the window scripts:
@@ -3439,20 +3439,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // If is a window startup script:
 	    if (_global2.default._isStartup) {
-	        (function () {
-	            var _require = _require3.default;
+	        var _nodeRequire2 = (0, _require2.default)('electron'),
+	            remote = _nodeRequire2.remote;
 	
-	            _require.runtime = _global2.default.runtime;
-	            _require.workingDir = _require('path').dirname(_require.main.filename);
-	            _require.windowmanagerPath = __filename; // Used so new windows know where to load windowmanager from.
-	            global.nodeRequire = _require; // Used so windowmanager in a window can access electron.
-	            // TODO: Determine if window can be set directly here.
+	        // Determine if this is the main window:
 	
-	            process.once('loaded', function () {
-	                // TODO: Is this needed?
-	                global.nodeRequire = _require;
-	            });
-	        })();
+	
+	        _global2.default.runtime.isMain = remote.getCurrentWindow().id === remote.BrowserWindow._getMainID();
+	
+	        // Store runtime details in nodeRequire:
+	        _require2.default.runtime = _global2.default.runtime;
+	        _require2.default.workingDir = (0, _require2.default)('path').dirname(_require2.default.main.filename);
+	        _require2.default.windowmanagerPath = __filename; // Used so new windows know where to load windowmanager from.
+	        global.nodeRequire = _require2.default; // Used so windowmanager in a window can access electron.
+	        // TODO: Determine if window object can be set directly here.
+	
+	        process.once('loaded', function () {
+	            // TODO: Determine if this is needed
+	            global.nodeRequire = _require2.default;
+	        });
 	    }
 	} else if (typeof window !== 'undefined' && window) {
 	    _global2.default._isRenderer = true;
@@ -8079,7 +8084,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Wraps a window object.
-	     * @param {Object} config - Configuration
+	     * @param {Object} [config] - Window Configuration
+	     * @param {Number} [config.width=800]
+	     * @param {Number} [config.height=500]
+	     * @param {Boolean} [config.frame=true] - When true, enables standard OS framing around the window
+	     * @param {Boolean} [config.resizable=true] - When true, allows user to resize window by dragging edges
+	     * @param {Boolean} [config.show=true] - When true, starts the window in the "show" state rather than "hidden"
+	     * @param {String} [config.icon='favicon.ico'] - Location to favicon
+	     * @param {String} [config.url='.'] - Location to page that the window should load
 	     */
 	    function Window(config) {
 	        (0, _classCallCheck3.default)(this, Window);
