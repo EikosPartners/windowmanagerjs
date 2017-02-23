@@ -92,10 +92,13 @@ class Window extends EventHandler {
             this._minSize = new BoundingBox(config.minWidth, config.minHeight);
             this._maxSize = new BoundingBox(config.maxWidth, config.maxHeight);
 
-            let newWindow = windowmanager._launcher.document.createElement('iframe');
+            let newWindow = windowmanager._launcher.document.createElement('div');
+            let iframe = windowmanager._launcher.document.createElement('iframe');
 
-            newWindow.src = config.url;
             newWindow.style.position = 'absolute';
+            iframe.style.margin = iframe.style.padding = iframe.style.border = 0;
+            newWindow.style.resize = 'both';
+            newWindow.style.overflow = 'visible';
             if (!Number.isFinite(config.left)) {
                 config.left = (windowmanager._launcher.innerWidth - config.width) / 2;
             }
@@ -110,14 +113,16 @@ class Window extends EventHandler {
             newWindow.style.minHeight = this._minSize.top + 'px';
             newWindow.style.maxWidth = this._maxSize.left + 'px';
             newWindow.style.maxHeight = this._maxSize.top + 'px';
-            newWindow.style.margin = 0;
-            newWindow.style.padding = 0;
-            newWindow.style.border = 0;
-            newWindow.style.resize = 'both';
-            newWindow.style.overflow = 'auto';
             windowmanager._launcher.document.body.appendChild(newWindow);
 
+            // Set up iframe for page:
+            iframe.src = config.url;
+            iframe.style.margin = iframe.style.padding = iframe.style.border = 0;
+            iframe.style.width = iframe.style.height = '100%';
+            newWindow.appendChild(iframe);
+
             this._window = newWindow;
+            this._iframe = iframe;
             windowmanager._windows.set(this._id, this);
             this._ready = true;
             this.emit('ready');
@@ -127,7 +132,7 @@ class Window extends EventHandler {
         } else {
             this._minSize = new BoundingBox(defaultConfig.minWidth, defaultConfig.minHeight);
             this._maxSize = new BoundingBox(defaultConfig.maxWidth, defaultConfig.maxHeight);
-            this._window = config.document.body;
+            this._window = this._iframe = config.document.body;
             windowmanager._windows.set(this._id, this);
             this._ready = true;
         }
@@ -447,7 +452,7 @@ class Window extends EventHandler {
         for (let window of this._dockedGroup) {
             if (window !== this) { window._window.contentWindow.focus(); }
         }
-        this._window.contentWindow.focus();
+        this._iframe.contentWindow.focus();
         if (callback) { callback(); }
     }
 
@@ -753,7 +758,7 @@ if (windowmanager.runtime.isMain) {
     // Handle current window in this context:
     Window.current = (function () {
         for (let win of windowmanager._windows.values()) {
-            if (win._window.contentWindow === window) { return win; }
+            if (win._iframe.contentWindow === window) { return win; }
         }
     })();
 }

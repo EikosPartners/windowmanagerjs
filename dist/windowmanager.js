@@ -8140,10 +8140,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _this._minSize = new _index2.BoundingBox(config.minWidth, config.minHeight);
 	            _this._maxSize = new _index2.BoundingBox(config.maxWidth, config.maxHeight);
 	
-	            var newWindow = _global2.default._launcher.document.createElement('iframe');
+	            var newWindow = _global2.default._launcher.document.createElement('div');
+	            var iframe = _global2.default._launcher.document.createElement('iframe');
 	
-	            newWindow.src = config.url;
 	            newWindow.style.position = 'absolute';
+	            iframe.style.margin = iframe.style.padding = iframe.style.border = 0;
+	            newWindow.style.resize = 'both';
+	            newWindow.style.overflow = 'visible';
 	            if (!(0, _isFinite2.default)(config.left)) {
 	                config.left = (_global2.default._launcher.innerWidth - config.width) / 2;
 	            }
@@ -8158,14 +8161,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	            newWindow.style.minHeight = _this._minSize.top + 'px';
 	            newWindow.style.maxWidth = _this._maxSize.left + 'px';
 	            newWindow.style.maxHeight = _this._maxSize.top + 'px';
-	            newWindow.style.margin = 0;
-	            newWindow.style.padding = 0;
-	            newWindow.style.border = 0;
-	            newWindow.style.resize = 'both';
-	            newWindow.style.overflow = 'auto';
 	            _global2.default._launcher.document.body.appendChild(newWindow);
 	
+	            // Set up iframe for page:
+	            iframe.src = config.url;
+	            iframe.style.margin = iframe.style.padding = iframe.style.border = 0;
+	            iframe.style.width = iframe.style.height = '100%';
+	            newWindow.appendChild(iframe);
+	
 	            _this._window = newWindow;
+	            _this._iframe = iframe;
 	            _global2.default._windows.set(_this._id, _this);
 	            _this._ready = true;
 	            _this.emit('ready');
@@ -8175,7 +8180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else {
 	            _this._minSize = new _index2.BoundingBox(defaultConfig.minWidth, defaultConfig.minHeight);
 	            _this._maxSize = new _index2.BoundingBox(defaultConfig.maxWidth, defaultConfig.maxHeight);
-	            _this._window = config.document.body;
+	            _this._window = _this._iframe = config.document.body;
 	            _global2.default._windows.set(_this._id, _this);
 	            _this._ready = true;
 	        }
@@ -8769,7 +8774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	
-	            this._window.contentWindow.focus();
+	            this._iframe.contentWindow.focus();
 	            if (callback) {
 	                callback();
 	            }
@@ -9457,7 +9462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            for (var _iterator21 = (0, _getIterator3.default)(_global2.default._windows.values()), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
 	                var win = _step21.value;
 	
-	                if (win._window.contentWindow === window) {
+	                if (win._iframe.contentWindow === window) {
 	                    return win;
 	                }
 	            }
