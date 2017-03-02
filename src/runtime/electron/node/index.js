@@ -26,7 +26,13 @@ function extractArg(argName) {
 }
 
 // Determine the endpoint:
-const packageJson = nodeRequire('./package.json');
+const packageJson = (() => {
+    try {
+        return nodeRequire('./package.json') || {};
+    } catch (err) {
+        return {};
+    }
+})();
 const endpoint = extractArg('endpoint') || packageJson.endpoint;
 const configPath = extractArg('config') || packageJson.config;
 // If configPath is null, url.resolve doesn't execute:

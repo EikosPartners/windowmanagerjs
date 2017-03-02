@@ -4085,7 +4085,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	// Determine the endpoint:
-	var packageJson = (0, _require2.default)('./package.json');
+	var packageJson = function () {
+	    try {
+	        return (0, _require2.default)('./package.json') || {};
+	    } catch (err) {
+	        return {};
+	    }
+	}();
 	var endpoint = extractArg('endpoint') || packageJson.endpoint;
 	var configPath = extractArg('config') || packageJson.config;
 	// If configPath is null, url.resolve doesn't execute:
