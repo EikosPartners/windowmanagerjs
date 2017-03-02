@@ -4088,7 +4088,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Determine the endpoint:
 	var packageJson = function () {
 	    try {
-	        return (0, _require2.default)(path.resolve(path.dirname(_require2.default.main.filename), 'package.json')).config || {};
+	        return (0, _require2.default)(path.resolve(path.dirname(_require2.default.main.filename), 'package.json')).windowmanager || {};
 	    } catch (err) {
 	        return {};
 	    }

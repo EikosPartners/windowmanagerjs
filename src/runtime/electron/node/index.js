@@ -29,7 +29,7 @@ function extractArg(argName) {
 // Determine the endpoint:
 const packageJson = (() => {
     try {
-        return nodeRequire(path.resolve(path.dirname(nodeRequire.main.filename), 'package.json')).config || {};
+        return nodeRequire(path.resolve(path.dirname(nodeRequire.main.filename), 'package.json')).windowmanager || {};
     } catch (err) {
         return {};
     }
