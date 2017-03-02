@@ -4060,6 +4060,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var http = (0, _require2.default)('http');
 	var https = (0, _require2.default)('https');
+	var path = (0, _require2.default)('path');
 	var url = (0, _require2.default)('url');
 	
 	// TODO: Add support for an app.json packaged with this script.
@@ -4087,7 +4088,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Determine the endpoint:
 	var packageJson = function () {
 	    try {
-	        return (0, _require2.default)('./package.json') || {};
+	        return (0, _require2.default)(path.resolve(path.dirname(_require2.default.main.filename), 'package.json')).config || {};
 	    } catch (err) {
 	        return {};
 	    }

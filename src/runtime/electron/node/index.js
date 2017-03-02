@@ -5,6 +5,7 @@ import './Window'; // Setup window backend
 const { app, BrowserWindow, dialog } = nodeRequire('electron');
 const http = nodeRequire('http');
 const https = nodeRequire('https');
+const path = nodeRequire('path');
 const url = nodeRequire('url');
 
 // TODO: Add support for an app.json packaged with this script.
@@ -28,7 +29,7 @@ function extractArg(argName) {
 // Determine the endpoint:
 const packageJson = (() => {
     try {
-        return nodeRequire('./package.json') || {};
+        return nodeRequire(path.resolve(path.dirname(nodeRequire.main.filename), 'package.json')).config || {};
     } catch (err) {
         return {};
     }

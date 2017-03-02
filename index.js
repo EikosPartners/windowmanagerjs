@@ -11,3 +11,7 @@ exports.min = {
 };
 
 exports.distPath = path.join(__dirname, './dist');
+
+exports.start = function () {
+    require(path.resolve(__dirname, "dist", "windowmanager.js"));
+};
