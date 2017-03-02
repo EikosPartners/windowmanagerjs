@@ -121,8 +121,8 @@ class Window extends EventHandler {
             iframe.style.width = iframe.style.height = '100%';
             newWindow.appendChild(iframe);
 
-            this._window = newWindow;
-            this._iframe = iframe;
+            this._window = iframe;
+            this._iframe = newWindow;
             windowmanager._windows.set(this._id, this);
             this._ready = true;
             this.emit('ready');
@@ -132,7 +132,7 @@ class Window extends EventHandler {
         } else {
             this._minSize = new BoundingBox(defaultConfig.minWidth, defaultConfig.minHeight);
             this._maxSize = new BoundingBox(defaultConfig.maxWidth, defaultConfig.maxHeight);
-            this._window = this._iframe = config.document.body;
+            this._wrapper = this._window = config.document.body;
             windowmanager._windows.set(this._id, this);
             this._ready = true;
         }
@@ -170,7 +170,7 @@ class Window extends EventHandler {
      * @returns {Vector}
      */
     getPosition() {
-        return new Position(this._window.getBoundingClientRect());
+        return new Position(this._wrapper.getBoundingClientRect());
     }
 
     getMinWidth() {
@@ -198,7 +198,7 @@ class Window extends EventHandler {
      * @returns {Number}
      */
     getHeight() {
-        return this._window.getBoundingClientRect().height;
+        return this._wrapper.getBoundingClientRect().height;
     }
 
     getMaxHeight() {
@@ -214,7 +214,7 @@ class Window extends EventHandler {
      * @returns {Size}
      */
     getSize() {
-        let box = this._window.getBoundingClientRect();
+        let box = this._wrapper.getBoundingClientRect();
 
         return new Size(box.width, box.height);
     }
@@ -325,7 +325,7 @@ class Window extends EventHandler {
     close(callback) {
         if (this.isClosed()) { return callback && callback(); }
 
-        this._window.parentElement.removeChild(this._window);
+        this._wrapper.parentElement.removeChild(this._wrapper);
         windowmanager._windows.delete(this._id);
 
         // Undock:
@@ -369,10 +369,10 @@ class Window extends EventHandler {
         if (!this._ready) { throw new Error('maximize can\'t be called on an unready window'); }
 
         this._restoreBounds = this.getBounds();
-        this._window.style.left = 0;
-        this._window.style.top = 0;
-        this._window.style.width = '100%';
-        this._window.style.height = '100%';
+        this._wrapper.style.left = 0;
+        this._wrapper.style.top = 0;
+        this._wrapper.style.width = '100%';
+        this._wrapper.style.height = '100%';
         this._isMaximized = true;
         if (callback) { callback(); }
     }
@@ -438,7 +438,7 @@ class Window extends EventHandler {
                 window._window.style['z-index'] = windowmanager._getNextZIndex();
             }
         }
-        this._window.style['z-index'] = windowmanager._getNextZIndex();
+        this._wrapper.style['z-index'] = windowmanager._getNextZIndex();
         if (callback) { callback(); }
     }
 
@@ -452,7 +452,7 @@ class Window extends EventHandler {
         for (let window of this._dockedGroup) {
             if (window !== this) { window._window.contentWindow.focus(); }
         }
-        this._iframe.contentWindow.focus();
+        this._window.contentWindow.focus();
         if (callback) { callback(); }
     }
 
@@ -468,8 +468,8 @@ class Window extends EventHandler {
         let size = new Position(width, height);
 
         this.undock();
-        this._window.width = size.left + 'px';
-        this._window.height = size.top + 'px';
+        this._wrapper.style.width = size.left + 'px';
+        this._wrapper.style.height = size.top + 'px';
         if (callback) { callback(); }
     }
 
@@ -523,13 +523,13 @@ class Window extends EventHandler {
         this.undock(); // TODO: Support changing size when docked.
         this._minSize.left = size.left;
         this._minSize.top = size.top;
-        this._window.style.minWidth = this._minSize.left + 'px';
-        this._window.style.minHeight = this._minSize.top + 'px';
+        this._wrapper.style.minWidth = this._minSize.left + 'px';
+        this._wrapper.style.minHeight = this._minSize.top + 'px';
         if (this.getWidth() < size.left || this.getHeight() < size.top) {
             // Resize window to meet new min size:
             // TODO: Take into account transform?
-            this._window.style.width = Math.max(this.getWidth(), size.left) + 'px';
-            this._window.style.height = Math.max(this.getHeight(), size.top) + 'px';
+            this._wrapper.style.width = Math.max(this.getWidth(), size.left) + 'px';
+            this._wrapper.style.height = Math.max(this.getHeight(), size.top) + 'px';
             if (callback) { callback(); }
             this.emit('resize');
         } else {
@@ -542,11 +542,11 @@ class Window extends EventHandler {
         const size = new Size(width, height);
 
         this.undock(); // TODO: Support changing size when docked.
-        this._window.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, size.left)) + 'px';
-        this._window.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, size.top)) + 'px';
+        this._wrapper.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, size.left)) + 'px';
+        this._wrapper.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, size.top)) + 'px';
         // Clear transform:
         for (let transformPropName of transformPropNames) {
-            this._window.style[transformPropName] = '';
+            this._wrapper.style[transformPropName] = '';
         }
         if (callback) { callback(); }
         this.emit('resize');
@@ -558,13 +558,13 @@ class Window extends EventHandler {
                             Math.min(this._maxSize.top, Math.max(this._minSize.top, height)));
 
         this.undock(); // TODO: Support changing size when docked.
-        this._window.style.width = size.left + 'px';
-        this._window.style.height = size.top + 'px';
+        this._wrapper.style.width = size.left + 'px';
+        this._wrapper.style.height = size.top + 'px';
         // TODO: Calc transform:
         let transform = Math.min(width / size.left, height / size.top);
 
         for (let transformPropName of transformPropNames) {
-            this._window.style[transformPropName] = 'scale(' + transform + ')';
+            this._wrapper.style[transformPropName] = 'scale(' + transform + ')';
         }
         if (callback) { callback(); }
         this.emit('resize');
@@ -577,16 +577,16 @@ class Window extends EventHandler {
         this.undock(); // TODO: Support changing size when docked.
         this._maxSize.left = size.left;
         this._maxSize.top = size.top;
-        this._window.style.maxWidth = this._maxSize.left + 'px';
-        this._window.style.maxHeight = this._maxSize.top + 'px';
+        this._wrapper.style.maxWidth = this._maxSize.left + 'px';
+        this._wrapper.style.maxHeight = this._maxSize.top + 'px';
         if (this.getWidth() > size.left || this.getHeight() > size.top) {
             // Resize window to meet new min size:
             // TODO: Take into account transform?
-            this._window.style.width = Math.min(this.getWidth(), size.left) + 'px';
-            this._window.style.height = Math.min(this.getHeight(), size.top) + 'px';
+            this._wrapper.style.width = Math.min(this.getWidth(), size.left) + 'px';
+            this._wrapper.style.height = Math.min(this.getHeight(), size.top) + 'px';
             // Clear transform:
             for (let transformPropName of transformPropNames) {
-                this._window.style[transformPropName] = '';
+                this._wrapper.style[transformPropName] = '';
             }
             if (callback) { callback(); }
             this.emit('resize');
@@ -608,14 +608,14 @@ class Window extends EventHandler {
         let bounds = new BoundingBox(left, top, right, bottom);
 
         this.undock(); // TODO: Support changing size when docked.
-        this._window.style.left = bounds.left + 'px';
-        this._window.style.top = bounds.top + 'px';
+        this._wrapper.style.left = bounds.left + 'px';
+        this._wrapper.style.top = bounds.top + 'px';
         // TODO: Take into account transform?
-        this._window.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, bounds.getWidth())) + 'px';
-        this._window.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, bounds.getHeight())) + 'px';
+        this._wrapper.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, bounds.getWidth())) + 'px';
+        this._wrapper.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, bounds.getHeight())) + 'px';
         // Clear transform:
         for (let transformPropName of transformPropNames) {
-            this._window.style[transformPropName] = '';
+            this._wrapper.style[transformPropName] = '';
         }
         // TODO: Events
         if (callback) { callback(); }
@@ -758,7 +758,7 @@ if (windowmanager.runtime.isMain) {
     // Handle current window in this context:
     Window.current = (function () {
         for (let win of windowmanager._windows.values()) {
-            if (win._iframe.contentWindow === window) { return win; }
+            if (win._window.contentWindow === window) { return win; }
         }
     })();
 }

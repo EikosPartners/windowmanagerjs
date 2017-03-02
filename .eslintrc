@@ -58,7 +58,7 @@
     "keyword-spacing": "error",
     "linebreak-style": "off",
     "max-depth": "off",
-    "max-len": ["error", 120, 4],
+    "max-len": ["error", 140, 4],
     "max-nested-callbacks": "off",
     "max-params": "off",
     "max-statements": "off",

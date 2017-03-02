@@ -8169,8 +8169,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            iframe.style.width = iframe.style.height = '100%';
 	            newWindow.appendChild(iframe);
 	
-	            _this._window = newWindow;
-	            _this._iframe = iframe;
+	            _this._window = iframe;
+	            _this._iframe = newWindow;
 	            _global2.default._windows.set(_this._id, _this);
 	            _this._ready = true;
 	            _this.emit('ready');
@@ -8180,7 +8180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else {
 	            _this._minSize = new _index2.BoundingBox(defaultConfig.minWidth, defaultConfig.minHeight);
 	            _this._maxSize = new _index2.BoundingBox(defaultConfig.maxWidth, defaultConfig.maxHeight);
-	            _this._window = _this._iframe = config.document.body;
+	            _this._wrapper = _this._window = config.document.body;
 	            _global2.default._windows.set(_this._id, _this);
 	            _this._ready = true;
 	        }
@@ -8236,7 +8236,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'getPosition',
 	        value: function getPosition() {
-	            return new _index2.Position(this._window.getBoundingClientRect());
+	            return new _index2.Position(this._wrapper.getBoundingClientRect());
 	        }
 	    }, {
 	        key: 'getMinWidth',
@@ -8273,7 +8273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'getHeight',
 	        value: function getHeight() {
-	            return this._window.getBoundingClientRect().height;
+	            return this._wrapper.getBoundingClientRect().height;
 	        }
 	    }, {
 	        key: 'getMaxHeight',
@@ -8294,7 +8294,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'getSize',
 	        value: function getSize() {
-	            var box = this._window.getBoundingClientRect();
+	            var box = this._wrapper.getBoundingClientRect();
 	
 	            return new _index2.Size(box.width, box.height);
 	        }
@@ -8445,7 +8445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return callback && callback();
 	            }
 	
-	            this._window.parentElement.removeChild(this._window);
+	            this._wrapper.parentElement.removeChild(this._wrapper);
 	            _global2.default._windows.delete(this._id);
 	
 	            // Undock:
@@ -8544,10 +8544,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	
 	            this._restoreBounds = this.getBounds();
-	            this._window.style.left = 0;
-	            this._window.style.top = 0;
-	            this._window.style.width = '100%';
-	            this._window.style.height = '100%';
+	            this._wrapper.style.left = 0;
+	            this._wrapper.style.top = 0;
+	            this._wrapper.style.width = '100%';
+	            this._wrapper.style.height = '100%';
 	            this._isMaximized = true;
 	            if (callback) {
 	                callback();
@@ -8729,7 +8729,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	
-	            this._window.style['z-index'] = _global2.default._getNextZIndex();
+	            this._wrapper.style['z-index'] = _global2.default._getNextZIndex();
 	            if (callback) {
 	                callback();
 	            }
@@ -8774,7 +8774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	
-	            this._iframe.contentWindow.focus();
+	            this._window.contentWindow.focus();
 	            if (callback) {
 	                callback();
 	            }
@@ -8799,8 +8799,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var size = new _index2.Position(width, height);
 	
 	            this.undock();
-	            this._window.width = size.left + 'px';
-	            this._window.height = size.top + 'px';
+	            this._wrapper.style.width = size.left + 'px';
+	            this._wrapper.style.height = size.top + 'px';
 	            if (callback) {
 	                callback();
 	            }
@@ -8942,13 +8942,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.undock(); // TODO: Support changing size when docked.
 	            this._minSize.left = size.left;
 	            this._minSize.top = size.top;
-	            this._window.style.minWidth = this._minSize.left + 'px';
-	            this._window.style.minHeight = this._minSize.top + 'px';
+	            this._wrapper.style.minWidth = this._minSize.left + 'px';
+	            this._wrapper.style.minHeight = this._minSize.top + 'px';
 	            if (this.getWidth() < size.left || this.getHeight() < size.top) {
 	                // Resize window to meet new min size:
 	                // TODO: Take into account transform?
-	                this._window.style.width = Math.max(this.getWidth(), size.left) + 'px';
-	                this._window.style.height = Math.max(this.getHeight(), size.top) + 'px';
+	                this._wrapper.style.width = Math.max(this.getWidth(), size.left) + 'px';
+	                this._wrapper.style.height = Math.max(this.getHeight(), size.top) + 'px';
 	                if (callback) {
 	                    callback();
 	                }
@@ -8968,8 +8968,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var size = new _index2.Size(width, height);
 	
 	            this.undock(); // TODO: Support changing size when docked.
-	            this._window.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, size.left)) + 'px';
-	            this._window.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, size.top)) + 'px';
+	            this._wrapper.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, size.left)) + 'px';
+	            this._wrapper.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, size.top)) + 'px';
 	            // Clear transform:
 	            var _iteratorNormalCompletion11 = true;
 	            var _didIteratorError11 = false;
@@ -8979,7 +8979,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                for (var _iterator11 = (0, _getIterator3.default)(transformPropNames), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
 	                    var transformPropName = _step11.value;
 	
-	                    this._window.style[transformPropName] = '';
+	                    this._wrapper.style[transformPropName] = '';
 	                }
 	            } catch (err) {
 	                _didIteratorError11 = true;
@@ -9010,8 +9010,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var size = new _index2.Size(Math.min(this._maxSize.left, Math.max(this._minSize.left, width)), Math.min(this._maxSize.top, Math.max(this._minSize.top, height)));
 	
 	            this.undock(); // TODO: Support changing size when docked.
-	            this._window.style.width = size.left + 'px';
-	            this._window.style.height = size.top + 'px';
+	            this._wrapper.style.width = size.left + 'px';
+	            this._wrapper.style.height = size.top + 'px';
 	            // TODO: Calc transform:
 	            var transform = Math.min(width / size.left, height / size.top);
 	
@@ -9023,7 +9023,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                for (var _iterator12 = (0, _getIterator3.default)(transformPropNames), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
 	                    var transformPropName = _step12.value;
 	
-	                    this._window.style[transformPropName] = 'scale(' + transform + ')';
+	                    this._wrapper.style[transformPropName] = 'scale(' + transform + ')';
 	                }
 	            } catch (err) {
 	                _didIteratorError12 = true;
@@ -9056,13 +9056,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.undock(); // TODO: Support changing size when docked.
 	            this._maxSize.left = size.left;
 	            this._maxSize.top = size.top;
-	            this._window.style.maxWidth = this._maxSize.left + 'px';
-	            this._window.style.maxHeight = this._maxSize.top + 'px';
+	            this._wrapper.style.maxWidth = this._maxSize.left + 'px';
+	            this._wrapper.style.maxHeight = this._maxSize.top + 'px';
 	            if (this.getWidth() > size.left || this.getHeight() > size.top) {
 	                // Resize window to meet new min size:
 	                // TODO: Take into account transform?
-	                this._window.style.width = Math.min(this.getWidth(), size.left) + 'px';
-	                this._window.style.height = Math.min(this.getHeight(), size.top) + 'px';
+	                this._wrapper.style.width = Math.min(this.getWidth(), size.left) + 'px';
+	                this._wrapper.style.height = Math.min(this.getHeight(), size.top) + 'px';
 	                // Clear transform:
 	                var _iteratorNormalCompletion13 = true;
 	                var _didIteratorError13 = false;
@@ -9072,7 +9072,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    for (var _iterator13 = (0, _getIterator3.default)(transformPropNames), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
 	                        var transformPropName = _step13.value;
 	
-	                        this._window.style[transformPropName] = '';
+	                        this._wrapper.style[transformPropName] = '';
 	                    }
 	                } catch (err) {
 	                    _didIteratorError13 = true;
@@ -9118,11 +9118,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var bounds = new _index2.BoundingBox(left, top, right, bottom);
 	
 	            this.undock(); // TODO: Support changing size when docked.
-	            this._window.style.left = bounds.left + 'px';
-	            this._window.style.top = bounds.top + 'px';
+	            this._wrapper.style.left = bounds.left + 'px';
+	            this._wrapper.style.top = bounds.top + 'px';
 	            // TODO: Take into account transform?
-	            this._window.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, bounds.getWidth())) + 'px';
-	            this._window.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, bounds.getHeight())) + 'px';
+	            this._wrapper.style.width = Math.min(this._maxSize.left, Math.max(this._minSize.left, bounds.getWidth())) + 'px';
+	            this._wrapper.style.height = Math.min(this._maxSize.top, Math.max(this._minSize.top, bounds.getHeight())) + 'px';
 	            // Clear transform:
 	            var _iteratorNormalCompletion14 = true;
 	            var _didIteratorError14 = false;
@@ -9132,7 +9132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                for (var _iterator14 = (0, _getIterator3.default)(transformPropNames), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
 	                    var transformPropName = _step14.value;
 	
-	                    this._window.style[transformPropName] = '';
+	                    this._wrapper.style[transformPropName] = '';
 	                }
 	                // TODO: Events
 	            } catch (err) {
@@ -9462,7 +9462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            for (var _iterator21 = (0, _getIterator3.default)(_global2.default._windows.values()), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
 	                var win = _step21.value;
 	
-	                if (win._iframe.contentWindow === window) {
+	                if (win._window.contentWindow === window) {
 	                    return win;
 	                }
 	            }
