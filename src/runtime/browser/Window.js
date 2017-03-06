@@ -122,7 +122,7 @@ class Window extends EventHandler {
             newWindow.appendChild(iframe);
 
             this._window = iframe;
-            this._iframe = newWindow;
+            this._wrapper = newWindow;
             windowmanager._windows.set(this._id, this);
             this._ready = true;
             this.emit('ready');
@@ -385,7 +385,7 @@ class Window extends EventHandler {
         if (!this._ready) { throw new Error('show can\'t be called on an unready window'); }
 
         for (let window of this._dockedGroup) {
-            window._window.style.display = '';
+            window._wrapper.style.display = '';
             window._isHidden = false;
         }
         if (callback) { callback(); }
@@ -399,7 +399,7 @@ class Window extends EventHandler {
         if (!this._ready) { throw new Error('hide can\'t be called on an unready window'); }
 
         for (let window of this._dockedGroup) {
-            window._window.style.display = 'none';
+            window._wrapper.style.display = 'none';
             window._isHidden = true;
         }
         if (callback) { callback(); }
@@ -414,10 +414,10 @@ class Window extends EventHandler {
 
         for (let window of this._dockedGroup) {
             if (window._isMaximized) {
-                window._window.style.left = window._restoreBounds.left + 'px';
-                window._window.style.top = window._restoreBounds.top + 'px';
-                window._window.style.width = window._restoreBounds.getWidth() + 'px';
-                window._window.style.height = window._restoreBounds.getHeight() + 'px';
+                window._wrapper.style.left = window._restoreBounds.left + 'px';
+                window._wrapper.style.top = window._restoreBounds.top + 'px';
+                window._wrapper.style.width = window._restoreBounds.getWidth() + 'px';
+                window._wrapper.style.height = window._restoreBounds.getHeight() + 'px';
                 window._isHidden = false;
                 window._isMinimized = false;
                 window._isMaximized = false;
@@ -435,7 +435,7 @@ class Window extends EventHandler {
 
         for (let window of this._dockedGroup) {
             if (window !== this) {
-                window._window.style['z-index'] = windowmanager._getNextZIndex();
+                window._wrapper.style['z-index'] = windowmanager._getNextZIndex();
             }
         }
         this._wrapper.style['z-index'] = windowmanager._getNextZIndex();
@@ -487,8 +487,8 @@ class Window extends EventHandler {
         for (let window of this._dockedGroup) {
             let pos = window.getPosition().add(deltaPos);
 
-            window._window.style.left = pos.left + 'px';
-            window._window.style.top = pos.top + 'px';
+            window._wrapper.style.left = pos.left + 'px';
+            window._wrapper.style.top = pos.top + 'px';
         }
         if (callback) { callback(); }
     }
@@ -507,8 +507,8 @@ class Window extends EventHandler {
         for (let window of this._dockedGroup) {
             let pos = window.getPosition().add(deltaPos);
 
-            window._window.style.left = pos.left + 'px';
-            window._window.style.top = pos.top + 'px';
+            window._wrapper.style.left = pos.left + 'px';
+            window._wrapper.style.top = pos.top + 'px';
         }
         if (callback) { callback(); }
         for (let window of this._dockedGroup) {

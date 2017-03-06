@@ -8177,7 +8177,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            newWindow.appendChild(iframe);
 	
 	            _this._window = iframe;
-	            _this._iframe = newWindow;
+	            _this._wrapper = newWindow;
 	            _global2.default._windows.set(_this._id, _this);
 	            _this._ready = true;
 	            _this.emit('ready');
@@ -8581,7 +8581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                for (var _iterator3 = (0, _getIterator3.default)(this._dockedGroup), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
 	                    var _window2 = _step3.value;
 	
-	                    _window2._window.style.display = '';
+	                    _window2._wrapper.style.display = '';
 	                    _window2._isHidden = false;
 	                }
 	            } catch (err) {
@@ -8624,7 +8624,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                for (var _iterator4 = (0, _getIterator3.default)(this._dockedGroup), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
 	                    var _window3 = _step4.value;
 	
-	                    _window3._window.style.display = 'none';
+	                    _window3._wrapper.style.display = 'none';
 	                    _window3._isHidden = true;
 	                }
 	            } catch (err) {
@@ -8668,10 +8668,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var _window4 = _step5.value;
 	
 	                    if (_window4._isMaximized) {
-	                        _window4._window.style.left = _window4._restoreBounds.left + 'px';
-	                        _window4._window.style.top = _window4._restoreBounds.top + 'px';
-	                        _window4._window.style.width = _window4._restoreBounds.getWidth() + 'px';
-	                        _window4._window.style.height = _window4._restoreBounds.getHeight() + 'px';
+	                        _window4._wrapper.style.left = _window4._restoreBounds.left + 'px';
+	                        _window4._wrapper.style.top = _window4._restoreBounds.top + 'px';
+	                        _window4._wrapper.style.width = _window4._restoreBounds.getWidth() + 'px';
+	                        _window4._wrapper.style.height = _window4._restoreBounds.getHeight() + 'px';
 	                        _window4._isHidden = false;
 	                        _window4._isMinimized = false;
 	                        _window4._isMaximized = false;
@@ -8718,7 +8718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var _window5 = _step6.value;
 	
 	                    if (_window5 !== this) {
-	                        _window5._window.style['z-index'] = _global2.default._getNextZIndex();
+	                        _window5._wrapper.style['z-index'] = _global2.default._getNextZIndex();
 	                    }
 	                }
 	            } catch (err) {
@@ -8841,8 +8841,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                    var pos = _window7.getPosition().add(deltaPos);
 	
-	                    _window7._window.style.left = pos.left + 'px';
-	                    _window7._window.style.top = pos.top + 'px';
+	                    _window7._wrapper.style.left = pos.left + 'px';
+	                    _window7._wrapper.style.top = pos.top + 'px';
 	                }
 	            } catch (err) {
 	                _didIteratorError8 = true;
@@ -8892,8 +8892,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                    var pos = _window8.getPosition().add(deltaPos);
 	
-	                    _window8._window.style.left = pos.left + 'px';
-	                    _window8._window.style.top = pos.top + 'px';
+	                    _window8._wrapper.style.left = pos.left + 'px';
+	                    _window8._wrapper.style.top = pos.top + 'px';
 	                }
 	            } catch (err) {
 	                _didIteratorError9 = true;
