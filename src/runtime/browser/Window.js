@@ -795,7 +795,7 @@ if (!windowmanager.runtime.isMain) {
     window.addEventListener('mousemove', function (event) {
         if (dragging) {
             // Stop text selection:
-            this._window.contentWindow.getSelection().removeAllRanges();
+            window.getSelection().removeAllRanges();
             // Drag:
             Window.current._dragBy(event.screenX - wX, event.screenY - wY);
         }
@@ -805,7 +805,7 @@ if (!windowmanager.runtime.isMain) {
         if (dragging) {
             event.preventDefault();
             // Stop text selection:
-            this._window.contentWindow.getSelection().removeAllRanges();
+            window.getSelection().removeAllRanges();
             // Drag:
             Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
         }

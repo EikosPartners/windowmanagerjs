@@ -5535,7 +5535,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    window.addEventListener('mousemove', function (event) {
 	        if (dragging) {
 	            // Stop text selection:
-	            this._window.contentWindow.getSelection().removeAllRanges();
+	            window.getSelection().removeAllRanges();
 	            // Drag:
 	            Window.current._window._dragBy(event.screenX - wX, event.screenY - wY);
 	        }
@@ -5545,7 +5545,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (dragging) {
 	            event.preventDefault();
 	            // Stop text selection:
-	            this._window.contentWindow.getSelection().removeAllRanges();
+	            window.getSelection().removeAllRanges();
 	            // Drag:
 	            Window.current._window._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
 	        }
@@ -7592,7 +7592,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    window.addEventListener('mousemove', function (event) {
 	        if (dragging) {
 	            // Stop text selection:
-	            this._window.contentWindow.getSelection().removeAllRanges();
+	            window.getSelection().removeAllRanges();
 	            // Drag:
 	            Window.current._dragBy(event.screenX - wX, event.screenY - wY);
 	        }
@@ -7602,7 +7602,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (dragging) {
 	            event.preventDefault();
 	            // Stop text selection:
-	            this._window.contentWindow.getSelection().removeAllRanges();
+	            window.getSelection().removeAllRanges();
 	            // Drag:
 	            Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
 	        }
@@ -9535,7 +9535,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        window.addEventListener('mousemove', function (event) {
 	            if (dragging) {
 	                // Stop text selection:
-	                this._window.contentWindow.getSelection().removeAllRanges();
+	                window.getSelection().removeAllRanges();
 	                // Drag:
 	                Window.current._dragBy(event.screenX - wX, event.screenY - wY);
 	            }
@@ -9545,7 +9545,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (dragging) {
 	                event.preventDefault();
 	                // Stop text selection:
-	                this._window.contentWindow.getSelection().removeAllRanges();
+	                window.getSelection().removeAllRanges();
 	                // Drag:
 	                Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
 	            }
