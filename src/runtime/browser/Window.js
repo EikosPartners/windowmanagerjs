@@ -692,8 +692,8 @@ class Window extends EventHandler {
                 pos.top -= deltaTop;
             }
 
-            other._window.style.left = (pos.left + deltaLeft) + 'px';
-            other._window.style.top = (pos.top + deltaTop) + 'px';
+            other._wrapper.style.left = (pos.left + deltaLeft) + 'px';
+            other._wrapper.style.top = (pos.top + deltaTop) + 'px';
             other.emit('move');
         }
     }
@@ -794,6 +794,9 @@ if (!windowmanager.runtime.isMain) {
 
     window.addEventListener('mousemove', function (event) {
         if (dragging) {
+            // Stop text selection:
+            this._window.contentWindow.getSelection().removeAllRanges();
+            // Drag:
             Window.current._dragBy(event.screenX - wX, event.screenY - wY);
         }
     });
@@ -801,6 +804,9 @@ if (!windowmanager.runtime.isMain) {
     window.addEventListener('touchmove', function (event) {
         if (dragging) {
             event.preventDefault();
+            // Stop text selection:
+            this._window.contentWindow.getSelection().removeAllRanges();
+            // Drag:
             Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
         }
     });

@@ -5534,6 +5534,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    window.addEventListener('mousemove', function (event) {
 	        if (dragging) {
+	            // Stop text selection:
+	            this._window.contentWindow.getSelection().removeAllRanges();
+	            // Drag:
 	            Window.current._window._dragBy(event.screenX - wX, event.screenY - wY);
 	        }
 	    });
@@ -5541,6 +5544,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    window.addEventListener('touchmove', function (event) {
 	        if (dragging) {
 	            event.preventDefault();
+	            // Stop text selection:
+	            this._window.contentWindow.getSelection().removeAllRanges();
+	            // Drag:
 	            Window.current._window._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
 	        }
 	    });
@@ -7585,6 +7591,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    window.addEventListener('mousemove', function (event) {
 	        if (dragging) {
+	            // Stop text selection:
+	            this._window.contentWindow.getSelection().removeAllRanges();
+	            // Drag:
 	            Window.current._dragBy(event.screenX - wX, event.screenY - wY);
 	        }
 	    });
@@ -7592,6 +7601,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    window.addEventListener('touchmove', function (event) {
 	        if (dragging) {
 	            event.preventDefault();
+	            // Stop text selection:
+	            this._window.contentWindow.getSelection().removeAllRanges();
+	            // Drag:
 	            Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
 	        }
 	    });
@@ -9323,8 +9335,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        pos.top -= deltaTop;
 	                    }
 	
-	                    _other._window.style.left = pos.left + deltaLeft + 'px';
-	                    _other._window.style.top = pos.top + deltaTop + 'px';
+	                    _other._wrapper.style.left = pos.left + deltaLeft + 'px';
+	                    _other._wrapper.style.top = pos.top + deltaTop + 'px';
 	                    _other.emit('move');
 	                }
 	            } catch (err) {
@@ -9522,6 +9534,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        window.addEventListener('mousemove', function (event) {
 	            if (dragging) {
+	                // Stop text selection:
+	                this._window.contentWindow.getSelection().removeAllRanges();
+	                // Drag:
 	                Window.current._dragBy(event.screenX - wX, event.screenY - wY);
 	            }
 	        });
@@ -9529,6 +9544,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        window.addEventListener('touchmove', function (event) {
 	            if (dragging) {
 	                event.preventDefault();
+	                // Stop text selection:
+	                this._window.contentWindow.getSelection().removeAllRanges();
+	                // Drag:
 	                Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
 	            }
 	        });

@@ -362,6 +362,9 @@ Window.current = new Window(currentWin);
 
     window.addEventListener('mousemove', function (event) {
         if (dragging) {
+            // Stop text selection:
+            this._window.contentWindow.getSelection().removeAllRanges();
+            // Drag:
             Window.current._window._dragBy(event.screenX - wX, event.screenY - wY);
         }
     });
@@ -369,6 +372,9 @@ Window.current = new Window(currentWin);
     window.addEventListener('touchmove', function (event) {
         if (dragging) {
             event.preventDefault();
+            // Stop text selection:
+            this._window.contentWindow.getSelection().removeAllRanges();
+            // Drag:
             Window.current._window._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
         }
     });
