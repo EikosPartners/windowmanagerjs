@@ -12,6 +12,7 @@ exports.min = {
 
 exports.distPath = path.join(__dirname, './dist');
 
-exports.start = function () {
-    require(path.resolve(__dirname, "dist", "windowmanager.js"));
+exports.start = function (config) {
+    global.__windowmanagerConfig = config || {};
+    require(path.resolve(__dirname, 'dist', 'windowmanager.js'));
 };

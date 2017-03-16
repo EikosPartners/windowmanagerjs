@@ -38,6 +38,13 @@ Loading the package via `require` in node only gives you access to the script pa
 ```javascript
 const windowmanager = require('windowmanager');
 ...
+// Start windowmanager in this node instance:
+windowmanager.start({
+    // Optionally override the windowmanager package.json options for Electron's runtime:
+    endpoint: "http://localhost:5000/",      // The starting window's page location
+    config: "http://localhost:5000/app.json" // Where the OpenFin/Electron app.json startup file is
+});
+...
 // Set up to access windowmanager debug, minified and map scripts via root url:
 // Will give access to windowmanager through: example.com/windowmanager.js
 app.use('/', express.static(windowmanager.distPath, { index: false }));

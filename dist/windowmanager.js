@@ -4063,11 +4063,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var path = (0, _require2.default)('path');
 	var url = (0, _require2.default)('url');
 	
-	// TODO: Add support for an app.json packaged with this script.
 	// TODO: Add support for local file loading for window url.
 	
 	function getArg(argName) {
-	    return process.argv.find(function (arg) {
+	    return global.__windowmanagerConfig[argName] || process.argv.find(function (arg) {
 	        return arg.indexOf('--' + argName) >= 0;
 	    });
 	}
@@ -4087,8 +4086,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	// Determine the endpoint:
 	var packageJson = function () {
+	    var packagePath = path.resolve(path.dirname(_require2.default.main.filename), 'package.json');
+	
 	    try {
-	        return (0, _require2.default)(path.resolve(path.dirname(_require2.default.main.filename), 'package.json')).windowmanager || {};
+	        return (0, _require2.default)(packagePath).windowmanager || global.__windowmanagerConfig || {};
 	    } catch (err) {
 	        return {};
 	    }
@@ -4329,83 +4330,79 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	BrowserWindow.prototype._ensureSetup = function () {
-	    var _this = this;
-	
 	    // Make sure docked group exists:
 	    if (this._dockedGroup === undefined) {
-	        (function () {
-	            _this._dockedGroup = [_this];
+	        this._dockedGroup = [this];
 	
-	            _this.on('closed', function () {
-	                // Clean up the dock system when this window closes:
-	                this.undock();
-	            });
+	        this.on('closed', function () {
+	            // Clean up the dock system when this window closes:
+	            this.undock();
+	        });
 	
-	            _this.on('maximize', function () {
-	                this.undock(); // TODO: Support changing size when docked.
-	            });
+	        this.on('maximize', function () {
+	            this.undock(); // TODO: Support changing size when docked.
+	        });
 	
-	            _this.on('minimize', function () {
-	                this._dockMinimize();
-	            });
+	        this.on('minimize', function () {
+	            this._dockMinimize();
+	        });
 	
-	            _this.on('restore', function () {
-	                var _iteratorNormalCompletion2 = true;
-	                var _didIteratorError2 = false;
-	                var _iteratorError2 = undefined;
+	        this.on('restore', function () {
+	            var _iteratorNormalCompletion2 = true;
+	            var _didIteratorError2 = false;
+	            var _iteratorError2 = undefined;
 	
+	            try {
+	                for (var _iterator2 = (0, _getIterator3.default)(this._dockedGroup), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                    var other = _step2.value;
+	
+	                    if (other !== this) {
+	                        other.restore();
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
+	            } finally {
 	                try {
-	                    for (var _iterator2 = (0, _getIterator3.default)(this._dockedGroup), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                        var other = _step2.value;
-	
-	                        if (other !== this) {
-	                            other.restore();
-	                        }
+	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                        _iterator2.return();
 	                    }
-	                } catch (err) {
-	                    _didIteratorError2 = true;
-	                    _iteratorError2 = err;
 	                } finally {
-	                    try {
-	                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                            _iterator2.return();
-	                        }
-	                    } finally {
-	                        if (_didIteratorError2) {
-	                            throw _iteratorError2;
-	                        }
+	                    if (_didIteratorError2) {
+	                        throw _iteratorError2;
 	                    }
 	                }
-	            });
+	            }
+	        });
 	
-	            var lastBounds = _this.getBounds();
+	        var lastBounds = this.getBounds();
 	
-	            _this.on('move', function () {
-	                var newBounds = this.getBounds();
+	        this.on('move', function () {
+	            var newBounds = this.getBounds();
 	
-	                // this._dockMoveTo(newBounds.x, newBounds.y, [lastBounds.x, lastBounds.y]);
-	                lastBounds = newBounds;
-	            });
+	            // this._dockMoveTo(newBounds.x, newBounds.y, [lastBounds.x, lastBounds.y]);
+	            lastBounds = newBounds;
+	        });
 	
-	            _this.on('resize', function () {
-	                var newBounds = this.getBounds();
+	        this.on('resize', function () {
+	            var newBounds = this.getBounds();
 	
-	                if (newBounds.width !== lastBounds.width || newBounds.height !== lastBounds.height) {
-	                    this.undock(); // TODO: Support changing size when docked.
+	            if (newBounds.width !== lastBounds.width || newBounds.height !== lastBounds.height) {
+	                this.undock(); // TODO: Support changing size when docked.
+	            }
+	            // TODO: Handle resize positions of other docked windows
+	            //       This requires reworking how windows are docked/connected
+	            //       (they must be docked to edges of windows, not the windows themselves)
+	            /* for (let index = 0; index < this._dockedGroup.length; index += 1) {
+	                const other = this._dockedGroup[index];
+	                  if (other !== this) {
+	                    other.setPosition()
 	                }
-	                // TODO: Handle resize positions of other docked windows
-	                //       This requires reworking how windows are docked/connected
-	                //       (they must be docked to edges of windows, not the windows themselves)
-	                /* for (let index = 0; index < this._dockedGroup.length; index += 1) {
-	                    const other = this._dockedGroup[index];
-	                      if (other !== this) {
-	                        other.setPosition()
-	                    }
-	                }*/
+	            }*/
 	
-	                lastBounds = newBounds;
-	            });
-	        })();
+	            lastBounds = newBounds;
+	        });
 	    }
 	};
 	
@@ -7950,58 +7947,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	if (_global2.default.runtime.isMain) {
-	    (function () {
-	        // This is the main/root window!
-	        var nextZIndex = 1000; // TODO: Recycle Z-Indexes! In case of a (probably never) overflow!
+	    // This is the main/root window!
+	    var nextZIndex = 1000; // TODO: Recycle Z-Indexes! In case of a (probably never) overflow!
 	
-	        // The following is to fix Edge not sharing Map values across windows:
+	    // The following is to fix Edge not sharing Map values across windows:
 	
-	        var _Map = function () {
-	            function _Map() {
-	                (0, _classCallCheck3.default)(this, _Map);
+	    var _Map = function () {
+	        function _Map() {
+	            (0, _classCallCheck3.default)(this, _Map);
 	
-	                this._map = (0, _create2.default)(null);
+	            this._map = (0, _create2.default)(null);
+	        }
+	
+	        (0, _createClass3.default)(_Map, [{
+	            key: 'values',
+	            value: function values() {
+	                var values = (0, _keys2.default)(this._map);
+	
+	                for (var index = 0; index < values.length; index += 1) {
+	                    values[index] = this._map[values[index]];
+	                }
+	
+	                return values;
 	            }
+	        }, {
+	            key: 'set',
+	            value: function set(key, value) {
+	                this._map[key] = value;
+	            }
+	        }, {
+	            key: 'get',
+	            value: function get(key) {
+	                return this._map[key];
+	            }
+	        }, {
+	            key: 'delete',
+	            value: function _delete(key) {
+	                delete this._map[key];
+	            }
+	        }]);
+	        return _Map;
+	    }();
 	
-	            (0, _createClass3.default)(_Map, [{
-	                key: 'values',
-	                value: function values() {
-	                    var values = (0, _keys2.default)(this._map);
+	    _global2.default._launcher = window;
+	    _global2.default._internalBus = new _index.EventHandler((0, _keys2.default)(_global2.default._eventListeners));
+	    _global2.default._windows = new _Map();
 	
-	                    for (var index = 0; index < values.length; index += 1) {
-	                        values[index] = this._map[values[index]];
-	                    }
-	
-	                    return values;
-	                }
-	            }, {
-	                key: 'set',
-	                value: function set(key, value) {
-	                    this._map[key] = value;
-	                }
-	            }, {
-	                key: 'get',
-	                value: function get(key) {
-	                    return this._map[key];
-	                }
-	            }, {
-	                key: 'delete',
-	                value: function _delete(key) {
-	                    delete this._map[key];
-	                }
-	            }]);
-	            return _Map;
-	        }();
-	
-	        _global2.default._launcher = window;
-	        _global2.default._internalBus = new _index.EventHandler((0, _keys2.default)(_global2.default._eventListeners));
-	        _global2.default._windows = new _Map();
-	
-	        _global2.default._getNextZIndex = function () {
-	            nextZIndex += 1;
-	            return nextZIndex;
-	        };
-	    })();
+	    _global2.default._getNextZIndex = function () {
+	        nextZIndex += 1;
+	        return nextZIndex;
+	    };
 	} else {
 	    // This is a child window of root!
 	    _global2.default._launcher = window.parent.windowmanager._launcher || window.parent;
@@ -9503,69 +9498,67 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	if (!_global2.default.runtime.isMain) {
-	    (function () {
-	        // Setup handlers on this child window:
-	        var wX = 0;
-	        var wY = 0;
-	        var dragging = false;
+	    // Setup handlers on this child window:
+	    var wX = 0;
+	    var wY = 0;
+	    var dragging = false;
 	
-	        window.addEventListener('focus', function () {
-	            Window.current.bringToFront();
-	        });
+	    window.addEventListener('focus', function () {
+	        Window.current.bringToFront();
+	    });
 	
-	        window.addEventListener('mousedown', function onDragStart(event) {
-	            if (event.target.classList && event.target.classList.contains('window-drag')) {
-	                dragging = true;
-	                wX = event.screenX;
-	                wY = event.screenY;
-	                Window.current._dragStart();
-	            }
-	        });
+	    window.addEventListener('mousedown', function onDragStart(event) {
+	        if (event.target.classList && event.target.classList.contains('window-drag')) {
+	            dragging = true;
+	            wX = event.screenX;
+	            wY = event.screenY;
+	            Window.current._dragStart();
+	        }
+	    });
 	
-	        window.addEventListener('touchstart', function (event) {
-	            if (event.target.classList && event.target.classList.contains('window-drag')) {
-	                event.preventDefault();
-	                dragging = true;
-	                wX = event.touches[0].screenX;
-	                wY = event.touches[0].screenY;
-	                Window.current._dragStart();
-	            }
-	        });
+	    window.addEventListener('touchstart', function (event) {
+	        if (event.target.classList && event.target.classList.contains('window-drag')) {
+	            event.preventDefault();
+	            dragging = true;
+	            wX = event.touches[0].screenX;
+	            wY = event.touches[0].screenY;
+	            Window.current._dragStart();
+	        }
+	    });
 	
-	        window.addEventListener('mousemove', function (event) {
-	            if (dragging) {
-	                // Stop text selection:
-	                window.getSelection().removeAllRanges();
-	                // Drag:
-	                Window.current._dragBy(event.screenX - wX, event.screenY - wY);
-	            }
-	        });
+	    window.addEventListener('mousemove', function (event) {
+	        if (dragging) {
+	            // Stop text selection:
+	            window.getSelection().removeAllRanges();
+	            // Drag:
+	            Window.current._dragBy(event.screenX - wX, event.screenY - wY);
+	        }
+	    });
 	
-	        window.addEventListener('touchmove', function (event) {
-	            if (dragging) {
-	                event.preventDefault();
-	                // Stop text selection:
-	                window.getSelection().removeAllRanges();
-	                // Drag:
-	                Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
-	            }
-	        });
+	    window.addEventListener('touchmove', function (event) {
+	        if (dragging) {
+	            event.preventDefault();
+	            // Stop text selection:
+	            window.getSelection().removeAllRanges();
+	            // Drag:
+	            Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
+	        }
+	    });
 	
-	        window.addEventListener('mouseup', function (event) {
-	            if (dragging) {
-	                dragging = false;
-	                Window.current._dragStop();
-	            }
-	        });
+	    window.addEventListener('mouseup', function (event) {
+	        if (dragging) {
+	            dragging = false;
+	            Window.current._dragStop();
+	        }
+	    });
 	
-	        window.addEventListener('touchend', function (event) {
-	            if (dragging) {
-	                event.preventDefault();
-	                dragging = false;
-	                Window.current._dragStop();
-	            }
-	        });
-	    })();
+	    window.addEventListener('touchend', function (event) {
+	        if (dragging) {
+	            event.preventDefault();
+	            dragging = false;
+	            Window.current._dragStop();
+	        }
+	    });
 	}
 	
 	_global2.default.Window = Window;

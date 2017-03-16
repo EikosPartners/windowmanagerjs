@@ -8,11 +8,10 @@ const https = nodeRequire('https');
 const path = nodeRequire('path');
 const url = nodeRequire('url');
 
-// TODO: Add support for an app.json packaged with this script.
 // TODO: Add support for local file loading for window url.
 
 function getArg(argName) {
-    return process.argv.find(arg => arg.indexOf(`--${argName}`) >= 0);
+    return global.__windowmanagerConfig[argName] || process.argv.find(arg => arg.indexOf(`--${argName}`) >= 0);
 }
 
 function extractArg(argName) {
@@ -28,8 +27,10 @@ function extractArg(argName) {
 
 // Determine the endpoint:
 const packageJson = (() => {
+    const packagePath = path.resolve(path.dirname(nodeRequire.main.filename), 'package.json');
+
     try {
-        return nodeRequire(path.resolve(path.dirname(nodeRequire.main.filename), 'package.json')).windowmanager || {};
+        return nodeRequire(packagePath).windowmanager || global.__windowmanagerConfig || {};
     } catch (err) {
         return {};
     }
