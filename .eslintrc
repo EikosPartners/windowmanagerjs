@@ -53,7 +53,7 @@
     "generator-star-spacing": ["error", "both"],
     "guard-for-in": "off",
     "handle-callback-err": ["error", "^(err|error|anySpecificError)$" ],
-    "indent": "error",
+    "indent": ["error", 4, { "SwitchCase": 1 }],
     "key-spacing": "error",
     "keyword-spacing": "error",
     "linebreak-style": "off",

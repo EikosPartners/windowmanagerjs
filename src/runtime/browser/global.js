@@ -77,6 +77,19 @@ if (windowmanager.runtime.isMain) {
     windowmanager._internalBus = new EventHandler(Object.keys(windowmanager._eventListeners));
     windowmanager._windows = new _Map();
 
+    // Create overlay:
+    let overlay = window.document.createElement('div');
+
+    overlay.style.position = 'absolute';
+    overlay.style.left = '0';
+    overlay.style.top = '0';
+    overlay.style.right = '0';
+    overlay.style.bottom = '0';
+    overlay.style['z-index'] = '10000000';
+    overlay.style.display = 'none';
+    window.document.body.appendChild(overlay);
+    windowmanager._overlay = overlay;
+
     windowmanager._getNextZIndex = () => {
         nextZIndex += 1;
         return nextZIndex;

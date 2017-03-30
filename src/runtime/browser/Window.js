@@ -62,6 +62,7 @@ class Window extends EventHandler {
         this._isHidden = false;
         this._isMinimized = false;
         this._isMaximized = false;
+        this._isResizable = false;
         this._dockedGroup = [this];
         this._children = []; // TODO: Add way to remove or change heirarchy.
         this._parent = undefined;
@@ -91,6 +92,7 @@ class Window extends EventHandler {
 
             this._minSize = new BoundingBox(config.minWidth, config.minHeight);
             this._maxSize = new BoundingBox(config.maxWidth, config.maxHeight);
+            this._isResizable = config.resizable;
 
             let newWindow = windowmanager._launcher.document.createElement('div');
             let iframe = windowmanager._launcher.document.createElement('iframe');
@@ -120,6 +122,138 @@ class Window extends EventHandler {
             iframe.style.margin = iframe.style.padding = iframe.style.border = 0;
             iframe.style.width = iframe.style.height = '100%';
             newWindow.appendChild(iframe);
+
+            // Set up resize:
+            let _resizeDown = null;
+            let _resizeStartMouse = new Position();
+            let _resizeStartBounds = new BoundingBox();
+            let that = this;
+
+            this._resize = Object.create(null);
+            this._resize.w = windowmanager._launcher.document.createElement('div');
+            this._resize.w.style.position = 'absolute';
+            this._resize.w.style.width = '6px';
+            this._resize.w.style.height = 'calc(100% - 6px)';
+            this._resize.w.style.left = '-3px';
+            this._resize.w.style.top = '3px';
+            this._resize.w.style.cursor = 'w-resize';
+            this._resize.w.style['user-select'] = 'none';
+            this._resize.nw = windowmanager._launcher.document.createElement('div');
+            this._resize.nw.style.position = 'absolute';
+            this._resize.nw.style.width = '6px';
+            this._resize.nw.style.height = '6px';
+            this._resize.nw.style.left = '-3px';
+            this._resize.nw.style.top = '-3px';
+            this._resize.nw.style.cursor = 'nw-resize';
+            this._resize.nw.style['user-select'] = 'none';
+            this._resize.n = windowmanager._launcher.document.createElement('div');
+            this._resize.n.style.position = 'absolute';
+            this._resize.n.style.width = 'calc(100% - 6px)';
+            this._resize.n.style.height = '6px';
+            this._resize.n.style.left = '3px';
+            this._resize.n.style.top = '-3px';
+            this._resize.n.style.cursor = 'n-resize';
+            this._resize.n.style['user-select'] = 'none';
+            this._resize.ne = windowmanager._launcher.document.createElement('div');
+            this._resize.ne.style.position = 'absolute';
+            this._resize.ne.style.width = '6px';
+            this._resize.ne.style.height = '6px';
+            this._resize.ne.style.right = '-3px';
+            this._resize.ne.style.top = '-3px';
+            this._resize.ne.style.cursor = 'ne-resize';
+            this._resize.ne.style['user-select'] = 'none';
+            this._resize.e = windowmanager._launcher.document.createElement('div');
+            this._resize.e.style.position = 'absolute';
+            this._resize.e.style.width = '6px';
+            this._resize.e.style.height = 'calc(100% - 6px)';
+            this._resize.e.style.right = '-3px';
+            this._resize.e.style.top = '3px';
+            this._resize.e.style.cursor = 'e-resize';
+            this._resize.e.style['user-select'] = 'none';
+            this._resize.se = windowmanager._launcher.document.createElement('div');
+            this._resize.se.style.position = 'absolute';
+            this._resize.se.style.width = '6px';
+            this._resize.se.style.height = '6px';
+            this._resize.se.style.right = '-3px';
+            this._resize.se.style.bottom = '-3px';
+            this._resize.se.style.cursor = 'se-resize';
+            this._resize.se.style['user-select'] = 'none';
+            this._resize.s = windowmanager._launcher.document.createElement('div');
+            this._resize.s.style.position = 'absolute';
+            this._resize.s.style.width = 'calc(100% - 6px)';
+            this._resize.s.style.height = '6px';
+            this._resize.s.style.left = '3px';
+            this._resize.s.style.bottom = '-3px';
+            this._resize.s.style.cursor = 's-resize';
+            this._resize.s.style['user-select'] = 'none';
+            this._resize.sw = windowmanager._launcher.document.createElement('div');
+            this._resize.sw.style.position = 'absolute';
+            this._resize.sw.style.width = '6px';
+            this._resize.sw.style.height = '6px';
+            this._resize.sw.style.left = '-3px';
+            this._resize.sw.style.bottom = '-3px';
+            this._resize.sw.style.cursor = 'sw-resize';
+            this._resize.sw.style['user-select'] = 'none';
+
+            windowmanager._overlay.addEventListener('mousemove', (event) => {
+                // if (_resizeDown == null) return;
+                const delta = new Position(event.screenX, event.screenY).subtract(_resizeStartMouse);
+                let bounds = _resizeStartBounds.clone();
+
+                switch (_resizeDown) {
+                    case 'w':
+                        bounds.left = bounds.left + (delta.left);
+                        break;
+                    case 'nw':
+                        bounds.left = bounds.left + (delta.left);
+                        bounds.top = bounds.top + (delta.top);
+                        break;
+                    case 'n':
+                        bounds.top = bounds.top + (delta.top);
+                        break;
+                    case 'ne':
+                        bounds.right = bounds.right + (delta.left);
+                        bounds.top = bounds.top + (delta.top);
+                        break;
+                    case 'e':
+                        bounds.right = bounds.right + (delta.left);
+                        break;
+                    case 'se':
+                        bounds.right = bounds.right + (delta.left);
+                        bounds.bottom = bounds.bottom + (delta.top);
+                        break;
+                    case 's':
+                        bounds.bottom = bounds.bottom + (delta.top);
+                        break;
+                    case 'sw':
+                        bounds.left = bounds.left + (delta.left);
+                        bounds.bottom = bounds.bottom + (delta.top);
+                        break;
+                }
+                that.setBounds(bounds);
+
+                event.preventDefault();
+            }, true); // true argument makes it execute before its children get the event
+            windowmanager._overlay.addEventListener('mouseup', (event) => {
+                _resizeDown = null;
+                windowmanager._overlay.style.display = 'none';
+            }, true); // true argument makes it execute before its children get the event
+
+            for (const field in this._resize) {
+                this._resize[field].style.display = (this._isResizable ? '' : 'none');
+                this._resize[field].addEventListener('mousedown', (event) => {
+                    if (!that._isResizable) return;
+
+                    _resizeDown = field;
+                    // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
+                    //       It also prevents css rendering that changes cursor, is there something better?
+                    windowmanager._overlay.style.display = '';
+                    windowmanager._overlay.style.cursor = field + '-resize';
+                    _resizeStartMouse = new Position(event.screenX, event.screenY);
+                    _resizeStartBounds = that.getBounds();
+                });
+                newWindow.appendChild(this._resize[field]);
+            }
 
             this._window = iframe;
             this._wrapper = newWindow;
@@ -319,6 +453,14 @@ class Window extends EventHandler {
     }
 
     /**
+     * Returns true if window is not hidden or minimize or maximized.
+     * @returns {Boolean}
+     */
+    isResizable() {
+        return this._isResizable;
+    }
+
+    /**
      * Closes the window instance.
      * @param {Callback=}
      */
@@ -423,6 +565,26 @@ class Window extends EventHandler {
                 window._isMaximized = false;
             }
         }
+        if (callback) { callback(); }
+    }
+
+    /**
+     * Sets whether the window instance is resizable.
+     * @param {Boolean} resizable
+     * @param {Callback=}
+     */
+    resizable(resizable, callback) {
+        if (!this._ready) { throw new Error('restore can\'t be called on an unready window'); }
+        // TODO: What if called while dragging?
+
+        if (this._isResizable !== resizable) {
+            this._isResizable = resizable;
+
+            for (const field in this._resize) {
+                this._resize[field].style.display = (resizable ? '' : 'none');
+            }
+        }
+
         if (callback) { callback(); }
     }
 

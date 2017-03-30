@@ -243,6 +243,13 @@ class Window extends EventHandler {
         if (callback) { callback(); }
     }
 
+    resizable(resizable, callback) {
+        if (!this._ready) { throw new Error('restore can\'t be called on an unready window'); }
+
+        this._window.setResizable();
+        if (callback) { callback(); }
+    }
+
     bringToFront(callback) {
         if (!this._ready) { throw new Error('bringToFront can\'t be called on an unready window'); }
 

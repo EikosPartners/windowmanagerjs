@@ -50,5 +50,10 @@
     "webpack": "^1.14.0",
     "yargs": "^6.6.0"
   },
-  "precommit": []
+  "precommit": [],
+  "dependencies": {
+    "babel-eslint": "^7.2.1",
+    "eslint": "^3.18.0",
+    "eslint-loader": "^1.7.0"
+  }
 }
