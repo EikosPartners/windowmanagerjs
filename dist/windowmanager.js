@@ -7922,6 +7922,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _index = __webpack_require__(3);
 	
+	var _index2 = __webpack_require__(59);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function getBrowserInfo() {
@@ -8029,6 +8031,65 @@ return /******/ (function(modules) { // webpackBootstrap
 	    window.document.body.appendChild(overlay);
 	    _global2.default._overlay = overlay;
 	
+	    var getScale = function getScale() {
+	        var scale = 1;
+	
+	        if (screen.deviceXDPI) {
+	            // IE/Edge
+	            scale = screen.deviceXDPI / screen.systemXDPI;
+	        } else {
+	            // Chrome
+	            scale = screen.width / overlay.clientWidth;
+	        }
+	
+	        return scale;
+	    };
+	
+	    overlay.addEventListener('mousemove', function (event) {
+	        // if (windowmanager._resize.down === '') return;
+	        var scale = getScale();
+	        var delta = new _index2.Position(event.screenX, event.screenY).subtract(_global2.default._resize.mouseStart);
+	        var bounds = _global2.default._resize.targetStartBounds.clone();
+	        var that = _global2.default._resize.target;
+	
+	        // Account for scaling:
+	        delta.left /= scale;
+	        delta.top /= scale;
+	
+	        // Size horizontally:
+	        if (_global2.default._resize.down.includes('w')) {
+	            bounds.left = Math.min(bounds.left + delta.left, bounds.right - that._minSize.left);
+	        } else if (_global2.default._resize.down.includes('e')) {
+	            bounds.right = Math.max(bounds.right + delta.left, bounds.left + that._minSize.left);
+	        }
+	
+	        // Size vertically:
+	        if (_global2.default._resize.down.includes('n')) {
+	            bounds.top = Math.min(bounds.top + delta.top, bounds.bottom - that._minSize.top);
+	        } else if (_global2.default._resize.down.includes('s')) {
+	            bounds.bottom = Math.max(bounds.bottom + delta.top, bounds.top + that._minSize.top);
+	        }
+	
+	        // Resize the window:
+	        that.setBounds(bounds);
+	
+	        // Disable propagation of event to any other element (prevent underlying clicks):
+	        event.preventDefault();
+	    }, true); // true argument makes it execute before its children get the event
+	
+	    _global2.default._overlay.addEventListener('mouseup', function (event) {
+	        // Turn off resizing mode:
+	        _global2.default._resize.down = '';
+	        _global2.default._overlay.style.display = 'none';
+	    }, true); // true argument makes it execute before its children get the event
+	
+	    _global2.default._resize = {
+	        isDown: false,
+	        mouseStart: new _index2.Position(),
+	        target: null,
+	        targetStartBounds: new _index2.BoundingBox()
+	    };
+	
 	    _global2.default._getNextZIndex = function () {
 	        nextZIndex += 1;
 	        return nextZIndex;
@@ -8039,6 +8100,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _global2.default._internalBus = window.parent.windowmanager._internalBus;
 	    _global2.default._windows = window.parent.windowmanager._windows;
 	    _global2.default._getNextZIndex = window.parent.windowmanager._getNextZIndex;
+	    _global2.default._overlay = window.parent.windowmanager._overlay;
+	    _global2.default._resize = window.parent.windowmanager._resize;
 	}
 	
 	// Wire the internal bus to emit events on windowmanager:
@@ -8102,6 +8165,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _index = __webpack_require__(3);
 	
 	var _index2 = __webpack_require__(59);
+	
+	__webpack_require__(148);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -8227,9 +8292,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                newWindow.appendChild(iframe);
 	
 	                // Set up resize:
-	                var _resizeDown = null;
-	                var _resizeStartMouse = new _index2.Position();
-	                var _resizeStartBounds = new _index2.BoundingBox();
 	                var that = _this;
 	
 	                _this._resize = (0, _create2.default)(null);
@@ -8254,13 +8316,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    edge.addEventListener('mousedown', function (event) {
 	                        if (!that._isResizable) return;
 	
-	                        _resizeDown = dir;
+	                        _global2.default._resize.down = dir;
 	                        // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
 	                        //       It also prevents css rendering that changes cursor, is there something better?
 	                        _global2.default._overlay.style.display = '';
 	                        _global2.default._overlay.style.cursor = dir + '-resize';
-	                        _resizeStartMouse = new _index2.Position(event.screenX, event.screenY);
-	                        _resizeStartBounds = that.getBounds();
+	                        _global2.default._resize.mouseStart = new _index2.Position(event.screenX, event.screenY);
+	                        _global2.default._resize.target = that;
+	                        _global2.default._resize.targetStartBounds = that.getBounds();
 	                    });
 	
 	                    // Add to window wrapper:
@@ -8270,38 +8333,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                for (var _i = 0; _i < _arr.length; _i++) {
 	                    _loop();
 	                }
-	
-	                _global2.default._overlay.addEventListener('mousemove', function (event) {
-	                    // if (_resizeDown == null) return;
-	                    var delta = new _index2.Position(event.screenX, event.screenY).subtract(_resizeStartMouse);
-	                    var bounds = _resizeStartBounds.clone();
-	
-	                    // Size horizontally:
-	                    if (_resizeDown.includes('w')) {
-	                        bounds.left = Math.min(bounds.left + delta.left, bounds.right - that._minSize.left);
-	                    } else if (_resizeDown.includes('e')) {
-	                        bounds.right = Math.max(bounds.right + delta.left, bounds.left + that._minSize.left);
-	                    }
-	
-	                    // Size vertically:
-	                    if (_resizeDown.includes('n')) {
-	                        bounds.top = Math.min(bounds.top + delta.top, bounds.bottom - that._minSize.top);
-	                    } else if (_resizeDown.includes('s')) {
-	                        bounds.bottom = Math.max(bounds.bottom + delta.top, bounds.top + that._minSize.top);
-	                    }
-	
-	                    // Resize the window:
-	                    that.setBounds(bounds);
-	
-	                    // Disable propagation of event to any other element (prevent underlying clicks):
-	                    event.preventDefault();
-	                }, true); // true argument makes it execute before its children get the event
-	
-	                _global2.default._overlay.addEventListener('mouseup', function (event) {
-	                    // Turn off resizing mode:
-	                    _resizeDown = null;
-	                    _global2.default._overlay.style.display = 'none';
-	                }, true); // true argument makes it execute before its children get the event
 	
 	                _this._window = iframe;
 	                _this._wrapper = newWindow;
@@ -9750,6 +9781,397 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return typeof it == 'number' && _isFinite(it);
 	  }
 	});
+
+/***/ },
+/* 148 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(149);
+	module.exports = __webpack_require__(152).String.includes;
+
+/***/ },
+/* 149 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 21.1.3.7 String.prototype.includes(searchString, position = 0)
+	'use strict';
+	var $export  = __webpack_require__(150)
+	  , context  = __webpack_require__(168)
+	  , INCLUDES = 'includes';
+	
+	$export($export.P + $export.F * __webpack_require__(174)(INCLUDES), 'String', {
+	  includes: function includes(searchString /*, position = 0 */){
+	    return !!~context(this, searchString, INCLUDES)
+	      .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
+	  }
+	});
+
+/***/ },
+/* 150 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global    = __webpack_require__(151)
+	  , core      = __webpack_require__(152)
+	  , hide      = __webpack_require__(153)
+	  , redefine  = __webpack_require__(163)
+	  , ctx       = __webpack_require__(166)
+	  , PROTOTYPE = 'prototype';
+	
+	var $export = function(type, name, source){
+	  var IS_FORCED = type & $export.F
+	    , IS_GLOBAL = type & $export.G
+	    , IS_STATIC = type & $export.S
+	    , IS_PROTO  = type & $export.P
+	    , IS_BIND   = type & $export.B
+	    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] || (global[name] = {}) : (global[name] || {})[PROTOTYPE]
+	    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
+	    , expProto  = exports[PROTOTYPE] || (exports[PROTOTYPE] = {})
+	    , key, own, out, exp;
+	  if(IS_GLOBAL)source = name;
+	  for(key in source){
+	    // contains in native
+	    own = !IS_FORCED && target && target[key] !== undefined;
+	    // export native or passed
+	    out = (own ? target : source)[key];
+	    // bind timers to global for call from export context
+	    exp = IS_BIND && own ? ctx(out, global) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+	    // extend global
+	    if(target)redefine(target, key, out, type & $export.U);
+	    // export
+	    if(exports[key] != out)hide(exports, key, exp);
+	    if(IS_PROTO && expProto[key] != out)expProto[key] = out;
+	  }
+	};
+	global.core = core;
+	// type bitmap
+	$export.F = 1;   // forced
+	$export.G = 2;   // global
+	$export.S = 4;   // static
+	$export.P = 8;   // proto
+	$export.B = 16;  // bind
+	$export.W = 32;  // wrap
+	$export.U = 64;  // safe
+	$export.R = 128; // real proto method for `library` 
+	module.exports = $export;
+
+/***/ },
+/* 151 */
+/***/ function(module, exports) {
+
+	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+	var global = module.exports = typeof window != 'undefined' && window.Math == Math
+	  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
+	if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
+
+/***/ },
+/* 152 */
+/***/ function(module, exports) {
+
+	var core = module.exports = {version: '2.4.0'};
+	if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
+
+/***/ },
+/* 153 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var dP         = __webpack_require__(154)
+	  , createDesc = __webpack_require__(162);
+	module.exports = __webpack_require__(158) ? function(object, key, value){
+	  return dP.f(object, key, createDesc(1, value));
+	} : function(object, key, value){
+	  object[key] = value;
+	  return object;
+	};
+
+/***/ },
+/* 154 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var anObject       = __webpack_require__(155)
+	  , IE8_DOM_DEFINE = __webpack_require__(157)
+	  , toPrimitive    = __webpack_require__(161)
+	  , dP             = Object.defineProperty;
+	
+	exports.f = __webpack_require__(158) ? Object.defineProperty : function defineProperty(O, P, Attributes){
+	  anObject(O);
+	  P = toPrimitive(P, true);
+	  anObject(Attributes);
+	  if(IE8_DOM_DEFINE)try {
+	    return dP(O, P, Attributes);
+	  } catch(e){ /* empty */ }
+	  if('get' in Attributes || 'set' in Attributes)throw TypeError('Accessors not supported!');
+	  if('value' in Attributes)O[P] = Attributes.value;
+	  return O;
+	};
+
+/***/ },
+/* 155 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(156);
+	module.exports = function(it){
+	  if(!isObject(it))throw TypeError(it + ' is not an object!');
+	  return it;
+	};
+
+/***/ },
+/* 156 */
+/***/ function(module, exports) {
+
+	module.exports = function(it){
+	  return typeof it === 'object' ? it !== null : typeof it === 'function';
+	};
+
+/***/ },
+/* 157 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = !__webpack_require__(158) && !__webpack_require__(159)(function(){
+	  return Object.defineProperty(__webpack_require__(160)('div'), 'a', {get: function(){ return 7; }}).a != 7;
+	});
+
+/***/ },
+/* 158 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// Thank's IE8 for his funny defineProperty
+	module.exports = !__webpack_require__(159)(function(){
+	  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
+	});
+
+/***/ },
+/* 159 */
+/***/ function(module, exports) {
+
+	module.exports = function(exec){
+	  try {
+	    return !!exec();
+	  } catch(e){
+	    return true;
+	  }
+	};
+
+/***/ },
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(156)
+	  , document = __webpack_require__(151).document
+	  // in old IE typeof document.createElement is 'object'
+	  , is = isObject(document) && isObject(document.createElement);
+	module.exports = function(it){
+	  return is ? document.createElement(it) : {};
+	};
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.1.1 ToPrimitive(input [, PreferredType])
+	var isObject = __webpack_require__(156);
+	// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+	// and the second argument - flag - preferred type is a string
+	module.exports = function(it, S){
+	  if(!isObject(it))return it;
+	  var fn, val;
+	  if(S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
+	  if(typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it)))return val;
+	  if(!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
+	  throw TypeError("Can't convert object to primitive value");
+	};
+
+/***/ },
+/* 162 */
+/***/ function(module, exports) {
+
+	module.exports = function(bitmap, value){
+	  return {
+	    enumerable  : !(bitmap & 1),
+	    configurable: !(bitmap & 2),
+	    writable    : !(bitmap & 4),
+	    value       : value
+	  };
+	};
+
+/***/ },
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global    = __webpack_require__(151)
+	  , hide      = __webpack_require__(153)
+	  , has       = __webpack_require__(164)
+	  , SRC       = __webpack_require__(165)('src')
+	  , TO_STRING = 'toString'
+	  , $toString = Function[TO_STRING]
+	  , TPL       = ('' + $toString).split(TO_STRING);
+	
+	__webpack_require__(152).inspectSource = function(it){
+	  return $toString.call(it);
+	};
+	
+	(module.exports = function(O, key, val, safe){
+	  var isFunction = typeof val == 'function';
+	  if(isFunction)has(val, 'name') || hide(val, 'name', key);
+	  if(O[key] === val)return;
+	  if(isFunction)has(val, SRC) || hide(val, SRC, O[key] ? '' + O[key] : TPL.join(String(key)));
+	  if(O === global){
+	    O[key] = val;
+	  } else {
+	    if(!safe){
+	      delete O[key];
+	      hide(O, key, val);
+	    } else {
+	      if(O[key])O[key] = val;
+	      else hide(O, key, val);
+	    }
+	  }
+	// add fake Function#toString for correct work wrapped methods / constructors with methods like LoDash isNative
+	})(Function.prototype, TO_STRING, function toString(){
+	  return typeof this == 'function' && this[SRC] || $toString.call(this);
+	});
+
+/***/ },
+/* 164 */
+/***/ function(module, exports) {
+
+	var hasOwnProperty = {}.hasOwnProperty;
+	module.exports = function(it, key){
+	  return hasOwnProperty.call(it, key);
+	};
+
+/***/ },
+/* 165 */
+/***/ function(module, exports) {
+
+	var id = 0
+	  , px = Math.random();
+	module.exports = function(key){
+	  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
+	};
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// optional / simple context binding
+	var aFunction = __webpack_require__(167);
+	module.exports = function(fn, that, length){
+	  aFunction(fn);
+	  if(that === undefined)return fn;
+	  switch(length){
+	    case 1: return function(a){
+	      return fn.call(that, a);
+	    };
+	    case 2: return function(a, b){
+	      return fn.call(that, a, b);
+	    };
+	    case 3: return function(a, b, c){
+	      return fn.call(that, a, b, c);
+	    };
+	  }
+	  return function(/* ...args */){
+	    return fn.apply(that, arguments);
+	  };
+	};
+
+/***/ },
+/* 167 */
+/***/ function(module, exports) {
+
+	module.exports = function(it){
+	  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
+	  return it;
+	};
+
+/***/ },
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// helper for String#{startsWith, endsWith, includes}
+	var isRegExp = __webpack_require__(169)
+	  , defined  = __webpack_require__(173);
+	
+	module.exports = function(that, searchString, NAME){
+	  if(isRegExp(searchString))throw TypeError('String#' + NAME + " doesn't accept regex!");
+	  return String(defined(that));
+	};
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.2.8 IsRegExp(argument)
+	var isObject = __webpack_require__(156)
+	  , cof      = __webpack_require__(170)
+	  , MATCH    = __webpack_require__(171)('match');
+	module.exports = function(it){
+	  var isRegExp;
+	  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
+	};
+
+/***/ },
+/* 170 */
+/***/ function(module, exports) {
+
+	var toString = {}.toString;
+	
+	module.exports = function(it){
+	  return toString.call(it).slice(8, -1);
+	};
+
+/***/ },
+/* 171 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var store      = __webpack_require__(172)('wks')
+	  , uid        = __webpack_require__(165)
+	  , Symbol     = __webpack_require__(151).Symbol
+	  , USE_SYMBOL = typeof Symbol == 'function';
+	
+	var $exports = module.exports = function(name){
+	  return store[name] || (store[name] =
+	    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
+	};
+	
+	$exports.store = store;
+
+/***/ },
+/* 172 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global = __webpack_require__(151)
+	  , SHARED = '__core-js_shared__'
+	  , store  = global[SHARED] || (global[SHARED] = {});
+	module.exports = function(key){
+	  return store[key] || (store[key] = {});
+	};
+
+/***/ },
+/* 173 */
+/***/ function(module, exports) {
+
+	// 7.2.1 RequireObjectCoercible(argument)
+	module.exports = function(it){
+	  if(it == undefined)throw TypeError("Can't call method on  " + it);
+	  return it;
+	};
+
+/***/ },
+/* 174 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var MATCH = __webpack_require__(171)('match');
+	module.exports = function(KEY){
+	  var re = /./;
+	  try {
+	    '/./'[KEY](re);
+	  } catch(e){
+	    try {
+	      re[MATCH] = false;
+	      return !'/./'[KEY](re);
+	    } catch(f){ /* empty */ }
+	  } return true;
+	};
 
 /***/ }
 /******/ ])

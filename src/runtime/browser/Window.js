@@ -1,6 +1,7 @@
 import windowmanager from './global';
 import { EventHandler, getUniqueWindowName } from '../../utils/index';
 import { BoundingBox, Position, Size, Vector } from '../../geometry/index';
+import 'core-js/fn/string/includes';
 
 const defaultConfig = {
     width: 800,
@@ -124,9 +125,6 @@ class Window extends EventHandler {
             newWindow.appendChild(iframe);
 
             // Set up resize:
-            let _resizeDown = null;
-            let _resizeStartMouse = new Position();
-            let _resizeStartBounds = new BoundingBox();
             let that = this;
 
             this._resize = Object.create(null);
@@ -148,50 +146,19 @@ class Window extends EventHandler {
                 edge.addEventListener('mousedown', (event) => {
                     if (!that._isResizable) return;
 
-                    _resizeDown = dir;
+                    windowmanager._resize.down = dir;
                     // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
                     //       It also prevents css rendering that changes cursor, is there something better?
                     windowmanager._overlay.style.display = '';
                     windowmanager._overlay.style.cursor = `${dir}-resize`;
-                    _resizeStartMouse = new Position(event.screenX, event.screenY);
-                    _resizeStartBounds = that.getBounds();
+                    windowmanager._resize.mouseStart = new Position(event.screenX, event.screenY);
+                    windowmanager._resize.target = that;
+                    windowmanager._resize.targetStartBounds = that.getBounds();
                 });
 
                 // Add to window wrapper:
                 newWindow.appendChild(edge);
             }
-
-            windowmanager._overlay.addEventListener('mousemove', (event) => {
-                // if (_resizeDown == null) return;
-                const delta = new Position(event.screenX, event.screenY).subtract(_resizeStartMouse);
-                let bounds = _resizeStartBounds.clone();
-
-                // Size horizontally:
-                if (_resizeDown.includes('w')) {
-                    bounds.left = Math.min(bounds.left + delta.left, bounds.right - that._minSize.left);
-                } else if (_resizeDown.includes('e')) {
-                    bounds.right = Math.max(bounds.right + delta.left, bounds.left + that._minSize.left);
-                }
-
-                // Size vertically:
-                if (_resizeDown.includes('n')) {
-                    bounds.top = Math.min(bounds.top + delta.top, bounds.bottom - that._minSize.top);
-                } else if (_resizeDown.includes('s')) {
-                    bounds.bottom = Math.max(bounds.bottom + delta.top, bounds.top + that._minSize.top);
-                }
-
-                // Resize the window:
-                that.setBounds(bounds);
-
-                // Disable propagation of event to any other element (prevent underlying clicks):
-                event.preventDefault();
-            }, true); // true argument makes it execute before its children get the event
-
-            windowmanager._overlay.addEventListener('mouseup', (event) => {
-                // Turn off resizing mode:
-                _resizeDown = null;
-                windowmanager._overlay.style.display = 'none';
-            }, true); // true argument makes it execute before its children get the event
 
             this._window = iframe;
             this._wrapper = newWindow;
