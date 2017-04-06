@@ -90,8 +90,8 @@ class Window extends EventHandler {
                 delete config.parent;
             }
 
-            this._minSize = new BoundingBox(config.minWidth, config.minHeight);
-            this._maxSize = new BoundingBox(config.maxWidth, config.maxHeight);
+            this._minSize = new Size(config.minWidth, config.minHeight);
+            this._maxSize = new Size(config.maxWidth, config.maxHeight);
             this._isResizable = config.resizable;
 
             let newWindow = windowmanager._launcher.document.createElement('div');
@@ -130,130 +130,68 @@ class Window extends EventHandler {
             let that = this;
 
             this._resize = Object.create(null);
-            this._resize.w = windowmanager._launcher.document.createElement('div');
-            this._resize.w.style.position = 'absolute';
-            this._resize.w.style.width = '6px';
-            this._resize.w.style.height = 'calc(100% - 6px)';
-            this._resize.w.style.left = '-3px';
-            this._resize.w.style.top = '3px';
-            this._resize.w.style.cursor = 'w-resize';
-            this._resize.w.style['user-select'] = 'none';
-            this._resize.nw = windowmanager._launcher.document.createElement('div');
-            this._resize.nw.style.position = 'absolute';
-            this._resize.nw.style.width = '6px';
-            this._resize.nw.style.height = '6px';
-            this._resize.nw.style.left = '-3px';
-            this._resize.nw.style.top = '-3px';
-            this._resize.nw.style.cursor = 'nw-resize';
-            this._resize.nw.style['user-select'] = 'none';
-            this._resize.n = windowmanager._launcher.document.createElement('div');
-            this._resize.n.style.position = 'absolute';
-            this._resize.n.style.width = 'calc(100% - 6px)';
-            this._resize.n.style.height = '6px';
-            this._resize.n.style.left = '3px';
-            this._resize.n.style.top = '-3px';
-            this._resize.n.style.cursor = 'n-resize';
-            this._resize.n.style['user-select'] = 'none';
-            this._resize.ne = windowmanager._launcher.document.createElement('div');
-            this._resize.ne.style.position = 'absolute';
-            this._resize.ne.style.width = '6px';
-            this._resize.ne.style.height = '6px';
-            this._resize.ne.style.right = '-3px';
-            this._resize.ne.style.top = '-3px';
-            this._resize.ne.style.cursor = 'ne-resize';
-            this._resize.ne.style['user-select'] = 'none';
-            this._resize.e = windowmanager._launcher.document.createElement('div');
-            this._resize.e.style.position = 'absolute';
-            this._resize.e.style.width = '6px';
-            this._resize.e.style.height = 'calc(100% - 6px)';
-            this._resize.e.style.right = '-3px';
-            this._resize.e.style.top = '3px';
-            this._resize.e.style.cursor = 'e-resize';
-            this._resize.e.style['user-select'] = 'none';
-            this._resize.se = windowmanager._launcher.document.createElement('div');
-            this._resize.se.style.position = 'absolute';
-            this._resize.se.style.width = '6px';
-            this._resize.se.style.height = '6px';
-            this._resize.se.style.right = '-3px';
-            this._resize.se.style.bottom = '-3px';
-            this._resize.se.style.cursor = 'se-resize';
-            this._resize.se.style['user-select'] = 'none';
-            this._resize.s = windowmanager._launcher.document.createElement('div');
-            this._resize.s.style.position = 'absolute';
-            this._resize.s.style.width = 'calc(100% - 6px)';
-            this._resize.s.style.height = '6px';
-            this._resize.s.style.left = '3px';
-            this._resize.s.style.bottom = '-3px';
-            this._resize.s.style.cursor = 's-resize';
-            this._resize.s.style['user-select'] = 'none';
-            this._resize.sw = windowmanager._launcher.document.createElement('div');
-            this._resize.sw.style.position = 'absolute';
-            this._resize.sw.style.width = '6px';
-            this._resize.sw.style.height = '6px';
-            this._resize.sw.style.left = '-3px';
-            this._resize.sw.style.bottom = '-3px';
-            this._resize.sw.style.cursor = 'sw-resize';
-            this._resize.sw.style['user-select'] = 'none';
+            for (const dir of ['w', 'nw', 'n', 'ne', 'e', 'se', 's', 'sw']) {
+                let edge = windowmanager._launcher.document.createElement('div');
+
+                this._resize[dir] = edge;
+                // Setup styling:
+                edge.style.display = (this._isResizable ? '' : 'none');
+                edge.style.position = 'absolute';
+                edge.style['user-select'] = 'none';
+                edge.style.cursor = `${dir}-resize`;
+                edge.style.width = (dir === 'n' || dir === 's' ? 'calc(100% - 6px)' : '6px');
+                edge.style.height = (dir === 'w' || dir === 'e' ? 'calc(100% - 6px)' : '6px');
+                edge.style[dir.includes('e') ? 'right' : 'left'] = (dir === 'n' || dir === 's' ? '3px' : '-3px');
+                edge.style[dir.includes('s') ? 'bottom' : 'top'] = (dir === 'w' || dir === 'e' ? '3px' : '-3px');
+
+                // Setup event handler to start dragging edge:
+                edge.addEventListener('mousedown', (event) => {
+                    if (!that._isResizable) return;
+
+                    _resizeDown = dir;
+                    // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
+                    //       It also prevents css rendering that changes cursor, is there something better?
+                    windowmanager._overlay.style.display = '';
+                    windowmanager._overlay.style.cursor = `${dir}-resize`;
+                    _resizeStartMouse = new Position(event.screenX, event.screenY);
+                    _resizeStartBounds = that.getBounds();
+                });
+
+                // Add to window wrapper:
+                newWindow.appendChild(edge);
+            }
 
             windowmanager._overlay.addEventListener('mousemove', (event) => {
                 // if (_resizeDown == null) return;
                 const delta = new Position(event.screenX, event.screenY).subtract(_resizeStartMouse);
                 let bounds = _resizeStartBounds.clone();
 
-                switch (_resizeDown) {
-                    case 'w':
-                        bounds.left = bounds.left + (delta.left);
-                        break;
-                    case 'nw':
-                        bounds.left = bounds.left + (delta.left);
-                        bounds.top = bounds.top + (delta.top);
-                        break;
-                    case 'n':
-                        bounds.top = bounds.top + (delta.top);
-                        break;
-                    case 'ne':
-                        bounds.right = bounds.right + (delta.left);
-                        bounds.top = bounds.top + (delta.top);
-                        break;
-                    case 'e':
-                        bounds.right = bounds.right + (delta.left);
-                        break;
-                    case 'se':
-                        bounds.right = bounds.right + (delta.left);
-                        bounds.bottom = bounds.bottom + (delta.top);
-                        break;
-                    case 's':
-                        bounds.bottom = bounds.bottom + (delta.top);
-                        break;
-                    case 'sw':
-                        bounds.left = bounds.left + (delta.left);
-                        bounds.bottom = bounds.bottom + (delta.top);
-                        break;
+                // Size horizontally:
+                if (_resizeDown.includes('w')) {
+                    bounds.left = Math.min(bounds.left + delta.left, bounds.right - that._minSize.left);
+                } else if (_resizeDown.includes('e')) {
+                    bounds.right = Math.max(bounds.right + delta.left, bounds.left + that._minSize.left);
                 }
+
+                // Size vertically:
+                if (_resizeDown.includes('n')) {
+                    bounds.top = Math.min(bounds.top + delta.top, bounds.bottom - that._minSize.top);
+                } else if (_resizeDown.includes('s')) {
+                    bounds.bottom = Math.max(bounds.bottom + delta.top, bounds.top + that._minSize.top);
+                }
+
+                // Resize the window:
                 that.setBounds(bounds);
 
+                // Disable propagation of event to any other element (prevent underlying clicks):
                 event.preventDefault();
             }, true); // true argument makes it execute before its children get the event
+
             windowmanager._overlay.addEventListener('mouseup', (event) => {
+                // Turn off resizing mode:
                 _resizeDown = null;
                 windowmanager._overlay.style.display = 'none';
             }, true); // true argument makes it execute before its children get the event
-
-            for (const field in this._resize) {
-                this._resize[field].style.display = (this._isResizable ? '' : 'none');
-                this._resize[field].addEventListener('mousedown', (event) => {
-                    if (!that._isResizable) return;
-
-                    _resizeDown = field;
-                    // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
-                    //       It also prevents css rendering that changes cursor, is there something better?
-                    windowmanager._overlay.style.display = '';
-                    windowmanager._overlay.style.cursor = field + '-resize';
-                    _resizeStartMouse = new Position(event.screenX, event.screenY);
-                    _resizeStartBounds = that.getBounds();
-                });
-                newWindow.appendChild(this._resize[field]);
-            }
 
             this._window = iframe;
             this._wrapper = newWindow;

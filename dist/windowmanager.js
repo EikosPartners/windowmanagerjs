@@ -8193,8 +8193,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    delete config.parent;
 	                }
 	
-	                _this._minSize = new _index2.BoundingBox(config.minWidth, config.minHeight);
-	                _this._maxSize = new _index2.BoundingBox(config.maxWidth, config.maxHeight);
+	                _this._minSize = new _index2.Size(config.minWidth, config.minHeight);
+	                _this._maxSize = new _index2.Size(config.maxWidth, config.maxHeight);
 	                _this._isResizable = config.resizable;
 	
 	                var newWindow = _global2.default._launcher.document.createElement('div');
@@ -8233,134 +8233,75 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var that = _this;
 	
 	                _this._resize = (0, _create2.default)(null);
-	                _this._resize.w = _global2.default._launcher.document.createElement('div');
-	                _this._resize.w.style.position = 'absolute';
-	                _this._resize.w.style.width = '6px';
-	                _this._resize.w.style.height = 'calc(100% - 6px)';
-	                _this._resize.w.style.left = '-3px';
-	                _this._resize.w.style.top = '3px';
-	                _this._resize.w.style.cursor = 'w-resize';
-	                _this._resize.w.style['user-select'] = 'none';
-	                _this._resize.nw = _global2.default._launcher.document.createElement('div');
-	                _this._resize.nw.style.position = 'absolute';
-	                _this._resize.nw.style.width = '6px';
-	                _this._resize.nw.style.height = '6px';
-	                _this._resize.nw.style.left = '-3px';
-	                _this._resize.nw.style.top = '-3px';
-	                _this._resize.nw.style.cursor = 'nw-resize';
-	                _this._resize.nw.style['user-select'] = 'none';
-	                _this._resize.n = _global2.default._launcher.document.createElement('div');
-	                _this._resize.n.style.position = 'absolute';
-	                _this._resize.n.style.width = 'calc(100% - 6px)';
-	                _this._resize.n.style.height = '6px';
-	                _this._resize.n.style.left = '3px';
-	                _this._resize.n.style.top = '-3px';
-	                _this._resize.n.style.cursor = 'n-resize';
-	                _this._resize.n.style['user-select'] = 'none';
-	                _this._resize.ne = _global2.default._launcher.document.createElement('div');
-	                _this._resize.ne.style.position = 'absolute';
-	                _this._resize.ne.style.width = '6px';
-	                _this._resize.ne.style.height = '6px';
-	                _this._resize.ne.style.right = '-3px';
-	                _this._resize.ne.style.top = '-3px';
-	                _this._resize.ne.style.cursor = 'ne-resize';
-	                _this._resize.ne.style['user-select'] = 'none';
-	                _this._resize.e = _global2.default._launcher.document.createElement('div');
-	                _this._resize.e.style.position = 'absolute';
-	                _this._resize.e.style.width = '6px';
-	                _this._resize.e.style.height = 'calc(100% - 6px)';
-	                _this._resize.e.style.right = '-3px';
-	                _this._resize.e.style.top = '3px';
-	                _this._resize.e.style.cursor = 'e-resize';
-	                _this._resize.e.style['user-select'] = 'none';
-	                _this._resize.se = _global2.default._launcher.document.createElement('div');
-	                _this._resize.se.style.position = 'absolute';
-	                _this._resize.se.style.width = '6px';
-	                _this._resize.se.style.height = '6px';
-	                _this._resize.se.style.right = '-3px';
-	                _this._resize.se.style.bottom = '-3px';
-	                _this._resize.se.style.cursor = 'se-resize';
-	                _this._resize.se.style['user-select'] = 'none';
-	                _this._resize.s = _global2.default._launcher.document.createElement('div');
-	                _this._resize.s.style.position = 'absolute';
-	                _this._resize.s.style.width = 'calc(100% - 6px)';
-	                _this._resize.s.style.height = '6px';
-	                _this._resize.s.style.left = '3px';
-	                _this._resize.s.style.bottom = '-3px';
-	                _this._resize.s.style.cursor = 's-resize';
-	                _this._resize.s.style['user-select'] = 'none';
-	                _this._resize.sw = _global2.default._launcher.document.createElement('div');
-	                _this._resize.sw.style.position = 'absolute';
-	                _this._resize.sw.style.width = '6px';
-	                _this._resize.sw.style.height = '6px';
-	                _this._resize.sw.style.left = '-3px';
-	                _this._resize.sw.style.bottom = '-3px';
-	                _this._resize.sw.style.cursor = 'sw-resize';
-	                _this._resize.sw.style['user-select'] = 'none';
+	                var _arr = ['w', 'nw', 'n', 'ne', 'e', 'se', 's', 'sw'];
+	
+	                var _loop = function _loop() {
+	                    var dir = _arr[_i];
+	                    var edge = _global2.default._launcher.document.createElement('div');
+	
+	                    _this._resize[dir] = edge;
+	                    // Setup styling:
+	                    edge.style.display = _this._isResizable ? '' : 'none';
+	                    edge.style.position = 'absolute';
+	                    edge.style['user-select'] = 'none';
+	                    edge.style.cursor = dir + '-resize';
+	                    edge.style.width = dir === 'n' || dir === 's' ? 'calc(100% - 6px)' : '6px';
+	                    edge.style.height = dir === 'w' || dir === 'e' ? 'calc(100% - 6px)' : '6px';
+	                    edge.style[dir.includes('e') ? 'right' : 'left'] = dir === 'n' || dir === 's' ? '3px' : '-3px';
+	                    edge.style[dir.includes('s') ? 'bottom' : 'top'] = dir === 'w' || dir === 'e' ? '3px' : '-3px';
+	
+	                    // Setup event handler to start dragging edge:
+	                    edge.addEventListener('mousedown', function (event) {
+	                        if (!that._isResizable) return;
+	
+	                        _resizeDown = dir;
+	                        // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
+	                        //       It also prevents css rendering that changes cursor, is there something better?
+	                        _global2.default._overlay.style.display = '';
+	                        _global2.default._overlay.style.cursor = dir + '-resize';
+	                        _resizeStartMouse = new _index2.Position(event.screenX, event.screenY);
+	                        _resizeStartBounds = that.getBounds();
+	                    });
+	
+	                    // Add to window wrapper:
+	                    newWindow.appendChild(edge);
+	                };
+	
+	                for (var _i = 0; _i < _arr.length; _i++) {
+	                    _loop();
+	                }
 	
 	                _global2.default._overlay.addEventListener('mousemove', function (event) {
 	                    // if (_resizeDown == null) return;
 	                    var delta = new _index2.Position(event.screenX, event.screenY).subtract(_resizeStartMouse);
 	                    var bounds = _resizeStartBounds.clone();
 	
-	                    switch (_resizeDown) {
-	                        case 'w':
-	                            bounds.left = bounds.left + delta.left;
-	                            break;
-	                        case 'nw':
-	                            bounds.left = bounds.left + delta.left;
-	                            bounds.top = bounds.top + delta.top;
-	                            break;
-	                        case 'n':
-	                            bounds.top = bounds.top + delta.top;
-	                            break;
-	                        case 'ne':
-	                            bounds.right = bounds.right + delta.left;
-	                            bounds.top = bounds.top + delta.top;
-	                            break;
-	                        case 'e':
-	                            bounds.right = bounds.right + delta.left;
-	                            break;
-	                        case 'se':
-	                            bounds.right = bounds.right + delta.left;
-	                            bounds.bottom = bounds.bottom + delta.top;
-	                            break;
-	                        case 's':
-	                            bounds.bottom = bounds.bottom + delta.top;
-	                            break;
-	                        case 'sw':
-	                            bounds.left = bounds.left + delta.left;
-	                            bounds.bottom = bounds.bottom + delta.top;
-	                            break;
+	                    // Size horizontally:
+	                    if (_resizeDown.includes('w')) {
+	                        bounds.left = Math.min(bounds.left + delta.left, bounds.right - that._minSize.left);
+	                    } else if (_resizeDown.includes('e')) {
+	                        bounds.right = Math.max(bounds.right + delta.left, bounds.left + that._minSize.left);
 	                    }
+	
+	                    // Size vertically:
+	                    if (_resizeDown.includes('n')) {
+	                        bounds.top = Math.min(bounds.top + delta.top, bounds.bottom - that._minSize.top);
+	                    } else if (_resizeDown.includes('s')) {
+	                        bounds.bottom = Math.max(bounds.bottom + delta.top, bounds.top + that._minSize.top);
+	                    }
+	
+	                    // Resize the window:
 	                    that.setBounds(bounds);
 	
+	                    // Disable propagation of event to any other element (prevent underlying clicks):
 	                    event.preventDefault();
 	                }, true); // true argument makes it execute before its children get the event
+	
 	                _global2.default._overlay.addEventListener('mouseup', function (event) {
+	                    // Turn off resizing mode:
 	                    _resizeDown = null;
 	                    _global2.default._overlay.style.display = 'none';
 	                }, true); // true argument makes it execute before its children get the event
-	
-	                var _loop = function _loop(field) {
-	                    _this._resize[field].style.display = _this._isResizable ? '' : 'none';
-	                    _this._resize[field].addEventListener('mousedown', function (event) {
-	                        if (!that._isResizable) return;
-	
-	                        _resizeDown = field;
-	                        // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
-	                        //       It also prevents css rendering that changes cursor, is there something better?
-	                        _global2.default._overlay.style.display = '';
-	                        _global2.default._overlay.style.cursor = field + '-resize';
-	                        _resizeStartMouse = new _index2.Position(event.screenX, event.screenY);
-	                        _resizeStartBounds = that.getBounds();
-	                    });
-	                    newWindow.appendChild(_this._resize[field]);
-	                };
-	
-	                for (var field in _this._resize) {
-	                    _loop(field);
-	                }
 	
 	                _this._window = iframe;
 	                _this._wrapper = newWindow;
