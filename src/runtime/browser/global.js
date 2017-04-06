@@ -96,7 +96,7 @@ if (windowmanager.runtime.isMain) {
 
         if (screen.deviceXDPI) {
             // IE/Edge
-            scale = screen.deviceXDPI / screen.systemXDPI;
+            scale = screen.deviceXDPI / screen.logicalXDPI;
         } else {
             // Chrome
             scale = screen.width / overlay.clientWidth;
@@ -106,45 +106,60 @@ if (windowmanager.runtime.isMain) {
     };
 
     overlay.addEventListener('mousemove', (event) => {
-        // if (windowmanager._resize.down === '') return;
+        // Disable propagation of event to any other element (prevent underlying clicks):
+        if (windowmanager._drag.down === '') return;
+        event.preventDefault();
+
         const scale = getScale();
-        const delta = new Position(event.screenX, event.screenY).subtract(windowmanager._resize.mouseStart);
-        let bounds = windowmanager._resize.targetStartBounds.clone();
-        let that = windowmanager._resize.target;
+        const delta = new Position(event.screenX, event.screenY).subtract(windowmanager._drag.mouseStart);
+        let that = windowmanager._drag.target;
 
         // Account for scaling:
         delta.left /= scale;
         delta.top /= scale;
 
-        // Size horizontally:
-        if (windowmanager._resize.down.includes('w')) {
-            bounds.left = Math.min(bounds.left + delta.left, bounds.right - that._minSize.left);
-        } else if (windowmanager._resize.down.includes('e')) {
-            bounds.right = Math.max(bounds.right + delta.left, bounds.left + that._minSize.left);
+        // Drag window:
+        if (windowmanager._drag.down === 'm') {
+            // Stop text selection:
+            that._window.contentWindow.getSelection().removeAllRanges();
+            window.getSelection().removeAllRanges();
+            // Drag:
+            that._dragBy(delta.left, delta.top);
+        } else {
+            // Resize window:
+            let bounds = windowmanager._drag.targetStartBounds.clone();
+
+            // Size horizontally:
+            if (windowmanager._drag.down.includes('w')) {
+                bounds.left = Math.min(bounds.left + delta.left, bounds.right - that._minSize.left);
+            } else if (windowmanager._drag.down.includes('e')) {
+                bounds.right = Math.max(bounds.right + delta.left, bounds.left + that._minSize.left);
+            }
+
+            // Size vertically:
+            if (windowmanager._drag.down.includes('n')) {
+                bounds.top = Math.min(bounds.top + delta.top, bounds.bottom - that._minSize.top);
+            } else if (windowmanager._drag.down.includes('s')) {
+                bounds.bottom = Math.max(bounds.bottom + delta.top, bounds.top + that._minSize.top);
+            }
+
+            // Resize the window:
+            that.setBounds(bounds);
         }
-
-        // Size vertically:
-        if (windowmanager._resize.down.includes('n')) {
-            bounds.top = Math.min(bounds.top + delta.top, bounds.bottom - that._minSize.top);
-        } else if (windowmanager._resize.down.includes('s')) {
-            bounds.bottom = Math.max(bounds.bottom + delta.top, bounds.top + that._minSize.top);
-        }
-
-        // Resize the window:
-        that.setBounds(bounds);
-
-        // Disable propagation of event to any other element (prevent underlying clicks):
-        event.preventDefault();
     }, true); // true argument makes it execute before its children get the event
 
     windowmanager._overlay.addEventListener('mouseup', (event) => {
+        // Finish dragging:
+        if (windowmanager._drag.down === 'm') {
+            windowmanager._drag.target._dragStop();
+        }
         // Turn off resizing mode:
-        windowmanager._resize.down = '';
+        windowmanager._drag.down = '';
         windowmanager._overlay.style.display = 'none';
     }, true); // true argument makes it execute before its children get the event
 
-    windowmanager._resize = {
-        isDown: false,
+    windowmanager._drag = {
+        down: '', // either direction (n, s, e, w, ne, se, ect), or 'm' for move
         mouseStart: new Position(),
         target: null,
         targetStartBounds: new BoundingBox()
@@ -161,7 +176,7 @@ if (windowmanager.runtime.isMain) {
     windowmanager._windows = window.parent.windowmanager._windows;
     windowmanager._getNextZIndex = window.parent.windowmanager._getNextZIndex;
     windowmanager._overlay = window.parent.windowmanager._overlay;
-    windowmanager._resize = window.parent.windowmanager._resize;
+    windowmanager._drag = window.parent.windowmanager._drag;
 }
 
 // Wire the internal bus to emit events on windowmanager:

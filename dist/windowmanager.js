@@ -8036,7 +8036,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        if (screen.deviceXDPI) {
 	            // IE/Edge
-	            scale = screen.deviceXDPI / screen.systemXDPI;
+	            scale = screen.deviceXDPI / screen.logicalXDPI;
 	        } else {
 	            // Chrome
 	            scale = screen.width / overlay.clientWidth;
@@ -8046,45 +8046,60 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	
 	    overlay.addEventListener('mousemove', function (event) {
-	        // if (windowmanager._resize.down === '') return;
+	        // Disable propagation of event to any other element (prevent underlying clicks):
+	        if (_global2.default._drag.down === '') return;
+	        event.preventDefault();
+	
 	        var scale = getScale();
-	        var delta = new _index2.Position(event.screenX, event.screenY).subtract(_global2.default._resize.mouseStart);
-	        var bounds = _global2.default._resize.targetStartBounds.clone();
-	        var that = _global2.default._resize.target;
+	        var delta = new _index2.Position(event.screenX, event.screenY).subtract(_global2.default._drag.mouseStart);
+	        var that = _global2.default._drag.target;
 	
 	        // Account for scaling:
 	        delta.left /= scale;
 	        delta.top /= scale;
 	
-	        // Size horizontally:
-	        if (_global2.default._resize.down.includes('w')) {
-	            bounds.left = Math.min(bounds.left + delta.left, bounds.right - that._minSize.left);
-	        } else if (_global2.default._resize.down.includes('e')) {
-	            bounds.right = Math.max(bounds.right + delta.left, bounds.left + that._minSize.left);
+	        // Drag window:
+	        if (_global2.default._drag.down === 'm') {
+	            // Stop text selection:
+	            that._window.contentWindow.getSelection().removeAllRanges();
+	            window.getSelection().removeAllRanges();
+	            // Drag:
+	            that._dragBy(delta.left, delta.top);
+	        } else {
+	            // Resize window:
+	            var bounds = _global2.default._drag.targetStartBounds.clone();
+	
+	            // Size horizontally:
+	            if (_global2.default._drag.down.includes('w')) {
+	                bounds.left = Math.min(bounds.left + delta.left, bounds.right - that._minSize.left);
+	            } else if (_global2.default._drag.down.includes('e')) {
+	                bounds.right = Math.max(bounds.right + delta.left, bounds.left + that._minSize.left);
+	            }
+	
+	            // Size vertically:
+	            if (_global2.default._drag.down.includes('n')) {
+	                bounds.top = Math.min(bounds.top + delta.top, bounds.bottom - that._minSize.top);
+	            } else if (_global2.default._drag.down.includes('s')) {
+	                bounds.bottom = Math.max(bounds.bottom + delta.top, bounds.top + that._minSize.top);
+	            }
+	
+	            // Resize the window:
+	            that.setBounds(bounds);
 	        }
-	
-	        // Size vertically:
-	        if (_global2.default._resize.down.includes('n')) {
-	            bounds.top = Math.min(bounds.top + delta.top, bounds.bottom - that._minSize.top);
-	        } else if (_global2.default._resize.down.includes('s')) {
-	            bounds.bottom = Math.max(bounds.bottom + delta.top, bounds.top + that._minSize.top);
-	        }
-	
-	        // Resize the window:
-	        that.setBounds(bounds);
-	
-	        // Disable propagation of event to any other element (prevent underlying clicks):
-	        event.preventDefault();
 	    }, true); // true argument makes it execute before its children get the event
 	
 	    _global2.default._overlay.addEventListener('mouseup', function (event) {
+	        // Finish dragging:
+	        if (_global2.default._drag.down === 'm') {
+	            _global2.default._drag.target._dragStop();
+	        }
 	        // Turn off resizing mode:
-	        _global2.default._resize.down = '';
+	        _global2.default._drag.down = '';
 	        _global2.default._overlay.style.display = 'none';
 	    }, true); // true argument makes it execute before its children get the event
 	
-	    _global2.default._resize = {
-	        isDown: false,
+	    _global2.default._drag = {
+	        down: '', // either direction (n, s, e, w, ne, se, ect), or 'm' for move
 	        mouseStart: new _index2.Position(),
 	        target: null,
 	        targetStartBounds: new _index2.BoundingBox()
@@ -8101,7 +8116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _global2.default._windows = window.parent.windowmanager._windows;
 	    _global2.default._getNextZIndex = window.parent.windowmanager._getNextZIndex;
 	    _global2.default._overlay = window.parent.windowmanager._overlay;
-	    _global2.default._resize = window.parent.windowmanager._resize;
+	    _global2.default._drag = window.parent.windowmanager._drag;
 	}
 	
 	// Wire the internal bus to emit events on windowmanager:
@@ -8316,14 +8331,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    edge.addEventListener('mousedown', function (event) {
 	                        if (!that._isResizable) return;
 	
-	                        _global2.default._resize.down = dir;
 	                        // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
 	                        //       It also prevents css rendering that changes cursor, is there something better?
 	                        _global2.default._overlay.style.display = '';
 	                        _global2.default._overlay.style.cursor = dir + '-resize';
-	                        _global2.default._resize.mouseStart = new _index2.Position(event.screenX, event.screenY);
-	                        _global2.default._resize.target = that;
-	                        _global2.default._resize.targetStartBounds = that.getBounds();
+	                        _global2.default._drag.down = dir;
+	                        _global2.default._drag.mouseStart = new _index2.Position(event.screenX, event.screenY);
+	                        _global2.default._drag.target = that;
+	                        _global2.default._drag.targetStartBounds = that.getBounds();
 	                    });
 	
 	                    // Add to window wrapper:
@@ -9622,6 +9637,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function getByID(id) {
 	            return _global2.default._windows.get(id);
 	        }
+	    }, {
+	        key: 'getByElement',
+	        value: function getByElement(el) {
+	            var doc = el.ownerDocument;
+	            var win = doc.defaultView || doc.parentWindow;
+	
+	            return _global2.default._windows.get(win.windowmanager.Window.current._id);
+	        }
 	
 	        /**
 	         * Returns the {@link Window} instance that is the main window.
@@ -9689,64 +9712,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	if (!_global2.default.runtime.isMain) {
 	    // Setup handlers on this child window:
-	    var wX = 0;
-	    var wY = 0;
-	    var dragging = false;
-	
 	    window.addEventListener('focus', function () {
 	        Window.current.bringToFront();
 	    });
 	
-	    window.addEventListener('mousedown', function onDragStart(event) {
+	    window.addEventListener('mousedown', function (event) {
 	        if (event.target.classList && event.target.classList.contains('window-drag')) {
-	            dragging = true;
-	            wX = event.screenX;
-	            wY = event.screenY;
+	            event.preventDefault();
 	            Window.current._dragStart();
+	            // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
+	            //       It also prevents css rendering that changes cursor, is there something better?
+	            _global2.default._overlay.style.display = '';
+	            _global2.default._overlay.style.cursor = '';
+	            _global2.default._drag.down = 'm';
+	            _global2.default._drag.mouseStart = new _index2.Position(event.screenX, event.screenY);
+	            _global2.default._drag.target = Window.current;
+	            _global2.default._drag.targetStartBounds = Window.current.getBounds();
+	            _global2.default._launcher.focus();
 	        }
 	    });
 	
 	    window.addEventListener('touchstart', function (event) {
 	        if (event.target.classList && event.target.classList.contains('window-drag')) {
 	            event.preventDefault();
-	            dragging = true;
-	            wX = event.touches[0].screenX;
-	            wY = event.touches[0].screenY;
 	            Window.current._dragStart();
-	        }
-	    });
-	
-	    window.addEventListener('mousemove', function (event) {
-	        if (dragging) {
-	            // Stop text selection:
-	            window.getSelection().removeAllRanges();
-	            // Drag:
-	            Window.current._dragBy(event.screenX - wX, event.screenY - wY);
-	        }
-	    });
-	
-	    window.addEventListener('touchmove', function (event) {
-	        if (dragging) {
-	            event.preventDefault();
-	            // Stop text selection:
-	            window.getSelection().removeAllRanges();
-	            // Drag:
-	            Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
-	        }
-	    });
-	
-	    window.addEventListener('mouseup', function (event) {
-	        if (dragging) {
-	            dragging = false;
-	            Window.current._dragStop();
-	        }
-	    });
-	
-	    window.addEventListener('touchend', function (event) {
-	        if (dragging) {
-	            event.preventDefault();
-	            dragging = false;
-	            Window.current._dragStop();
+	            // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
+	            //       It also prevents css rendering that changes cursor, is there something better?
+	            _global2.default._overlay.style.display = '';
+	            _global2.default._overlay.style.cursor = '';
+	            _global2.default._drag.down = 'm';
+	            _global2.default._drag.mouseStart = new _index2.Position(event.touches[0].screenX, event.touches[0].screenY);
+	            _global2.default._drag.target = Window.current;
+	            _global2.default._drag.targetStartBounds = Window.current.getBounds();
+	            _global2.default._launcher.focus();
 	        }
 	    });
 	}

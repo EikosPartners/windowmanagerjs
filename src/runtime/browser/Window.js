@@ -146,14 +146,14 @@ class Window extends EventHandler {
                 edge.addEventListener('mousedown', (event) => {
                     if (!that._isResizable) return;
 
-                    windowmanager._resize.down = dir;
                     // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
                     //       It also prevents css rendering that changes cursor, is there something better?
                     windowmanager._overlay.style.display = '';
                     windowmanager._overlay.style.cursor = `${dir}-resize`;
-                    windowmanager._resize.mouseStart = new Position(event.screenX, event.screenY);
-                    windowmanager._resize.target = that;
-                    windowmanager._resize.targetStartBounds = that.getBounds();
+                    windowmanager._drag.down = dir;
+                    windowmanager._drag.mouseStart = new Position(event.screenX, event.screenY);
+                    windowmanager._drag.target = that;
+                    windowmanager._drag.targetStartBounds = that.getBounds();
                 });
 
                 // Add to window wrapper:
@@ -799,6 +799,13 @@ class Window extends EventHandler {
         return windowmanager._windows.get(id);
     }
 
+    static getByElement(el) {
+        let doc = el.ownerDocument;
+        let win = doc.defaultView || doc.parentWindow;
+
+        return windowmanager._windows.get(win.windowmanager.Window.current._id);
+    }
+
     /**
      * Returns the {@link Window} instance that is the main window.
      * @returns {Window}
@@ -832,64 +839,39 @@ if (windowmanager.runtime.isMain) {
 
 if (!windowmanager.runtime.isMain) {
     // Setup handlers on this child window:
-    let wX = 0;
-    let wY = 0;
-    let dragging = false;
-
     window.addEventListener('focus', function () {
         Window.current.bringToFront();
     });
 
-    window.addEventListener('mousedown', function onDragStart(event) {
+    window.addEventListener('mousedown', function (event) {
         if (event.target.classList && event.target.classList.contains('window-drag')) {
-            dragging = true;
-            wX = event.screenX;
-            wY = event.screenY;
+            event.preventDefault();
             Window.current._dragStart();
+            // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
+            //       It also prevents css rendering that changes cursor, is there something better?
+            windowmanager._overlay.style.display = '';
+            windowmanager._overlay.style.cursor = '';
+            windowmanager._drag.down = 'm';
+            windowmanager._drag.mouseStart = new Position(event.screenX, event.screenY);
+            windowmanager._drag.target = Window.current;
+            windowmanager._drag.targetStartBounds = Window.current.getBounds();
+            windowmanager._launcher.focus();
         }
     });
 
     window.addEventListener('touchstart', function (event) {
         if (event.target.classList && event.target.classList.contains('window-drag')) {
             event.preventDefault();
-            dragging = true;
-            wX = event.touches[0].screenX;
-            wY = event.touches[0].screenY;
             Window.current._dragStart();
-        }
-    });
-
-    window.addEventListener('mousemove', function (event) {
-        if (dragging) {
-            // Stop text selection:
-            window.getSelection().removeAllRanges();
-            // Drag:
-            Window.current._dragBy(event.screenX - wX, event.screenY - wY);
-        }
-    });
-
-    window.addEventListener('touchmove', function (event) {
-        if (dragging) {
-            event.preventDefault();
-            // Stop text selection:
-            window.getSelection().removeAllRanges();
-            // Drag:
-            Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
-        }
-    });
-
-    window.addEventListener('mouseup', function (event) {
-        if (dragging) {
-            dragging = false;
-            Window.current._dragStop();
-        }
-    });
-
-    window.addEventListener('touchend', function (event) {
-        if (dragging) {
-            event.preventDefault();
-            dragging = false;
-            Window.current._dragStop();
+            // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
+            //       It also prevents css rendering that changes cursor, is there something better?
+            windowmanager._overlay.style.display = '';
+            windowmanager._overlay.style.cursor = '';
+            windowmanager._drag.down = 'm';
+            windowmanager._drag.mouseStart = new Position(event.touches[0].screenX, event.touches[0].screenY);
+            windowmanager._drag.target = Window.current;
+            windowmanager._drag.targetStartBounds = Window.current.getBounds();
+            windowmanager._launcher.focus();
         }
     });
 }
