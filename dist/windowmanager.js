@@ -8031,7 +8031,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    window.document.body.appendChild(overlay);
 	    _global2.default._overlay = overlay;
 	
-	    var getScale = function getScale() {
+	    _global2.default._getScale = function () {
 	        var scale = 1;
 	
 	        if (screen.deviceXDPI) {
@@ -8045,12 +8045,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return scale;
 	    };
 	
-	    overlay.addEventListener('mousemove', function (event) {
+	    var mousemove = function mousemove(event) {
 	        // Disable propagation of event to any other element (prevent underlying clicks):
 	        if (_global2.default._drag.down === '') return;
 	        event.preventDefault();
 	
-	        var scale = getScale();
+	        var scale = _global2.default._getScale();
 	        var delta = new _index2.Position(event.screenX, event.screenY).subtract(_global2.default._drag.mouseStart);
 	        var that = _global2.default._drag.target;
 	
@@ -8060,11 +8060,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        // Drag window:
 	        if (_global2.default._drag.down === 'm') {
-	            // Stop text selection:
-	            that._window.contentWindow.getSelection().removeAllRanges();
-	            window.getSelection().removeAllRanges();
-	            // Drag:
-	            that._dragBy(delta.left, delta.top);
+	            if (_global2.default.runtime.name !== 'Firefox') {
+	                // Stop text selection:
+	                that._window.contentWindow.getSelection().removeAllRanges();
+	                window.getSelection().removeAllRanges();
+	                // Drag:
+	                that._dragBy(delta.left, delta.top);
+	            }
 	        } else {
 	            // Resize window:
 	            var bounds = _global2.default._drag.targetStartBounds.clone();
@@ -8086,17 +8088,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // Resize the window:
 	            that.setBounds(bounds);
 	        }
+	    };
+	
+	    overlay.addEventListener('mousemove', mousemove, true); // true argument makes it execute before its children get the event
+	    overlay.addEventListener('touchmove', function (event) {
+	        mousemove({
+	            screenX: event.touches[0].screenX,
+	            screenY: event.touches[0].screenY,
+	            preventDefault: event.preventDefault
+	        });
 	    }, true); // true argument makes it execute before its children get the event
 	
-	    _global2.default._overlay.addEventListener('mouseup', function (event) {
+	    var mouseup = function mouseup(event) {
 	        // Finish dragging:
 	        if (_global2.default._drag.down === 'm') {
+	            event.preventDefault();
 	            _global2.default._drag.target._dragStop();
 	        }
 	        // Turn off resizing mode:
 	        _global2.default._drag.down = '';
 	        _global2.default._overlay.style.display = 'none';
-	    }, true); // true argument makes it execute before its children get the event
+	    };
+	
+	    _global2.default._overlay.addEventListener('mouseup', mouseup, true); // true argument makes it execute before its children get the event
+	    _global2.default._overlay.addEventListener('touchend', mouseup, true); // true argument makes it execute before its children get the event
 	
 	    _global2.default._drag = {
 	        down: '', // either direction (n, s, e, w, ne, se, ect), or 'm' for move
@@ -8117,6 +8132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _global2.default._getNextZIndex = window.parent.windowmanager._getNextZIndex;
 	    _global2.default._overlay = window.parent.windowmanager._overlay;
 	    _global2.default._drag = window.parent.windowmanager._drag;
+	    _global2.default._getScale = window.parent.windowmanager._getScale;
 	}
 	
 	// Wire the internal bus to emit events on windowmanager:
@@ -9716,37 +9732,75 @@ return /******/ (function(modules) { // webpackBootstrap
 	        Window.current.bringToFront();
 	    });
 	
-	    window.addEventListener('mousedown', function (event) {
+	    var mousedown = function mousedown(event) {
 	        if (event.target.classList && event.target.classList.contains('window-drag')) {
 	            event.preventDefault();
 	            Window.current._dragStart();
 	            // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
 	            //       It also prevents css rendering that changes cursor, is there something better?
-	            _global2.default._overlay.style.display = '';
-	            _global2.default._overlay.style.cursor = '';
 	            _global2.default._drag.down = 'm';
 	            _global2.default._drag.mouseStart = new _index2.Position(event.screenX, event.screenY);
 	            _global2.default._drag.target = Window.current;
 	            _global2.default._drag.targetStartBounds = Window.current.getBounds();
-	            _global2.default._launcher.focus();
+	            if (_global2.default.runtime.name !== 'Firefox') {
+	                _global2.default._overlay.style.display = '';
+	                _global2.default._overlay.style.cursor = '';
+	                _global2.default._overlay.focus();
+	            }
 	        }
-	    });
+	    };
 	
+	    window.addEventListener('mousedown', mousedown, true);
 	    window.addEventListener('touchstart', function (event) {
-	        if (event.target.classList && event.target.classList.contains('window-drag')) {
-	            event.preventDefault();
-	            Window.current._dragStart();
-	            // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
-	            //       It also prevents css rendering that changes cursor, is there something better?
-	            _global2.default._overlay.style.display = '';
-	            _global2.default._overlay.style.cursor = '';
-	            _global2.default._drag.down = 'm';
-	            _global2.default._drag.mouseStart = new _index2.Position(event.touches[0].screenX, event.touches[0].screenY);
-	            _global2.default._drag.target = Window.current;
-	            _global2.default._drag.targetStartBounds = Window.current.getBounds();
-	            _global2.default._launcher.focus();
-	        }
-	    });
+	        mousedown({
+	            screenX: event.touches[0].screenX,
+	            screenY: event.touches[0].screenY,
+	            preventDefault: event.preventDefault
+	        });
+	    }, true);
+	
+	    if (_global2.default.runtime.name === 'Firefox') {
+	        var mousemove = function mousemove(event) {
+	            if (_global2.default._drag.down === 'm') {
+	                event.preventDefault();
+	                _global2.default._overlay.style.display = '';
+	                var scale = _global2.default._getScale();
+	
+	                _global2.default._overlay.style.display = 'none';
+	                var delta = new _index2.Position(event.screenX, event.screenY).subtract(_global2.default._drag.mouseStart);
+	
+	                // Account for scaling:
+	                delta.left /= scale;
+	                delta.top /= scale;
+	                // Stop text selection:
+	                window.getSelection().removeAllRanges();
+	                // Drag:
+	                Window.current._dragBy(delta.left, delta.top);
+	            }
+	        };
+	
+	        window.addEventListener('mousemove', mousemove, true);
+	        window.addEventListener('touchmove', function (event) {
+	            mousemove({
+	                screenX: event.touches[0].screenX,
+	                screenY: event.touches[0].screenY,
+	                preventDefault: event.preventDefault
+	            });
+	        }, true);
+	
+	        var mouseup = function mouseup(event) {
+	            if (_global2.default._drag.down === 'm') {
+	                event.preventDefault();
+	                Window.current._dragStop();
+	                // Turn off resizing mode:
+	                _global2.default._drag.down = '';
+	                _global2.default._overlay.style.display = 'none';
+	            }
+	        };
+	
+	        window.addEventListener('mouseup', mouseup, true);
+	        window.addEventListener('touchend', mouseup, true);
+	    }
 	}
 	
 	_global2.default.Window = Window;

@@ -91,7 +91,7 @@ if (windowmanager.runtime.isMain) {
     window.document.body.appendChild(overlay);
     windowmanager._overlay = overlay;
 
-    let getScale = () => {
+    windowmanager._getScale = () => {
         let scale = 1;
 
         if (screen.deviceXDPI) {
@@ -105,12 +105,12 @@ if (windowmanager.runtime.isMain) {
         return scale;
     };
 
-    overlay.addEventListener('mousemove', (event) => {
+    const mousemove = (event) => {
         // Disable propagation of event to any other element (prevent underlying clicks):
         if (windowmanager._drag.down === '') return;
         event.preventDefault();
 
-        const scale = getScale();
+        const scale = windowmanager._getScale();
         const delta = new Position(event.screenX, event.screenY).subtract(windowmanager._drag.mouseStart);
         let that = windowmanager._drag.target;
 
@@ -120,11 +120,13 @@ if (windowmanager.runtime.isMain) {
 
         // Drag window:
         if (windowmanager._drag.down === 'm') {
-            // Stop text selection:
-            that._window.contentWindow.getSelection().removeAllRanges();
-            window.getSelection().removeAllRanges();
-            // Drag:
-            that._dragBy(delta.left, delta.top);
+            if (windowmanager.runtime.name !== 'Firefox') {
+                // Stop text selection:
+                that._window.contentWindow.getSelection().removeAllRanges();
+                window.getSelection().removeAllRanges();
+                // Drag:
+                that._dragBy(delta.left, delta.top);
+            }
         } else {
             // Resize window:
             let bounds = windowmanager._drag.targetStartBounds.clone();
@@ -146,17 +148,30 @@ if (windowmanager.runtime.isMain) {
             // Resize the window:
             that.setBounds(bounds);
         }
+    };
+
+    overlay.addEventListener('mousemove', mousemove, true); // true argument makes it execute before its children get the event
+    overlay.addEventListener('touchmove', (event) => {
+        mousemove({
+            screenX: event.touches[0].screenX,
+            screenY: event.touches[0].screenY,
+            preventDefault: event.preventDefault
+        });
     }, true); // true argument makes it execute before its children get the event
 
-    windowmanager._overlay.addEventListener('mouseup', (event) => {
+    const mouseup = (event) => {
         // Finish dragging:
         if (windowmanager._drag.down === 'm') {
+            event.preventDefault();
             windowmanager._drag.target._dragStop();
         }
         // Turn off resizing mode:
         windowmanager._drag.down = '';
         windowmanager._overlay.style.display = 'none';
-    }, true); // true argument makes it execute before its children get the event
+    };
+
+    windowmanager._overlay.addEventListener('mouseup', mouseup, true); // true argument makes it execute before its children get the event
+    windowmanager._overlay.addEventListener('touchend', mouseup, true); // true argument makes it execute before its children get the event
 
     windowmanager._drag = {
         down: '', // either direction (n, s, e, w, ne, se, ect), or 'm' for move
@@ -177,6 +192,7 @@ if (windowmanager.runtime.isMain) {
     windowmanager._getNextZIndex = window.parent.windowmanager._getNextZIndex;
     windowmanager._overlay = window.parent.windowmanager._overlay;
     windowmanager._drag = window.parent.windowmanager._drag;
+    windowmanager._getScale = window.parent.windowmanager._getScale;
 }
 
 // Wire the internal bus to emit events on windowmanager:

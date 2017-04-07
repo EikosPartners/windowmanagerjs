@@ -843,37 +843,75 @@ if (!windowmanager.runtime.isMain) {
         Window.current.bringToFront();
     });
 
-    window.addEventListener('mousedown', function (event) {
+    const mousedown = (event) => {
         if (event.target.classList && event.target.classList.contains('window-drag')) {
             event.preventDefault();
             Window.current._dragStart();
             // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
             //       It also prevents css rendering that changes cursor, is there something better?
-            windowmanager._overlay.style.display = '';
-            windowmanager._overlay.style.cursor = '';
             windowmanager._drag.down = 'm';
             windowmanager._drag.mouseStart = new Position(event.screenX, event.screenY);
             windowmanager._drag.target = Window.current;
             windowmanager._drag.targetStartBounds = Window.current.getBounds();
-            windowmanager._launcher.focus();
+            if (windowmanager.runtime.name !== 'Firefox') {
+                windowmanager._overlay.style.display = '';
+                windowmanager._overlay.style.cursor = '';
+                windowmanager._overlay.focus();
+            }
         }
-    });
+    };
 
-    window.addEventListener('touchstart', function (event) {
-        if (event.target.classList && event.target.classList.contains('window-drag')) {
-            event.preventDefault();
-            Window.current._dragStart();
-            // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
-            //       It also prevents css rendering that changes cursor, is there something better?
-            windowmanager._overlay.style.display = '';
-            windowmanager._overlay.style.cursor = '';
-            windowmanager._drag.down = 'm';
-            windowmanager._drag.mouseStart = new Position(event.touches[0].screenX, event.touches[0].screenY);
-            windowmanager._drag.target = Window.current;
-            windowmanager._drag.targetStartBounds = Window.current.getBounds();
-            windowmanager._launcher.focus();
-        }
-    });
+    window.addEventListener('mousedown', mousedown, true);
+    window.addEventListener('touchstart', (event) => {
+        mousedown({
+            screenX: event.touches[0].screenX,
+            screenY: event.touches[0].screenY,
+            preventDefault: event.preventDefault
+        });
+    }, true);
+
+    if (windowmanager.runtime.name === 'Firefox') {
+        const mousemove = (event) => {
+            if (windowmanager._drag.down === 'm') {
+                event.preventDefault();
+                windowmanager._overlay.style.display = '';
+                const scale = windowmanager._getScale();
+
+                windowmanager._overlay.style.display = 'none';
+                const delta = new Position(event.screenX, event.screenY).subtract(windowmanager._drag.mouseStart);
+
+                // Account for scaling:
+                delta.left /= scale;
+                delta.top /= scale;
+                // Stop text selection:
+                window.getSelection().removeAllRanges();
+                // Drag:
+                Window.current._dragBy(delta.left, delta.top);
+            }
+        };
+
+        window.addEventListener('mousemove', mousemove, true);
+        window.addEventListener('touchmove', (event) => {
+            mousemove({
+                screenX: event.touches[0].screenX,
+                screenY: event.touches[0].screenY,
+                preventDefault: event.preventDefault
+            });
+        }, true);
+
+        const mouseup = (event) => {
+            if (windowmanager._drag.down === 'm') {
+                event.preventDefault();
+                Window.current._dragStop();
+                // Turn off resizing mode:
+                windowmanager._drag.down = '';
+                windowmanager._overlay.style.display = 'none';
+            }
+        };
+
+        window.addEventListener('mouseup', mouseup, true);
+        window.addEventListener('touchend', mouseup, true);
+    }
 }
 
 windowmanager.Window = Window;
