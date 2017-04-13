@@ -29,7 +29,8 @@
     "release": "release-it",
     "release-minor": "release-it minor",
     "release-major": "release-it major",
-    "test": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js"
+    "test": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js",
+    "test-travis": "mocha --compilers js:babel-core/register --colors ./test/*.spec.js"
   },
   "devDependencies": {
     "babel": "^6.5.2",
@@ -48,6 +49,7 @@
     "pre-commit": "^1.2.2",
     "release-it": "^2.5.3",
     "webpack": "^1.14.0",
+    "webpack-fail-plugin": "^1.0.6",
     "yargs": "^6.6.0"
   },
   "precommit": []

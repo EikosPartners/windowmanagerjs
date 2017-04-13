@@ -1,6 +1,7 @@
 // TODO: Determine which auto release system like:
 //       https://github.com/semantic-release/semantic-release
 //       https://github.com/webpro/release-it
+const failPlugin = require('webpack-fail-plugin');
 const webpack = require('webpack');
 const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 const path = require('path');
@@ -8,7 +9,7 @@ const env = require('yargs').argv.mode;
 const packageJson = require('./package.json');
 
 const libraryName = 'windowmanager';
-let plugins = [];
+let plugins = [failPlugin];
 let outputFile;
 let config;
 

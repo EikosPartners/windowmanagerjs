@@ -1,5 +1,5 @@
 # windowmanager.js
-[![npm version](https://badge.fury.io/js/windowmanager.svg)](https://badge.fury.io/js/windowmanager)<br>
+[![npm version](https://badge.fury.io/js/windowmanager.svg)](https://badge.fury.io/js/windowmanager) [![Build Status](https://travis-ci.org/EikosPartners/scalejs.metadataFactory-common.svg?branch=master)](https://travis-ci.org/EikosPartners/windowmanager)<br>
 A framework to manage multiple dockable HTML windows.<br>
 This extension is designed to support multiple different different encapsulation runtimes.<br>
 See [API Documentation](https://eikospartners.github.io/windowmanagerjs/) for more information.
