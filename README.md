@@ -1,7 +1,7 @@
 # windowmanager.js
+[![NPM Status](https://img.shields.io/npm/v/windowmanager.svg?style=flat)](https://www.npmjs.com/package/windowmanager)
 [![Build Status](https://travis-ci.org/EikosPartners/windowmanagerjs.svg?branch=master)](https://travis-ci.org/EikosPartners/windowmanagerjs)
-[![devDependencies Status](https://david-dm.org/EikosPartners/windowmanagerjs/dev-status.svg)](https://david-dm.org/EikosPartners/windowmanagerjs?type=dev)
-[![npm version](https://badge.fury.io/js/windowmanager.svg)](https://badge.fury.io/js/windowmanager)<br>
+[![devDependencies Status](https://david-dm.org/EikosPartners/windowmanagerjs/dev-status.svg)](https://david-dm.org/EikosPartners/windowmanagerjs?type=dev)<br>
 A framework to manage multiple dockable HTML windows.<br>
 This extension is designed to support multiple different different encapsulation runtimes.<br>
 See [API Documentation](https://eikospartners.github.io/windowmanagerjs/) for more information.
