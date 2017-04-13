@@ -1,15 +1,11 @@
-// TODO: Determine which auto release system like:
-//       https://github.com/semantic-release/semantic-release
-//       https://github.com/webpro/release-it
-const failPlugin = require('webpack-fail-plugin');
 const webpack = require('webpack');
 const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 const path = require('path');
-const env = require('yargs').argv.mode;
+const isMin = require('yargs').argv.p;
 const packageJson = require('./package.json');
 
 const libraryName = 'windowmanager';
-let plugins = [failPlugin];
+let plugins = [];
 let outputFile;
 let config;
 
@@ -17,36 +13,38 @@ plugins.push(new webpack.DefinePlugin({
     VERSION: JSON.stringify(packageJson.version)
 }));
 
-if (env === 'build') {
-    plugins.push(new UglifyJsPlugin({ minimize: true }));
+if (isMin) {
+    plugins.push(new webpack.optimize.UglifyJsPlugin({
+        compress: { warnings: false },
+        output: { comments: false },
+        sourceMap: true
+    }));
     outputFile = `${libraryName}.min.js`;
 } else {
     outputFile = `${libraryName}.js`;
 }
 
 config = {
-    entry: [`${__dirname}/src/index.js`],
+    context: path.resolve(__dirname, 'src'),
+    entry: './index',
     devtool: 'source-map',
     output: {
-        path: `${__dirname}/dist`,
+        path: path.resolve(__dirname, 'dist'),
         filename: outputFile,
         library: libraryName,
         libraryTarget: 'umd',
         umdNamedDefine: true
     },
     module: {
-        loaders: [
-            {
-                test: /(\.jsx|\.js)$/,
-                loader: 'babel',
-                exclude: /(node_modules|bower_components)/
-            },
-            {
-                test: /(\.jsx|\.js)$/,
-                loader: 'eslint-loader',
-                exclude: /node_modules/
-            }
-        ]
+        rules: [{
+            test: /(\.jsx|\.js)$/,
+            loader: 'babel-loader',
+            exclude: /node_modules/
+        }, {
+            test: /(\.jsx|\.js)$/,
+            loader: 'eslint-loader',
+            exclude: /node_modules/
+        }]
     },
     node: {
         global: false,
@@ -55,8 +53,10 @@ config = {
         __filename: false
     },
     resolve: {
-        root: path.resolve('./src'),
-        extensions: ['', '.js']
+        modules: [
+            path.resolve(__dirname, 'src'),
+            'node_modules'
+        ]
     },
     plugins: plugins
 };

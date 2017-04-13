@@ -23,9 +23,9 @@
   },
   "scripts": {
     "build": "npm run build-dist && npm run build-docs",
-    "build-dist": "webpack --mode=dev && webpack --mode=build",
+    "build-dist": "webpack -d --devtool source-map && webpack -p --devtool source-map",
     "build-docs": "jsdoc --configure jsdoc.json",
-    "dev": "webpack --progress --colors --watch --mode=dev",
+    "dev": "webpack --progress --colors --watch -d",
     "release": "release-it",
     "release-minor": "release-it minor",
     "release-major": "release-it major",
@@ -33,7 +33,6 @@
     "test-travis": "mocha --compilers js:babel-core/register --colors ./test/*.spec.js"
   },
   "devDependencies": {
-    "babel": "^6.23.0",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.2",
     "babel-loader": "^6.4.1",
@@ -46,11 +45,8 @@
     "jsdoc": "^3.4.3",
     "minami": "^1.1.1",
     "mocha": "^3.2.0",
-    "pre-commit": "^1.2.2",
     "release-it": "^2.7.1",
-    "webpack": "^1.14.0",
-    "webpack-fail-plugin": "^1.0.6",
+    "webpack": "^2.3.3",
     "yargs": "^7.0.2"
-  },
-  "precommit": []
+  }
 }

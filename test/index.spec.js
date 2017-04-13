@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { assert } from 'chai';
-import windowmanager from '../index.js';
+import windowmanager from '../index';
 import fs from 'fs';
 
 describe('index.js', function () {
