@@ -34,12 +34,40 @@ const transformPropNames = ['-ms-transform', '-moz-transform', '-o-transform',
  */
 
 /**
- * A Window class.
+ * A Window class, used to create windows.
+ * <h5>Example:</h5>
+ * ```javascript
+ * // Create a new window:
+ * let newWindow = new windowmanager.Window({
+ *     url: "child.html", // Loads "child.html" based on the current window's url.
+ *     width: 500,
+ *     height: 500,
+ *     show: false // Don't automatically show window on creation
+ * });
+ *
+ * newWindow.onReady(() => {
+ *     // Setup window:
+ *     // ...
+ *
+ *     // Display window:
+ *     this.show();
+ *     this.focus();
+ * });
+ * ```
  * @extends EventHandler
  */
 class Window extends EventHandler {
     /**
-     * Wraps a window object.
+     * Creates a window object.
+     * <h5>Example:</h5>
+     * ```javascript
+     * // Create a new window:
+     * let newWindow = new windowmanager.Window({
+     *     url: "child.html", // Loads "child.html" based on the current window's url.
+     *     width: 500,
+     *     height: 500
+     * });
+     * ```
      * @param {Object} [config] - Window Configuration
      * @param {Number} [config.width=800]
      * @param {Number} [config.height=500]
@@ -187,6 +215,12 @@ class Window extends EventHandler {
 
     /**
      * Calls a callback when window is ready and setup.
+     * <h5>Example:</h5>
+     * ```javascript
+     * newWindow.onReady(() => {
+     *     // newWindow methods can be executed in here
+     * });
+     * ```
      * @param {Callback=}
      */
     onReady(callback) {
@@ -784,6 +818,11 @@ class Window extends EventHandler {
 
     /**
      * Returns a list of all {@link Window} instances open.
+     * <h5>Example:</h5>
+     * ```javascript
+     * // Close all windows:
+     * let allWindows = windowmanager.Window.getAll();
+     * ```
      * @returns {Window[]}
      */
     static getAll() {
@@ -792,6 +831,11 @@ class Window extends EventHandler {
 
     /**
      * Returns the {@link Window} instance that has `id`.
+     * <h5>Example:</h5>
+     * ```javascript
+     * // Get window with ID:
+     * let window = windowmanager.Window.getById(windowID);
+     * ```
      * @param {String|Number}
      * @returns {Window|undefined}
      */
@@ -808,6 +852,11 @@ class Window extends EventHandler {
 
     /**
      * Returns the {@link Window} instance that is the main window.
+     * <h5>Example:</h5>
+     * ```javascript
+     * // Get main window of the application:
+     * let mainWindow = windowmanager.Window.getMain();
+     * ```
      * @returns {Window}
      */
     static getMain() {
@@ -816,6 +865,11 @@ class Window extends EventHandler {
 
     /**
      * Returns the {@link Window} instance that calls this function.
+     * <h5>Example:</h5>
+     * ```javascript
+     * // Get current window this code is executing in:
+     * let currentWindow = windowmanager.Window.getCurrent();
+     * ```
      * @returns {Window}
      */
     static getCurrent() {
