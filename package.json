@@ -1,6 +1,6 @@
 {
   "name": "windowmanager",
-  "version": "0.13.9",
+  "version": "0.13.11",
   "description": "A framework to manage multiple dockable, HTML windows",
   "keywords": [
     "browser",
@@ -29,8 +29,9 @@
     "release": "release-it",
     "release-minor": "release-it minor",
     "release-major": "release-it major",
-    "test": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js",
-    "test-travis": "mocha --compilers js:babel-core/register --colors ./test/*.spec.js"
+    "test": "mocha --compilers js:babel-core/register --colors ./test/*.spec.js",
+    "test-watch": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js",
+    "test-travis": "npm run test"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
