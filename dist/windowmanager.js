@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
+/******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		}
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -623,7 +623,7 @@ var windowmanagerEventNames = ['window-create', 'window-close'];
  */
 var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 
-windowmanager.version = "0.13.11";
+windowmanager.version = "0.14.0";
 // runtime is set in the respective runtime
 windowmanager.runtime = {
     name: undefined,
@@ -4459,7 +4459,7 @@ var defaultConfig = {
     maxHeight: Infinity
 };
 var configMap = {};
-var acceptedEventHandlers = ['ready', 'drag-start', 'drag-before', 'drag-stop', 'dock-before', 'move', 'move-before', 'resize-before', 'close', 'minimize'];
+var acceptedEventHandlers = ['ready', 'drag-start', 'drag-before', 'drag-stop', 'dock-before', 'move', 'move-before', 'resize-before', 'close', 'show', 'hide', 'restore', 'minimize', 'maximize', 'focus', 'blur'];
 var transformPropNames = ['-ms-transform', '-moz-transform', '-o-transform', '-webkit-transform', 'transform'];
 
 /**
@@ -4554,6 +4554,8 @@ var Window = function (_EventHandler) {
                 }
                 _this._title = config.title == null ? _this._id : config.title;
 
+                var that = _this;
+
                 if (config.parent) {
                     config.parent._children.push(_this);
                     _this._parent = config.parent;
@@ -4586,6 +4588,12 @@ var Window = function (_EventHandler) {
                 newWindow.style.minHeight = _this._minSize.top + 'px';
                 newWindow.style.maxWidth = _this._maxSize.left + 'px';
                 newWindow.style.maxHeight = _this._maxSize.top + 'px';
+                newWindow.addEventListener('focus', function () {
+                    that.emit('focus');
+                });
+                newWindow.addEventListener('blur', function () {
+                    that.emit('blur');
+                });
                 _global2.default._launcher.document.body.appendChild(newWindow);
 
                 // Set up iframe for page:
@@ -4595,8 +4603,6 @@ var Window = function (_EventHandler) {
                 newWindow.appendChild(iframe);
 
                 // Set up resize:
-                var that = _this;
-
                 _this._resize = (0, _create2.default)(null);
                 var _arr = ['w', 'nw', 'n', 'ne', 'e', 'se', 's', 'sw'];
 
@@ -5035,6 +5041,7 @@ var Window = function (_EventHandler) {
             this._wrapper.style.width = '100%';
             this._wrapper.style.height = '100%';
             this._isMaximized = true;
+            window.emit('maximize');
             if (callback) {
                 callback();
             }
@@ -5062,6 +5069,7 @@ var Window = function (_EventHandler) {
 
                     _window2._wrapper.style.display = '';
                     _window2._isHidden = false;
+                    _window2.emit('show');
                 }
             } catch (err) {
                 _didIteratorError3 = true;
@@ -5105,6 +5113,7 @@ var Window = function (_EventHandler) {
 
                     _window3._wrapper.style.display = 'none';
                     _window3._isHidden = true;
+                    _window3.emit('hide');
                 }
             } catch (err) {
                 _didIteratorError4 = true;
@@ -5154,6 +5163,7 @@ var Window = function (_EventHandler) {
                         _window4._isHidden = false;
                         _window4._isMinimized = false;
                         _window4._isMaximized = false;
+                        _window4.emit('restore');
                     }
                 }
             } catch (err) {
@@ -5288,6 +5298,7 @@ var Window = function (_EventHandler) {
             }
 
             this._window.contentWindow.focus();
+            this.emit('focus');
             if (callback) {
                 callback();
             }
@@ -7241,7 +7252,7 @@ var configMap = {
     left: 'x',
     top: 'y'
 };
-var acceptedEventHandlers = ['ready', 'drag-start', 'drag-before', 'drag-stop', 'dock-before', 'move', 'move-before', 'resize-before', 'close', 'minimize'];
+var acceptedEventHandlers = ['ready', 'drag-start', 'drag-before', 'drag-stop', 'dock-before', 'move', 'move-before', 'resize-before', 'close', 'show', 'hide', 'restore', 'minimize', 'maximize', 'focus', 'blur'];
 
 var Window = function (_EventHandler) {
     (0, _inherits3.default)(Window, _EventHandler);
@@ -7338,6 +7349,29 @@ var Window = function (_EventHandler) {
         if (_this._window !== currentWin) {
             _this._window.on('close', _onclose);
         }
+
+        // Setup event listeners:
+        _this._window.on('show', function () {
+            thisWindow.emit('show');
+        });
+        _this._window.on('hide', function () {
+            thisWindow.emit('hide');
+        });
+        _this._window.on('restore', function () {
+            thisWindow.emit('restore');
+        });
+        _this._window.on('minimize', function () {
+            thisWindow.emit('minimize');
+        });
+        _this._window.on('maximize', function () {
+            thisWindow.emit('maximize');
+        });
+        _this._window.on('focus', function () {
+            thisWindow.emit('focus');
+        });
+        _this._window.on('blur', function () {
+            thisWindow.emit('blur');
+        });
 
         _this._isClosed = false;
         _this._ready = true;
@@ -8077,7 +8111,7 @@ var configMap = {
     width: 'defaultWidth',
     height: 'defaultHeight'
 };
-var acceptedEventHandlers = ['ready', 'drag-start', 'drag-before', 'drag-stop', 'dock-before', 'move', 'move-before', 'resize-before', 'close', 'minimize'];
+var acceptedEventHandlers = ['ready', 'drag-start', 'drag-before', 'drag-stop', 'dock-before', 'move', 'move-before', 'resize-before', 'close', 'show', 'hide', 'restore', 'minimize', 'maximize', 'focus', 'blur'];
 var currentWin = void 0;
 
 function _setupDOM(config) {
@@ -8166,10 +8200,28 @@ function _setupDOM(config) {
     }
     this._window.addEventListener('closed', onClose);
 
-    function onMinimized() {
+    // Setup event listeners:
+    this._window.addEventListener('shown', function () {
+        thisWindow.emit('show');
+    });
+    this._window.addEventListener('hidden', function () {
+        thisWindow.emit('hide');
+    });
+    this._window.addEventListener('restored', function () {
+        thisWindow.emit('restore');
+    });
+    this._window.addEventListener('minimized', function () {
         thisWindow.emit('minimize');
-    }
-    this._window.addEventListener('minimized', onMinimized);
+    });
+    this._window.addEventListener('maximized', function () {
+        thisWindow.emit('maximize');
+    });
+    this._window.addEventListener('focused', function () {
+        thisWindow.emit('focus');
+    });
+    this._window.addEventListener('blurred', function () {
+        thisWindow.emit('blur');
+    });
 
     // Setup title element:
     this._titleEl = this._window.contentWindow.document.createElement('title');
@@ -9547,16 +9599,30 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 function SyncCallback(callback) {
+    var _this = this;
+
     if (!(this instanceof SyncCallback)) {
         return new SyncCallback(callback);
     }
 
     this.callback = callback;
     this.count = 0;
+
+    // If no ref are called in event loop, then run callback:
+    this._timeout = setTimeout(function (that) {
+        delete _this._timeout;
+        that._check();
+    }, 0, this);
 }
 
 SyncCallback.prototype.ref = function (callback) {
     var thisRef = this;
+
+    if (this._timeout !== undefined) {
+        // Ref is called, so remove timeout:
+        delete this._timeout;
+        clearTimeout(this._timeout);
+    }
 
     this.count += 1;
     return function () {
@@ -9569,6 +9635,10 @@ SyncCallback.prototype.ref = function (callback) {
 
 SyncCallback.prototype._deref = function () {
     this.count -= 1;
+    this._check();
+};
+
+SyncCallback.prototype._check = function () {
     if (this.count <= 0) {
         this.callback();
     }
