@@ -29,7 +29,10 @@ const acceptedEventHandlers = [
     'drag-start', 'drag-before', 'drag-stop',
     'dock-before',
     'move', 'move-before',
-    'resize-before', 'close', 'minimize'];
+    'resize-before',
+    'close',
+    'show', 'hide', 'restore', 'minimize', 'maximize',
+    'focus', 'blur'];
 
 class Window extends EventHandler {
     constructor(config) {
@@ -121,6 +124,29 @@ class Window extends EventHandler {
         if (this._window !== currentWin) {
             this._window.on('close', _onclose);
         }
+
+        // Setup event listeners:
+        this._window.on('show', () => {
+            thisWindow.emit('show');
+        });
+        this._window.on('hide', () => {
+            thisWindow.emit('hide');
+        });
+        this._window.on('restore', () => {
+            thisWindow.emit('restore');
+        });
+        this._window.on('minimize', () => {
+            thisWindow.emit('minimize');
+        });
+        this._window.on('maximize', () => {
+            thisWindow.emit('maximize');
+        });
+        this._window.on('focus', () => {
+            thisWindow.emit('focus');
+        });
+        this._window.on('blur', () => {
+            thisWindow.emit('blur');
+        });
 
         this._isClosed = false;
         this._ready = true;

@@ -25,7 +25,10 @@ const acceptedEventHandlers = [
     'drag-start', 'drag-before', 'drag-stop',
     'dock-before',
     'move', 'move-before',
-    'resize-before', 'close', 'minimize'];
+    'resize-before',
+    'close',
+    'show', 'hide', 'restore', 'minimize', 'maximize',
+    'focus', 'blur'];
 let currentWin;
 
 function _setupDOM(config) {
@@ -92,10 +95,28 @@ function _setupDOM(config) {
     }
     this._window.addEventListener('closed', onClose);
 
-    function onMinimized() {
+    // Setup event listeners:
+    this._window.addEventListener('shown', () => {
+        thisWindow.emit('show');
+    });
+    this._window.addEventListener('hidden', () => {
+        thisWindow.emit('hide');
+    });
+    this._window.addEventListener('restored', () => {
+        thisWindow.emit('restore');
+    });
+    this._window.addEventListener('minimized', () => {
         thisWindow.emit('minimize');
-    }
-    this._window.addEventListener('minimized', onMinimized);
+    });
+    this._window.addEventListener('maximized', () => {
+        thisWindow.emit('maximize');
+    });
+    this._window.addEventListener('focused', () => {
+        thisWindow.emit('focus');
+    });
+    this._window.addEventListener('blurred', () => {
+        thisWindow.emit('blur');
+    });
 
     // Setup title element:
     this._titleEl = this._window.contentWindow.document.createElement('title');

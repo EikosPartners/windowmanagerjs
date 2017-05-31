@@ -23,7 +23,10 @@ const acceptedEventHandlers = [
     'drag-start', 'drag-before', 'drag-stop',
     'dock-before',
     'move', 'move-before',
-    'resize-before', 'close', 'minimize'];
+    'resize-before',
+    'close',
+    'show', 'hide', 'restore', 'minimize', 'maximize',
+    'focus', 'blur'];
 const transformPropNames = ['-ms-transform', '-moz-transform', '-o-transform',
     '-webkit-transform', 'transform'];
 
@@ -112,6 +115,8 @@ class Window extends EventHandler {
             }
             this._title = config.title == null ? this._id : config.title;
 
+            let that = this;
+
             if (config.parent) {
                 config.parent._children.push(this);
                 this._parent = config.parent;
@@ -144,6 +149,12 @@ class Window extends EventHandler {
             newWindow.style.minHeight = this._minSize.top + 'px';
             newWindow.style.maxWidth = this._maxSize.left + 'px';
             newWindow.style.maxHeight = this._maxSize.top + 'px';
+            newWindow.addEventListener('focus', () => {
+                that.emit('focus');
+            });
+            newWindow.addEventListener('blur', () => {
+                that.emit('blur');
+            });
             windowmanager._launcher.document.body.appendChild(newWindow);
 
             // Set up iframe for page:
@@ -153,8 +164,6 @@ class Window extends EventHandler {
             newWindow.appendChild(iframe);
 
             // Set up resize:
-            let that = this;
-
             this._resize = Object.create(null);
             for (const dir of ['w', 'nw', 'n', 'ne', 'e', 'se', 's', 'sw']) {
                 let edge = windowmanager._launcher.document.createElement('div');
@@ -455,6 +464,7 @@ class Window extends EventHandler {
         this._wrapper.style.width = '100%';
         this._wrapper.style.height = '100%';
         this._isMaximized = true;
+        window.emit('maximize');
         if (callback) { callback(); }
     }
 
@@ -468,6 +478,7 @@ class Window extends EventHandler {
         for (let window of this._dockedGroup) {
             window._wrapper.style.display = '';
             window._isHidden = false;
+            window.emit('show');
         }
         if (callback) { callback(); }
     }
@@ -482,6 +493,7 @@ class Window extends EventHandler {
         for (let window of this._dockedGroup) {
             window._wrapper.style.display = 'none';
             window._isHidden = true;
+            window.emit('hide');
         }
         if (callback) { callback(); }
     }
@@ -502,6 +514,7 @@ class Window extends EventHandler {
                 window._isHidden = false;
                 window._isMinimized = false;
                 window._isMaximized = false;
+                window.emit('restore');
             }
         }
         if (callback) { callback(); }
@@ -554,6 +567,7 @@ class Window extends EventHandler {
             if (window !== this) { window._window.contentWindow.focus(); }
         }
         this._window.contentWindow.focus();
+        this.emit('focus');
         if (callback) { callback(); }
     }
 
