@@ -33,7 +33,10 @@ SyncCallback.prototype._deref = function () {
 };
 
 SyncCallback.prototype._check = function () {
-    if (this.count <= 0) { this.callback(); }
+    if (this.count <= 0 && this.callback != null) {
+        this.callback();
+        delete this.callback;
+    }
 };
 
 export default SyncCallback;
