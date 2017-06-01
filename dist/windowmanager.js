@@ -623,7 +623,7 @@ var windowmanagerEventNames = ['window-create', 'window-close'];
  */
 var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 
-windowmanager.version = "0.14.0";
+windowmanager.version = "0.14.1";
 // runtime is set in the respective runtime
 windowmanager.runtime = {
     name: undefined,
@@ -9639,8 +9639,9 @@ SyncCallback.prototype._deref = function () {
 };
 
 SyncCallback.prototype._check = function () {
-    if (this.count <= 0) {
+    if (this.count <= 0 && this.callback != null) {
         this.callback();
+        delete this.callback;
     }
 };
 
