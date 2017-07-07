@@ -61,7 +61,7 @@ windowmanager.messagebus = (() => {
                 if (window._id === curWin._id) { return; }
 
                 fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], window._id,
-                                                        eventName, message);
+                    eventName, message);
             } else {
                 // TODO: Possibly switch the below out for a loop through all windows?
                 fin.desktop.InterApplicationBus.send(Window.current._window[APP_UUID], eventName, message);
@@ -84,7 +84,7 @@ windowmanager.messagebus = (() => {
                 winLisGroup[eventName] = winLisGroup[eventName] || new Map();
                 winLisGroup[eventName].set(listener, onMessage);
                 fin.desktop.InterApplicationBus.subscribe(Window.current._window[APP_UUID], window._id,
-                                                            eventName, onMessage);
+                    eventName, onMessage);
                 // TODO: On window close, clear subscriptions in windowWrappedListeners!
             } else {
                 wrappedListeners[eventName] = wrappedListeners[eventName] || new Map();
@@ -104,12 +104,12 @@ windowmanager.messagebus = (() => {
                 winLisGroup[eventName] = winLisGroup[eventName] || new Map();
                 // delete on a Map returns the deleted value (desired onMessage):
                 fin.desktop.InterApplicationBus.unsubscribe(Window.current._window[APP_UUID], window._window._id,
-                                                eventName, winLisGroup[eventName].delete(listener));
+                    eventName, winLisGroup[eventName].delete(listener));
             } else {
                 wrappedListeners[eventName] = wrappedListeners[eventName] || new Set();
                 // delete on a Map returns the deleted value (desired onMessage):
                 fin.desktop.InterApplicationBus.unsubscribe(Window.current._window[APP_UUID], eventName,
-                                                            wrappedListeners[eventName].delete(listener));
+                    wrappedListeners[eventName].delete(listener));
             }
         }
     };

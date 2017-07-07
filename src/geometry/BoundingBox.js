@@ -147,7 +147,7 @@ class BoundingBox {
         other = other.getBoundingBox();
 
         return new BoundingBox(this.left - other.left, this.top - other.top,
-                                this.right - other.right, this.bottom - other.bottom);
+            this.right - other.right, this.bottom - other.bottom);
     }
 
     /**

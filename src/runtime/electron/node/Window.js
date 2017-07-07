@@ -152,7 +152,7 @@ BrowserWindow.prototype._dragBy = function (deltaLeft, deltaTop) {
 
     // Perform Snap:
     const thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft,
-                                                this._dragStartPos[1] + deltaTop);
+        this._dragStartPos[1] + deltaTop);
     let snapDelta = new Vector(NaN, NaN);
 
     if (!this._isFramed) {

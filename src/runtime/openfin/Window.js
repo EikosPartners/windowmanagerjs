@@ -467,7 +467,7 @@ class Window extends EventHandler {
         if (!this.emit('drag-before')) { return; } // Allow preventing drag
         // Perform Snap:
         const thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft,
-                                                    this._dragStartPos.top + deltaTop);
+            this._dragStartPos.top + deltaTop);
         let snapDelta = new Vector(NaN, NaN);
 
         if (!this._isFramed) {

@@ -670,7 +670,7 @@ class Window extends EventHandler {
     forceScaledSize(width, height, callback) {
         if (!this._ready) { throw new Error('setMaxSize can\'t be called on an unready window'); }
         const size = new Size(Math.min(this._maxSize.left, Math.max(this._minSize.left, width)),
-                            Math.min(this._maxSize.top, Math.max(this._minSize.top, height)));
+            Math.min(this._maxSize.top, Math.max(this._minSize.top, height)));
 
         this.undock(); // TODO: Support changing size when docked.
         this._wrapper.style.width = size.left + 'px';
@@ -786,7 +786,7 @@ class Window extends EventHandler {
         if (!this.emit('drag-before')) { return; } // Allow preventing drag
         // Perform Snap:
         const thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft,
-                                                    this._dragStartPos.top + deltaTop);
+            this._dragStartPos.top + deltaTop);
         let snapDelta = new Vector(NaN, NaN);
 
         for (const other of windowmanager._windows.values()) {
