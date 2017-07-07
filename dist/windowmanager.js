@@ -687,7 +687,7 @@ var windowmanagerEventNames = ['window-create', 'window-close'];
  */
 var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 
-windowmanager.version = "0.14.2";
+windowmanager.version = "0.14.3";
 // runtime is set in the respective runtime
 windowmanager.runtime = {
     name: undefined,
