@@ -1,8 +1,30 @@
 /* global fin */
 import windowmanager from './global';
 import Window from './Window';
+import { CollisionMesh, BoundingBox } from '../../geometry/index';
 
 const APP_UUID = 'app_uuid';
+
+windowmanager.monitors = new CollisionMesh([]);
+
+function updateMonitors(monitorInfo) {
+    let boxes = [];
+
+    // Add the primary monitor:
+    boxes.push(new BoundingBox(monitorInfo.primaryMonitor.monitorRect));
+
+    // Add the secondary monitors:
+    for (const monitor in monitorInfo.nonPrimaryMonitors) {
+        boxes.push(new BoundingBox(monitor.monitorRect));
+    }
+
+    // Update monitors CollisionMesh:
+    windowmanager.monitors.boxes = boxes;
+}
+
+// Set up system to update monitors:
+fin.desktop.System.getMonitorInfo(updateMonitors);
+fin.desktop.System.addEventListener('monitor-info-changed', updateMonitors);
 
 windowmanager.messagebus = (() => {
     let wrappedListeners = {};

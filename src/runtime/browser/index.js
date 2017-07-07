@@ -1,6 +1,24 @@
 import windowmanager from './global';
 import readySync from '../ready';
 import Window from './Window';
+import { CollisionMesh, BoundingBox } from '../../geometry/index';
+
+/**
+ * Contains the monitor space.
+ * @type {CollisionMesh}
+ */
+windowmanager.monitors = new CollisionMesh([]);
+
+function updateMonitors() {
+    // Update monitors CollisionMesh with the primary "fake" monitor:
+    windowmanager.monitors.boxes = [new BoundingBox(0, 0,
+        Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+        Math.max(document.documentElement.clientHeight, window.innerHeight || 0))];
+}
+
+// Set up system to update monitors:
+updateMonitors();
+window.addEventListener('resize', updateMonitors);
 
 /**
  * Message bus for application.

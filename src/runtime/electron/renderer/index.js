@@ -1,7 +1,31 @@
 import windowmanager from '../global';
 import readySync from '../../ready';
 import Window from './Window';
-const { ipcRenderer } = window.nodeRequire('electron');
+import { CollisionMesh, BoundingBox } from '../../../geometry/index';
+const { ipcRenderer, screen } = window.nodeRequire('electron');
+
+windowmanager.monitors = new CollisionMesh([]);
+
+function updateMonitors() {
+    const displays = screen.getAllDisplays();
+    let boxes = [];
+
+    // Add monitors:
+    for (const display in displays) {
+        boxes.push(new BoundingBox(display.bounds.x, display.bounds.y,
+            display.bounds.x + display.bounds.width,
+            display.bounds.y + display.bounds.height));
+    }
+
+    // Update monitors CollisionMesh:
+    windowmanager.monitors.boxes = boxes;
+}
+
+// Set up system to update monitors:
+updateMonitors();
+screen.on('display-added', updateMonitors);
+screen.on('display-removed', updateMonitors);
+screen.on('display-metrics-changed', updateMonitors);
 
 windowmanager.messagebus = (() => {
     // TODO: Optimize Electron's messagebus by keeping track of listeners
