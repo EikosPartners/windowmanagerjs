@@ -2,6 +2,7 @@ import windowmanager from './global';
 import readySync from '../ready';
 import Window from './Window';
 import { CollisionMesh, BoundingBox } from '../../geometry/index';
+import Layout from './Layout/Layout';
 
 /**
  * Contains the monitor space.
@@ -19,6 +20,11 @@ function updateMonitors() {
 // Set up system to update monitors:
 updateMonitors();
 window.addEventListener('resize', updateMonitors);
+
+/**
+ * Add layout to windowmanager object.
+ */
+windowmanager.Layout = Layout;
 
 /**
  * Message bus for application.

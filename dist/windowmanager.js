@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 90);
+/******/ 	return __webpack_require__(__webpack_require__.s = 91);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -226,7 +226,7 @@ exports.f = __webpack_require__(/*! ./_descriptors */ 6) ? Object.defineProperty
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(/*! core-js/library/fn/get-iterator */ 92), __esModule: true };
+module.exports = { "default": __webpack_require__(/*! core-js/library/fn/get-iterator */ 93), __esModule: true };
 
 /***/ }),
 /* 6 */
@@ -269,7 +269,7 @@ module.exports = __webpack_require__(/*! ./_descriptors */ 6) ? function(object,
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(/*! ./_is-object */ 12);
+var isObject = __webpack_require__(/*! ./_is-object */ 14);
 module.exports = function(it){
   if(!isObject(it))throw TypeError(it + ' is not an object!');
   return it;
@@ -344,6 +344,64 @@ module.exports = exports['default'];
 
 /***/ }),
 /* 10 */
+/*!***************************************************************!*\
+  !*** ../node_modules/babel-runtime/helpers/classCallCheck.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+exports.default = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+/***/ }),
+/* 11 */
+/*!************************************************************!*\
+  !*** ../node_modules/babel-runtime/helpers/createClass.js ***!
+  \************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _defineProperty = __webpack_require__(/*! ../core-js/object/define-property */ 105);
+
+var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      (0, _defineProperty2.default)(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+/***/ }),
+/* 12 */
 /*!************************!*\
   !*** ./utils/index.js ***!
   \************************/
@@ -358,11 +416,11 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _EventHandler = __webpack_require__(/*! ./EventHandler */ 91);
+var _EventHandler = __webpack_require__(/*! ./EventHandler */ 92);
 
 var _EventHandler2 = _interopRequireDefault(_EventHandler);
 
-var _SyncCallback = __webpack_require__(/*! ./SyncCallback */ 103);
+var _SyncCallback = __webpack_require__(/*! ./SyncCallback */ 104);
 
 var _SyncCallback2 = _interopRequireDefault(_SyncCallback);
 
@@ -397,7 +455,7 @@ exports.default = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 11 */
+/* 13 */
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_to-iobject.js ***!
   \**************************************************************/
@@ -413,7 +471,7 @@ module.exports = function(it){
 };
 
 /***/ }),
-/* 12 */
+/* 14 */
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_is-object.js ***!
   \*************************************************************/
@@ -426,7 +484,7 @@ module.exports = function(it){
 };
 
 /***/ }),
-/* 13 */
+/* 15 */
 /*!*******************************************************!*\
   !*** ../node_modules/core-js/library/modules/_has.js ***!
   \*******************************************************/
@@ -440,64 +498,6 @@ module.exports = function(it, key){
 };
 
 /***/ }),
-/* 14 */
-/*!***************************************************************!*\
-  !*** ../node_modules/babel-runtime/helpers/classCallCheck.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-
-exports.default = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-/***/ }),
-/* 15 */
-/*!************************************************************!*\
-  !*** ../node_modules/babel-runtime/helpers/createClass.js ***!
-  \************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-
-var _defineProperty = __webpack_require__(/*! ../core-js/object/define-property */ 104);
-
-var _defineProperty2 = _interopRequireDefault(_defineProperty);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      (0, _defineProperty2.default)(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-/***/ }),
 /* 16 */
 /*!*******************************************************!*\
   !*** ../node_modules/core-js/library/modules/_ctx.js ***!
@@ -507,7 +507,7 @@ exports.default = function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 // optional / simple context binding
-var aFunction = __webpack_require__(/*! ./_a-function */ 95);
+var aFunction = __webpack_require__(/*! ./_a-function */ 96);
 module.exports = function(fn, that, length){
   aFunction(fn);
   if(that === undefined)return fn;
@@ -568,7 +568,7 @@ var _global = __webpack_require__(/*! ../global */ 19);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _index = __webpack_require__(/*! ../utils/index */ 10);
+var _index = __webpack_require__(/*! ../utils/index */ 12);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -656,7 +656,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _index = __webpack_require__(/*! ./utils/index */ 10);
+var _index = __webpack_require__(/*! ./utils/index */ 12);
 
 var _index2 = __webpack_require__(/*! ./geometry/index */ 9);
 
@@ -791,7 +791,7 @@ module.exports = function(it){
 
 "use strict";
 
-var $at  = __webpack_require__(/*! ./_string-at */ 101)(true);
+var $at  = __webpack_require__(/*! ./_string-at */ 102)(true);
 
 // 21.1.3.27 String.prototype[@@iterator]()
 __webpack_require__(/*! ./_iter-define */ 36)(String, 'String', function(iterated){
@@ -919,7 +919,7 @@ if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! ./es6.array.iterator */ 93);
+__webpack_require__(/*! ./es6.array.iterator */ 94);
 var global        = __webpack_require__(/*! ./_global */ 3)
   , hide          = __webpack_require__(/*! ./_hide */ 7)
   , Iterators     = __webpack_require__(/*! ./_iterators */ 20)
@@ -959,7 +959,7 @@ module.exports = function(it){
 
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
 var anObject    = __webpack_require__(/*! ./_an-object */ 8)
-  , dPs         = __webpack_require__(/*! ./_object-dps */ 97)
+  , dPs         = __webpack_require__(/*! ./_object-dps */ 98)
   , enumBugKeys = __webpack_require__(/*! ./_enum-bug-keys */ 42)
   , IE_PROTO    = __webpack_require__(/*! ./_shared-key */ 40)('IE_PROTO')
   , Empty       = function(){ /* empty */ }
@@ -974,7 +974,7 @@ var createDict = function(){
     , gt     = '>'
     , iframeDocument;
   iframe.style.display = 'none';
-  __webpack_require__(/*! ./_html */ 100).appendChild(iframe);
+  __webpack_require__(/*! ./_html */ 101).appendChild(iframe);
   iframe.src = 'javascript:'; // eslint-disable-line no-script-url
   // createDict = iframe.contentWindow.Object;
   // html.removeChild(iframe);
@@ -1041,7 +1041,7 @@ module.exports = function(key){
 /***/ (function(module, exports, __webpack_require__) {
 
 var def = __webpack_require__(/*! ./_object-dp */ 4).f
-  , has = __webpack_require__(/*! ./_has */ 13)
+  , has = __webpack_require__(/*! ./_has */ 15)
   , TAG = __webpack_require__(/*! ./_wks */ 1)('toStringTag');
 
 module.exports = function(it, tag, stat){
@@ -1057,7 +1057,7 @@ module.exports = function(it, tag, stat){
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(/*! core-js/library/fn/map */ 109), __esModule: true };
+module.exports = { "default": __webpack_require__(/*! core-js/library/fn/map */ 110), __esModule: true };
 
 /***/ }),
 /* 34 */
@@ -1102,9 +1102,9 @@ var LIBRARY        = __webpack_require__(/*! ./_library */ 37)
   , $export        = __webpack_require__(/*! ./_export */ 2)
   , redefine       = __webpack_require__(/*! ./_redefine */ 66)
   , hide           = __webpack_require__(/*! ./_hide */ 7)
-  , has            = __webpack_require__(/*! ./_has */ 13)
+  , has            = __webpack_require__(/*! ./_has */ 15)
   , Iterators      = __webpack_require__(/*! ./_iterators */ 20)
-  , $iterCreate    = __webpack_require__(/*! ./_iter-create */ 96)
+  , $iterCreate    = __webpack_require__(/*! ./_iter-create */ 97)
   , setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 32)
   , getPrototypeOf = __webpack_require__(/*! ./_object-gpo */ 68)
   , ITERATOR       = __webpack_require__(/*! ./_wks */ 1)('iterator')
@@ -1189,7 +1189,7 @@ module.exports = true;
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.1 ToPrimitive(input [, PreferredType])
-var isObject = __webpack_require__(/*! ./_is-object */ 12);
+var isObject = __webpack_require__(/*! ./_is-object */ 14);
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
 // and the second argument - flag - preferred type is a string
 module.exports = function(it, S){
@@ -1296,11 +1296,11 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 14);
+var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 10);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 15);
+var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 11);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -1605,11 +1605,11 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 14);
+var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 10);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 15);
+var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 11);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -2385,11 +2385,11 @@ var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator *
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 14);
+var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 10);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 15);
+var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 11);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -3056,8 +3056,8 @@ exports.RETURN = RETURN;
 /***/ (function(module, exports, __webpack_require__) {
 
 var META     = __webpack_require__(/*! ./_uid */ 31)('meta')
-  , isObject = __webpack_require__(/*! ./_is-object */ 12)
-  , has      = __webpack_require__(/*! ./_has */ 13)
+  , isObject = __webpack_require__(/*! ./_is-object */ 14)
+  , has      = __webpack_require__(/*! ./_has */ 15)
   , setDesc  = __webpack_require__(/*! ./_object-dp */ 4).f
   , id       = 0;
 var isExtensible = Object.isExtensible || function(){
@@ -3138,7 +3138,7 @@ module.exports = exports['default'];
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(/*! core-js/library/fn/set */ 120), __esModule: true };
+module.exports = { "default": __webpack_require__(/*! core-js/library/fn/set */ 121), __esModule: true };
 
 /***/ }),
 /* 52 */
@@ -3149,7 +3149,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/set */ 
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(/*! core-js/library/fn/array/from */ 124), __esModule: true };
+module.exports = { "default": __webpack_require__(/*! core-js/library/fn/array/from */ 125), __esModule: true };
 
 /***/ }),
 /* 53 */
@@ -3160,7 +3160,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/array/f
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/get-prototype-of */ 128), __esModule: true };
+module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/get-prototype-of */ 129), __esModule: true };
 
 /***/ }),
 /* 54 */
@@ -3245,7 +3245,7 @@ exports.f = {}.propertyIsEnumerable;
 
 exports.__esModule = true;
 
-var _setPrototypeOf = __webpack_require__(/*! ../core-js/object/set-prototype-of */ 140);
+var _setPrototypeOf = __webpack_require__(/*! ../core-js/object/set-prototype-of */ 141);
 
 var _setPrototypeOf2 = _interopRequireDefault(_setPrototypeOf);
 
@@ -3284,7 +3284,7 @@ exports.default = function (subClass, superClass) {
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/create */ 144), __esModule: true };
+module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/create */ 145), __esModule: true };
 
 /***/ }),
 /* 60 */
@@ -3308,7 +3308,7 @@ if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 /***/ (function(module, exports, __webpack_require__) {
 
 // Thank's IE8 for his funny defineProperty
-module.exports = !__webpack_require__(/*! ./_fails */ 87)(function(){
+module.exports = !__webpack_require__(/*! ./_fails */ 88)(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
 
@@ -3362,7 +3362,7 @@ module.exports = !__webpack_require__(/*! ./_descriptors */ 6) && !__webpack_req
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(/*! ./_is-object */ 12)
+var isObject = __webpack_require__(/*! ./_is-object */ 14)
   , document = __webpack_require__(/*! ./_global */ 3).document
   // in old IE typeof document.createElement is 'object'
   , is = isObject(document) && isObject(document.createElement);
@@ -3390,9 +3390,9 @@ module.exports = __webpack_require__(/*! ./_hide */ 7);
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-var has          = __webpack_require__(/*! ./_has */ 13)
-  , toIObject    = __webpack_require__(/*! ./_to-iobject */ 11)
-  , arrayIndexOf = __webpack_require__(/*! ./_array-includes */ 98)(false)
+var has          = __webpack_require__(/*! ./_has */ 15)
+  , toIObject    = __webpack_require__(/*! ./_to-iobject */ 13)
+  , arrayIndexOf = __webpack_require__(/*! ./_array-includes */ 99)(false)
   , IE_PROTO     = __webpack_require__(/*! ./_shared-key */ 40)('IE_PROTO');
 
 module.exports = function(object, names){
@@ -3418,7 +3418,7 @@ module.exports = function(object, names){
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
-var has         = __webpack_require__(/*! ./_has */ 13)
+var has         = __webpack_require__(/*! ./_has */ 15)
   , toObject    = __webpack_require__(/*! ./_to-object */ 23)
   , IE_PROTO    = __webpack_require__(/*! ./_shared-key */ 40)('IE_PROTO')
   , ObjectProto = Object.prototype;
@@ -3484,7 +3484,7 @@ var dP          = __webpack_require__(/*! ./_object-dp */ 4).f
   , forOf       = __webpack_require__(/*! ./_for-of */ 48)
   , $iterDefine = __webpack_require__(/*! ./_iter-define */ 36)
   , step        = __webpack_require__(/*! ./_iter-step */ 62)
-  , setSpecies  = __webpack_require__(/*! ./_set-species */ 111)
+  , setSpecies  = __webpack_require__(/*! ./_set-species */ 112)
   , DESCRIPTORS = __webpack_require__(/*! ./_descriptors */ 6)
   , fastKey     = __webpack_require__(/*! ./_meta */ 49).fastKey
   , SIZE        = DESCRIPTORS ? '_s' : 'size';
@@ -3708,10 +3708,10 @@ var global         = __webpack_require__(/*! ./_global */ 3)
   , redefineAll    = __webpack_require__(/*! ./_redefine-all */ 71)
   , forOf          = __webpack_require__(/*! ./_for-of */ 48)
   , anInstance     = __webpack_require__(/*! ./_an-instance */ 72)
-  , isObject       = __webpack_require__(/*! ./_is-object */ 12)
+  , isObject       = __webpack_require__(/*! ./_is-object */ 14)
   , setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 32)
   , dP             = __webpack_require__(/*! ./_object-dp */ 4).f
-  , each           = __webpack_require__(/*! ./_array-methods */ 112)(0)
+  , each           = __webpack_require__(/*! ./_array-methods */ 113)(0)
   , DESCRIPTORS    = __webpack_require__(/*! ./_descriptors */ 6);
 
 module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
@@ -3785,7 +3785,7 @@ module.exports = Array.isArray || function isArray(arg){
 
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var classof = __webpack_require__(/*! ./_classof */ 69)
-  , from    = __webpack_require__(/*! ./_array-from-iterable */ 116);
+  , from    = __webpack_require__(/*! ./_array-from-iterable */ 117);
 module.exports = function(NAME){
   return function toJSON(){
     if(classof(this) != NAME)throw TypeError(NAME + "#toJSON isn't generic");
@@ -3827,11 +3827,11 @@ module.exports = function(KEY, exec){
 
 exports.__esModule = true;
 
-var _iterator = __webpack_require__(/*! ../core-js/symbol/iterator */ 130);
+var _iterator = __webpack_require__(/*! ../core-js/symbol/iterator */ 131);
 
 var _iterator2 = _interopRequireDefault(_iterator);
 
-var _symbol = __webpack_require__(/*! ../core-js/symbol */ 132);
+var _symbol = __webpack_require__(/*! ../core-js/symbol */ 133);
 
 var _symbol2 = _interopRequireDefault(_symbol);
 
@@ -3884,9 +3884,9 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O){
 
 var pIE            = __webpack_require__(/*! ./_object-pie */ 57)
   , createDesc     = __webpack_require__(/*! ./_property-desc */ 21)
-  , toIObject      = __webpack_require__(/*! ./_to-iobject */ 11)
+  , toIObject      = __webpack_require__(/*! ./_to-iobject */ 13)
   , toPrimitive    = __webpack_require__(/*! ./_to-primitive */ 38)
-  , has            = __webpack_require__(/*! ./_has */ 13)
+  , has            = __webpack_require__(/*! ./_has */ 15)
   , IE8_DOM_DEFINE = __webpack_require__(/*! ./_ie8-dom-define */ 64)
   , gOPD           = Object.getOwnPropertyDescriptor;
 
@@ -3931,7 +3931,7 @@ var _ready = __webpack_require__(/*! ../ready */ 18);
 
 var _ready2 = _interopRequireDefault(_ready);
 
-var _index = __webpack_require__(/*! ../../utils/index */ 10);
+var _index = __webpack_require__(/*! ../../utils/index */ 12);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3975,7 +3975,7 @@ module.exports = exports['default'];
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 147), __esModule: true };
+module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 148), __esModule: true };
 
 /***/ }),
 /* 85 */
@@ -4001,11 +4001,11 @@ var _create = __webpack_require__(/*! babel-runtime/core-js/object/create */ 59)
 
 var _create2 = _interopRequireDefault(_create);
 
-var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 14);
+var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 10);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 15);
+var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 11);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4013,7 +4013,7 @@ var _global = __webpack_require__(/*! ../../global */ 19);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _index = __webpack_require__(/*! ../../utils/index */ 10);
+var _index = __webpack_require__(/*! ../../utils/index */ 12);
 
 var _index2 = __webpack_require__(/*! ../../geometry/index */ 9);
 
@@ -4238,4932 +4238,6 @@ module.exports = exports['default'];
 
 /***/ }),
 /* 86 */
-/*!************************************************!*\
-  !*** ../node_modules/core-js/modules/_hide.js ***!
-  \************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var dP         = __webpack_require__(/*! ./_object-dp */ 158)
-  , createDesc = __webpack_require__(/*! ./_property-desc */ 163);
-module.exports = __webpack_require__(/*! ./_descriptors */ 61) ? function(object, key, value){
-  return dP.f(object, key, createDesc(1, value));
-} : function(object, key, value){
-  object[key] = value;
-  return object;
-};
-
-/***/ }),
-/* 87 */
-/*!*************************************************!*\
-  !*** ../node_modules/core-js/modules/_fails.js ***!
-  \*************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports) {
-
-module.exports = function(exec){
-  try {
-    return !!exec();
-  } catch(e){
-    return true;
-  }
-};
-
-/***/ }),
-/* 88 */
-/*!***********************************************!*\
-  !*** ../node_modules/core-js/modules/_uid.js ***!
-  \***********************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports) {
-
-var id = 0
-  , px = Math.random();
-module.exports = function(key){
-  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
-};
-
-/***/ }),
-/* 89 */
-/*!***********************************************!*\
-  !*** ../node_modules/core-js/modules/_wks.js ***!
-  \***********************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var store      = __webpack_require__(/*! ./_shared */ 171)('wks')
-  , uid        = __webpack_require__(/*! ./_uid */ 88)
-  , Symbol     = __webpack_require__(/*! ./_global */ 26).Symbol
-  , USE_SYMBOL = typeof Symbol == 'function';
-
-var $exports = module.exports = function(name){
-  return store[name] || (store[name] =
-    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
-};
-
-$exports.store = store;
-
-/***/ }),
-/* 90 */
-/*!******************!*\
-  !*** ./index.js ***!
-  \******************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _global = __webpack_require__(/*! ./global */ 19);
-
-var _global2 = _interopRequireDefault(_global);
-
-__webpack_require__(/*! ./runtime/index */ 107);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Make windowmanager global:
-if (typeof global !== 'undefined' && global) {
-  global.windowmanager = _global2.default;
-}
-if (typeof window !== 'undefined' && window) {
-  window.windowmanager = _global2.default;
-}
-
-exports.default = _global2.default;
-module.exports = exports['default'];
-
-/***/ }),
-/* 91 */
-/*!*******************************!*\
-  !*** ./utils/EventHandler.js ***!
-  \*******************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// TODO: Use class, rather than prototype.
-
-/**
- * An EventHandler
- * @constructor
- * @alias EventHandler
- * @param {String[]} [acceptedEventHandlers=[]] - String of allowed events.
- */
-function EventHandler() {
-    var acceptedEventHandlers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-
-    this._eventListeners = {};
-    this._eventPipes = [];
-    // TODO: Look into making these special properties that can't be deleted?
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-        for (var _iterator = (0, _getIterator3.default)(acceptedEventHandlers), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var acceptedEventHandler = _step.value;
-
-            this._eventListeners[acceptedEventHandler] = [];
-        }
-    } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-            }
-        } finally {
-            if (_didIteratorError) {
-                throw _iteratorError;
-            }
-        }
-    }
-}
-
-/**
- * @method
- * @param {String}
- * @param {callback}
- */
-EventHandler.prototype.on = function (eventNames, eventListener) {
-    eventNames = eventNames.toLowerCase().split(' ');
-
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
-
-    try {
-        for (var _iterator2 = (0, _getIterator3.default)(eventNames), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var eventName = _step2.value;
-
-            // Check if this event can be subscribed to via this function:
-            if (this._eventListeners[eventName] === undefined) {
-                continue;
-            }
-
-            // Check if eventListener is a function:
-            if (!eventListener || typeof eventListener.constructor !== 'function') {
-                throw new Error('on requires argument \'eventListener\' of type Function');
-            }
-
-            // Check if eventListener is already added:
-            if (this._eventListeners[eventName].indexOf(eventListener) >= 0) {
-                continue;
-            }
-
-            // Add event listener:
-            this._eventListeners[eventName].push(eventListener);
-        }
-    } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
-            }
-        } finally {
-            if (_didIteratorError2) {
-                throw _iteratorError2;
-            }
-        }
-    }
-};
-
-/**
- * @method
- * @param {String}
- * @param {callback}
- */
-EventHandler.prototype.once = function (eventName, eventListener) {
-    function onceListener() {
-        this.off(eventName, onceListener);
-        eventListener.apply(this, arguments);
-    }
-    this.on(eventName, onceListener);
-};
-
-/**
- * @method
- * @param {String}
- * @param {callback}
- */
-EventHandler.prototype.off = function (eventNames, eventListener) {
-    eventNames = eventNames.toLowerCase().split(' ');
-
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
-
-    try {
-        for (var _iterator3 = (0, _getIterator3.default)(eventNames), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var eventName = _step3.value;
-
-            // If event listeners don't exist, bail:
-            if (this._eventListeners[eventName] === undefined) {
-                return;
-            }
-
-            // Check if eventListener is a function:
-            if (!eventListener || typeof eventListener.constructor !== 'function') {
-                throw new Error('off requires argument \'eventListener\' of type Function');
-            }
-
-            // Remove event listener, if exists:
-            var index = this._eventListeners[eventName].indexOf(eventListener);
-
-            if (index >= 0) {
-                this._eventListeners[eventName].splice(index, 1);
-            }
-        }
-    } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
-            }
-        } finally {
-            if (_didIteratorError3) {
-                throw _iteratorError3;
-            }
-        }
-    }
-};
-
-/**
- * @method
- * @param {String}
- */
-EventHandler.prototype.clearEvent = function (eventNames) {
-    eventNames = eventNames.toLowerCase();
-
-    var _iteratorNormalCompletion4 = true;
-    var _didIteratorError4 = false;
-    var _iteratorError4 = undefined;
-
-    try {
-        for (var _iterator4 = (0, _getIterator3.default)(eventNames), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var eventName = _step4.value;
-
-            // If event listeners don't exist, bail:
-            if (this._eventListeners[eventName] === undefined) {
-                return;
-            }
-
-            this._eventListeners[eventName] = [];
-        }
-    } catch (err) {
-        _didIteratorError4 = true;
-        _iteratorError4 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                _iterator4.return();
-            }
-        } finally {
-            if (_didIteratorError4) {
-                throw _iteratorError4;
-            }
-        }
-    }
-};
-
-/**
- * @method
- * @param {String}
- * @param {...*} args - Arguments to pass to listeners
- * @returns {Boolean} true if all handlers return true, else false
- */
-EventHandler.prototype.emit = function (eventName) {
-    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-    }
-
-    eventName = eventName.toLowerCase();
-
-    // If event listeners don't exist, bail:
-    if (this._eventListeners[eventName] === undefined) {
-        return false;
-    }
-
-    var returnVal = true;
-
-    var _iteratorNormalCompletion5 = true;
-    var _didIteratorError5 = false;
-    var _iteratorError5 = undefined;
-
-    try {
-        for (var _iterator5 = (0, _getIterator3.default)(this._eventListeners[eventName]), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-            var eventListener = _step5.value;
-
-            // Call listener with the 'this' context as the current window:
-            returnVal = returnVal && eventListener.apply(this, args) !== false;
-        }
-    } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                _iterator5.return();
-            }
-        } finally {
-            if (_didIteratorError5) {
-                throw _iteratorError5;
-            }
-        }
-    }
-
-    var _iteratorNormalCompletion6 = true;
-    var _didIteratorError6 = false;
-    var _iteratorError6 = undefined;
-
-    try {
-        for (var _iterator6 = (0, _getIterator3.default)(this._eventPipes), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var eventHandler = _step6.value;
-
-            // Call handler with the 'this' context as the current window:
-            returnVal = returnVal && eventHandler.emit.apply(eventHandler, arguments) !== false;
-        }
-    } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                _iterator6.return();
-            }
-        } finally {
-            if (_didIteratorError6) {
-                throw _iteratorError6;
-            }
-        }
-    }
-
-    return returnVal;
-};
-
-/**
- * @method
- * @param {EventHandler}
- */
-EventHandler.prototype.addPipe = function (eventHandler) {
-    // Check if eventHandler is a EventHandler:
-    if (!eventHandler || !eventHandler.emit) {
-        throw new Error('addPipe requires argument \'eventHandler\' of type EventHandler');
-    }
-
-    // Check if eventHandler is already added:
-    if (this._eventPipes.indexOf(eventHandler) >= 0) {
-        return;
-    }
-
-    // Add event handler:
-    this._eventPipes.push(eventHandler);
-};
-
-/**
- * @method
- * @param {EventHandler}
- */
-EventHandler.prototype.removePipe = function (eventHandler) {
-    // Check if eventHandler is a EventHandler:
-    if (!eventHandler || !eventHandler.emit) {
-        throw new Error('removePipe requires argument \'eventHandler\' of type EventHandler');
-    }
-
-    // Check if eventHandler is already added:
-    if (this._eventPipes.indexOf(eventHandler) >= 0) {
-        return;
-    }
-
-    // Remove eventHandler, if exists:
-    var index = this._eventPipes.indexOf(eventHandler);
-
-    if (index >= 0) {
-        this._eventPipes.splice(index, 1);
-    }
-};
-
-exports.default = EventHandler;
-module.exports = exports['default'];
-
-/***/ }),
-/* 92 */
-/*!**********************************************************!*\
-  !*** ../node_modules/core-js/library/fn/get-iterator.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ../modules/web.dom.iterable */ 27);
-__webpack_require__(/*! ../modules/es6.string.iterator */ 24);
-module.exports = __webpack_require__(/*! ../modules/core.get-iterator */ 102);
-
-/***/ }),
-/* 93 */
-/*!*********************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es6.array.iterator.js ***!
-  \*********************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var addToUnscopables = __webpack_require__(/*! ./_add-to-unscopables */ 94)
-  , step             = __webpack_require__(/*! ./_iter-step */ 62)
-  , Iterators        = __webpack_require__(/*! ./_iterators */ 20)
-  , toIObject        = __webpack_require__(/*! ./_to-iobject */ 11);
-
-// 22.1.3.4 Array.prototype.entries()
-// 22.1.3.13 Array.prototype.keys()
-// 22.1.3.29 Array.prototype.values()
-// 22.1.3.30 Array.prototype[@@iterator]()
-module.exports = __webpack_require__(/*! ./_iter-define */ 36)(Array, 'Array', function(iterated, kind){
-  this._t = toIObject(iterated); // target
-  this._i = 0;                   // next index
-  this._k = kind;                // kind
-// 22.1.5.2.1 %ArrayIteratorPrototype%.next()
-}, function(){
-  var O     = this._t
-    , kind  = this._k
-    , index = this._i++;
-  if(!O || index >= O.length){
-    this._t = undefined;
-    return step(1);
-  }
-  if(kind == 'keys'  )return step(0, index);
-  if(kind == 'values')return step(0, O[index]);
-  return step(0, [index, O[index]]);
-}, 'values');
-
-// argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
-Iterators.Arguments = Iterators.Array;
-
-addToUnscopables('keys');
-addToUnscopables('values');
-addToUnscopables('entries');
-
-/***/ }),
-/* 94 */
-/*!**********************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_add-to-unscopables.js ***!
-  \**********************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports) {
-
-module.exports = function(){ /* empty */ };
-
-/***/ }),
-/* 95 */
-/*!**************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_a-function.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports) {
-
-module.exports = function(it){
-  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
-  return it;
-};
-
-/***/ }),
-/* 96 */
-/*!***************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_iter-create.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var create         = __webpack_require__(/*! ./_object-create */ 29)
-  , descriptor     = __webpack_require__(/*! ./_property-desc */ 21)
-  , setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 32)
-  , IteratorPrototype = {};
-
-// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-__webpack_require__(/*! ./_hide */ 7)(IteratorPrototype, __webpack_require__(/*! ./_wks */ 1)('iterator'), function(){ return this; });
-
-module.exports = function(Constructor, NAME, next){
-  Constructor.prototype = create(IteratorPrototype, {next: descriptor(1, next)});
-  setToStringTag(Constructor, NAME + ' Iterator');
-};
-
-/***/ }),
-/* 97 */
-/*!**************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_object-dps.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var dP       = __webpack_require__(/*! ./_object-dp */ 4)
-  , anObject = __webpack_require__(/*! ./_an-object */ 8)
-  , getKeys  = __webpack_require__(/*! ./_object-keys */ 22);
-
-module.exports = __webpack_require__(/*! ./_descriptors */ 6) ? Object.defineProperties : function defineProperties(O, Properties){
-  anObject(O);
-  var keys   = getKeys(Properties)
-    , length = keys.length
-    , i = 0
-    , P;
-  while(length > i)dP.f(O, P = keys[i++], Properties[P]);
-  return O;
-};
-
-/***/ }),
-/* 98 */
-/*!******************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_array-includes.js ***!
-  \******************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-// false -> Array#indexOf
-// true  -> Array#includes
-var toIObject = __webpack_require__(/*! ./_to-iobject */ 11)
-  , toLength  = __webpack_require__(/*! ./_to-length */ 30)
-  , toIndex   = __webpack_require__(/*! ./_to-index */ 99);
-module.exports = function(IS_INCLUDES){
-  return function($this, el, fromIndex){
-    var O      = toIObject($this)
-      , length = toLength(O.length)
-      , index  = toIndex(fromIndex, length)
-      , value;
-    // Array#includes uses SameValueZero equality algorithm
-    if(IS_INCLUDES && el != el)while(length > index){
-      value = O[index++];
-      if(value != value)return true;
-    // Array#toIndex ignores holes, Array#includes - not
-    } else for(;length > index; index++)if(IS_INCLUDES || index in O){
-      if(O[index] === el)return IS_INCLUDES || index || 0;
-    } return !IS_INCLUDES && -1;
-  };
-};
-
-/***/ }),
-/* 99 */
-/*!************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_to-index.js ***!
-  \************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var toInteger = __webpack_require__(/*! ./_to-integer */ 39)
-  , max       = Math.max
-  , min       = Math.min;
-module.exports = function(index, length){
-  index = toInteger(index);
-  return index < 0 ? max(index + length, 0) : min(index, length);
-};
-
-/***/ }),
-/* 100 */
-/*!********************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_html.js ***!
-  \********************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(/*! ./_global */ 3).document && document.documentElement;
-
-/***/ }),
-/* 101 */
-/*!*************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_string-at.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var toInteger = __webpack_require__(/*! ./_to-integer */ 39)
-  , defined   = __webpack_require__(/*! ./_defined */ 28);
-// true  -> String#at
-// false -> String#codePointAt
-module.exports = function(TO_STRING){
-  return function(that, pos){
-    var s = String(defined(that))
-      , i = toInteger(pos)
-      , l = s.length
-      , a, b;
-    if(i < 0 || i >= l)return TO_STRING ? '' : undefined;
-    a = s.charCodeAt(i);
-    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
-      ? TO_STRING ? s.charAt(i) : a
-      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
-  };
-};
-
-/***/ }),
-/* 102 */
-/*!********************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/core.get-iterator.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var anObject = __webpack_require__(/*! ./_an-object */ 8)
-  , get      = __webpack_require__(/*! ./core.get-iterator-method */ 43);
-module.exports = __webpack_require__(/*! ./_core */ 0).getIterator = function(it){
-  var iterFn = get(it);
-  if(typeof iterFn != 'function')throw TypeError(it + ' is not iterable!');
-  return anObject(iterFn.call(it));
-};
-
-/***/ }),
-/* 103 */
-/*!*******************************!*\
-  !*** ./utils/SyncCallback.js ***!
-  \*******************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-function SyncCallback(callback) {
-    var _this = this;
-
-    if (!(this instanceof SyncCallback)) {
-        return new SyncCallback(callback);
-    }
-
-    this.callback = callback;
-    this.count = 0;
-
-    // If no ref are called in event loop, then run callback:
-    this._timeout = setTimeout(function (that) {
-        delete _this._timeout;
-        that._check();
-    }, 0, this);
-}
-
-SyncCallback.prototype.ref = function (callback) {
-    var thisRef = this;
-
-    if (this._timeout !== undefined) {
-        // Ref is called, so remove timeout:
-        delete this._timeout;
-        clearTimeout(this._timeout);
-    }
-
-    this.count += 1;
-    return function () {
-        if (callback) {
-            callback.apply(undefined, arguments);
-        }
-        thisRef._deref();
-    };
-};
-
-SyncCallback.prototype._deref = function () {
-    this.count -= 1;
-    this._check();
-};
-
-SyncCallback.prototype._check = function () {
-    if (this.count <= 0 && this.callback != null) {
-        this.callback();
-        delete this.callback;
-    }
-};
-
-exports.default = SyncCallback;
-module.exports = exports["default"];
-
-/***/ }),
-/* 104 */
-/*!***********************************************************************!*\
-  !*** ../node_modules/babel-runtime/core-js/object/define-property.js ***!
-  \***********************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/define-property */ 105), __esModule: true };
-
-/***/ }),
-/* 105 */
-/*!********************************************************************!*\
-  !*** ../node_modules/core-js/library/fn/object/define-property.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ../../modules/es6.object.define-property */ 106);
-var $Object = __webpack_require__(/*! ../../modules/_core */ 0).Object;
-module.exports = function defineProperty(it, key, desc){
-  return $Object.defineProperty(it, key, desc);
-};
-
-/***/ }),
-/* 106 */
-/*!*****************************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es6.object.define-property.js ***!
-  \*****************************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $export = __webpack_require__(/*! ./_export */ 2);
-// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
-$export($export.S + $export.F * !__webpack_require__(/*! ./_descriptors */ 6), 'Object', {defineProperty: __webpack_require__(/*! ./_object-dp */ 4).f});
-
-/***/ }),
-/* 107 */
-/*!**************************!*\
-  !*** ./runtime/index.js ***!
-  \**************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-__webpack_require__(/*! ./ready */ 18);
-
-// TODO: Add runtime checks here for OpenFin and Electron
-var runtime = void 0; /* global fin */
-
-
-if (typeof process !== 'undefined' && process && process.versions && (process.versions.electron || process.versions.node) || typeof window !== 'undefined' && window && window.nodeRequire && window.nodeRequire.runtime) {
-    // We are running in an Electron Runtime:
-    runtime = __webpack_require__(/*! ./electron/index */ 108);
-} else if (typeof fin !== 'undefined' && fin && fin.desktop && fin.desktop.main) {
-    // We are running in an OpenFin Runtime:
-    runtime = __webpack_require__(/*! ./openfin/index */ 146);
-} else {
-    // We are running in an Browser Runtime:
-    runtime = __webpack_require__(/*! ./browser/index */ 150);
-}
-
-exports.default = runtime;
-module.exports = exports['default'];
-
-/***/ }),
-/* 108 */
-/*!***********************************!*\
-  !*** ./runtime/electron/index.js ***!
-  \***********************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _global = __webpack_require__(/*! ./global */ 25);
-
-var _global2 = _interopRequireDefault(_global);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Setup windowmanager runtime variables for Electron
-// TODO: Determine if renderer should be setup using the startup script, and have renderer be a NOOP
-
-if (_global2.default._isNode) {
-    // We are running in an Electron's main script:
-    __webpack_require__(/*! ./node/index */ 117);
-} else if (_global2.default._isRenderer) {
-    // We are running in an Electron renderer:
-    __webpack_require__(/*! ./renderer/index */ 119);
-}
-
-/***/ }),
-/* 109 */
-/*!*************************************************!*\
-  !*** ../node_modules/core-js/library/fn/map.js ***!
-  \*************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ../modules/es6.object.to-string */ 47);
-__webpack_require__(/*! ../modules/es6.string.iterator */ 24);
-__webpack_require__(/*! ../modules/web.dom.iterable */ 27);
-__webpack_require__(/*! ../modules/es6.map */ 110);
-__webpack_require__(/*! ../modules/es7.map.to-json */ 115);
-module.exports = __webpack_require__(/*! ../modules/_core */ 0).Map;
-
-/***/ }),
-/* 110 */
-/*!**********************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es6.map.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var strong = __webpack_require__(/*! ./_collection-strong */ 70);
-
-// 23.1 Map Objects
-module.exports = __webpack_require__(/*! ./_collection */ 75)('Map', function(get){
-  return function Map(){ return get(this, arguments.length > 0 ? arguments[0] : undefined); };
-}, {
-  // 23.1.3.6 Map.prototype.get(key)
-  get: function get(key){
-    var entry = strong.getEntry(this, key);
-    return entry && entry.v;
-  },
-  // 23.1.3.9 Map.prototype.set(key, value)
-  set: function set(key, value){
-    return strong.def(this, key === 0 ? 0 : key, value);
-  }
-}, strong, true);
-
-/***/ }),
-/* 111 */
-/*!***************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_set-species.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var global      = __webpack_require__(/*! ./_global */ 3)
-  , core        = __webpack_require__(/*! ./_core */ 0)
-  , dP          = __webpack_require__(/*! ./_object-dp */ 4)
-  , DESCRIPTORS = __webpack_require__(/*! ./_descriptors */ 6)
-  , SPECIES     = __webpack_require__(/*! ./_wks */ 1)('species');
-
-module.exports = function(KEY){
-  var C = typeof core[KEY] == 'function' ? core[KEY] : global[KEY];
-  if(DESCRIPTORS && C && !C[SPECIES])dP.f(C, SPECIES, {
-    configurable: true,
-    get: function(){ return this; }
-  });
-};
-
-/***/ }),
-/* 112 */
-/*!*****************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_array-methods.js ***!
-  \*****************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 0 -> Array#forEach
-// 1 -> Array#map
-// 2 -> Array#filter
-// 3 -> Array#some
-// 4 -> Array#every
-// 5 -> Array#find
-// 6 -> Array#findIndex
-var ctx      = __webpack_require__(/*! ./_ctx */ 16)
-  , IObject  = __webpack_require__(/*! ./_iobject */ 63)
-  , toObject = __webpack_require__(/*! ./_to-object */ 23)
-  , toLength = __webpack_require__(/*! ./_to-length */ 30)
-  , asc      = __webpack_require__(/*! ./_array-species-create */ 113);
-module.exports = function(TYPE, $create){
-  var IS_MAP        = TYPE == 1
-    , IS_FILTER     = TYPE == 2
-    , IS_SOME       = TYPE == 3
-    , IS_EVERY      = TYPE == 4
-    , IS_FIND_INDEX = TYPE == 6
-    , NO_HOLES      = TYPE == 5 || IS_FIND_INDEX
-    , create        = $create || asc;
-  return function($this, callbackfn, that){
-    var O      = toObject($this)
-      , self   = IObject(O)
-      , f      = ctx(callbackfn, that, 3)
-      , length = toLength(self.length)
-      , index  = 0
-      , result = IS_MAP ? create($this, length) : IS_FILTER ? create($this, 0) : undefined
-      , val, res;
-    for(;length > index; index++)if(NO_HOLES || index in self){
-      val = self[index];
-      res = f(val, index, O);
-      if(TYPE){
-        if(IS_MAP)result[index] = res;            // map
-        else if(res)switch(TYPE){
-          case 3: return true;                    // some
-          case 5: return val;                     // find
-          case 6: return index;                   // findIndex
-          case 2: result.push(val);               // filter
-        } else if(IS_EVERY)return false;          // every
-      }
-    }
-    return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : result;
-  };
-};
-
-/***/ }),
-/* 113 */
-/*!************************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_array-species-create.js ***!
-  \************************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 9.4.2.3 ArraySpeciesCreate(originalArray, length)
-var speciesConstructor = __webpack_require__(/*! ./_array-species-constructor */ 114);
-
-module.exports = function(original, length){
-  return new (speciesConstructor(original))(length);
-};
-
-/***/ }),
-/* 114 */
-/*!*****************************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_array-species-constructor.js ***!
-  \*****************************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isObject = __webpack_require__(/*! ./_is-object */ 12)
-  , isArray  = __webpack_require__(/*! ./_is-array */ 76)
-  , SPECIES  = __webpack_require__(/*! ./_wks */ 1)('species');
-
-module.exports = function(original){
-  var C;
-  if(isArray(original)){
-    C = original.constructor;
-    // cross-realm fallback
-    if(typeof C == 'function' && (C === Array || isArray(C.prototype)))C = undefined;
-    if(isObject(C)){
-      C = C[SPECIES];
-      if(C === null)C = undefined;
-    }
-  } return C === undefined ? Array : C;
-};
-
-/***/ }),
-/* 115 */
-/*!******************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es7.map.to-json.js ***!
-  \******************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-// https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var $export  = __webpack_require__(/*! ./_export */ 2);
-
-$export($export.P + $export.R, 'Map', {toJSON: __webpack_require__(/*! ./_collection-to-json */ 77)('Map')});
-
-/***/ }),
-/* 116 */
-/*!***********************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_array-from-iterable.js ***!
-  \***********************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var forOf = __webpack_require__(/*! ./_for-of */ 48);
-
-module.exports = function(iter, ITERATOR){
-  var result = [];
-  forOf(iter, false, result.push, result, ITERATOR);
-  return result;
-};
-
-
-/***/ }),
-/* 117 */
-/*!****************************************!*\
-  !*** ./runtime/electron/node/index.js ***!
-  \****************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _ready = __webpack_require__(/*! ../../ready */ 18);
-
-var _ready2 = _interopRequireDefault(_ready);
-
-var _require = __webpack_require__(/*! ../require */ 50);
-
-var _require2 = _interopRequireDefault(_require);
-
-var _global = __webpack_require__(/*! ../global */ 25);
-
-var _global2 = _interopRequireDefault(_global);
-
-__webpack_require__(/*! ./Window */ 118);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Setup window backend
-var _nodeRequire = (0, _require2.default)('electron'),
-    app = _nodeRequire.app,
-    BrowserWindow = _nodeRequire.BrowserWindow,
-    dialog = _nodeRequire.dialog;
-
-var http = (0, _require2.default)('http');
-var https = (0, _require2.default)('https');
-var path = (0, _require2.default)('path');
-var url = (0, _require2.default)('url');
-
-// TODO: Add support for local file loading for window url.
-
-function getArg(argName) {
-    return global.__windowmanagerConfig[argName] || process.argv.find(function (arg) {
-        return arg.indexOf('--' + argName) >= 0;
-    });
-}
-
-function extractArg(argName) {
-    var arg = getArg(argName);
-
-    if (arg) {
-        var index = arg.indexOf('=') + 1;
-
-        if (index < arg.length) {
-            return arg.substr(index);
-        }
-    }
-    // Return falsey value
-}
-
-// Determine the endpoint:
-var packageJson = function () {
-    var packagePath = path.resolve(path.dirname(_require2.default.main.filename), 'package.json');
-
-    try {
-        return (0, _require2.default)(packagePath).windowmanager || global.__windowmanagerConfig || {};
-    } catch (err) {
-        return {};
-    }
-}();
-var endpoint = extractArg('endpoint') || packageJson.endpoint;
-var configPath = extractArg('config') || packageJson.config;
-// If configPath is null, url.resolve doesn't execute:
-var configUrl = configPath && url.resolve(endpoint, configPath);
-// Setup defaults (similar to OpenFin):
-var defaultConfig = {
-    url: endpoint,
-    width: 800,
-    height: 500,
-    frame: true,
-    resizable: true,
-    show: true,
-    hasShadow: false,
-    autoHideMenuBar: true,
-    icon: 'favicon.ico',
-    webPreferences: {
-        nodeIntegration: false,
-        // Windowmanager path should be absolute:
-        preload: __filename
-    }
-};
-// Setup openfin to electron mappings:
-var configMap = {
-    name: 'title',
-    autoShow: 'show',
-    defaultLeft: 'x',
-    defaultTop: 'y',
-    defaultWidth: 'width',
-    defaultHeight: 'height'
-};
-var mainWindow = void 0;
-
-function createWindow() {
-    function _start(config) {
-        var _url = config.url;
-
-        delete config.url;
-
-        // Start main window:
-        mainWindow = new BrowserWindow(config);
-        config.title = config.title == null ? String(mainWindow.id) : config.title;
-
-        // load the index.html of the app:
-        mainWindow._setFrameInit(config.frame);
-        mainWindow.loadURL(_url);
-        mainWindow.setTitle(config.title);
-
-        mainWindow.webContents.on('did-fail-load', function () {
-            // Failed to load url, close window:
-            mainWindow.close();
-        });
-
-        mainWindow.on('closed', function () {
-            mainWindow = null;
-            app.quit();
-        });
-
-        // Store this as the main window:
-        _global2.default._launcher = mainWindow;
-
-        // Open the DevTools.
-        // mainWindow.webContents.openDevTools();
-
-        // Notify windowmanager is setup:
-        _ready2.default._deref();
-    }
-
-    function _response(res) {
-        var json = '';
-
-        res.setEncoding('utf8');
-        res.on('data', function (chunk) {
-            json += chunk;
-        });
-        res.on('error', function (error) {
-            // Had error, handle it:
-            var err = 'Server failed to load app.json (' + configUrl + '). Error: ' + error;
-
-            dialog.showErrorBox('ERROR', err);
-            app.quit();
-        });
-        res.on('end', function () {
-            if (res.statusCode === 200) {
-                var config = void 0;
-
-                try {
-                    config = JSON.parse(json).startup_app || {};
-                } catch (e) {
-                    var err = 'Server failed to parse app.json (' + configUrl + ').';
-
-                    dialog.showErrorBox('ERROR', err);
-                    return app.quit();
-                }
-
-                // Map options to electron options:
-                for (var prop in config) {
-                    if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
-                        config[configMap[prop]] = config[prop];
-                        delete config[prop];
-                    }
-                }
-                // Set defaults:
-                for (var _prop in defaultConfig) {
-                    if (defaultConfig.hasOwnProperty(_prop)) {
-                        config[_prop] = config[_prop] != null ? config[_prop] : defaultConfig[_prop];
-                    }
-                }
-
-                // Start main window:
-                _start(config);
-            } else {
-                var _err = 'Server failed to load app.json (' + configUrl + '). Status code: ' + res.statusCode;
-
-                dialog.showErrorBox('ERROR', _err);
-                app.quit();
-            }
-        });
-    }
-
-    // Get app.json:
-    if (configUrl != null) {
-        if (configUrl.indexOf('https') === 0) {
-            // Use https to load app.json:
-            https.get(configUrl, _response).on('error', function (error) {
-                // Had error, handle it:
-                var err = 'Server failed to load app.json (' + configUrl + '). Error: ' + error;
-
-                dialog.showErrorBox('ERROR', err);
-                app.quit();
-            });
-        } else if (configUrl.indexOf('http') === 0) {
-            // Use http to load app.json:
-            http.get(configUrl, _response).on('error', function (error) {
-                // Had error, handle it:
-                var err = 'Server failed to load app.json (' + configUrl + '). Error: ' + error;
-
-                dialog.showErrorBox('ERROR', err);
-                app.quit();
-            });
-        } else {
-            // Unsupported protocol:
-            var err = 'Server doesn\'t support endpoint for app.json (' + configUrl + ').';
-
-            dialog.showErrorBox('ERROR', err);
-            app.quit();
-        }
-    } else if (endpoint != null) {
-        // Load defaults:
-        _start(defaultConfig);
-    } else {
-        var _err2 = 'No endpoint provided to start the app.';
-
-        dialog.showErrorBox('ERROR', _err2);
-        app.quit();
-    }
-}
-
-// When app starts, load main window:
-app.on('ready', createWindow);
-
-// When app closes all windows, end app:
-app.on('window-all-closed', function () {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-});
-
-app.on('activate', function () {
-    if (mainWindow === null) {
-        createWindow();
-    }
-});
-
-/***/ }),
-/* 118 */
-/*!*****************************************!*\
-  !*** ./runtime/electron/node/Window.js ***!
-  \*****************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-var _global = __webpack_require__(/*! ../global */ 25);
-
-var _global2 = _interopRequireDefault(_global);
-
-var _require = __webpack_require__(/*! ../require */ 50);
-
-var _require2 = _interopRequireDefault(_require);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _nodeRequire = (0, _require2.default)('electron'),
-    BrowserWindow = _nodeRequire.BrowserWindow;
-
-// TODO: Give the node backend access to windowmanager Window-like functionality.
-//       This will automatically setup windowmanager on each window if added.
-
-// This is Electron's main process:
-
-
-var _windowmanager$geomet = _global2.default.geometry,
-    Vector = _windowmanager$geomet.Vector,
-    BoundingBox = _windowmanager$geomet.BoundingBox;
-
-// TODO: Solve event syncing between windows
-
-BrowserWindow.prototype._notifyReady = function () {
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-        for (var _iterator = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var other = _step.value;
-
-            other.webContents.send('window-create', this.id);
-        }
-    } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-            }
-        } finally {
-            if (_didIteratorError) {
-                throw _iteratorError;
-            }
-        }
-    }
-};
-
-BrowserWindow.prototype._ensureSetup = function () {
-    // Make sure docked group exists:
-    if (this._dockedGroup === undefined) {
-        this._dockedGroup = [this];
-
-        this.on('closed', function () {
-            // Clean up the dock system when this window closes:
-            this.undock();
-        });
-
-        this.on('maximize', function () {
-            this.undock(); // TODO: Support changing size when docked.
-        });
-
-        this.on('minimize', function () {
-            this._dockMinimize();
-        });
-
-        this.on('restore', function () {
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
-
-            try {
-                for (var _iterator2 = (0, _getIterator3.default)(this._dockedGroup), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var other = _step2.value;
-
-                    if (other !== this) {
-                        other.restore();
-                    }
-                }
-            } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
-                    }
-                } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
-                    }
-                }
-            }
-        });
-
-        var lastBounds = this.getBounds();
-
-        this.on('move', function () {
-            var newBounds = this.getBounds();
-
-            // this._dockMoveTo(newBounds.x, newBounds.y, [lastBounds.x, lastBounds.y]);
-            lastBounds = newBounds;
-        });
-
-        this.on('resize', function () {
-            var newBounds = this.getBounds();
-
-            if (newBounds.width !== lastBounds.width || newBounds.height !== lastBounds.height) {
-                this.undock(); // TODO: Support changing size when docked.
-            }
-            // TODO: Handle resize positions of other docked windows
-            //       This requires reworking how windows are docked/connected
-            //       (they must be docked to edges of windows, not the windows themselves)
-            /* for (let index = 0; index < this._dockedGroup.length; index += 1) {
-                const other = this._dockedGroup[index];
-                  if (other !== this) {
-                    other.setPosition()
-                }
-            }*/
-
-            lastBounds = newBounds;
-        });
-    }
-};
-
-BrowserWindow.prototype._setFrameInit = function (isFramed) {
-    this._ensureSetup();
-
-    this._isFramed = isFramed;
-};
-
-BrowserWindow.prototype.dock = function (otherID) {
-    this._ensureSetup();
-    if (this._isFramed) return; // If window is framed, don't support dock system.
-
-    // Resolve otherID, and fail if otherID doesn't exist.
-    var other = BrowserWindow.fromId(otherID);
-
-    if (other === undefined) {
-        return;
-    } // Failed to find other. TODO: Return error
-
-    // If other is already in the group, return:
-    if (this._dockedGroup.indexOf(other) >= 0) {
-        return;
-    }
-
-    // Make sure docked group exists:
-    other._ensureSetup();
-    if (other._isFramed) return; // If window is framed, don't support dock system.
-
-    // Loop through all windows in otherGroup and add them to this's group:
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
-
-    try {
-        for (var _iterator3 = (0, _getIterator3.default)(other._dockedGroup), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var otherWin = _step3.value;
-
-            this._dockedGroup.push(otherWin);
-            // Sharing the array between window objects makes it easier to manage:
-            otherWin._dockedGroup = this._dockedGroup;
-        }
-
-        // TODO: Check if otherGroup is touching
-    } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
-            }
-        } finally {
-            if (_didIteratorError3) {
-                throw _iteratorError3;
-            }
-        }
-    }
-};
-
-BrowserWindow.prototype.undock = function () {
-    this._ensureSetup();
-
-    // Check to see if window is already undocked:
-    if (this._dockedGroup.length === 1) {
-        return;
-    }
-
-    // Undock this:
-    this._dockedGroup.splice(this._dockedGroup.indexOf(this), 1);
-    this._dockedGroup = [this];
-
-    // TODO: Redock those still touching, EXCEPT 'this'.
-};
-
-BrowserWindow.prototype._dockFocus = function () {
-    this._ensureSetup();
-
-    var _iteratorNormalCompletion4 = true;
-    var _didIteratorError4 = false;
-    var _iteratorError4 = undefined;
-
-    try {
-        for (var _iterator4 = (0, _getIterator3.default)(this._dockedGroup), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var window = _step4.value;
-
-            if (window !== this) {
-                window.setAlwaysOnTop(true);
-                window.setAlwaysOnTop(false);
-            }
-        }
-    } catch (err) {
-        _didIteratorError4 = true;
-        _iteratorError4 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                _iterator4.return();
-            }
-        } finally {
-            if (_didIteratorError4) {
-                throw _iteratorError4;
-            }
-        }
-    }
-
-    this.setAlwaysOnTop(true);
-    this.setAlwaysOnTop(false);
-};
-
-BrowserWindow.prototype._dragStart = function () {
-    // if (!this.emit('drag-start')) { return; } // Allow preventing drag
-    this._ensureSetup();
-
-    this.restore();
-
-    var _iteratorNormalCompletion5 = true;
-    var _didIteratorError5 = false;
-    var _iteratorError5 = undefined;
-
-    try {
-        for (var _iterator5 = (0, _getIterator3.default)(this._dockedGroup), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-            var window = _step5.value;
-
-            window._dragStartPos = window.getPosition();
-        }
-    } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                _iterator5.return();
-            }
-        } finally {
-            if (_didIteratorError5) {
-                throw _iteratorError5;
-            }
-        }
-    }
-};
-
-BrowserWindow.prototype._getBounds = function () {
-    var bounds = this.getBounds();
-
-    return new BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
-};
-
-BrowserWindow.prototype._dragBy = function (deltaLeft, deltaTop) {
-    this._ensureSetup();
-
-    // Perform Snap:
-    var thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft, this._dragStartPos[1] + deltaTop);
-    var snapDelta = new Vector(NaN, NaN);
-
-    if (!this._isFramed) {
-        // If window is framed, don't support snap system.
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
-
-        try {
-            for (var _iterator6 = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                var other = _step6.value;
-
-                if (!other._isFramed && other._dockedGroup !== this._dockedGroup) {
-                    snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
-                }
-            }
-        } catch (err) {
-            _didIteratorError6 = true;
-            _iteratorError6 = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                    _iterator6.return();
-                }
-            } finally {
-                if (_didIteratorError6) {
-                    throw _iteratorError6;
-                }
-            }
-        }
-    }
-    deltaLeft += snapDelta.left || 0;
-    deltaTop += snapDelta.top || 0;
-
-    var _iteratorNormalCompletion7 = true;
-    var _didIteratorError7 = false;
-    var _iteratorError7 = undefined;
-
-    try {
-        for (var _iterator7 = (0, _getIterator3.default)(this._dockedGroup), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-            var _other = _step7.value;
-
-            var pos = _other._dragStartPos;
-
-            // If other doesn't have a drag position, start it:
-            if (pos === undefined) {
-                pos = _other._dragStartPos = _other.getPosition();
-                pos[0] -= deltaLeft;
-                pos[1] -= deltaTop;
-            }
-
-            _other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
-        }
-    } catch (err) {
-        _didIteratorError7 = true;
-        _iteratorError7 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                _iterator7.return();
-            }
-        } finally {
-            if (_didIteratorError7) {
-                throw _iteratorError7;
-            }
-        }
-    }
-};
-
-BrowserWindow.prototype._dragStop = function () {
-    this._ensureSetup();
-
-    if (!this._isFramed) {
-        // If window is framed, don't support dock system.
-        // Dock to those it snapped to:
-        var thisBounds = this._getBounds();
-
-        var _iteratorNormalCompletion8 = true;
-        var _didIteratorError8 = false;
-        var _iteratorError8 = undefined;
-
-        try {
-            for (var _iterator8 = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                var other = _step8.value;
-
-                if (!other._isFramed && thisBounds.isTouching(other._getBounds())) {
-                    this.dock(other.id);
-                }
-            }
-        } catch (err) {
-            _didIteratorError8 = true;
-            _iteratorError8 = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                    _iterator8.return();
-                }
-            } finally {
-                if (_didIteratorError8) {
-                    throw _iteratorError8;
-                }
-            }
-        }
-    }
-
-    var _iteratorNormalCompletion9 = true;
-    var _didIteratorError9 = false;
-    var _iteratorError9 = undefined;
-
-    try {
-        for (var _iterator9 = (0, _getIterator3.default)(this._dockedGroup), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-            var window = _step9.value;
-
-            delete window._dragStartPos;
-        }
-    } catch (err) {
-        _didIteratorError9 = true;
-        _iteratorError9 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                _iterator9.return();
-            }
-        } finally {
-            if (_didIteratorError9) {
-                throw _iteratorError9;
-            }
-        }
-    }
-};
-
-BrowserWindow.prototype._dockMoveTo = function (left, top) {
-    this._ensureSetup();
-
-    var oldPos = this.getPosition();
-    var deltaLeft = left - oldPos[0];
-    var deltaTop = top - oldPos[1];
-
-    var _iteratorNormalCompletion10 = true;
-    var _didIteratorError10 = false;
-    var _iteratorError10 = undefined;
-
-    try {
-        for (var _iterator10 = (0, _getIterator3.default)(this._dockedGroup), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-            var other = _step10.value;
-
-            var pos = other.getPosition();
-
-            other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
-        }
-    } catch (err) {
-        _didIteratorError10 = true;
-        _iteratorError10 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                _iterator10.return();
-            }
-        } finally {
-            if (_didIteratorError10) {
-                throw _iteratorError10;
-            }
-        }
-    }
-};
-
-BrowserWindow.prototype._dockMinimize = function (left, top) {
-    this._ensureSetup();
-
-    var _iteratorNormalCompletion11 = true;
-    var _didIteratorError11 = false;
-    var _iteratorError11 = undefined;
-
-    try {
-        for (var _iterator11 = (0, _getIterator3.default)(this._dockedGroup), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-            var window = _step11.value;
-
-            window.minimize();
-        }
-    } catch (err) {
-        _didIteratorError11 = true;
-        _iteratorError11 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                _iterator11.return();
-            }
-        } finally {
-            if (_didIteratorError11) {
-                throw _iteratorError11;
-            }
-        }
-    }
-};
-
-BrowserWindow.prototype._dockHide = function (left, top) {
-    this._ensureSetup();
-
-    var _iteratorNormalCompletion12 = true;
-    var _didIteratorError12 = false;
-    var _iteratorError12 = undefined;
-
-    try {
-        for (var _iterator12 = (0, _getIterator3.default)(this._dockedGroup), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-            var window = _step12.value;
-
-            window.hide();
-        }
-    } catch (err) {
-        _didIteratorError12 = true;
-        _iteratorError12 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion12 && _iterator12.return) {
-                _iterator12.return();
-            }
-        } finally {
-            if (_didIteratorError12) {
-                throw _iteratorError12;
-            }
-        }
-    }
-};
-
-BrowserWindow.prototype._dockShow = function (left, top) {
-    this._ensureSetup();
-
-    var _iteratorNormalCompletion13 = true;
-    var _didIteratorError13 = false;
-    var _iteratorError13 = undefined;
-
-    try {
-        for (var _iterator13 = (0, _getIterator3.default)(this._dockedGroup), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-            var window = _step13.value;
-
-            window.show();
-        }
-    } catch (err) {
-        _didIteratorError13 = true;
-        _iteratorError13 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion13 && _iterator13.return) {
-                _iterator13.return();
-            }
-        } finally {
-            if (_didIteratorError13) {
-                throw _iteratorError13;
-            }
-        }
-    }
-};
-
-BrowserWindow._getMainID = function () {
-    return _global2.default._launcher.id;
-};
-
-/***/ }),
-/* 119 */
-/*!********************************************!*\
-  !*** ./runtime/electron/renderer/index.js ***!
-  \********************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _set = __webpack_require__(/*! babel-runtime/core-js/set */ 51);
-
-var _set2 = _interopRequireDefault(_set);
-
-var _map = __webpack_require__(/*! babel-runtime/core-js/map */ 33);
-
-var _map2 = _interopRequireDefault(_map);
-
-var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-var _global = __webpack_require__(/*! ../global */ 25);
-
-var _global2 = _interopRequireDefault(_global);
-
-var _ready = __webpack_require__(/*! ../../ready */ 18);
-
-var _ready2 = _interopRequireDefault(_ready);
-
-var _Window = __webpack_require__(/*! ./Window */ 123);
-
-var _Window2 = _interopRequireDefault(_Window);
-
-var _index = __webpack_require__(/*! ../../../geometry/index */ 9);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _window$nodeRequire = window.nodeRequire('electron'),
-    ipcRenderer = _window$nodeRequire.ipcRenderer,
-    screen = _window$nodeRequire.screen;
-
-_global2.default.monitors = new _index.CollisionMesh([]);
-
-function updateMonitors() {
-    var displays = screen.getAllDisplays();
-    var boxes = [];
-
-    // Add monitors:
-    for (var display in displays) {
-        boxes.push(new _index.BoundingBox(display.bounds.x, display.bounds.y, display.bounds.x + display.bounds.width, display.bounds.y + display.bounds.height));
-    }
-
-    // Update monitors CollisionMesh:
-    _global2.default.monitors.boxes = boxes;
-}
-
-// Set up system to update monitors:
-updateMonitors();
-screen.on('display-added', updateMonitors);
-screen.on('display-removed', updateMonitors);
-screen.on('display-metrics-changed', updateMonitors);
-
-_global2.default.messagebus = function () {
-    // TODO: Optimize Electron's messagebus by keeping track of listeners
-    //       in the main process for early termination.
-    // TODO: Listener cleanup on this window, or other window close.
-    // TODO: Use a custom eventName, so to not collide with current ones.
-    var wrappedListeners = {};
-    var windowWrappedListeners = {};
-
-    function wrapListener(window, listener) {
-        return function (_, message) {
-            // If listener only listens from a specific window, check that this message is from that window:
-            if (window && window._id !== message.winID) {
-                return;
-            }
-
-            var fromWindow = _global2.default.Window.getByID(message.winID);
-
-            // Don't execute listeners when the sender is the same as the listener:
-            if (fromWindow._id === _global2.default.Window.current._id) {
-                return;
-            }
-
-            listener.apply(fromWindow, message.args);
-            // TODO: Send response if response is expected
-        };
-    }
-
-    return {
-        send: function send(eventName) {
-            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                args[_key - 1] = arguments[_key];
-            }
-
-            var curWin = _global2.default.Window.current;
-            var message = {
-                id: 0, // TODO: Randomly generate a unique id to avoid collision!
-                winID: curWin._id,
-                event: eventName,
-                args: args // If the first arg is a window, it gets removed later.
-            };
-
-            if (args.length > 0 && args[0] instanceof _Window2.default) {
-                // Remove window from args in message:
-                var _window = args.shift(); // args is by reference in message currently
-
-                // Don't execute listeners when the sender is the same as the listener:
-                if (_window._id === curWin._id) {
-                    return;
-                }
-
-                _window._window.webContents.send(eventName, message);
-            } else {
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = (0, _getIterator3.default)(_global2.default.Window.getAll()), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var _window2 = _step.value;
-
-                        if (_window2 !== curWin) {
-                            _window2._window.webContents.send(eventName, message);
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-            }
-        },
-        on: function on(eventName, window, listener) {
-            if (listener === undefined) {
-                listener = window;
-                window = undefined;
-            }
-
-            var onMessage = wrapListener(window, listener);
-
-            if (window !== undefined) {
-                // Don't execute listeners when the sender is the same as the listener:
-                if (window._id === _global2.default.Window.current._id) {
-                    return;
-                }
-
-                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
-
-                winLisGroup[eventName] = winLisGroup[eventName] || new _map2.default();
-                winLisGroup[eventName].set(listener, onMessage);
-                // TODO: On window close, clear subscriptions in windowWrappedListeners!
-            } else {
-                wrappedListeners[eventName] = wrappedListeners[eventName] || new _map2.default();
-                wrappedListeners[eventName].set(listener, onMessage);
-            }
-            ipcRenderer.on(eventName, onMessage);
-        },
-        off: function off(eventName, window, listener) {
-            if (listener === undefined) {
-                listener = window;
-                window = undefined;
-            }
-
-            if (window !== undefined) {
-                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
-
-                winLisGroup[eventName] = winLisGroup[eventName] || new _map2.default();
-                // delete on a Map returns the deleted value (desired onMessage):
-                ipcRenderer.removeListener(eventName, winLisGroup[eventName].delete(listener));
-            } else {
-                wrappedListeners[eventName] = wrappedListeners[eventName] || new _set2.default();
-                // delete on a Map returns the deleted value (desired onMessage):
-                ipcRenderer.removeListener(eventName, wrappedListeners[eventName].get(listener));
-            }
-        }
-    };
-}();
-
-_ready2.default._deref();
-
-/***/ }),
-/* 120 */
-/*!*************************************************!*\
-  !*** ../node_modules/core-js/library/fn/set.js ***!
-  \*************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ../modules/es6.object.to-string */ 47);
-__webpack_require__(/*! ../modules/es6.string.iterator */ 24);
-__webpack_require__(/*! ../modules/web.dom.iterable */ 27);
-__webpack_require__(/*! ../modules/es6.set */ 121);
-__webpack_require__(/*! ../modules/es7.set.to-json */ 122);
-module.exports = __webpack_require__(/*! ../modules/_core */ 0).Set;
-
-/***/ }),
-/* 121 */
-/*!**********************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es6.set.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var strong = __webpack_require__(/*! ./_collection-strong */ 70);
-
-// 23.2 Set Objects
-module.exports = __webpack_require__(/*! ./_collection */ 75)('Set', function(get){
-  return function Set(){ return get(this, arguments.length > 0 ? arguments[0] : undefined); };
-}, {
-  // 23.2.3.1 Set.prototype.add(value)
-  add: function add(value){
-    return strong.def(this, value = value === 0 ? 0 : value, value);
-  }
-}, strong);
-
-/***/ }),
-/* 122 */
-/*!******************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es7.set.to-json.js ***!
-  \******************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-// https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var $export  = __webpack_require__(/*! ./_export */ 2);
-
-$export($export.P + $export.R, 'Set', {toJSON: __webpack_require__(/*! ./_collection-to-json */ 77)('Set')});
-
-/***/ }),
-/* 123 */
-/*!*********************************************!*\
-  !*** ./runtime/electron/renderer/Window.js ***!
-  \*********************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-var _from = __webpack_require__(/*! babel-runtime/core-js/array/from */ 52);
-
-var _from2 = _interopRequireDefault(_from);
-
-var _getPrototypeOf = __webpack_require__(/*! babel-runtime/core-js/object/get-prototype-of */ 53);
-
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 14);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 15);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(/*! babel-runtime/helpers/possibleConstructorReturn */ 54);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(/*! babel-runtime/helpers/inherits */ 58);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-var _global = __webpack_require__(/*! ../global */ 25);
-
-var _global2 = _interopRequireDefault(_global);
-
-var _index = __webpack_require__(/*! ../../../utils/index */ 10);
-
-var _index2 = __webpack_require__(/*! ../../../geometry/index */ 9);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _window$nodeRequire = window.nodeRequire('electron'),
-    ipcRenderer = _window$nodeRequire.ipcRenderer,
-    remote = _window$nodeRequire.remote;
-
-var url = window.nodeRequire('url');
-var BrowserWindow = remote.BrowserWindow;
-
-var currentWin = remote.getCurrentWindow();
-var defaultConfig = {
-    width: 800,
-    height: 500,
-    frame: true,
-    resizable: true,
-    show: true,
-    hasShadow: false,
-    autoHideMenuBar: true,
-    icon: 'favicon.ico',
-    webPreferences: {
-        nodeIntegration: false,
-        preload: window.nodeRequire.windowmanagerPath
-    }
-};
-var configMap = {
-    left: 'x',
-    top: 'y'
-};
-var acceptedEventHandlers = ['ready', 'drag-start', 'drag-before', 'drag-stop', 'dock-before', 'move', 'move-before', 'resize-before', 'close', 'show', 'hide', 'restore', 'minimize', 'maximize', 'focus', 'blur'];
-
-var Window = function (_EventHandler) {
-    (0, _inherits3.default)(Window, _EventHandler);
-
-    function Window(config) {
-        (0, _classCallCheck3.default)(this, Window);
-
-        var _this = (0, _possibleConstructorReturn3.default)(this, (Window.__proto__ || (0, _getPrototypeOf2.default)(Window)).call(this, acceptedEventHandlers));
-        // Call the parent constructor:
-
-
-        config = config || {}; // If no arguments are passed, assume we are creating a default blank window
-        var isArgConfig = config.webContents === undefined; // TODO: Improve checking of arguments.
-
-        if (isArgConfig) {
-            for (var prop in config) {
-                if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
-                    config[configMap[prop]] = config[prop];
-                    delete config[prop];
-                }
-            }
-            for (var _prop in defaultConfig) {
-                if (defaultConfig.hasOwnProperty(_prop)) {
-                    config[_prop] = config[_prop] != null ? config[_prop] : defaultConfig[_prop];
-                }
-            }
-            var _url = config.url;
-
-            delete config.url;
-
-            _this._window = new BrowserWindow(config);
-            _this._id = _this._window.id;
-            config.title = config.title == null ? String(_this._id) : config.title;
-            // The following logic works like (in logical if-order):
-            //       1. If url has 'http' or 'file' at start, then use url, no modification.
-            //       2. If url has no '/', take location.href and remove all stuff up till last /, then append url.
-            //       3. If url has '/':
-            //          a. If location.href has 'http', extract the root url (domain) and append url.
-            //          b. If location.href has 'file', take remote.getGlobal('workingDir'), and then append url.
-            // Resolve url:
-            if (!/^(file|http)/i.test(_url)) {
-                if (_url[0] !== '/') {
-                    _url = url.resolve(location.href, _url); // TODO: Is this unsafe with '..'?
-                } else if (/^http/i.test(location.href)) {
-                    _url = location.origin + _url; // TODO: Safe?
-                } else if (/^file/i.test(location.href)) {
-                    _url = remote.getGlobal('workingDir') + _url; // TODO: Safe?
-                }
-                // If can\'t determine url to load, then attempt to just load the url.
-            }
-            _this._window._setFrameInit(config.frame);
-            _this._window.loadURL(_url);
-            _this._window.setTitle(config.title);
-        } else {
-            _this._window = config;
-            _this._id = _this._window.id;
-        }
-        _global2.default._windows.set(_this._id, _this);
-
-        // Setup _window event listeners:
-        // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.
-        var thisWindow = _this;
-
-        function _onmove() {
-            thisWindow.emit('move'); // TODO: Pass what position it is at.
-        }
-        _this._window.on('move', _onmove);
-
-        function _onminimize() {
-            thisWindow.emit('minimize'); // TODO: Pass what position it is at.
-        }
-        _this._window.on('minimize', _onminimize);
-
-        function _onclose() {
-            window.removeEventListener('beforeunload', _oncurrclose); // eslint-disable-line no-use-before-define
-            _global2.default._windows.delete(thisWindow._id);
-            thisWindow._isClosed = true;
-            thisWindow.emit('close');
-            thisWindow._window = undefined;
-            // TODO: Clean up ALL listeners
-        }
-
-        function _oncurrclose() {
-            _global2.default._windows.delete(thisWindow._id);
-            thisWindow._window.removeListener('move', _onmove);
-            thisWindow._window.removeListener('close', _onclose);
-            thisWindow._window.removeListener('minimize', _onminimize);
-        }
-
-        // Register _oncurrclose when page changes or window closes to clean up listeners:
-        window.addEventListener('beforeunload', _oncurrclose);
-
-        // If window isn't currentWin, execute local event listeners:
-        if (_this._window !== currentWin) {
-            _this._window.on('close', _onclose);
-        }
-
-        // Setup event listeners:
-        _this._window.on('show', function () {
-            thisWindow.emit('show');
-        });
-        _this._window.on('hide', function () {
-            thisWindow.emit('hide');
-        });
-        _this._window.on('restore', function () {
-            thisWindow.emit('restore');
-        });
-        _this._window.on('minimize', function () {
-            thisWindow.emit('minimize');
-        });
-        _this._window.on('maximize', function () {
-            thisWindow.emit('maximize');
-        });
-        _this._window.on('focus', function () {
-            thisWindow.emit('focus');
-        });
-        _this._window.on('blur', function () {
-            thisWindow.emit('blur');
-        });
-
-        _this._isClosed = false;
-        _this._ready = true;
-        if (isArgConfig) {
-            _this._window._notifyReady();
-        }
-        return _this;
-    }
-
-    (0, _createClass3.default)(Window, [{
-        key: 'isReady',
-        value: function isReady() {
-            return this._window !== undefined && !this._isClosed();
-        }
-    }, {
-        key: 'onReady',
-        value: function onReady(callback) {
-            if (this.isClosed()) {
-                throw new Error('onReady can\'t be called on a closed window');
-            }
-            if (this.isReady()) {
-                return callback.call(this);
-            }
-
-            this.once('ready', callback);
-        }
-    }, {
-        key: 'isClosed',
-        value: function isClosed() {
-            return this._isClosed;
-        }
-    }, {
-        key: 'getPosition',
-        value: function getPosition() {
-            var pos = this._window.getPosition();
-
-            return new _index2.Position(pos[0], pos[1]);
-        }
-    }, {
-        key: 'getWidth',
-        value: function getWidth() {
-            var size = this._window.getSize();
-
-            return size[0];
-        }
-    }, {
-        key: 'getHeight',
-        value: function getHeight() {
-            var size = this._window.getSize();
-
-            return size[1];
-        }
-    }, {
-        key: 'getSize',
-        value: function getSize() {
-            var size = this._window.getSize();
-
-            return new _index2.Position(size[0], size[1]);
-        }
-    }, {
-        key: 'getBounds',
-        value: function getBounds() {
-            var bounds = this._window.getBounds();
-
-            return new _index2.BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
-        }
-    }, {
-        key: 'getTitle',
-        value: function getTitle() {
-            return this._window.getTitle();
-        }
-    }, {
-        key: 'setTitle',
-        value: function setTitle(newTitle) {
-            if (!newTitle) {
-                throw new Error('setTitle requires one argument of type String');
-            }
-            this._window.setTitle(newTitle);
-        }
-    }, {
-        key: 'isHidden',
-        value: function isHidden() {
-            return !this.isShown();
-        }
-    }, {
-        key: 'isShown',
-        value: function isShown() {
-            return this._window.isVisible();
-        }
-    }, {
-        key: 'isMinimized',
-        value: function isMinimized() {
-            return this._window.isMinimized();
-        }
-    }, {
-        key: 'isMaximized',
-        value: function isMaximized() {
-            return this._window.isMaximized();
-        }
-    }, {
-        key: 'isRestored',
-        value: function isRestored() {
-            return this.isShown() && !this.isMinimized() && !this.isMaximized();
-        }
-    }, {
-        key: 'close',
-        value: function close(callback) {
-            if (this.isClosed()) {
-                return callback && callback();
-            }
-
-            this._window.close();
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'minimize',
-        value: function minimize(callback) {
-            if (!this._ready) {
-                throw new Error('minimize can\'t be called on an unready window');
-            }
-
-            this._window._dockMinimize();
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'maximize',
-        value: function maximize(callback) {
-            if (!this._ready) {
-                throw new Error('maximize can\'t be called on an unready window');
-            }
-
-            this._window.maximize();
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'show',
-        value: function show(callback) {
-            if (!this._ready) {
-                throw new Error('show can\'t be called on an unready window');
-            }
-
-            this._window._dockShow();
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'hide',
-        value: function hide(callback) {
-            if (!this._ready) {
-                throw new Error('hide can\'t be called on an unready window');
-            }
-
-            this._window._dockHide();
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'restore',
-        value: function restore(callback) {
-            if (!this._ready) {
-                throw new Error('restore can\'t be called on an unready window');
-            }
-
-            this._window.restore();
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'resizable',
-        value: function resizable(_resizable, callback) {
-            if (!this._ready) {
-                throw new Error('restore can\'t be called on an unready window');
-            }
-
-            this._window.setResizable();
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'bringToFront',
-        value: function bringToFront(callback) {
-            if (!this._ready) {
-                throw new Error('bringToFront can\'t be called on an unready window');
-            }
-
-            this._window._dockFocus();
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'focus',
-        value: function focus(callback) {
-            if (!this._ready) {
-                throw new Error('focus can\'t be called on an unready window');
-            }
-
-            this._window.focus();
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'resizeTo',
-        value: function resizeTo(width, height, callback) {
-            if (!this._ready) {
-                throw new Error('resizeTo can\'t be called on an unready window');
-            }
-            var size = new _index2.Position(width, height);
-
-            this._window.setSize(size.left, size.top);
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'moveTo',
-        value: function moveTo(left, top, callback) {
-            if (!this._ready) {
-                throw new Error('moveTo can\'t be called on an unready window');
-            }
-            var pos = new _index2.Position(left, top);
-
-            this._window._dockMoveTo(pos.left, pos.top);
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'moveBy',
-        value: function moveBy(deltaLeft, deltaTop, callback) {
-            if (!this._ready) {
-                throw new Error('moveBy can\'t be called on an unready window');
-            }
-            var bounds = this.getBounds();
-            var deltaPos = new _index2.Position(deltaLeft, deltaTop);
-
-            this._window._dockMoveTo(bounds.left + deltaPos.left, bounds.top + deltaPos.top);
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'setSize',
-        value: function setSize(width, height, callback) {
-            if (!this._ready) {
-                throw new Error('setSize can\'t be called on an unready window');
-            }
-            var size = new _index2.Size(width, height);
-
-            this._window.setSize(size.left, size.top);
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'setBounds',
-        value: function setBounds(left, top, right, bottom, callback) {
-            if (!this._ready) {
-                throw new Error('resizeTo can\'t be called on an unready window');
-            }
-            var bounds = new _index2.BoundingBox(left, top, right, bottom);
-
-            this._window.setBounds({
-                x: bounds.left,
-                y: bounds.top,
-                width: bounds.getWidth(),
-                height: bounds.getHeight()
-            });
-            if (callback) {
-                callback();
-            }
-        }
-    }, {
-        key: 'dock',
-        value: function dock(other) {
-            this._window.dock(other._window.id);
-        }
-    }, {
-        key: 'undock',
-        value: function undock() {
-            this._window.undock();
-        }
-    }], [{
-        key: 'getAll',
-        value: function getAll() {
-            return (0, _from2.default)(_global2.default._windows.values());
-        }
-    }, {
-        key: 'getByID',
-        value: function getByID(id) {
-            return _global2.default._windows.get(id);
-        }
-    }, {
-        key: 'getMain',
-        value: function getMain(id) {
-            return _global2.default._windows.get(BrowserWindow._getMainID());
-        }
-    }, {
-        key: 'getCurrent',
-        value: function getCurrent() {
-            return Window.current;
-        }
-    }]);
-    return Window;
-}(_index.EventHandler);
-
-// Handle current window in this context:
-
-
-Window.current = new Window(currentWin);
-
-(function () {
-    // Setup handlers on this window:
-    var wX = 0;
-    var wY = 0;
-    var dragging = false;
-
-    window.addEventListener('focus', function () {
-        Window.current.bringToFront();
-    });
-
-    window.addEventListener('mousedown', function onDragStart(event) {
-        if (event.target.classList && event.target.classList.contains('window-drag')) {
-            dragging = true;
-            wX = event.screenX;
-            wY = event.screenY;
-            Window.current._window._dragStart();
-        }
-    });
-
-    window.addEventListener('touchstart', function (event) {
-        if (event.target.classList && event.target.classList.contains('window-drag')) {
-            event.preventDefault();
-            dragging = true;
-            wX = event.touches[0].screenX;
-            wY = event.touches[0].screenY;
-            Window.current._window._dragStart();
-        }
-    });
-
-    window.addEventListener('mousemove', function (event) {
-        if (dragging) {
-            // Stop text selection:
-            window.getSelection().removeAllRanges();
-            // Drag:
-            Window.current._window._dragBy(event.screenX - wX, event.screenY - wY);
-        }
-    });
-
-    window.addEventListener('touchmove', function (event) {
-        if (dragging) {
-            event.preventDefault();
-            // Stop text selection:
-            window.getSelection().removeAllRanges();
-            // Drag:
-            Window.current._window._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
-        }
-    });
-
-    window.addEventListener('mouseup', function (event) {
-        if (dragging) {
-            dragging = false;
-            Window.current._window._dragStop();
-        }
-    });
-
-    window.addEventListener('touchend', function (event) {
-        if (dragging) {
-            event.preventDefault();
-            dragging = false;
-            Window.current._window._dragStop();
-        }
-    });
-
-    // Add context menu:
-    var Menu = remote.Menu;
-    var MenuItem = remote.MenuItem;
-    var rightClickPosition = null;
-    var menu = new Menu();
-
-    menu.append(new MenuItem({
-        label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
-        click: function click() {
-            Window.current._window.reload();
-        }
-    }));
-    menu.append(new MenuItem({
-        label: 'Reload app and restart children',
-        click: function click() {
-            // Close ALL windows:
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = (0, _getIterator3.default)(_global2.default._windows.values()), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var _window = _step.value;
-
-                    _window.close();
-                }
-                // Relaunch app:
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-
-            remote.app.relaunch();
-            remote.app.exit(0);
-        }
-    }));
-    menu.append(new MenuItem({ type: 'separator' }));
-    menu.append(new MenuItem({
-        label: 'Inspect Element',
-        accelerator: 'CmdOrCtrl+Shift+I',
-        click: function click() {
-            Window.current._window.inspectElement(rightClickPosition.x, rightClickPosition.y);
-        }
-    }));
-
-    window.addEventListener('contextmenu', function (event) {
-        event.preventDefault();
-        rightClickPosition = { x: event.x, y: event.y };
-        menu.popup(Window.current._window);
-    }, false);
-})();
-
-function resolveWindowWithID(id) {
-    var window = _global2.default._windows.get(id);
-
-    if (window) return window;
-
-    // Window isn't registered yet in windowmanager, so do so:
-    var electronWin = BrowserWindow.fromId(id);
-
-    if (electronWin !== null) {
-        return new Window(electronWin);
-    }
-}
-
-// Add other browser windows to global windows:
-var _iteratorNormalCompletion2 = true;
-var _didIteratorError2 = false;
-var _iteratorError2 = undefined;
-
-try {
-    for (var _iterator2 = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-        var other = _step2.value;
-
-        resolveWindowWithID(other.id);
-    }
-} catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
-} finally {
-    try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
-        }
-    } finally {
-        if (_didIteratorError2) {
-            throw _iteratorError2;
-        }
-    }
-}
-
-ipcRenderer.on('window-create', function (event, otherID) {
-    _global2.default.emit('window-create', resolveWindowWithID(otherID));
-});
-
-_global2.default.Window = Window;
-exports.default = Window;
-module.exports = exports['default'];
-
-/***/ }),
-/* 124 */
-/*!********************************************************!*\
-  !*** ../node_modules/core-js/library/fn/array/from.js ***!
-  \********************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ../../modules/es6.string.iterator */ 24);
-__webpack_require__(/*! ../../modules/es6.array.from */ 125);
-module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Array.from;
-
-/***/ }),
-/* 125 */
-/*!*****************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es6.array.from.js ***!
-  \*****************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var ctx            = __webpack_require__(/*! ./_ctx */ 16)
-  , $export        = __webpack_require__(/*! ./_export */ 2)
-  , toObject       = __webpack_require__(/*! ./_to-object */ 23)
-  , call           = __webpack_require__(/*! ./_iter-call */ 73)
-  , isArrayIter    = __webpack_require__(/*! ./_is-array-iter */ 74)
-  , toLength       = __webpack_require__(/*! ./_to-length */ 30)
-  , createProperty = __webpack_require__(/*! ./_create-property */ 126)
-  , getIterFn      = __webpack_require__(/*! ./core.get-iterator-method */ 43);
-
-$export($export.S + $export.F * !__webpack_require__(/*! ./_iter-detect */ 127)(function(iter){ Array.from(iter); }), 'Array', {
-  // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
-  from: function from(arrayLike/*, mapfn = undefined, thisArg = undefined*/){
-    var O       = toObject(arrayLike)
-      , C       = typeof this == 'function' ? this : Array
-      , aLen    = arguments.length
-      , mapfn   = aLen > 1 ? arguments[1] : undefined
-      , mapping = mapfn !== undefined
-      , index   = 0
-      , iterFn  = getIterFn(O)
-      , length, result, step, iterator;
-    if(mapping)mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
-    // if object isn't iterable or it's array with default iterator - use simple case
-    if(iterFn != undefined && !(C == Array && isArrayIter(iterFn))){
-      for(iterator = iterFn.call(O), result = new C; !(step = iterator.next()).done; index++){
-        createProperty(result, index, mapping ? call(iterator, mapfn, [step.value, index], true) : step.value);
-      }
-    } else {
-      length = toLength(O.length);
-      for(result = new C(length); length > index; index++){
-        createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
-      }
-    }
-    result.length = index;
-    return result;
-  }
-});
-
-
-/***/ }),
-/* 126 */
-/*!*******************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_create-property.js ***!
-  \*******************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $defineProperty = __webpack_require__(/*! ./_object-dp */ 4)
-  , createDesc      = __webpack_require__(/*! ./_property-desc */ 21);
-
-module.exports = function(object, index, value){
-  if(index in object)$defineProperty.f(object, index, createDesc(0, value));
-  else object[index] = value;
-};
-
-/***/ }),
-/* 127 */
-/*!***************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_iter-detect.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var ITERATOR     = __webpack_require__(/*! ./_wks */ 1)('iterator')
-  , SAFE_CLOSING = false;
-
-try {
-  var riter = [7][ITERATOR]();
-  riter['return'] = function(){ SAFE_CLOSING = true; };
-  Array.from(riter, function(){ throw 2; });
-} catch(e){ /* empty */ }
-
-module.exports = function(exec, skipClosing){
-  if(!skipClosing && !SAFE_CLOSING)return false;
-  var safe = false;
-  try {
-    var arr  = [7]
-      , iter = arr[ITERATOR]();
-    iter.next = function(){ return {done: safe = true}; };
-    arr[ITERATOR] = function(){ return iter; };
-    exec(arr);
-  } catch(e){ /* empty */ }
-  return safe;
-};
-
-/***/ }),
-/* 128 */
-/*!*********************************************************************!*\
-  !*** ../node_modules/core-js/library/fn/object/get-prototype-of.js ***!
-  \*********************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ../../modules/es6.object.get-prototype-of */ 129);
-module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Object.getPrototypeOf;
-
-/***/ }),
-/* 129 */
-/*!******************************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es6.object.get-prototype-of.js ***!
-  \******************************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 19.1.2.9 Object.getPrototypeOf(O)
-var toObject        = __webpack_require__(/*! ./_to-object */ 23)
-  , $getPrototypeOf = __webpack_require__(/*! ./_object-gpo */ 68);
-
-__webpack_require__(/*! ./_object-sap */ 78)('getPrototypeOf', function(){
-  return function getPrototypeOf(it){
-    return $getPrototypeOf(toObject(it));
-  };
-});
-
-/***/ }),
-/* 130 */
-/*!****************************************************************!*\
-  !*** ../node_modules/babel-runtime/core-js/symbol/iterator.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol/iterator */ 131), __esModule: true };
-
-/***/ }),
-/* 131 */
-/*!*************************************************************!*\
-  !*** ../node_modules/core-js/library/fn/symbol/iterator.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ../../modules/es6.string.iterator */ 24);
-__webpack_require__(/*! ../../modules/web.dom.iterable */ 27);
-module.exports = __webpack_require__(/*! ../../modules/_wks-ext */ 55).f('iterator');
-
-/***/ }),
-/* 132 */
-/*!*******************************************************!*\
-  !*** ../node_modules/babel-runtime/core-js/symbol.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol */ 133), __esModule: true };
-
-/***/ }),
-/* 133 */
-/*!**********************************************************!*\
-  !*** ../node_modules/core-js/library/fn/symbol/index.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ../../modules/es6.symbol */ 134);
-__webpack_require__(/*! ../../modules/es6.object.to-string */ 47);
-__webpack_require__(/*! ../../modules/es7.symbol.async-iterator */ 138);
-__webpack_require__(/*! ../../modules/es7.symbol.observable */ 139);
-module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Symbol;
-
-/***/ }),
-/* 134 */
-/*!*************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es6.symbol.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-// ECMAScript 6 symbols shim
-var global         = __webpack_require__(/*! ./_global */ 3)
-  , has            = __webpack_require__(/*! ./_has */ 13)
-  , DESCRIPTORS    = __webpack_require__(/*! ./_descriptors */ 6)
-  , $export        = __webpack_require__(/*! ./_export */ 2)
-  , redefine       = __webpack_require__(/*! ./_redefine */ 66)
-  , META           = __webpack_require__(/*! ./_meta */ 49).KEY
-  , $fails         = __webpack_require__(/*! ./_fails */ 17)
-  , shared         = __webpack_require__(/*! ./_shared */ 41)
-  , setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 32)
-  , uid            = __webpack_require__(/*! ./_uid */ 31)
-  , wks            = __webpack_require__(/*! ./_wks */ 1)
-  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 55)
-  , wksDefine      = __webpack_require__(/*! ./_wks-define */ 56)
-  , keyOf          = __webpack_require__(/*! ./_keyof */ 135)
-  , enumKeys       = __webpack_require__(/*! ./_enum-keys */ 136)
-  , isArray        = __webpack_require__(/*! ./_is-array */ 76)
-  , anObject       = __webpack_require__(/*! ./_an-object */ 8)
-  , toIObject      = __webpack_require__(/*! ./_to-iobject */ 11)
-  , toPrimitive    = __webpack_require__(/*! ./_to-primitive */ 38)
-  , createDesc     = __webpack_require__(/*! ./_property-desc */ 21)
-  , _create        = __webpack_require__(/*! ./_object-create */ 29)
-  , gOPNExt        = __webpack_require__(/*! ./_object-gopn-ext */ 137)
-  , $GOPD          = __webpack_require__(/*! ./_object-gopd */ 82)
-  , $DP            = __webpack_require__(/*! ./_object-dp */ 4)
-  , $keys          = __webpack_require__(/*! ./_object-keys */ 22)
-  , gOPD           = $GOPD.f
-  , dP             = $DP.f
-  , gOPN           = gOPNExt.f
-  , $Symbol        = global.Symbol
-  , $JSON          = global.JSON
-  , _stringify     = $JSON && $JSON.stringify
-  , PROTOTYPE      = 'prototype'
-  , HIDDEN         = wks('_hidden')
-  , TO_PRIMITIVE   = wks('toPrimitive')
-  , isEnum         = {}.propertyIsEnumerable
-  , SymbolRegistry = shared('symbol-registry')
-  , AllSymbols     = shared('symbols')
-  , OPSymbols      = shared('op-symbols')
-  , ObjectProto    = Object[PROTOTYPE]
-  , USE_NATIVE     = typeof $Symbol == 'function'
-  , QObject        = global.QObject;
-// Don't use setters in Qt Script, https://github.com/zloirock/core-js/issues/173
-var setter = !QObject || !QObject[PROTOTYPE] || !QObject[PROTOTYPE].findChild;
-
-// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
-var setSymbolDesc = DESCRIPTORS && $fails(function(){
-  return _create(dP({}, 'a', {
-    get: function(){ return dP(this, 'a', {value: 7}).a; }
-  })).a != 7;
-}) ? function(it, key, D){
-  var protoDesc = gOPD(ObjectProto, key);
-  if(protoDesc)delete ObjectProto[key];
-  dP(it, key, D);
-  if(protoDesc && it !== ObjectProto)dP(ObjectProto, key, protoDesc);
-} : dP;
-
-var wrap = function(tag){
-  var sym = AllSymbols[tag] = _create($Symbol[PROTOTYPE]);
-  sym._k = tag;
-  return sym;
-};
-
-var isSymbol = USE_NATIVE && typeof $Symbol.iterator == 'symbol' ? function(it){
-  return typeof it == 'symbol';
-} : function(it){
-  return it instanceof $Symbol;
-};
-
-var $defineProperty = function defineProperty(it, key, D){
-  if(it === ObjectProto)$defineProperty(OPSymbols, key, D);
-  anObject(it);
-  key = toPrimitive(key, true);
-  anObject(D);
-  if(has(AllSymbols, key)){
-    if(!D.enumerable){
-      if(!has(it, HIDDEN))dP(it, HIDDEN, createDesc(1, {}));
-      it[HIDDEN][key] = true;
-    } else {
-      if(has(it, HIDDEN) && it[HIDDEN][key])it[HIDDEN][key] = false;
-      D = _create(D, {enumerable: createDesc(0, false)});
-    } return setSymbolDesc(it, key, D);
-  } return dP(it, key, D);
-};
-var $defineProperties = function defineProperties(it, P){
-  anObject(it);
-  var keys = enumKeys(P = toIObject(P))
-    , i    = 0
-    , l = keys.length
-    , key;
-  while(l > i)$defineProperty(it, key = keys[i++], P[key]);
-  return it;
-};
-var $create = function create(it, P){
-  return P === undefined ? _create(it) : $defineProperties(_create(it), P);
-};
-var $propertyIsEnumerable = function propertyIsEnumerable(key){
-  var E = isEnum.call(this, key = toPrimitive(key, true));
-  if(this === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key))return false;
-  return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
-};
-var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key){
-  it  = toIObject(it);
-  key = toPrimitive(key, true);
-  if(it === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key))return;
-  var D = gOPD(it, key);
-  if(D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key]))D.enumerable = true;
-  return D;
-};
-var $getOwnPropertyNames = function getOwnPropertyNames(it){
-  var names  = gOPN(toIObject(it))
-    , result = []
-    , i      = 0
-    , key;
-  while(names.length > i){
-    if(!has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META)result.push(key);
-  } return result;
-};
-var $getOwnPropertySymbols = function getOwnPropertySymbols(it){
-  var IS_OP  = it === ObjectProto
-    , names  = gOPN(IS_OP ? OPSymbols : toIObject(it))
-    , result = []
-    , i      = 0
-    , key;
-  while(names.length > i){
-    if(has(AllSymbols, key = names[i++]) && (IS_OP ? has(ObjectProto, key) : true))result.push(AllSymbols[key]);
-  } return result;
-};
-
-// 19.4.1.1 Symbol([description])
-if(!USE_NATIVE){
-  $Symbol = function Symbol(){
-    if(this instanceof $Symbol)throw TypeError('Symbol is not a constructor!');
-    var tag = uid(arguments.length > 0 ? arguments[0] : undefined);
-    var $set = function(value){
-      if(this === ObjectProto)$set.call(OPSymbols, value);
-      if(has(this, HIDDEN) && has(this[HIDDEN], tag))this[HIDDEN][tag] = false;
-      setSymbolDesc(this, tag, createDesc(1, value));
-    };
-    if(DESCRIPTORS && setter)setSymbolDesc(ObjectProto, tag, {configurable: true, set: $set});
-    return wrap(tag);
-  };
-  redefine($Symbol[PROTOTYPE], 'toString', function toString(){
-    return this._k;
-  });
-
-  $GOPD.f = $getOwnPropertyDescriptor;
-  $DP.f   = $defineProperty;
-  __webpack_require__(/*! ./_object-gopn */ 81).f = gOPNExt.f = $getOwnPropertyNames;
-  __webpack_require__(/*! ./_object-pie */ 57).f  = $propertyIsEnumerable;
-  __webpack_require__(/*! ./_object-gops */ 80).f = $getOwnPropertySymbols;
-
-  if(DESCRIPTORS && !__webpack_require__(/*! ./_library */ 37)){
-    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
-  }
-
-  wksExt.f = function(name){
-    return wrap(wks(name));
-  }
-}
-
-$export($export.G + $export.W + $export.F * !USE_NATIVE, {Symbol: $Symbol});
-
-for(var symbols = (
-  // 19.4.2.2, 19.4.2.3, 19.4.2.4, 19.4.2.6, 19.4.2.8, 19.4.2.9, 19.4.2.10, 19.4.2.11, 19.4.2.12, 19.4.2.13, 19.4.2.14
-  'hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables'
-).split(','), i = 0; symbols.length > i; )wks(symbols[i++]);
-
-for(var symbols = $keys(wks.store), i = 0; symbols.length > i; )wksDefine(symbols[i++]);
-
-$export($export.S + $export.F * !USE_NATIVE, 'Symbol', {
-  // 19.4.2.1 Symbol.for(key)
-  'for': function(key){
-    return has(SymbolRegistry, key += '')
-      ? SymbolRegistry[key]
-      : SymbolRegistry[key] = $Symbol(key);
-  },
-  // 19.4.2.5 Symbol.keyFor(sym)
-  keyFor: function keyFor(key){
-    if(isSymbol(key))return keyOf(SymbolRegistry, key);
-    throw TypeError(key + ' is not a symbol!');
-  },
-  useSetter: function(){ setter = true; },
-  useSimple: function(){ setter = false; }
-});
-
-$export($export.S + $export.F * !USE_NATIVE, 'Object', {
-  // 19.1.2.2 Object.create(O [, Properties])
-  create: $create,
-  // 19.1.2.4 Object.defineProperty(O, P, Attributes)
-  defineProperty: $defineProperty,
-  // 19.1.2.3 Object.defineProperties(O, Properties)
-  defineProperties: $defineProperties,
-  // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
-  getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
-  // 19.1.2.7 Object.getOwnPropertyNames(O)
-  getOwnPropertyNames: $getOwnPropertyNames,
-  // 19.1.2.8 Object.getOwnPropertySymbols(O)
-  getOwnPropertySymbols: $getOwnPropertySymbols
-});
-
-// 24.3.2 JSON.stringify(value [, replacer [, space]])
-$JSON && $export($export.S + $export.F * (!USE_NATIVE || $fails(function(){
-  var S = $Symbol();
-  // MS Edge converts symbol values to JSON as {}
-  // WebKit converts symbol values to JSON as null
-  // V8 throws on boxed symbols
-  return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
-})), 'JSON', {
-  stringify: function stringify(it){
-    if(it === undefined || isSymbol(it))return; // IE8 returns string on undefined
-    var args = [it]
-      , i    = 1
-      , replacer, $replacer;
-    while(arguments.length > i)args.push(arguments[i++]);
-    replacer = args[1];
-    if(typeof replacer == 'function')$replacer = replacer;
-    if($replacer || !isArray(replacer))replacer = function(key, value){
-      if($replacer)value = $replacer.call(this, key, value);
-      if(!isSymbol(value))return value;
-    };
-    args[1] = replacer;
-    return _stringify.apply($JSON, args);
-  }
-});
-
-// 19.4.3.4 Symbol.prototype[@@toPrimitive](hint)
-$Symbol[PROTOTYPE][TO_PRIMITIVE] || __webpack_require__(/*! ./_hide */ 7)($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
-// 19.4.3.5 Symbol.prototype[@@toStringTag]
-setToStringTag($Symbol, 'Symbol');
-// 20.2.1.9 Math[@@toStringTag]
-setToStringTag(Math, 'Math', true);
-// 24.3.3 JSON[@@toStringTag]
-setToStringTag(global.JSON, 'JSON', true);
-
-/***/ }),
-/* 135 */
-/*!*********************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_keyof.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var getKeys   = __webpack_require__(/*! ./_object-keys */ 22)
-  , toIObject = __webpack_require__(/*! ./_to-iobject */ 11);
-module.exports = function(object, el){
-  var O      = toIObject(object)
-    , keys   = getKeys(O)
-    , length = keys.length
-    , index  = 0
-    , key;
-  while(length > index)if(O[key = keys[index++]] === el)return key;
-};
-
-/***/ }),
-/* 136 */
-/*!*************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_enum-keys.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-// all enumerable object keys, includes symbols
-var getKeys = __webpack_require__(/*! ./_object-keys */ 22)
-  , gOPS    = __webpack_require__(/*! ./_object-gops */ 80)
-  , pIE     = __webpack_require__(/*! ./_object-pie */ 57);
-module.exports = function(it){
-  var result     = getKeys(it)
-    , getSymbols = gOPS.f;
-  if(getSymbols){
-    var symbols = getSymbols(it)
-      , isEnum  = pIE.f
-      , i       = 0
-      , key;
-    while(symbols.length > i)if(isEnum.call(it, key = symbols[i++]))result.push(key);
-  } return result;
-};
-
-/***/ }),
-/* 137 */
-/*!*******************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_object-gopn-ext.js ***!
-  \*******************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
-var toIObject = __webpack_require__(/*! ./_to-iobject */ 11)
-  , gOPN      = __webpack_require__(/*! ./_object-gopn */ 81).f
-  , toString  = {}.toString;
-
-var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
-  ? Object.getOwnPropertyNames(window) : [];
-
-var getWindowNames = function(it){
-  try {
-    return gOPN(it);
-  } catch(e){
-    return windowNames.slice();
-  }
-};
-
-module.exports.f = function getOwnPropertyNames(it){
-  return windowNames && toString.call(it) == '[object Window]' ? getWindowNames(it) : gOPN(toIObject(it));
-};
-
-
-/***/ }),
-/* 138 */
-/*!****************************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es7.symbol.async-iterator.js ***!
-  \****************************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ./_wks-define */ 56)('asyncIterator');
-
-/***/ }),
-/* 139 */
-/*!************************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es7.symbol.observable.js ***!
-  \************************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ./_wks-define */ 56)('observable');
-
-/***/ }),
-/* 140 */
-/*!************************************************************************!*\
-  !*** ../node_modules/babel-runtime/core-js/object/set-prototype-of.js ***!
-  \************************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/set-prototype-of */ 141), __esModule: true };
-
-/***/ }),
-/* 141 */
-/*!*********************************************************************!*\
-  !*** ../node_modules/core-js/library/fn/object/set-prototype-of.js ***!
-  \*********************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ../../modules/es6.object.set-prototype-of */ 142);
-module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Object.setPrototypeOf;
-
-/***/ }),
-/* 142 */
-/*!******************************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es6.object.set-prototype-of.js ***!
-  \******************************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 19.1.3.19 Object.setPrototypeOf(O, proto)
-var $export = __webpack_require__(/*! ./_export */ 2);
-$export($export.S, 'Object', {setPrototypeOf: __webpack_require__(/*! ./_set-proto */ 143).set});
-
-/***/ }),
-/* 143 */
-/*!*************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/_set-proto.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-// Works with __proto__ only. Old v8 can't work with null proto objects.
-/* eslint-disable no-proto */
-var isObject = __webpack_require__(/*! ./_is-object */ 12)
-  , anObject = __webpack_require__(/*! ./_an-object */ 8);
-var check = function(O, proto){
-  anObject(O);
-  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
-};
-module.exports = {
-  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
-    function(test, buggy, set){
-      try {
-        set = __webpack_require__(/*! ./_ctx */ 16)(Function.call, __webpack_require__(/*! ./_object-gopd */ 82).f(Object.prototype, '__proto__').set, 2);
-        set(test, []);
-        buggy = !(test instanceof Array);
-      } catch(e){ buggy = true; }
-      return function setPrototypeOf(O, proto){
-        check(O, proto);
-        if(buggy)O.__proto__ = proto;
-        else set(O, proto);
-        return O;
-      };
-    }({}, false) : undefined),
-  check: check
-};
-
-/***/ }),
-/* 144 */
-/*!***********************************************************!*\
-  !*** ../node_modules/core-js/library/fn/object/create.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ../../modules/es6.object.create */ 145);
-var $Object = __webpack_require__(/*! ../../modules/_core */ 0).Object;
-module.exports = function create(P, D){
-  return $Object.create(P, D);
-};
-
-/***/ }),
-/* 145 */
-/*!********************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es6.object.create.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $export = __webpack_require__(/*! ./_export */ 2)
-// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-$export($export.S, 'Object', {create: __webpack_require__(/*! ./_object-create */ 29)});
-
-/***/ }),
-/* 146 */
-/*!**********************************!*\
-  !*** ./runtime/openfin/index.js ***!
-  \**********************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _set = __webpack_require__(/*! babel-runtime/core-js/set */ 51);
-
-var _set2 = _interopRequireDefault(_set);
-
-var _map = __webpack_require__(/*! babel-runtime/core-js/map */ 33);
-
-var _map2 = _interopRequireDefault(_map);
-
-var _global = __webpack_require__(/*! ./global */ 83);
-
-var _global2 = _interopRequireDefault(_global);
-
-var _Window = __webpack_require__(/*! ./Window */ 149);
-
-var _Window2 = _interopRequireDefault(_Window);
-
-var _index = __webpack_require__(/*! ../../geometry/index */ 9);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var APP_UUID = 'app_uuid'; /* global fin */
-
-
-_global2.default.monitors = new _index.CollisionMesh([]);
-
-function updateMonitors(monitorInfo) {
-    var boxes = [];
-
-    // Add the primary monitor:
-    boxes.push(new _index.BoundingBox(monitorInfo.primaryMonitor.monitorRect));
-
-    // Add the secondary monitors:
-    for (var monitor in monitorInfo.nonPrimaryMonitors) {
-        boxes.push(new _index.BoundingBox(monitor.monitorRect));
-    }
-
-    // Update monitors CollisionMesh:
-    _global2.default.monitors.boxes = boxes;
-}
-
-// Set up system to update monitors:
-fin.desktop.System.getMonitorInfo(updateMonitors);
-fin.desktop.System.addEventListener('monitor-info-changed', updateMonitors);
-
-_global2.default.messagebus = function () {
-    var wrappedListeners = {};
-    var windowWrappedListeners = {};
-
-    function wrapListener(listener) {
-        return function (message) {
-            var window = _Window2.default.getByID(message.winID);
-
-            // Don't execute listeners when the sender is the same as the listener:
-            if (window._id === _Window2.default.current._id) {
-                return;
-            }
-
-            listener.apply(window, message.args);
-            // TODO: Send response if response is expected
-        };
-    }
-
-    return {
-        send: function send(eventName) {
-            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                args[_key - 1] = arguments[_key];
-            }
-
-            // TODO: Check if ready? Dunno if needed
-            var curWin = _Window2.default.current;
-            var message = {
-                id: 0, // TODO: Randomly generate a unique id to avoid collision!
-                winID: curWin._id,
-                event: eventName,
-                args: args // If the first arg is a window, it gets removed later.
-            };
-
-            if (args.length > 0 && args[0] instanceof _Window2.default) {
-                // Remove window from args in message:
-                var window = args.shift(); // args is by reference in message currently
-
-                // Don't execute listeners when the sender is the same as the listener:
-                if (window._id === curWin._id) {
-                    return;
-                }
-
-                fin.desktop.InterApplicationBus.send(_Window2.default.current._window[APP_UUID], window._id, eventName, message);
-            } else {
-                // TODO: Possibly switch the below out for a loop through all windows?
-                fin.desktop.InterApplicationBus.send(_Window2.default.current._window[APP_UUID], eventName, message);
-            }
-        },
-        on: function on(eventName, window, listener) {
-            if (listener === undefined) {
-                listener = window;
-                window = undefined;
-            }
-
-            var onMessage = wrapListener(listener);
-
-            if (window !== undefined) {
-                // Don't execute listeners when the sender is the same as the listener:
-                if (window._id === _Window2.default.current._id) {
-                    return;
-                }
-
-                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
-
-                winLisGroup[eventName] = winLisGroup[eventName] || new _map2.default();
-                winLisGroup[eventName].set(listener, onMessage);
-                fin.desktop.InterApplicationBus.subscribe(_Window2.default.current._window[APP_UUID], window._id, eventName, onMessage);
-                // TODO: On window close, clear subscriptions in windowWrappedListeners!
-            } else {
-                wrappedListeners[eventName] = wrappedListeners[eventName] || new _map2.default();
-                wrappedListeners[eventName].set(listener, onMessage);
-                fin.desktop.InterApplicationBus.subscribe(_Window2.default.current._window[APP_UUID], eventName, onMessage);
-            }
-        },
-        off: function off(eventName, window, listener) {
-            if (listener === undefined) {
-                listener = window;
-                window = undefined;
-            }
-
-            if (window !== undefined) {
-                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
-
-                winLisGroup[eventName] = winLisGroup[eventName] || new _map2.default();
-                // delete on a Map returns the deleted value (desired onMessage):
-                fin.desktop.InterApplicationBus.unsubscribe(_Window2.default.current._window[APP_UUID], window._window._id, eventName, winLisGroup[eventName].delete(listener));
-            } else {
-                wrappedListeners[eventName] = wrappedListeners[eventName] || new _set2.default();
-                // delete on a Map returns the deleted value (desired onMessage):
-                fin.desktop.InterApplicationBus.unsubscribe(_Window2.default.current._window[APP_UUID], eventName, wrappedListeners[eventName].delete(listener));
-            }
-        }
-    };
-}();
-
-/***/ }),
-/* 147 */
-/*!*********************************************************!*\
-  !*** ../node_modules/core-js/library/fn/object/keys.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ../../modules/es6.object.keys */ 148);
-module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Object.keys;
-
-/***/ }),
-/* 148 */
-/*!******************************************************************!*\
-  !*** ../node_modules/core-js/library/modules/es6.object.keys.js ***!
-  \******************************************************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 19.1.2.14 Object.keys(O)
-var toObject = __webpack_require__(/*! ./_to-object */ 23)
-  , $keys    = __webpack_require__(/*! ./_object-keys */ 22);
-
-__webpack_require__(/*! ./_object-sap */ 78)('keys', function(){
-  return function keys(it){
-    return $keys(toObject(it));
-  };
-});
-
-/***/ }),
-/* 149 */
-/*!***********************************!*\
-  !*** ./runtime/openfin/Window.js ***!
-  \***********************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _from = __webpack_require__(/*! babel-runtime/core-js/array/from */ 52);
-
-var _from2 = _interopRequireDefault(_from);
-
-var _getPrototypeOf = __webpack_require__(/*! babel-runtime/core-js/object/get-prototype-of */ 53);
-
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 14);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 15);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(/*! babel-runtime/helpers/possibleConstructorReturn */ 54);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(/*! babel-runtime/helpers/inherits */ 58);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-var _global = __webpack_require__(/*! ./global */ 83);
-
-var _global2 = _interopRequireDefault(_global);
-
-var _ready = __webpack_require__(/*! ../ready */ 18);
-
-var _ready2 = _interopRequireDefault(_ready);
-
-var _index = __webpack_require__(/*! ../../utils/index */ 10);
-
-var _index2 = __webpack_require__(/*! ../../geometry/index */ 9);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/* global fin */
-var defaultConfig = {
-    defaultWidth: 600,
-    defaultHeight: 600,
-    frame: false,
-    resizable: true,
-    saveWindowState: false,
-    autoShow: true,
-    icon: location.href + 'favicon.ico'
-};
-var configMap = {
-    title: 'name',
-    left: 'defaultLeft',
-    top: 'defaultTop',
-    width: 'defaultWidth',
-    height: 'defaultHeight'
-};
-var acceptedEventHandlers = ['ready', 'drag-start', 'drag-before', 'drag-stop', 'dock-before', 'move', 'move-before', 'resize-before', 'close', 'show', 'hide', 'restore', 'minimize', 'maximize', 'focus', 'blur'];
-var currentWin = void 0;
-
-function _setupDOM(config) {
-    var thisWindow = this;
-
-    // TODO: Rewrite to remove setTimeout for the following:
-    function setWindows() {
-        if (thisWindow._window.contentWindow.windowmanager) {
-            thisWindow._window.contentWindow.windowmanager._launcher = _global2.default._launcher;
-            thisWindow._window.contentWindow.windowmanager._windows = _global2.default._windows;
-            thisWindow._window.contentWindow.windowmanager._internalBus = _global2.default._internalBus;
-        } else {
-            setTimeout(setWindows, 5);
-        }
-    }
-    setWindows();
-
-    this._window.getBounds(function (bounds) {
-        bounds.right = bounds.left + bounds.width;
-        bounds.bottom = bounds.top + bounds.height;
-        thisWindow._bounds.set(new _index2.BoundingBox(bounds));
-    });
-
-    // Setup _window event listeners:
-    // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.
-    function onBoundsChange(event) {
-        event.right = event.left + event.width;
-        event.bottom = event.top + event.height;
-        thisWindow._bounds.set(new _index2.BoundingBox(event));
-
-        if (event.changeType !== 0) {
-            thisWindow.undock(); // Undock on resize. TODO: Allow resize with docking
-        }
-        if (event.changeType !== 1) {
-            thisWindow.emit('move'); // TODO: Pass what position it is at.
-        }
-    }
-    this._window.addEventListener('bounds-changing', onBoundsChange);
-    this._window.addEventListener('bounds-changed', onBoundsChange);
-
-    function onClose() {
-        // TODO: Is it possible that onClose might not be called when the window is closed?
-        //       What if this event is set up on a window that has closed already, and then this window closes?
-        thisWindow._isClosed = true;
-        _global2.default._windows.delete(thisWindow._id);
-
-        // Undock:
-        thisWindow.undock();
-
-        // Move children to parent:
-        var parent = thisWindow.getParent();
-
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            for (var _iterator = (0, _getIterator3.default)(thisWindow.getChildren()), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var child = _step.value;
-
-                // We use getChildren to have a copy of the list, so child.setParent doesn't modify this loop's list!
-                // TODO: Optimize this loop, by not making a copy of children, and not executing splice in each setParent!
-                child.setParent(parent);
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
-        }
-
-        thisWindow.setParent(undefined); // Remove from parent
-
-        thisWindow.emit('close');
-        _global2.default._internalBus.emit('window-close', thisWindow);
-        thisWindow._window = undefined;
-        // TODO: Clean up ALL listeners
-    }
-    this._window.addEventListener('closed', onClose);
-
-    // Setup event listeners:
-    this._window.addEventListener('shown', function () {
-        thisWindow.emit('show');
-    });
-    this._window.addEventListener('hidden', function () {
-        thisWindow.emit('hide');
-    });
-    this._window.addEventListener('restored', function () {
-        thisWindow.emit('restore');
-    });
-    this._window.addEventListener('minimized', function () {
-        thisWindow.emit('minimize');
-    });
-    this._window.addEventListener('maximized', function () {
-        thisWindow.emit('maximize');
-    });
-    this._window.addEventListener('focused', function () {
-        thisWindow.emit('focus');
-    });
-    this._window.addEventListener('blurred', function () {
-        thisWindow.emit('blur');
-    });
-
-    // Setup title element:
-    this._titleEl = this._window.contentWindow.document.createElement('title');
-    this._titleEl.innerText = this._title;
-    this._window.contentWindow.document.head.appendChild(this._titleEl);
-
-    this._isFramed = config.frame;
-    this._ready = true;
-    this.emit('ready');
-    _global2.default._internalBus.emit('window-create', this);
-};
-
-var Window = function (_EventHandler) {
-    (0, _inherits3.default)(Window, _EventHandler);
-
-    function Window(config) {
-        (0, _classCallCheck3.default)(this, Window);
-
-        var _this = (0, _possibleConstructorReturn3.default)(this, (Window.__proto__ || (0, _getPrototypeOf2.default)(Window)).call(this, acceptedEventHandlers));
-        // Call the parent constructor:
-
-
-        config = config || {}; // If no arguments are passed, assume we are creating a default blank window
-        var isArgConfig = config.app_uuid === undefined;
-
-        // Setup private variables:
-        _this._bounds = new _index2.BoundingBox();
-        _this._ready = false;
-        // TODO: Identify current states.
-        _this._isClosed = false;
-        _this._isHidden = false;
-        _this._isMinimized = false;
-        _this._isMaximized = false;
-        _this._dockedGroup = [_this];
-        _this._children = [];
-        _this._parent = undefined;
-        _this._title = undefined;
-
-        if (isArgConfig) {
-            for (var prop in config) {
-                if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
-                    config[configMap[prop]] = config[prop];
-                    delete config[prop];
-                }
-            }
-            for (var _prop in defaultConfig) {
-                if (defaultConfig.hasOwnProperty(_prop)) {
-                    config[_prop] = config[_prop] != null ? config[_prop] : defaultConfig[_prop];
-                }
-            }
-            _this._id = (0, _index.getUniqueWindowName)();
-            _this._title = config.name == null ? _this._id : config.name;
-            config.name = _this._id; // Need name to be unique
-
-            if (config.parent) {
-                config.parent._children.push(_this);
-                _this._parent = config.parent;
-                // TODO: Emit event 'child-added' on parent
-                delete config.parent;
-            }
-
-            _global2.default._windows.set(_this._id, _this);
-            _this._window = new fin.desktop.Window(config, _setupDOM.bind(_this, config), function (err) {
-                console.error(err, config);
-            });
-        } else {
-            _this._id = config._id || config.name;
-            _this._title = _this._id;
-            _this._window = config;
-            _global2.default._windows.set(_this._id, _this);
-            _this._window.getOptions(_setupDOM.bind(_this), function (err) {
-                console.error(err);
-            });
-        }
-
-        // TODO: Ensure docking system
-        return _this;
-    }
-
-    (0, _createClass3.default)(Window, [{
-        key: 'isReady',
-        value: function isReady() {
-            return this._ready;
-        }
-    }, {
-        key: 'onReady',
-        value: function onReady(callback) {
-            if (this.isClosed()) {
-                throw new Error('onReady can\'t be called on a closed window');
-            }
-            if (this.isReady()) {
-                return callback.call(this);
-            }
-
-            this.once('ready', callback);
-        }
-    }, {
-        key: 'isClosed',
-        value: function isClosed() {
-            return this._isClosed;
-        }
-    }, {
-        key: 'getPosition',
-        value: function getPosition() {
-            return this._bounds.getPosition();
-        }
-    }, {
-        key: 'getWidth',
-        value: function getWidth() {
-            return this._bounds.getWidth();
-        }
-    }, {
-        key: 'getHeight',
-        value: function getHeight() {
-            return this._bounds.getHeight();
-        }
-    }, {
-        key: 'getSize',
-        value: function getSize() {
-            return this._bounds.getSize();
-        }
-    }, {
-        key: 'getBounds',
-        value: function getBounds() {
-            return this._bounds.clone();
-        }
-    }, {
-        key: 'getParent',
-        value: function getParent() {
-            return this._parent;
-        }
-    }, {
-        key: 'setParent',
-        value: function setParent(parent) {
-            // TODO: Execute appropriate checks (if not closed, and is this new parent a window)
-
-            if (parent === this._parent) {
-                return;
-            }
-
-            if (this._parent) {
-                var index = this._parent._children.indexOf(this);
-
-                if (index >= 0) {
-                    this._parent._children.splice(index, 1);
-                }
-                // TODO: Emit event 'child-removed' on current parent.
-            }
-
-            if (parent) {
-                this._parent = parent;
-                this._parent._children.push(this);
-                // TODO: Emit event 'child-added on parent'.
-            }
-        }
-    }, {
-        key: 'getChildren',
-        value: function getChildren() {
-            return this._children.slice();
-        }
-    }, {
-        key: 'addChild',
-        value: function addChild(child) {
-            child.setParent(this);
-        }
-    }, {
-        key: 'getTitle',
-        value: function getTitle() {
-            return this._title;
-        }
-    }, {
-        key: 'setTitle',
-        value: function setTitle(newTitle) {
-            if (!newTitle) {
-                throw new Error('setTitle requires one argument of type String');
-            }
-            this._titleEl.innerText = this._title = newTitle;
-        }
-    }, {
-        key: 'isHidden',
-        value: function isHidden() {
-            return this._isHidden;
-        }
-    }, {
-        key: 'isShown',
-        value: function isShown() {
-            return !this._isHidden;
-        }
-    }, {
-        key: 'isMinimized',
-        value: function isMinimized() {
-            return this._isMinimized;
-        }
-    }, {
-        key: 'isMaximized',
-        value: function isMaximized() {
-            return this._isMaximized;
-        }
-    }, {
-        key: 'isRestored',
-        value: function isRestored() {
-            return this.isShown() && !this.isMinimized() && !this.isMaximized();
-        }
-    }, {
-        key: 'close',
-        value: function close(callback) {
-            if (this.isClosed()) {
-                return callback && callback();
-            }
-            this._window.close(callback);
-        }
-    }, {
-        key: 'minimize',
-        value: function minimize(callback) {
-            if (!this._ready) {
-                throw new Error('minimize can\'t be called on an unready window');
-            }
-
-            callback = new _index.SyncCallback(callback);
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
-
-            try {
-                for (var _iterator2 = (0, _getIterator3.default)(this._dockedGroup), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _window = _step2.value;
-
-                    _window._isMinimized = true;
-                    _window._window.minimize(callback.ref());
-                }
-            } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
-                    }
-                } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'maximize',
-        value: function maximize(callback) {
-            if (!this._ready) {
-                throw new Error('maximize can\'t be called on an unready window');
-            }
-
-            this._isMaximized = true;
-            this._window.maximize(callback);
-        }
-    }, {
-        key: 'show',
-        value: function show(callback) {
-            if (!this._ready) {
-                throw new Error('show can\'t be called on an unready window');
-            }
-
-            callback = new _index.SyncCallback(callback);
-            var _iteratorNormalCompletion3 = true;
-            var _didIteratorError3 = false;
-            var _iteratorError3 = undefined;
-
-            try {
-                for (var _iterator3 = (0, _getIterator3.default)(this._dockedGroup), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var _window2 = _step3.value;
-
-                    _window2._isHidden = false;
-                    _window2._window.show(callback.ref());
-                }
-            } catch (err) {
-                _didIteratorError3 = true;
-                _iteratorError3 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                        _iterator3.return();
-                    }
-                } finally {
-                    if (_didIteratorError3) {
-                        throw _iteratorError3;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'hide',
-        value: function hide(callback) {
-            if (!this._ready) {
-                throw new Error('hide can\'t be called on an unready window');
-            }
-
-            callback = new _index.SyncCallback(callback);
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
-
-            try {
-                for (var _iterator4 = (0, _getIterator3.default)(this._dockedGroup), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                    var _window3 = _step4.value;
-
-                    _window3._isHidden = true;
-                    _window3._window.hide(callback.ref());
-                }
-            } catch (err) {
-                _didIteratorError4 = true;
-                _iteratorError4 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                        _iterator4.return();
-                    }
-                } finally {
-                    if (_didIteratorError4) {
-                        throw _iteratorError4;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'restore',
-        value: function restore(callback) {
-            if (!this._ready) {
-                throw new Error('restore can\'t be called on an unready window');
-            }
-
-            callback = new _index.SyncCallback(callback);
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
-
-            try {
-                for (var _iterator5 = (0, _getIterator3.default)(this._dockedGroup), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var _window4 = _step5.value;
-
-                    _window4._isHidden = false;
-                    _window4._isMinimized = false;
-                    _window4._isMaximized = false;
-                    _window4._window.restore(callback.ref());
-                }
-            } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
-                    }
-                } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'resizable',
-        value: function resizable(_resizable, callback) {
-            if (!this._ready) {
-                throw new Error('restore can\'t be called on an unready window');
-            }
-
-            this._window.updateOptions({
-                resizable: _resizable
-            }, callback);
-        }
-    }, {
-        key: 'bringToFront',
-        value: function bringToFront(callback) {
-            if (!this._ready) {
-                throw new Error('bringToFront can\'t be called on an unready window');
-            }
-            var thisWindow = this;
-
-            var beforeCallback = new _index.SyncCallback(function () {
-                thisWindow._window.bringToFront(callback);
-            });
-
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
-
-            try {
-                for (var _iterator6 = (0, _getIterator3.default)(this._dockedGroup), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                    var _window5 = _step6.value;
-
-                    if (_window5 !== this) {
-                        _window5._window.bringToFront(beforeCallback.ref());
-                    }
-                }
-            } catch (err) {
-                _didIteratorError6 = true;
-                _iteratorError6 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                        _iterator6.return();
-                    }
-                } finally {
-                    if (_didIteratorError6) {
-                        throw _iteratorError6;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'focus',
-        value: function focus(callback) {
-            if (!this._ready) {
-                throw new Error('focus can\'t be called on an unready window');
-            }
-            var thisWindow = this;
-
-            var beforeCallback = new _index.SyncCallback(function () {
-                thisWindow._window.focus(callback);
-            });
-
-            var _iteratorNormalCompletion7 = true;
-            var _didIteratorError7 = false;
-            var _iteratorError7 = undefined;
-
-            try {
-                for (var _iterator7 = (0, _getIterator3.default)(this._dockedGroup), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                    var _window6 = _step7.value;
-
-                    if (_window6 !== this) {
-                        _window6._window.focus(beforeCallback.ref());
-                    }
-                }
-            } catch (err) {
-                _didIteratorError7 = true;
-                _iteratorError7 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                        _iterator7.return();
-                    }
-                } finally {
-                    if (_didIteratorError7) {
-                        throw _iteratorError7;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'resizeTo',
-        value: function resizeTo(width, height, callback) {
-            if (!this._ready) {
-                throw new Error('resizeTo can\'t be called on an unready window');
-            }
-            if (!this.emit('resize-before')) {
-                return;
-            } // Allow preventing resize
-            var size = new _index2.Position(width, height);
-
-            this._window.resizeTo(size.left, size.top, 'top-left', callback);
-        }
-    }, {
-        key: 'moveTo',
-        value: function moveTo(left, top, callback) {
-            if (!this._ready) {
-                throw new Error('moveTo can\'t be called on an unready window');
-            }
-            if (!this.emit('move-before')) {
-                return;
-            } // Allow preventing move
-            var deltaPos = new _index2.Position(left, top).subtract(this.getPosition());
-
-            callback = new _index.SyncCallback(callback);
-            var _iteratorNormalCompletion8 = true;
-            var _didIteratorError8 = false;
-            var _iteratorError8 = undefined;
-
-            try {
-                for (var _iterator8 = (0, _getIterator3.default)(this._dockedGroup), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                    var _window7 = _step8.value;
-
-                    var pos = _window7.getPosition().add(deltaPos);
-
-                    _window7._bounds.moveTo(pos);
-                    _window7._window.moveTo(pos.left, pos.top, callback.ref());
-                }
-            } catch (err) {
-                _didIteratorError8 = true;
-                _iteratorError8 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                        _iterator8.return();
-                    }
-                } finally {
-                    if (_didIteratorError8) {
-                        throw _iteratorError8;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'moveBy',
-        value: function moveBy(deltaLeft, deltaTop, callback) {
-            if (!this._ready) {
-                throw new Error('moveBy can\'t be called on an unready window');
-            }
-            if (!this.emit('move-before')) {
-                return;
-            } // Allow preventing move
-            var deltaPos = new _index2.Position(deltaLeft, deltaTop);
-
-            callback = new _index.SyncCallback(callback);
-            var _iteratorNormalCompletion9 = true;
-            var _didIteratorError9 = false;
-            var _iteratorError9 = undefined;
-
-            try {
-                for (var _iterator9 = (0, _getIterator3.default)(this._dockedGroup), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                    var _window8 = _step9.value;
-
-                    var pos = _window8.getPosition().add(deltaPos);
-
-                    _window8._bounds.moveTo(pos);
-                    _window8._window.moveTo(pos.left, pos.top, callback.ref());
-                }
-            } catch (err) {
-                _didIteratorError9 = true;
-                _iteratorError9 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                        _iterator9.return();
-                    }
-                } finally {
-                    if (_didIteratorError9) {
-                        throw _iteratorError9;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'setSize',
-        value: function setSize(width, height, callback) {
-            if (!this._ready) {
-                throw new Error('setSize can\'t be called on an unready window');
-            }
-            var size = new _index2.Size(width, height);
-
-            this._window.resizeTo(size.left, size.top, 'top-left', callback);
-        }
-    }, {
-        key: 'setBounds',
-        value: function setBounds(left, top, right, bottom, callback) {
-            if (!this._ready) {
-                throw new Error('resizeTo can\'t be called on an unready window');
-            }
-            var bounds = new _index2.BoundingBox(left, top, right, bottom);
-
-            this._window.setBounds(bounds.left, bounds.top, bounds.right, bounds.bottom, callback);
-        }
-    }, {
-        key: 'dock',
-        value: function dock(other) {
-            if (!this.emit('dock-before')) {
-                return;
-            } // Allow preventing dock
-            if (other == null) {
-                return;
-            } // Failed to find other. TODO: Return error
-            if (this._isFramed || other._isFramed) return; // If window is framed, don't support dock system.
-
-            // If other is already in the group, return:
-            if (this._dockedGroup.indexOf(other) >= 0) {
-                return;
-            }
-
-            // Loop through all windows in otherGroup and add them to this's group:
-            var _iteratorNormalCompletion10 = true;
-            var _didIteratorError10 = false;
-            var _iteratorError10 = undefined;
-
-            try {
-                for (var _iterator10 = (0, _getIterator3.default)(other._dockedGroup), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-                    var otherWin = _step10.value;
-
-                    this._dockedGroup.push(otherWin);
-                    // Sharing the array between window objects makes it easier to manage:
-                    otherWin._dockedGroup = this._dockedGroup;
-                }
-
-                // TODO: Check if otherGroup is touching
-            } catch (err) {
-                _didIteratorError10 = true;
-                _iteratorError10 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                        _iterator10.return();
-                    }
-                } finally {
-                    if (_didIteratorError10) {
-                        throw _iteratorError10;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'undock',
-        value: function undock(other) {
-            // Check to see if window is already undocked:
-            if (this._dockedGroup.length === 1) {
-                return;
-            }
-
-            // Undock this:
-            this._dockedGroup.splice(this._dockedGroup.indexOf(this), 1);
-            this._dockedGroup = [this];
-
-            // TODO: Redock those still touching, EXCEPT 'this'.
-        }
-    }, {
-        key: '_dragStart',
-        value: function _dragStart() {
-            if (!this.emit('drag-start')) {
-                return;
-            } // Allow preventing drag
-            var _iteratorNormalCompletion11 = true;
-            var _didIteratorError11 = false;
-            var _iteratorError11 = undefined;
-
-            try {
-                for (var _iterator11 = (0, _getIterator3.default)(this._dockedGroup), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-                    var _window9 = _step11.value;
-
-                    _window9._dragStartPos = _window9.getPosition();
-                }
-            } catch (err) {
-                _didIteratorError11 = true;
-                _iteratorError11 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                        _iterator11.return();
-                    }
-                } finally {
-                    if (_didIteratorError11) {
-                        throw _iteratorError11;
-                    }
-                }
-            }
-        }
-    }, {
-        key: '_dragBy',
-        value: function _dragBy(deltaLeft, deltaTop) {
-            if (!this.emit('drag-before')) {
-                return;
-            } // Allow preventing drag
-            // Perform Snap:
-            var thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft, this._dragStartPos.top + deltaTop);
-            var snapDelta = new _index2.Vector(NaN, NaN);
-
-            if (!this._isFramed) {
-                // If window is framed, don't support snap system.
-                var _iteratorNormalCompletion12 = true;
-                var _didIteratorError12 = false;
-                var _iteratorError12 = undefined;
-
-                try {
-                    for (var _iterator12 = (0, _getIterator3.default)(_global2.default._windows.values()), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-                        var other = _step12.value;
-
-                        if (!other._isFramed && other._dockedGroup !== this._dockedGroup) {
-                            snapDelta.setMin(thisBounds.getSnapDelta(other.getBounds()));
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError12 = true;
-                    _iteratorError12 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion12 && _iterator12.return) {
-                            _iterator12.return();
-                        }
-                    } finally {
-                        if (_didIteratorError12) {
-                            throw _iteratorError12;
-                        }
-                    }
-                }
-            }
-            deltaLeft += snapDelta.left || 0;
-            deltaTop += snapDelta.top || 0;
-
-            var _iteratorNormalCompletion13 = true;
-            var _didIteratorError13 = false;
-            var _iteratorError13 = undefined;
-
-            try {
-                for (var _iterator13 = (0, _getIterator3.default)(this._dockedGroup), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-                    var _other = _step13.value;
-
-                    var pos = _other._dragStartPos;
-
-                    // If other doesn't have a drag position, start it:
-                    if (pos === undefined) {
-                        pos = _other._dragStartPos = _other.getPosition();
-                        pos.left -= deltaLeft;
-                        pos.top -= deltaTop;
-                    }
-
-                    _other._window.moveTo(pos.left + deltaLeft, pos.top + deltaTop);
-                }
-            } catch (err) {
-                _didIteratorError13 = true;
-                _iteratorError13 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion13 && _iterator13.return) {
-                        _iterator13.return();
-                    }
-                } finally {
-                    if (_didIteratorError13) {
-                        throw _iteratorError13;
-                    }
-                }
-            }
-        }
-    }, {
-        key: '_dragStop',
-        value: function _dragStop() {
-            // Dock to those it snapped to:
-            var thisBounds = this.getBounds();
-
-            if (!this._isFramed) {
-                // If window is framed, don't support dock system.
-                var _iteratorNormalCompletion14 = true;
-                var _didIteratorError14 = false;
-                var _iteratorError14 = undefined;
-
-                try {
-                    for (var _iterator14 = (0, _getIterator3.default)(_global2.default._windows.values()), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-                        var other = _step14.value;
-
-                        if (!other._isFramed && thisBounds.isTouching(other.getBounds())) {
-                            this.dock(other);
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError14 = true;
-                    _iteratorError14 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion14 && _iterator14.return) {
-                            _iterator14.return();
-                        }
-                    } finally {
-                        if (_didIteratorError14) {
-                            throw _iteratorError14;
-                        }
-                    }
-                }
-            }
-
-            var _iteratorNormalCompletion15 = true;
-            var _didIteratorError15 = false;
-            var _iteratorError15 = undefined;
-
-            try {
-                for (var _iterator15 = (0, _getIterator3.default)(this._dockedGroup), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-                    var _window10 = _step15.value;
-
-                    delete _window10._dragStartPos;
-                }
-            } catch (err) {
-                _didIteratorError15 = true;
-                _iteratorError15 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion15 && _iterator15.return) {
-                        _iterator15.return();
-                    }
-                } finally {
-                    if (_didIteratorError15) {
-                        throw _iteratorError15;
-                    }
-                }
-            }
-
-            this.emit('drag-stop');
-        }
-    }], [{
-        key: 'getAll',
-        value: function getAll() {
-            return (0, _from2.default)(_global2.default._windows.values());
-        }
-    }, {
-        key: 'getByID',
-        value: function getByID(id) {
-            return _global2.default._windows.get(id);
-        }
-    }, {
-        key: 'getMain',
-        value: function getMain(id) {
-            return _global2.default._windows.get(_global2.default._launcher.name);
-        }
-    }, {
-        key: 'getCurrent',
-        value: function getCurrent() {
-            return Window.current;
-        }
-    }]);
-    return Window;
-}(_index.EventHandler);
-
-function setupCurrentWindow() {
-    Window.current = _global2.default._windows.get(currentWin.name) || new Window(currentWin);
-
-    // Setup handlers on this window:
-    var wX = 0;
-    var wY = 0;
-    var dragging = false;
-
-    window.addEventListener('focus', function () {
-        Window.current.bringToFront();
-    });
-
-    window.addEventListener('mousedown', function onDragStart(event) {
-        if (event.target.classList && event.target.classList.contains('window-drag')) {
-            dragging = true;
-            wX = event.screenX;
-            wY = event.screenY;
-            Window.current._dragStart();
-        }
-    });
-
-    window.addEventListener('touchstart', function (event) {
-        if (event.target.classList && event.target.classList.contains('window-drag')) {
-            event.preventDefault();
-            dragging = true;
-            wX = event.touches[0].screenX;
-            wY = event.touches[0].screenY;
-            Window.current._dragStart();
-        }
-    });
-
-    window.addEventListener('mousemove', function (event) {
-        if (dragging) {
-            // Stop text selection:
-            window.getSelection().removeAllRanges();
-            // Drag:
-            Window.current._dragBy(event.screenX - wX, event.screenY - wY);
-        }
-    });
-
-    window.addEventListener('touchmove', function (event) {
-        if (dragging) {
-            event.preventDefault();
-            // Stop text selection:
-            window.getSelection().removeAllRanges();
-            // Drag:
-            Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
-        }
-    });
-
-    window.addEventListener('mouseup', function (event) {
-        if (dragging) {
-            dragging = false;
-            Window.current._dragStop();
-        }
-    });
-
-    window.addEventListener('touchend', function (event) {
-        if (dragging) {
-            event.preventDefault();
-            dragging = false;
-            Window.current._dragStop();
-        }
-    });
-}
-
-// Handle current window in this context:
-// TODO: Rewrite to remove setTimeout for the following:
-fin.desktop.main(_ready2.default.ref(function () {
-    currentWin = fin.desktop.Window.getCurrent();
-    var currentReady = _ready2.default.ref(setupCurrentWindow);
-
-    function getCurrent() {
-        if (_global2.default._windows) {
-            currentReady();
-        } else {
-            setTimeout(getCurrent, 5);
-        }
-    }
-    getCurrent();
-}));
-
-_global2.default.Window = Window;
-exports.default = Window;
-module.exports = exports['default'];
-
-/***/ }),
-/* 150 */
-/*!**********************************!*\
-  !*** ./runtime/browser/index.js ***!
-  \**********************************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _set = __webpack_require__(/*! babel-runtime/core-js/set */ 51);
-
-var _set2 = _interopRequireDefault(_set);
-
-var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-var _global = __webpack_require__(/*! ./global */ 85);
-
-var _global2 = _interopRequireDefault(_global);
-
-var _ready = __webpack_require__(/*! ../ready */ 18);
-
-var _ready2 = _interopRequireDefault(_ready);
-
-var _Window = __webpack_require__(/*! ./Window */ 151);
-
-var _Window2 = _interopRequireDefault(_Window);
-
-var _index = __webpack_require__(/*! ../../geometry/index */ 9);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Contains the monitor space.
- * @type {CollisionMesh}
- */
-_global2.default.monitors = new _index.CollisionMesh([]);
-
-function updateMonitors() {
-    // Update monitors CollisionMesh with the primary "fake" monitor:
-    _global2.default.monitors.boxes = [new _index.BoundingBox(0, 0, Math.max(document.documentElement.clientWidth, window.innerWidth || 0), Math.max(document.documentElement.clientHeight, window.innerHeight || 0))];
-}
-
-// Set up system to update monitors:
-updateMonitors();
-window.addEventListener('resize', updateMonitors);
-
-/**
- * Message bus for application.
- * @namespace
- * @alias messagebus
- */
-_global2.default.messagebus = function () {
-    // TODO: Utilize iframe communication? Or use messagebus that is currently shared in setup.js?
-    var wrappedListeners = {};
-    var windowWrappedListeners = {};
-
-    window.addEventListener('message', function (event) {
-        var message = event.data;
-        var win = _Window2.default.getByID(message.winID);
-
-        // Don't execute listeners when the sender is the same as the listener:
-        if (win._id === _Window2.default.current._id) {
-            return;
-        }
-
-        if (windowWrappedListeners[message.event] != null) {
-            // Check to see if the called window is being listened to directly:
-            if (windowWrappedListeners[message.event][message.winID] != null) {
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = (0, _getIterator3.default)(windowWrappedListeners[message.event][message.winID]), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var listener = _step.value;
-
-                        listener.apply(win, message.args); // TODO: Make apply's this point to window who sent messsage
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-            }
-        }
-        if (wrappedListeners[message.event] != null) {
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
-
-            try {
-                for (var _iterator2 = (0, _getIterator3.default)(wrappedListeners[message.event]), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _listener = _step2.value;
-
-                    _listener.apply(win, message.args); // TODO: Make apply's this point to window who sent messsage
-                }
-            } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
-                    }
-                } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
-                    }
-                }
-            }
-        }
-    }, false);
-
-    return {
-        /**
-         * @method
-         * @alias messagebus.send
-         * @param {String} eventName - the event to send to
-         * @param {Window} [window=undefined] - the target window to send to (if not specified, sends to all windows)
-         * @param {...*} args Arguments to send to listeners
-         */
-        send: function send(eventName) {
-            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                args[_key - 1] = arguments[_key];
-            }
-
-            // TODO: Check if ready? Dunno if needed
-            // TODO: Do we need to add a way to identify if a return is needed?
-            var curWin = _Window2.default.current;
-            var message = {
-                id: 0, // TODO: Randomly generate a unique id to avoid collision!
-                winID: curWin._id,
-                event: eventName,
-                args: args // If the first arg is a window, it gets removed later.
-            };
-
-            if (args.length > 0 && args[0] instanceof _Window2.default) {
-                // Remove window from args in message:
-                var _window = args.shift(); // args is by reference in message currently
-
-                // Don't execute listeners when the sender is the same as the listener:
-                if (_window._id === curWin._id) {
-                    return;
-                }
-                // TODO: Save the id of message so we can get the response
-                _window._window.contentWindow.postMessage(message, '*');
-            } else {
-                var _iteratorNormalCompletion3 = true;
-                var _didIteratorError3 = false;
-                var _iteratorError3 = undefined;
-
-                try {
-                    for (var _iterator3 = (0, _getIterator3.default)(_global2.default._windows.values()), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                        var _window2 = _step3.value;
-
-                        if (curWin !== _window2) {
-                            // Don't send to current window
-                            _window2._window.contentWindow.postMessage(message, '*');
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError3 = true;
-                    _iteratorError3 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                            _iterator3.return();
-                        }
-                    } finally {
-                        if (_didIteratorError3) {
-                            throw _iteratorError3;
-                        }
-                    }
-                }
-            }
-        },
-        /**
-         * @method
-         * @alias messagebus.on
-         * @param {String} eventName - the event to listen to
-         * @param {Window} [window=undefined] - the window to listen to events from (if null, listens to all windows)
-         * @param {Function} listener - the callback function to call when event is triggered for this window
-         */
-        on: function on(eventName, window, listener) {
-            if (listener === undefined) {
-                listener = window;
-                window = undefined;
-            }
-
-            if (window !== undefined) {
-                // Don't execute listeners when the sender is the same as the listener:
-                if (window._id === _Window2.default.current._id) {
-                    return;
-                }
-                // Replace window.name with some way to identify the unique window
-                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
-
-                winLisGroup[eventName] = winLisGroup[eventName] || new _set2.default();
-                winLisGroup[eventName].add(listener);
-                // TODO: On window close, clear subscriptions in windowWrappedListeners!
-            } else {
-                wrappedListeners[eventName] = wrappedListeners[eventName] || new _set2.default();
-                wrappedListeners[eventName].add(listener);
-            }
-        },
-        /**
-         * @method
-         * @alias messagebus.off
-         * @param {String} eventName - the event to remove listener from
-         * @param {Window} [window=undefined] - the window to listen to events from (if null, listens to all windows)
-         * @param {Function} listener - the callback function to call when event is triggered for this window
-         */
-        off: function off(eventName, window, listener) {
-            if (listener === undefined) {
-                listener = window;
-                window = undefined;
-            }
-
-            if (window !== undefined) {
-                // Replace window.name with some way to identify the unique window
-                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
-
-                winLisGroup[eventName] = winLisGroup[eventName] || new _set2.default();
-                winLisGroup[eventName].delete(listener);
-            } else {
-                wrappedListeners[eventName] = wrappedListeners[eventName] || new _set2.default();
-                wrappedListeners[eventName].delete(listener);
-            }
-        }
-    };
-}();
-
-// Notify everyone that windowmanager is setup for this window:
-_ready2.default._deref();
-
-/***/ }),
-/* 151 */
 /*!***********************************!*\
   !*** ./runtime/browser/Window.js ***!
   \***********************************/
@@ -9198,11 +4272,11 @@ var _getPrototypeOf = __webpack_require__(/*! babel-runtime/core-js/object/get-p
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 14);
+var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 10);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 15);
+var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 11);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -9218,7 +4292,7 @@ var _global = __webpack_require__(/*! ./global */ 85);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _index = __webpack_require__(/*! ../../utils/index */ 10);
+var _index = __webpack_require__(/*! ../../utils/index */ 12);
 
 var _index2 = __webpack_require__(/*! ../../geometry/index */ 9);
 
@@ -10898,6 +5972,4941 @@ exports.default = Window;
 module.exports = exports['default'];
 
 /***/ }),
+/* 87 */
+/*!************************************************!*\
+  !*** ../node_modules/core-js/modules/_hide.js ***!
+  \************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var dP         = __webpack_require__(/*! ./_object-dp */ 158)
+  , createDesc = __webpack_require__(/*! ./_property-desc */ 163);
+module.exports = __webpack_require__(/*! ./_descriptors */ 61) ? function(object, key, value){
+  return dP.f(object, key, createDesc(1, value));
+} : function(object, key, value){
+  object[key] = value;
+  return object;
+};
+
+/***/ }),
+/* 88 */
+/*!*************************************************!*\
+  !*** ../node_modules/core-js/modules/_fails.js ***!
+  \*************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports) {
+
+module.exports = function(exec){
+  try {
+    return !!exec();
+  } catch(e){
+    return true;
+  }
+};
+
+/***/ }),
+/* 89 */
+/*!***********************************************!*\
+  !*** ../node_modules/core-js/modules/_uid.js ***!
+  \***********************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports) {
+
+var id = 0
+  , px = Math.random();
+module.exports = function(key){
+  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
+};
+
+/***/ }),
+/* 90 */
+/*!***********************************************!*\
+  !*** ../node_modules/core-js/modules/_wks.js ***!
+  \***********************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var store      = __webpack_require__(/*! ./_shared */ 171)('wks')
+  , uid        = __webpack_require__(/*! ./_uid */ 89)
+  , Symbol     = __webpack_require__(/*! ./_global */ 26).Symbol
+  , USE_SYMBOL = typeof Symbol == 'function';
+
+var $exports = module.exports = function(name){
+  return store[name] || (store[name] =
+    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
+};
+
+$exports.store = store;
+
+/***/ }),
+/* 91 */
+/*!******************!*\
+  !*** ./index.js ***!
+  \******************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _global = __webpack_require__(/*! ./global */ 19);
+
+var _global2 = _interopRequireDefault(_global);
+
+__webpack_require__(/*! ./runtime/index */ 108);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Make windowmanager global:
+if (typeof global !== 'undefined' && global) {
+  global.windowmanager = _global2.default;
+}
+if (typeof window !== 'undefined' && window) {
+  window.windowmanager = _global2.default;
+}
+
+exports.default = _global2.default;
+module.exports = exports['default'];
+
+/***/ }),
+/* 92 */
+/*!*******************************!*\
+  !*** ./utils/EventHandler.js ***!
+  \*******************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// TODO: Use class, rather than prototype.
+
+/**
+ * An EventHandler
+ * @constructor
+ * @alias EventHandler
+ * @param {String[]} [acceptedEventHandlers=[]] - String of allowed events.
+ */
+function EventHandler() {
+    var acceptedEventHandlers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+    this._eventListeners = {};
+    this._eventPipes = [];
+    // TODO: Look into making these special properties that can't be deleted?
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = (0, _getIterator3.default)(acceptedEventHandlers), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var acceptedEventHandler = _step.value;
+
+            this._eventListeners[acceptedEventHandler] = [];
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+}
+
+/**
+ * @method
+ * @param {String}
+ * @param {callback}
+ */
+EventHandler.prototype.on = function (eventNames, eventListener) {
+    eventNames = eventNames.toLowerCase().split(' ');
+
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+        for (var _iterator2 = (0, _getIterator3.default)(eventNames), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var eventName = _step2.value;
+
+            // Check if this event can be subscribed to via this function:
+            if (this._eventListeners[eventName] === undefined) {
+                continue;
+            }
+
+            // Check if eventListener is a function:
+            if (!eventListener || typeof eventListener.constructor !== 'function') {
+                throw new Error('on requires argument \'eventListener\' of type Function');
+            }
+
+            // Check if eventListener is already added:
+            if (this._eventListeners[eventName].indexOf(eventListener) >= 0) {
+                continue;
+            }
+
+            // Add event listener:
+            this._eventListeners[eventName].push(eventListener);
+        }
+    } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+            }
+        } finally {
+            if (_didIteratorError2) {
+                throw _iteratorError2;
+            }
+        }
+    }
+};
+
+/**
+ * @method
+ * @param {String}
+ * @param {callback}
+ */
+EventHandler.prototype.once = function (eventName, eventListener) {
+    function onceListener() {
+        this.off(eventName, onceListener);
+        eventListener.apply(this, arguments);
+    }
+    this.on(eventName, onceListener);
+};
+
+/**
+ * @method
+ * @param {String}
+ * @param {callback}
+ */
+EventHandler.prototype.off = function (eventNames, eventListener) {
+    eventNames = eventNames.toLowerCase().split(' ');
+
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+        for (var _iterator3 = (0, _getIterator3.default)(eventNames), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var eventName = _step3.value;
+
+            // If event listeners don't exist, bail:
+            if (this._eventListeners[eventName] === undefined) {
+                return;
+            }
+
+            // Check if eventListener is a function:
+            if (!eventListener || typeof eventListener.constructor !== 'function') {
+                throw new Error('off requires argument \'eventListener\' of type Function');
+            }
+
+            // Remove event listener, if exists:
+            var index = this._eventListeners[eventName].indexOf(eventListener);
+
+            if (index >= 0) {
+                this._eventListeners[eventName].splice(index, 1);
+            }
+        }
+    } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+            }
+        } finally {
+            if (_didIteratorError3) {
+                throw _iteratorError3;
+            }
+        }
+    }
+};
+
+/**
+ * @method
+ * @param {String}
+ */
+EventHandler.prototype.clearEvent = function (eventNames) {
+    eventNames = eventNames.toLowerCase();
+
+    var _iteratorNormalCompletion4 = true;
+    var _didIteratorError4 = false;
+    var _iteratorError4 = undefined;
+
+    try {
+        for (var _iterator4 = (0, _getIterator3.default)(eventNames), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var eventName = _step4.value;
+
+            // If event listeners don't exist, bail:
+            if (this._eventListeners[eventName] === undefined) {
+                return;
+            }
+
+            this._eventListeners[eventName] = [];
+        }
+    } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                _iterator4.return();
+            }
+        } finally {
+            if (_didIteratorError4) {
+                throw _iteratorError4;
+            }
+        }
+    }
+};
+
+/**
+ * @method
+ * @param {String}
+ * @param {...*} args - Arguments to pass to listeners
+ * @returns {Boolean} true if all handlers return true, else false
+ */
+EventHandler.prototype.emit = function (eventName) {
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+    }
+
+    eventName = eventName.toLowerCase();
+
+    // If event listeners don't exist, bail:
+    if (this._eventListeners[eventName] === undefined) {
+        return false;
+    }
+
+    var returnVal = true;
+
+    var _iteratorNormalCompletion5 = true;
+    var _didIteratorError5 = false;
+    var _iteratorError5 = undefined;
+
+    try {
+        for (var _iterator5 = (0, _getIterator3.default)(this._eventListeners[eventName]), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var eventListener = _step5.value;
+
+            // Call listener with the 'this' context as the current window:
+            returnVal = returnVal && eventListener.apply(this, args) !== false;
+        }
+    } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                _iterator5.return();
+            }
+        } finally {
+            if (_didIteratorError5) {
+                throw _iteratorError5;
+            }
+        }
+    }
+
+    var _iteratorNormalCompletion6 = true;
+    var _didIteratorError6 = false;
+    var _iteratorError6 = undefined;
+
+    try {
+        for (var _iterator6 = (0, _getIterator3.default)(this._eventPipes), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var eventHandler = _step6.value;
+
+            // Call handler with the 'this' context as the current window:
+            returnVal = returnVal && eventHandler.emit.apply(eventHandler, arguments) !== false;
+        }
+    } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                _iterator6.return();
+            }
+        } finally {
+            if (_didIteratorError6) {
+                throw _iteratorError6;
+            }
+        }
+    }
+
+    return returnVal;
+};
+
+/**
+ * @method
+ * @param {EventHandler}
+ */
+EventHandler.prototype.addPipe = function (eventHandler) {
+    // Check if eventHandler is a EventHandler:
+    if (!eventHandler || !eventHandler.emit) {
+        throw new Error('addPipe requires argument \'eventHandler\' of type EventHandler');
+    }
+
+    // Check if eventHandler is already added:
+    if (this._eventPipes.indexOf(eventHandler) >= 0) {
+        return;
+    }
+
+    // Add event handler:
+    this._eventPipes.push(eventHandler);
+};
+
+/**
+ * @method
+ * @param {EventHandler}
+ */
+EventHandler.prototype.removePipe = function (eventHandler) {
+    // Check if eventHandler is a EventHandler:
+    if (!eventHandler || !eventHandler.emit) {
+        throw new Error('removePipe requires argument \'eventHandler\' of type EventHandler');
+    }
+
+    // Check if eventHandler is already added:
+    if (this._eventPipes.indexOf(eventHandler) >= 0) {
+        return;
+    }
+
+    // Remove eventHandler, if exists:
+    var index = this._eventPipes.indexOf(eventHandler);
+
+    if (index >= 0) {
+        this._eventPipes.splice(index, 1);
+    }
+};
+
+exports.default = EventHandler;
+module.exports = exports['default'];
+
+/***/ }),
+/* 93 */
+/*!**********************************************************!*\
+  !*** ../node_modules/core-js/library/fn/get-iterator.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../modules/web.dom.iterable */ 27);
+__webpack_require__(/*! ../modules/es6.string.iterator */ 24);
+module.exports = __webpack_require__(/*! ../modules/core.get-iterator */ 103);
+
+/***/ }),
+/* 94 */
+/*!*********************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es6.array.iterator.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var addToUnscopables = __webpack_require__(/*! ./_add-to-unscopables */ 95)
+  , step             = __webpack_require__(/*! ./_iter-step */ 62)
+  , Iterators        = __webpack_require__(/*! ./_iterators */ 20)
+  , toIObject        = __webpack_require__(/*! ./_to-iobject */ 13);
+
+// 22.1.3.4 Array.prototype.entries()
+// 22.1.3.13 Array.prototype.keys()
+// 22.1.3.29 Array.prototype.values()
+// 22.1.3.30 Array.prototype[@@iterator]()
+module.exports = __webpack_require__(/*! ./_iter-define */ 36)(Array, 'Array', function(iterated, kind){
+  this._t = toIObject(iterated); // target
+  this._i = 0;                   // next index
+  this._k = kind;                // kind
+// 22.1.5.2.1 %ArrayIteratorPrototype%.next()
+}, function(){
+  var O     = this._t
+    , kind  = this._k
+    , index = this._i++;
+  if(!O || index >= O.length){
+    this._t = undefined;
+    return step(1);
+  }
+  if(kind == 'keys'  )return step(0, index);
+  if(kind == 'values')return step(0, O[index]);
+  return step(0, [index, O[index]]);
+}, 'values');
+
+// argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
+Iterators.Arguments = Iterators.Array;
+
+addToUnscopables('keys');
+addToUnscopables('values');
+addToUnscopables('entries');
+
+/***/ }),
+/* 95 */
+/*!**********************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_add-to-unscopables.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports) {
+
+module.exports = function(){ /* empty */ };
+
+/***/ }),
+/* 96 */
+/*!**************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_a-function.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports) {
+
+module.exports = function(it){
+  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
+  return it;
+};
+
+/***/ }),
+/* 97 */
+/*!***************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_iter-create.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var create         = __webpack_require__(/*! ./_object-create */ 29)
+  , descriptor     = __webpack_require__(/*! ./_property-desc */ 21)
+  , setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 32)
+  , IteratorPrototype = {};
+
+// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
+__webpack_require__(/*! ./_hide */ 7)(IteratorPrototype, __webpack_require__(/*! ./_wks */ 1)('iterator'), function(){ return this; });
+
+module.exports = function(Constructor, NAME, next){
+  Constructor.prototype = create(IteratorPrototype, {next: descriptor(1, next)});
+  setToStringTag(Constructor, NAME + ' Iterator');
+};
+
+/***/ }),
+/* 98 */
+/*!**************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_object-dps.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var dP       = __webpack_require__(/*! ./_object-dp */ 4)
+  , anObject = __webpack_require__(/*! ./_an-object */ 8)
+  , getKeys  = __webpack_require__(/*! ./_object-keys */ 22);
+
+module.exports = __webpack_require__(/*! ./_descriptors */ 6) ? Object.defineProperties : function defineProperties(O, Properties){
+  anObject(O);
+  var keys   = getKeys(Properties)
+    , length = keys.length
+    , i = 0
+    , P;
+  while(length > i)dP.f(O, P = keys[i++], Properties[P]);
+  return O;
+};
+
+/***/ }),
+/* 99 */
+/*!******************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_array-includes.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+// false -> Array#indexOf
+// true  -> Array#includes
+var toIObject = __webpack_require__(/*! ./_to-iobject */ 13)
+  , toLength  = __webpack_require__(/*! ./_to-length */ 30)
+  , toIndex   = __webpack_require__(/*! ./_to-index */ 100);
+module.exports = function(IS_INCLUDES){
+  return function($this, el, fromIndex){
+    var O      = toIObject($this)
+      , length = toLength(O.length)
+      , index  = toIndex(fromIndex, length)
+      , value;
+    // Array#includes uses SameValueZero equality algorithm
+    if(IS_INCLUDES && el != el)while(length > index){
+      value = O[index++];
+      if(value != value)return true;
+    // Array#toIndex ignores holes, Array#includes - not
+    } else for(;length > index; index++)if(IS_INCLUDES || index in O){
+      if(O[index] === el)return IS_INCLUDES || index || 0;
+    } return !IS_INCLUDES && -1;
+  };
+};
+
+/***/ }),
+/* 100 */
+/*!************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_to-index.js ***!
+  \************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toInteger = __webpack_require__(/*! ./_to-integer */ 39)
+  , max       = Math.max
+  , min       = Math.min;
+module.exports = function(index, length){
+  index = toInteger(index);
+  return index < 0 ? max(index + length, 0) : min(index, length);
+};
+
+/***/ }),
+/* 101 */
+/*!********************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_html.js ***!
+  \********************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./_global */ 3).document && document.documentElement;
+
+/***/ }),
+/* 102 */
+/*!*************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_string-at.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toInteger = __webpack_require__(/*! ./_to-integer */ 39)
+  , defined   = __webpack_require__(/*! ./_defined */ 28);
+// true  -> String#at
+// false -> String#codePointAt
+module.exports = function(TO_STRING){
+  return function(that, pos){
+    var s = String(defined(that))
+      , i = toInteger(pos)
+      , l = s.length
+      , a, b;
+    if(i < 0 || i >= l)return TO_STRING ? '' : undefined;
+    a = s.charCodeAt(i);
+    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
+      ? TO_STRING ? s.charAt(i) : a
+      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+  };
+};
+
+/***/ }),
+/* 103 */
+/*!********************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/core.get-iterator.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var anObject = __webpack_require__(/*! ./_an-object */ 8)
+  , get      = __webpack_require__(/*! ./core.get-iterator-method */ 43);
+module.exports = __webpack_require__(/*! ./_core */ 0).getIterator = function(it){
+  var iterFn = get(it);
+  if(typeof iterFn != 'function')throw TypeError(it + ' is not iterable!');
+  return anObject(iterFn.call(it));
+};
+
+/***/ }),
+/* 104 */
+/*!*******************************!*\
+  !*** ./utils/SyncCallback.js ***!
+  \*******************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+function SyncCallback(callback) {
+    var _this = this;
+
+    if (!(this instanceof SyncCallback)) {
+        return new SyncCallback(callback);
+    }
+
+    this.callback = callback;
+    this.count = 0;
+
+    // If no ref are called in event loop, then run callback:
+    this._timeout = setTimeout(function (that) {
+        delete _this._timeout;
+        that._check();
+    }, 0, this);
+}
+
+SyncCallback.prototype.ref = function (callback) {
+    var thisRef = this;
+
+    if (this._timeout !== undefined) {
+        // Ref is called, so remove timeout:
+        delete this._timeout;
+        clearTimeout(this._timeout);
+    }
+
+    this.count += 1;
+    return function () {
+        if (callback) {
+            callback.apply(undefined, arguments);
+        }
+        thisRef._deref();
+    };
+};
+
+SyncCallback.prototype._deref = function () {
+    this.count -= 1;
+    this._check();
+};
+
+SyncCallback.prototype._check = function () {
+    if (this.count <= 0 && this.callback != null) {
+        this.callback();
+        delete this.callback;
+    }
+};
+
+exports.default = SyncCallback;
+module.exports = exports["default"];
+
+/***/ }),
+/* 105 */
+/*!***********************************************************************!*\
+  !*** ../node_modules/babel-runtime/core-js/object/define-property.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/define-property */ 106), __esModule: true };
+
+/***/ }),
+/* 106 */
+/*!********************************************************************!*\
+  !*** ../node_modules/core-js/library/fn/object/define-property.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../../modules/es6.object.define-property */ 107);
+var $Object = __webpack_require__(/*! ../../modules/_core */ 0).Object;
+module.exports = function defineProperty(it, key, desc){
+  return $Object.defineProperty(it, key, desc);
+};
+
+/***/ }),
+/* 107 */
+/*!*****************************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es6.object.define-property.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $export = __webpack_require__(/*! ./_export */ 2);
+// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
+$export($export.S + $export.F * !__webpack_require__(/*! ./_descriptors */ 6), 'Object', {defineProperty: __webpack_require__(/*! ./_object-dp */ 4).f});
+
+/***/ }),
+/* 108 */
+/*!**************************!*\
+  !*** ./runtime/index.js ***!
+  \**************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+__webpack_require__(/*! ./ready */ 18);
+
+// TODO: Add runtime checks here for OpenFin and Electron
+var runtime = void 0; /* global fin */
+
+
+if (typeof process !== 'undefined' && process && process.versions && (process.versions.electron || process.versions.node) || typeof window !== 'undefined' && window && window.nodeRequire && window.nodeRequire.runtime) {
+    // We are running in an Electron Runtime:
+    runtime = __webpack_require__(/*! ./electron/index */ 109);
+} else if (typeof fin !== 'undefined' && fin && fin.desktop && fin.desktop.main) {
+    // We are running in an OpenFin Runtime:
+    runtime = __webpack_require__(/*! ./openfin/index */ 147);
+} else {
+    // We are running in an Browser Runtime:
+    runtime = __webpack_require__(/*! ./browser/index */ 151);
+}
+
+exports.default = runtime;
+module.exports = exports['default'];
+
+/***/ }),
+/* 109 */
+/*!***********************************!*\
+  !*** ./runtime/electron/index.js ***!
+  \***********************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _global = __webpack_require__(/*! ./global */ 25);
+
+var _global2 = _interopRequireDefault(_global);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Setup windowmanager runtime variables for Electron
+// TODO: Determine if renderer should be setup using the startup script, and have renderer be a NOOP
+
+if (_global2.default._isNode) {
+    // We are running in an Electron's main script:
+    __webpack_require__(/*! ./node/index */ 118);
+} else if (_global2.default._isRenderer) {
+    // We are running in an Electron renderer:
+    __webpack_require__(/*! ./renderer/index */ 120);
+}
+
+/***/ }),
+/* 110 */
+/*!*************************************************!*\
+  !*** ../node_modules/core-js/library/fn/map.js ***!
+  \*************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../modules/es6.object.to-string */ 47);
+__webpack_require__(/*! ../modules/es6.string.iterator */ 24);
+__webpack_require__(/*! ../modules/web.dom.iterable */ 27);
+__webpack_require__(/*! ../modules/es6.map */ 111);
+__webpack_require__(/*! ../modules/es7.map.to-json */ 116);
+module.exports = __webpack_require__(/*! ../modules/_core */ 0).Map;
+
+/***/ }),
+/* 111 */
+/*!**********************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es6.map.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var strong = __webpack_require__(/*! ./_collection-strong */ 70);
+
+// 23.1 Map Objects
+module.exports = __webpack_require__(/*! ./_collection */ 75)('Map', function(get){
+  return function Map(){ return get(this, arguments.length > 0 ? arguments[0] : undefined); };
+}, {
+  // 23.1.3.6 Map.prototype.get(key)
+  get: function get(key){
+    var entry = strong.getEntry(this, key);
+    return entry && entry.v;
+  },
+  // 23.1.3.9 Map.prototype.set(key, value)
+  set: function set(key, value){
+    return strong.def(this, key === 0 ? 0 : key, value);
+  }
+}, strong, true);
+
+/***/ }),
+/* 112 */
+/*!***************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_set-species.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var global      = __webpack_require__(/*! ./_global */ 3)
+  , core        = __webpack_require__(/*! ./_core */ 0)
+  , dP          = __webpack_require__(/*! ./_object-dp */ 4)
+  , DESCRIPTORS = __webpack_require__(/*! ./_descriptors */ 6)
+  , SPECIES     = __webpack_require__(/*! ./_wks */ 1)('species');
+
+module.exports = function(KEY){
+  var C = typeof core[KEY] == 'function' ? core[KEY] : global[KEY];
+  if(DESCRIPTORS && C && !C[SPECIES])dP.f(C, SPECIES, {
+    configurable: true,
+    get: function(){ return this; }
+  });
+};
+
+/***/ }),
+/* 113 */
+/*!*****************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_array-methods.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 0 -> Array#forEach
+// 1 -> Array#map
+// 2 -> Array#filter
+// 3 -> Array#some
+// 4 -> Array#every
+// 5 -> Array#find
+// 6 -> Array#findIndex
+var ctx      = __webpack_require__(/*! ./_ctx */ 16)
+  , IObject  = __webpack_require__(/*! ./_iobject */ 63)
+  , toObject = __webpack_require__(/*! ./_to-object */ 23)
+  , toLength = __webpack_require__(/*! ./_to-length */ 30)
+  , asc      = __webpack_require__(/*! ./_array-species-create */ 114);
+module.exports = function(TYPE, $create){
+  var IS_MAP        = TYPE == 1
+    , IS_FILTER     = TYPE == 2
+    , IS_SOME       = TYPE == 3
+    , IS_EVERY      = TYPE == 4
+    , IS_FIND_INDEX = TYPE == 6
+    , NO_HOLES      = TYPE == 5 || IS_FIND_INDEX
+    , create        = $create || asc;
+  return function($this, callbackfn, that){
+    var O      = toObject($this)
+      , self   = IObject(O)
+      , f      = ctx(callbackfn, that, 3)
+      , length = toLength(self.length)
+      , index  = 0
+      , result = IS_MAP ? create($this, length) : IS_FILTER ? create($this, 0) : undefined
+      , val, res;
+    for(;length > index; index++)if(NO_HOLES || index in self){
+      val = self[index];
+      res = f(val, index, O);
+      if(TYPE){
+        if(IS_MAP)result[index] = res;            // map
+        else if(res)switch(TYPE){
+          case 3: return true;                    // some
+          case 5: return val;                     // find
+          case 6: return index;                   // findIndex
+          case 2: result.push(val);               // filter
+        } else if(IS_EVERY)return false;          // every
+      }
+    }
+    return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : result;
+  };
+};
+
+/***/ }),
+/* 114 */
+/*!************************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_array-species-create.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 9.4.2.3 ArraySpeciesCreate(originalArray, length)
+var speciesConstructor = __webpack_require__(/*! ./_array-species-constructor */ 115);
+
+module.exports = function(original, length){
+  return new (speciesConstructor(original))(length);
+};
+
+/***/ }),
+/* 115 */
+/*!*****************************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_array-species-constructor.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__(/*! ./_is-object */ 14)
+  , isArray  = __webpack_require__(/*! ./_is-array */ 76)
+  , SPECIES  = __webpack_require__(/*! ./_wks */ 1)('species');
+
+module.exports = function(original){
+  var C;
+  if(isArray(original)){
+    C = original.constructor;
+    // cross-realm fallback
+    if(typeof C == 'function' && (C === Array || isArray(C.prototype)))C = undefined;
+    if(isObject(C)){
+      C = C[SPECIES];
+      if(C === null)C = undefined;
+    }
+  } return C === undefined ? Array : C;
+};
+
+/***/ }),
+/* 116 */
+/*!******************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es7.map.to-json.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+// https://github.com/DavidBruant/Map-Set.prototype.toJSON
+var $export  = __webpack_require__(/*! ./_export */ 2);
+
+$export($export.P + $export.R, 'Map', {toJSON: __webpack_require__(/*! ./_collection-to-json */ 77)('Map')});
+
+/***/ }),
+/* 117 */
+/*!***********************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_array-from-iterable.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var forOf = __webpack_require__(/*! ./_for-of */ 48);
+
+module.exports = function(iter, ITERATOR){
+  var result = [];
+  forOf(iter, false, result.push, result, ITERATOR);
+  return result;
+};
+
+
+/***/ }),
+/* 118 */
+/*!****************************************!*\
+  !*** ./runtime/electron/node/index.js ***!
+  \****************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _ready = __webpack_require__(/*! ../../ready */ 18);
+
+var _ready2 = _interopRequireDefault(_ready);
+
+var _require = __webpack_require__(/*! ../require */ 50);
+
+var _require2 = _interopRequireDefault(_require);
+
+var _global = __webpack_require__(/*! ../global */ 25);
+
+var _global2 = _interopRequireDefault(_global);
+
+__webpack_require__(/*! ./Window */ 119);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Setup window backend
+var _nodeRequire = (0, _require2.default)('electron'),
+    app = _nodeRequire.app,
+    BrowserWindow = _nodeRequire.BrowserWindow,
+    dialog = _nodeRequire.dialog;
+
+var http = (0, _require2.default)('http');
+var https = (0, _require2.default)('https');
+var path = (0, _require2.default)('path');
+var url = (0, _require2.default)('url');
+
+// TODO: Add support for local file loading for window url.
+
+function getArg(argName) {
+    return global.__windowmanagerConfig[argName] || process.argv.find(function (arg) {
+        return arg.indexOf('--' + argName) >= 0;
+    });
+}
+
+function extractArg(argName) {
+    var arg = getArg(argName);
+
+    if (arg) {
+        var index = arg.indexOf('=') + 1;
+
+        if (index < arg.length) {
+            return arg.substr(index);
+        }
+    }
+    // Return falsey value
+}
+
+// Determine the endpoint:
+var packageJson = function () {
+    var packagePath = path.resolve(path.dirname(_require2.default.main.filename), 'package.json');
+
+    try {
+        return (0, _require2.default)(packagePath).windowmanager || global.__windowmanagerConfig || {};
+    } catch (err) {
+        return {};
+    }
+}();
+var endpoint = extractArg('endpoint') || packageJson.endpoint;
+var configPath = extractArg('config') || packageJson.config;
+// If configPath is null, url.resolve doesn't execute:
+var configUrl = configPath && url.resolve(endpoint, configPath);
+// Setup defaults (similar to OpenFin):
+var defaultConfig = {
+    url: endpoint,
+    width: 800,
+    height: 500,
+    frame: true,
+    resizable: true,
+    show: true,
+    hasShadow: false,
+    autoHideMenuBar: true,
+    icon: 'favicon.ico',
+    webPreferences: {
+        nodeIntegration: false,
+        // Windowmanager path should be absolute:
+        preload: __filename
+    }
+};
+// Setup openfin to electron mappings:
+var configMap = {
+    name: 'title',
+    autoShow: 'show',
+    defaultLeft: 'x',
+    defaultTop: 'y',
+    defaultWidth: 'width',
+    defaultHeight: 'height'
+};
+var mainWindow = void 0;
+
+function createWindow() {
+    function _start(config) {
+        var _url = config.url;
+
+        delete config.url;
+
+        // Start main window:
+        mainWindow = new BrowserWindow(config);
+        config.title = config.title == null ? String(mainWindow.id) : config.title;
+
+        // load the index.html of the app:
+        mainWindow._setFrameInit(config.frame);
+        mainWindow.loadURL(_url);
+        mainWindow.setTitle(config.title);
+
+        mainWindow.webContents.on('did-fail-load', function () {
+            // Failed to load url, close window:
+            mainWindow.close();
+        });
+
+        mainWindow.on('closed', function () {
+            mainWindow = null;
+            app.quit();
+        });
+
+        // Store this as the main window:
+        _global2.default._launcher = mainWindow;
+
+        // Open the DevTools.
+        // mainWindow.webContents.openDevTools();
+
+        // Notify windowmanager is setup:
+        _ready2.default._deref();
+    }
+
+    function _response(res) {
+        var json = '';
+
+        res.setEncoding('utf8');
+        res.on('data', function (chunk) {
+            json += chunk;
+        });
+        res.on('error', function (error) {
+            // Had error, handle it:
+            var err = 'Server failed to load app.json (' + configUrl + '). Error: ' + error;
+
+            dialog.showErrorBox('ERROR', err);
+            app.quit();
+        });
+        res.on('end', function () {
+            if (res.statusCode === 200) {
+                var config = void 0;
+
+                try {
+                    config = JSON.parse(json).startup_app || {};
+                } catch (e) {
+                    var err = 'Server failed to parse app.json (' + configUrl + ').';
+
+                    dialog.showErrorBox('ERROR', err);
+                    return app.quit();
+                }
+
+                // Map options to electron options:
+                for (var prop in config) {
+                    if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
+                        config[configMap[prop]] = config[prop];
+                        delete config[prop];
+                    }
+                }
+                // Set defaults:
+                for (var _prop in defaultConfig) {
+                    if (defaultConfig.hasOwnProperty(_prop)) {
+                        config[_prop] = config[_prop] != null ? config[_prop] : defaultConfig[_prop];
+                    }
+                }
+
+                // Start main window:
+                _start(config);
+            } else {
+                var _err = 'Server failed to load app.json (' + configUrl + '). Status code: ' + res.statusCode;
+
+                dialog.showErrorBox('ERROR', _err);
+                app.quit();
+            }
+        });
+    }
+
+    // Get app.json:
+    if (configUrl != null) {
+        if (configUrl.indexOf('https') === 0) {
+            // Use https to load app.json:
+            https.get(configUrl, _response).on('error', function (error) {
+                // Had error, handle it:
+                var err = 'Server failed to load app.json (' + configUrl + '). Error: ' + error;
+
+                dialog.showErrorBox('ERROR', err);
+                app.quit();
+            });
+        } else if (configUrl.indexOf('http') === 0) {
+            // Use http to load app.json:
+            http.get(configUrl, _response).on('error', function (error) {
+                // Had error, handle it:
+                var err = 'Server failed to load app.json (' + configUrl + '). Error: ' + error;
+
+                dialog.showErrorBox('ERROR', err);
+                app.quit();
+            });
+        } else {
+            // Unsupported protocol:
+            var err = 'Server doesn\'t support endpoint for app.json (' + configUrl + ').';
+
+            dialog.showErrorBox('ERROR', err);
+            app.quit();
+        }
+    } else if (endpoint != null) {
+        // Load defaults:
+        _start(defaultConfig);
+    } else {
+        var _err2 = 'No endpoint provided to start the app.';
+
+        dialog.showErrorBox('ERROR', _err2);
+        app.quit();
+    }
+}
+
+// When app starts, load main window:
+app.on('ready', createWindow);
+
+// When app closes all windows, end app:
+app.on('window-all-closed', function () {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
+});
+
+app.on('activate', function () {
+    if (mainWindow === null) {
+        createWindow();
+    }
+});
+
+/***/ }),
+/* 119 */
+/*!*****************************************!*\
+  !*** ./runtime/electron/node/Window.js ***!
+  \*****************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _global = __webpack_require__(/*! ../global */ 25);
+
+var _global2 = _interopRequireDefault(_global);
+
+var _require = __webpack_require__(/*! ../require */ 50);
+
+var _require2 = _interopRequireDefault(_require);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _nodeRequire = (0, _require2.default)('electron'),
+    BrowserWindow = _nodeRequire.BrowserWindow;
+
+// TODO: Give the node backend access to windowmanager Window-like functionality.
+//       This will automatically setup windowmanager on each window if added.
+
+// This is Electron's main process:
+
+
+var _windowmanager$geomet = _global2.default.geometry,
+    Vector = _windowmanager$geomet.Vector,
+    BoundingBox = _windowmanager$geomet.BoundingBox;
+
+// TODO: Solve event syncing between windows
+
+BrowserWindow.prototype._notifyReady = function () {
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var other = _step.value;
+
+            other.webContents.send('window-create', this.id);
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+};
+
+BrowserWindow.prototype._ensureSetup = function () {
+    // Make sure docked group exists:
+    if (this._dockedGroup === undefined) {
+        this._dockedGroup = [this];
+
+        this.on('closed', function () {
+            // Clean up the dock system when this window closes:
+            this.undock();
+        });
+
+        this.on('maximize', function () {
+            this.undock(); // TODO: Support changing size when docked.
+        });
+
+        this.on('minimize', function () {
+            this._dockMinimize();
+        });
+
+        this.on('restore', function () {
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = (0, _getIterator3.default)(this._dockedGroup), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var other = _step2.value;
+
+                    if (other !== this) {
+                        other.restore();
+                    }
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+        });
+
+        var lastBounds = this.getBounds();
+
+        this.on('move', function () {
+            var newBounds = this.getBounds();
+
+            // this._dockMoveTo(newBounds.x, newBounds.y, [lastBounds.x, lastBounds.y]);
+            lastBounds = newBounds;
+        });
+
+        this.on('resize', function () {
+            var newBounds = this.getBounds();
+
+            if (newBounds.width !== lastBounds.width || newBounds.height !== lastBounds.height) {
+                this.undock(); // TODO: Support changing size when docked.
+            }
+            // TODO: Handle resize positions of other docked windows
+            //       This requires reworking how windows are docked/connected
+            //       (they must be docked to edges of windows, not the windows themselves)
+            /* for (let index = 0; index < this._dockedGroup.length; index += 1) {
+                const other = this._dockedGroup[index];
+                 if (other !== this) {
+                    other.setPosition()
+                }
+            }*/
+
+            lastBounds = newBounds;
+        });
+    }
+};
+
+BrowserWindow.prototype._setFrameInit = function (isFramed) {
+    this._ensureSetup();
+
+    this._isFramed = isFramed;
+};
+
+BrowserWindow.prototype.dock = function (otherID) {
+    this._ensureSetup();
+    if (this._isFramed) return; // If window is framed, don't support dock system.
+
+    // Resolve otherID, and fail if otherID doesn't exist.
+    var other = BrowserWindow.fromId(otherID);
+
+    if (other === undefined) {
+        return;
+    } // Failed to find other. TODO: Return error
+
+    // If other is already in the group, return:
+    if (this._dockedGroup.indexOf(other) >= 0) {
+        return;
+    }
+
+    // Make sure docked group exists:
+    other._ensureSetup();
+    if (other._isFramed) return; // If window is framed, don't support dock system.
+
+    // Loop through all windows in otherGroup and add them to this's group:
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+        for (var _iterator3 = (0, _getIterator3.default)(other._dockedGroup), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var otherWin = _step3.value;
+
+            this._dockedGroup.push(otherWin);
+            // Sharing the array between window objects makes it easier to manage:
+            otherWin._dockedGroup = this._dockedGroup;
+        }
+
+        // TODO: Check if otherGroup is touching
+    } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+            }
+        } finally {
+            if (_didIteratorError3) {
+                throw _iteratorError3;
+            }
+        }
+    }
+};
+
+BrowserWindow.prototype.undock = function () {
+    this._ensureSetup();
+
+    // Check to see if window is already undocked:
+    if (this._dockedGroup.length === 1) {
+        return;
+    }
+
+    // Undock this:
+    this._dockedGroup.splice(this._dockedGroup.indexOf(this), 1);
+    this._dockedGroup = [this];
+
+    // TODO: Redock those still touching, EXCEPT 'this'.
+};
+
+BrowserWindow.prototype._dockFocus = function () {
+    this._ensureSetup();
+
+    var _iteratorNormalCompletion4 = true;
+    var _didIteratorError4 = false;
+    var _iteratorError4 = undefined;
+
+    try {
+        for (var _iterator4 = (0, _getIterator3.default)(this._dockedGroup), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var window = _step4.value;
+
+            if (window !== this) {
+                window.setAlwaysOnTop(true);
+                window.setAlwaysOnTop(false);
+            }
+        }
+    } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                _iterator4.return();
+            }
+        } finally {
+            if (_didIteratorError4) {
+                throw _iteratorError4;
+            }
+        }
+    }
+
+    this.setAlwaysOnTop(true);
+    this.setAlwaysOnTop(false);
+};
+
+BrowserWindow.prototype._dragStart = function () {
+    // if (!this.emit('drag-start')) { return; } // Allow preventing drag
+    this._ensureSetup();
+
+    this.restore();
+
+    var _iteratorNormalCompletion5 = true;
+    var _didIteratorError5 = false;
+    var _iteratorError5 = undefined;
+
+    try {
+        for (var _iterator5 = (0, _getIterator3.default)(this._dockedGroup), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var window = _step5.value;
+
+            window._dragStartPos = window.getPosition();
+        }
+    } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                _iterator5.return();
+            }
+        } finally {
+            if (_didIteratorError5) {
+                throw _iteratorError5;
+            }
+        }
+    }
+};
+
+BrowserWindow.prototype._getBounds = function () {
+    var bounds = this.getBounds();
+
+    return new BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
+};
+
+BrowserWindow.prototype._dragBy = function (deltaLeft, deltaTop) {
+    this._ensureSetup();
+
+    // Perform Snap:
+    var thisBounds = this._getBounds().moveTo(this._dragStartPos[0] + deltaLeft, this._dragStartPos[1] + deltaTop);
+    var snapDelta = new Vector(NaN, NaN);
+
+    if (!this._isFramed) {
+        // If window is framed, don't support snap system.
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
+
+        try {
+            for (var _iterator6 = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                var other = _step6.value;
+
+                if (!other._isFramed && other._dockedGroup !== this._dockedGroup) {
+                    snapDelta.setMin(thisBounds.getSnapDelta(other._getBounds()));
+                }
+            }
+        } catch (err) {
+            _didIteratorError6 = true;
+            _iteratorError6 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                    _iterator6.return();
+                }
+            } finally {
+                if (_didIteratorError6) {
+                    throw _iteratorError6;
+                }
+            }
+        }
+    }
+    deltaLeft += snapDelta.left || 0;
+    deltaTop += snapDelta.top || 0;
+
+    var _iteratorNormalCompletion7 = true;
+    var _didIteratorError7 = false;
+    var _iteratorError7 = undefined;
+
+    try {
+        for (var _iterator7 = (0, _getIterator3.default)(this._dockedGroup), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var _other = _step7.value;
+
+            var pos = _other._dragStartPos;
+
+            // If other doesn't have a drag position, start it:
+            if (pos === undefined) {
+                pos = _other._dragStartPos = _other.getPosition();
+                pos[0] -= deltaLeft;
+                pos[1] -= deltaTop;
+            }
+
+            _other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
+        }
+    } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                _iterator7.return();
+            }
+        } finally {
+            if (_didIteratorError7) {
+                throw _iteratorError7;
+            }
+        }
+    }
+};
+
+BrowserWindow.prototype._dragStop = function () {
+    this._ensureSetup();
+
+    if (!this._isFramed) {
+        // If window is framed, don't support dock system.
+        // Dock to those it snapped to:
+        var thisBounds = this._getBounds();
+
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
+
+        try {
+            for (var _iterator8 = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                var other = _step8.value;
+
+                if (!other._isFramed && thisBounds.isTouching(other._getBounds())) {
+                    this.dock(other.id);
+                }
+            }
+        } catch (err) {
+            _didIteratorError8 = true;
+            _iteratorError8 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                    _iterator8.return();
+                }
+            } finally {
+                if (_didIteratorError8) {
+                    throw _iteratorError8;
+                }
+            }
+        }
+    }
+
+    var _iteratorNormalCompletion9 = true;
+    var _didIteratorError9 = false;
+    var _iteratorError9 = undefined;
+
+    try {
+        for (var _iterator9 = (0, _getIterator3.default)(this._dockedGroup), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+            var window = _step9.value;
+
+            delete window._dragStartPos;
+        }
+    } catch (err) {
+        _didIteratorError9 = true;
+        _iteratorError9 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                _iterator9.return();
+            }
+        } finally {
+            if (_didIteratorError9) {
+                throw _iteratorError9;
+            }
+        }
+    }
+};
+
+BrowserWindow.prototype._dockMoveTo = function (left, top) {
+    this._ensureSetup();
+
+    var oldPos = this.getPosition();
+    var deltaLeft = left - oldPos[0];
+    var deltaTop = top - oldPos[1];
+
+    var _iteratorNormalCompletion10 = true;
+    var _didIteratorError10 = false;
+    var _iteratorError10 = undefined;
+
+    try {
+        for (var _iterator10 = (0, _getIterator3.default)(this._dockedGroup), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+            var other = _step10.value;
+
+            var pos = other.getPosition();
+
+            other.setPosition(pos[0] + deltaLeft, pos[1] + deltaTop);
+        }
+    } catch (err) {
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                _iterator10.return();
+            }
+        } finally {
+            if (_didIteratorError10) {
+                throw _iteratorError10;
+            }
+        }
+    }
+};
+
+BrowserWindow.prototype._dockMinimize = function (left, top) {
+    this._ensureSetup();
+
+    var _iteratorNormalCompletion11 = true;
+    var _didIteratorError11 = false;
+    var _iteratorError11 = undefined;
+
+    try {
+        for (var _iterator11 = (0, _getIterator3.default)(this._dockedGroup), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+            var window = _step11.value;
+
+            window.minimize();
+        }
+    } catch (err) {
+        _didIteratorError11 = true;
+        _iteratorError11 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                _iterator11.return();
+            }
+        } finally {
+            if (_didIteratorError11) {
+                throw _iteratorError11;
+            }
+        }
+    }
+};
+
+BrowserWindow.prototype._dockHide = function (left, top) {
+    this._ensureSetup();
+
+    var _iteratorNormalCompletion12 = true;
+    var _didIteratorError12 = false;
+    var _iteratorError12 = undefined;
+
+    try {
+        for (var _iterator12 = (0, _getIterator3.default)(this._dockedGroup), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+            var window = _step12.value;
+
+            window.hide();
+        }
+    } catch (err) {
+        _didIteratorError12 = true;
+        _iteratorError12 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                _iterator12.return();
+            }
+        } finally {
+            if (_didIteratorError12) {
+                throw _iteratorError12;
+            }
+        }
+    }
+};
+
+BrowserWindow.prototype._dockShow = function (left, top) {
+    this._ensureSetup();
+
+    var _iteratorNormalCompletion13 = true;
+    var _didIteratorError13 = false;
+    var _iteratorError13 = undefined;
+
+    try {
+        for (var _iterator13 = (0, _getIterator3.default)(this._dockedGroup), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+            var window = _step13.value;
+
+            window.show();
+        }
+    } catch (err) {
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion13 && _iterator13.return) {
+                _iterator13.return();
+            }
+        } finally {
+            if (_didIteratorError13) {
+                throw _iteratorError13;
+            }
+        }
+    }
+};
+
+BrowserWindow._getMainID = function () {
+    return _global2.default._launcher.id;
+};
+
+/***/ }),
+/* 120 */
+/*!********************************************!*\
+  !*** ./runtime/electron/renderer/index.js ***!
+  \********************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _set = __webpack_require__(/*! babel-runtime/core-js/set */ 51);
+
+var _set2 = _interopRequireDefault(_set);
+
+var _map = __webpack_require__(/*! babel-runtime/core-js/map */ 33);
+
+var _map2 = _interopRequireDefault(_map);
+
+var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _global = __webpack_require__(/*! ../global */ 25);
+
+var _global2 = _interopRequireDefault(_global);
+
+var _ready = __webpack_require__(/*! ../../ready */ 18);
+
+var _ready2 = _interopRequireDefault(_ready);
+
+var _Window = __webpack_require__(/*! ./Window */ 124);
+
+var _Window2 = _interopRequireDefault(_Window);
+
+var _index = __webpack_require__(/*! ../../../geometry/index */ 9);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _window$nodeRequire = window.nodeRequire('electron'),
+    ipcRenderer = _window$nodeRequire.ipcRenderer,
+    screen = _window$nodeRequire.screen;
+
+_global2.default.monitors = new _index.CollisionMesh([]);
+
+function updateMonitors() {
+    var displays = screen.getAllDisplays();
+    var boxes = [];
+
+    // Add monitors:
+    for (var display in displays) {
+        boxes.push(new _index.BoundingBox(display.bounds.x, display.bounds.y, display.bounds.x + display.bounds.width, display.bounds.y + display.bounds.height));
+    }
+
+    // Update monitors CollisionMesh:
+    _global2.default.monitors.boxes = boxes;
+}
+
+// Set up system to update monitors:
+updateMonitors();
+screen.on('display-added', updateMonitors);
+screen.on('display-removed', updateMonitors);
+screen.on('display-metrics-changed', updateMonitors);
+
+_global2.default.messagebus = function () {
+    // TODO: Optimize Electron's messagebus by keeping track of listeners
+    //       in the main process for early termination.
+    // TODO: Listener cleanup on this window, or other window close.
+    // TODO: Use a custom eventName, so to not collide with current ones.
+    var wrappedListeners = {};
+    var windowWrappedListeners = {};
+
+    function wrapListener(window, listener) {
+        return function (_, message) {
+            // If listener only listens from a specific window, check that this message is from that window:
+            if (window && window._id !== message.winID) {
+                return;
+            }
+
+            var fromWindow = _global2.default.Window.getByID(message.winID);
+
+            // Don't execute listeners when the sender is the same as the listener:
+            if (fromWindow._id === _global2.default.Window.current._id) {
+                return;
+            }
+
+            listener.apply(fromWindow, message.args);
+            // TODO: Send response if response is expected
+        };
+    }
+
+    return {
+        send: function send(eventName) {
+            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                args[_key - 1] = arguments[_key];
+            }
+
+            var curWin = _global2.default.Window.current;
+            var message = {
+                id: 0, // TODO: Randomly generate a unique id to avoid collision!
+                winID: curWin._id,
+                event: eventName,
+                args: args // If the first arg is a window, it gets removed later.
+            };
+
+            if (args.length > 0 && args[0] instanceof _Window2.default) {
+                // Remove window from args in message:
+                var _window = args.shift(); // args is by reference in message currently
+
+                // Don't execute listeners when the sender is the same as the listener:
+                if (_window._id === curWin._id) {
+                    return;
+                }
+
+                _window._window.webContents.send(eventName, message);
+            } else {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = (0, _getIterator3.default)(_global2.default.Window.getAll()), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var _window2 = _step.value;
+
+                        if (_window2 !== curWin) {
+                            _window2._window.webContents.send(eventName, message);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+        },
+        on: function on(eventName, window, listener) {
+            if (listener === undefined) {
+                listener = window;
+                window = undefined;
+            }
+
+            var onMessage = wrapListener(window, listener);
+
+            if (window !== undefined) {
+                // Don't execute listeners when the sender is the same as the listener:
+                if (window._id === _global2.default.Window.current._id) {
+                    return;
+                }
+
+                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
+
+                winLisGroup[eventName] = winLisGroup[eventName] || new _map2.default();
+                winLisGroup[eventName].set(listener, onMessage);
+                // TODO: On window close, clear subscriptions in windowWrappedListeners!
+            } else {
+                wrappedListeners[eventName] = wrappedListeners[eventName] || new _map2.default();
+                wrappedListeners[eventName].set(listener, onMessage);
+            }
+            ipcRenderer.on(eventName, onMessage);
+        },
+        off: function off(eventName, window, listener) {
+            if (listener === undefined) {
+                listener = window;
+                window = undefined;
+            }
+
+            if (window !== undefined) {
+                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
+
+                winLisGroup[eventName] = winLisGroup[eventName] || new _map2.default();
+                // delete on a Map returns the deleted value (desired onMessage):
+                ipcRenderer.removeListener(eventName, winLisGroup[eventName].delete(listener));
+            } else {
+                wrappedListeners[eventName] = wrappedListeners[eventName] || new _set2.default();
+                // delete on a Map returns the deleted value (desired onMessage):
+                ipcRenderer.removeListener(eventName, wrappedListeners[eventName].get(listener));
+            }
+        }
+    };
+}();
+
+_ready2.default._deref();
+
+/***/ }),
+/* 121 */
+/*!*************************************************!*\
+  !*** ../node_modules/core-js/library/fn/set.js ***!
+  \*************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../modules/es6.object.to-string */ 47);
+__webpack_require__(/*! ../modules/es6.string.iterator */ 24);
+__webpack_require__(/*! ../modules/web.dom.iterable */ 27);
+__webpack_require__(/*! ../modules/es6.set */ 122);
+__webpack_require__(/*! ../modules/es7.set.to-json */ 123);
+module.exports = __webpack_require__(/*! ../modules/_core */ 0).Set;
+
+/***/ }),
+/* 122 */
+/*!**********************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es6.set.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var strong = __webpack_require__(/*! ./_collection-strong */ 70);
+
+// 23.2 Set Objects
+module.exports = __webpack_require__(/*! ./_collection */ 75)('Set', function(get){
+  return function Set(){ return get(this, arguments.length > 0 ? arguments[0] : undefined); };
+}, {
+  // 23.2.3.1 Set.prototype.add(value)
+  add: function add(value){
+    return strong.def(this, value = value === 0 ? 0 : value, value);
+  }
+}, strong);
+
+/***/ }),
+/* 123 */
+/*!******************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es7.set.to-json.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+// https://github.com/DavidBruant/Map-Set.prototype.toJSON
+var $export  = __webpack_require__(/*! ./_export */ 2);
+
+$export($export.P + $export.R, 'Set', {toJSON: __webpack_require__(/*! ./_collection-to-json */ 77)('Set')});
+
+/***/ }),
+/* 124 */
+/*!*********************************************!*\
+  !*** ./runtime/electron/renderer/Window.js ***!
+  \*********************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _from = __webpack_require__(/*! babel-runtime/core-js/array/from */ 52);
+
+var _from2 = _interopRequireDefault(_from);
+
+var _getPrototypeOf = __webpack_require__(/*! babel-runtime/core-js/object/get-prototype-of */ 53);
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 10);
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 11);
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = __webpack_require__(/*! babel-runtime/helpers/possibleConstructorReturn */ 54);
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = __webpack_require__(/*! babel-runtime/helpers/inherits */ 58);
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _global = __webpack_require__(/*! ../global */ 25);
+
+var _global2 = _interopRequireDefault(_global);
+
+var _index = __webpack_require__(/*! ../../../utils/index */ 12);
+
+var _index2 = __webpack_require__(/*! ../../../geometry/index */ 9);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _window$nodeRequire = window.nodeRequire('electron'),
+    ipcRenderer = _window$nodeRequire.ipcRenderer,
+    remote = _window$nodeRequire.remote;
+
+var url = window.nodeRequire('url');
+var BrowserWindow = remote.BrowserWindow;
+
+var currentWin = remote.getCurrentWindow();
+var defaultConfig = {
+    width: 800,
+    height: 500,
+    frame: true,
+    resizable: true,
+    show: true,
+    hasShadow: false,
+    autoHideMenuBar: true,
+    icon: 'favicon.ico',
+    webPreferences: {
+        nodeIntegration: false,
+        preload: window.nodeRequire.windowmanagerPath
+    }
+};
+var configMap = {
+    left: 'x',
+    top: 'y'
+};
+var acceptedEventHandlers = ['ready', 'drag-start', 'drag-before', 'drag-stop', 'dock-before', 'move', 'move-before', 'resize-before', 'close', 'show', 'hide', 'restore', 'minimize', 'maximize', 'focus', 'blur'];
+
+var Window = function (_EventHandler) {
+    (0, _inherits3.default)(Window, _EventHandler);
+
+    function Window(config) {
+        (0, _classCallCheck3.default)(this, Window);
+
+        var _this = (0, _possibleConstructorReturn3.default)(this, (Window.__proto__ || (0, _getPrototypeOf2.default)(Window)).call(this, acceptedEventHandlers));
+        // Call the parent constructor:
+
+
+        config = config || {}; // If no arguments are passed, assume we are creating a default blank window
+        var isArgConfig = config.webContents === undefined; // TODO: Improve checking of arguments.
+
+        if (isArgConfig) {
+            for (var prop in config) {
+                if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
+                    config[configMap[prop]] = config[prop];
+                    delete config[prop];
+                }
+            }
+            for (var _prop in defaultConfig) {
+                if (defaultConfig.hasOwnProperty(_prop)) {
+                    config[_prop] = config[_prop] != null ? config[_prop] : defaultConfig[_prop];
+                }
+            }
+            var _url = config.url;
+
+            delete config.url;
+
+            _this._window = new BrowserWindow(config);
+            _this._id = _this._window.id;
+            config.title = config.title == null ? String(_this._id) : config.title;
+            // The following logic works like (in logical if-order):
+            //       1. If url has 'http' or 'file' at start, then use url, no modification.
+            //       2. If url has no '/', take location.href and remove all stuff up till last /, then append url.
+            //       3. If url has '/':
+            //          a. If location.href has 'http', extract the root url (domain) and append url.
+            //          b. If location.href has 'file', take remote.getGlobal('workingDir'), and then append url.
+            // Resolve url:
+            if (!/^(file|http)/i.test(_url)) {
+                if (_url[0] !== '/') {
+                    _url = url.resolve(location.href, _url); // TODO: Is this unsafe with '..'?
+                } else if (/^http/i.test(location.href)) {
+                    _url = location.origin + _url; // TODO: Safe?
+                } else if (/^file/i.test(location.href)) {
+                    _url = remote.getGlobal('workingDir') + _url; // TODO: Safe?
+                }
+                // If can\'t determine url to load, then attempt to just load the url.
+            }
+            _this._window._setFrameInit(config.frame);
+            _this._window.loadURL(_url);
+            _this._window.setTitle(config.title);
+        } else {
+            _this._window = config;
+            _this._id = _this._window.id;
+        }
+        _global2.default._windows.set(_this._id, _this);
+
+        // Setup _window event listeners:
+        // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.
+        var thisWindow = _this;
+
+        function _onmove() {
+            thisWindow.emit('move'); // TODO: Pass what position it is at.
+        }
+        _this._window.on('move', _onmove);
+
+        function _onminimize() {
+            thisWindow.emit('minimize'); // TODO: Pass what position it is at.
+        }
+        _this._window.on('minimize', _onminimize);
+
+        function _onclose() {
+            window.removeEventListener('beforeunload', _oncurrclose); // eslint-disable-line no-use-before-define
+            _global2.default._windows.delete(thisWindow._id);
+            thisWindow._isClosed = true;
+            thisWindow.emit('close');
+            thisWindow._window = undefined;
+            // TODO: Clean up ALL listeners
+        }
+
+        function _oncurrclose() {
+            _global2.default._windows.delete(thisWindow._id);
+            thisWindow._window.removeListener('move', _onmove);
+            thisWindow._window.removeListener('close', _onclose);
+            thisWindow._window.removeListener('minimize', _onminimize);
+        }
+
+        // Register _oncurrclose when page changes or window closes to clean up listeners:
+        window.addEventListener('beforeunload', _oncurrclose);
+
+        // If window isn't currentWin, execute local event listeners:
+        if (_this._window !== currentWin) {
+            _this._window.on('close', _onclose);
+        }
+
+        // Setup event listeners:
+        _this._window.on('show', function () {
+            thisWindow.emit('show');
+        });
+        _this._window.on('hide', function () {
+            thisWindow.emit('hide');
+        });
+        _this._window.on('restore', function () {
+            thisWindow.emit('restore');
+        });
+        _this._window.on('minimize', function () {
+            thisWindow.emit('minimize');
+        });
+        _this._window.on('maximize', function () {
+            thisWindow.emit('maximize');
+        });
+        _this._window.on('focus', function () {
+            thisWindow.emit('focus');
+        });
+        _this._window.on('blur', function () {
+            thisWindow.emit('blur');
+        });
+
+        _this._isClosed = false;
+        _this._ready = true;
+        if (isArgConfig) {
+            _this._window._notifyReady();
+        }
+        return _this;
+    }
+
+    (0, _createClass3.default)(Window, [{
+        key: 'isReady',
+        value: function isReady() {
+            return this._window !== undefined && !this._isClosed();
+        }
+    }, {
+        key: 'onReady',
+        value: function onReady(callback) {
+            if (this.isClosed()) {
+                throw new Error('onReady can\'t be called on a closed window');
+            }
+            if (this.isReady()) {
+                return callback.call(this);
+            }
+
+            this.once('ready', callback);
+        }
+    }, {
+        key: 'isClosed',
+        value: function isClosed() {
+            return this._isClosed;
+        }
+    }, {
+        key: 'getPosition',
+        value: function getPosition() {
+            var pos = this._window.getPosition();
+
+            return new _index2.Position(pos[0], pos[1]);
+        }
+    }, {
+        key: 'getWidth',
+        value: function getWidth() {
+            var size = this._window.getSize();
+
+            return size[0];
+        }
+    }, {
+        key: 'getHeight',
+        value: function getHeight() {
+            var size = this._window.getSize();
+
+            return size[1];
+        }
+    }, {
+        key: 'getSize',
+        value: function getSize() {
+            var size = this._window.getSize();
+
+            return new _index2.Position(size[0], size[1]);
+        }
+    }, {
+        key: 'getBounds',
+        value: function getBounds() {
+            var bounds = this._window.getBounds();
+
+            return new _index2.BoundingBox(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
+        }
+    }, {
+        key: 'getTitle',
+        value: function getTitle() {
+            return this._window.getTitle();
+        }
+    }, {
+        key: 'setTitle',
+        value: function setTitle(newTitle) {
+            if (!newTitle) {
+                throw new Error('setTitle requires one argument of type String');
+            }
+            this._window.setTitle(newTitle);
+        }
+    }, {
+        key: 'isHidden',
+        value: function isHidden() {
+            return !this.isShown();
+        }
+    }, {
+        key: 'isShown',
+        value: function isShown() {
+            return this._window.isVisible();
+        }
+    }, {
+        key: 'isMinimized',
+        value: function isMinimized() {
+            return this._window.isMinimized();
+        }
+    }, {
+        key: 'isMaximized',
+        value: function isMaximized() {
+            return this._window.isMaximized();
+        }
+    }, {
+        key: 'isRestored',
+        value: function isRestored() {
+            return this.isShown() && !this.isMinimized() && !this.isMaximized();
+        }
+    }, {
+        key: 'close',
+        value: function close(callback) {
+            if (this.isClosed()) {
+                return callback && callback();
+            }
+
+            this._window.close();
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'minimize',
+        value: function minimize(callback) {
+            if (!this._ready) {
+                throw new Error('minimize can\'t be called on an unready window');
+            }
+
+            this._window._dockMinimize();
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'maximize',
+        value: function maximize(callback) {
+            if (!this._ready) {
+                throw new Error('maximize can\'t be called on an unready window');
+            }
+
+            this._window.maximize();
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'show',
+        value: function show(callback) {
+            if (!this._ready) {
+                throw new Error('show can\'t be called on an unready window');
+            }
+
+            this._window._dockShow();
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'hide',
+        value: function hide(callback) {
+            if (!this._ready) {
+                throw new Error('hide can\'t be called on an unready window');
+            }
+
+            this._window._dockHide();
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'restore',
+        value: function restore(callback) {
+            if (!this._ready) {
+                throw new Error('restore can\'t be called on an unready window');
+            }
+
+            this._window.restore();
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'resizable',
+        value: function resizable(_resizable, callback) {
+            if (!this._ready) {
+                throw new Error('restore can\'t be called on an unready window');
+            }
+
+            this._window.setResizable();
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'bringToFront',
+        value: function bringToFront(callback) {
+            if (!this._ready) {
+                throw new Error('bringToFront can\'t be called on an unready window');
+            }
+
+            this._window._dockFocus();
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'focus',
+        value: function focus(callback) {
+            if (!this._ready) {
+                throw new Error('focus can\'t be called on an unready window');
+            }
+
+            this._window.focus();
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'resizeTo',
+        value: function resizeTo(width, height, callback) {
+            if (!this._ready) {
+                throw new Error('resizeTo can\'t be called on an unready window');
+            }
+            var size = new _index2.Position(width, height);
+
+            this._window.setSize(size.left, size.top);
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'moveTo',
+        value: function moveTo(left, top, callback) {
+            if (!this._ready) {
+                throw new Error('moveTo can\'t be called on an unready window');
+            }
+            var pos = new _index2.Position(left, top);
+
+            this._window._dockMoveTo(pos.left, pos.top);
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'moveBy',
+        value: function moveBy(deltaLeft, deltaTop, callback) {
+            if (!this._ready) {
+                throw new Error('moveBy can\'t be called on an unready window');
+            }
+            var bounds = this.getBounds();
+            var deltaPos = new _index2.Position(deltaLeft, deltaTop);
+
+            this._window._dockMoveTo(bounds.left + deltaPos.left, bounds.top + deltaPos.top);
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'setSize',
+        value: function setSize(width, height, callback) {
+            if (!this._ready) {
+                throw new Error('setSize can\'t be called on an unready window');
+            }
+            var size = new _index2.Size(width, height);
+
+            this._window.setSize(size.left, size.top);
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'setBounds',
+        value: function setBounds(left, top, right, bottom, callback) {
+            if (!this._ready) {
+                throw new Error('resizeTo can\'t be called on an unready window');
+            }
+            var bounds = new _index2.BoundingBox(left, top, right, bottom);
+
+            this._window.setBounds({
+                x: bounds.left,
+                y: bounds.top,
+                width: bounds.getWidth(),
+                height: bounds.getHeight()
+            });
+            if (callback) {
+                callback();
+            }
+        }
+    }, {
+        key: 'dock',
+        value: function dock(other) {
+            this._window.dock(other._window.id);
+        }
+    }, {
+        key: 'undock',
+        value: function undock() {
+            this._window.undock();
+        }
+    }], [{
+        key: 'getAll',
+        value: function getAll() {
+            return (0, _from2.default)(_global2.default._windows.values());
+        }
+    }, {
+        key: 'getByID',
+        value: function getByID(id) {
+            return _global2.default._windows.get(id);
+        }
+    }, {
+        key: 'getMain',
+        value: function getMain(id) {
+            return _global2.default._windows.get(BrowserWindow._getMainID());
+        }
+    }, {
+        key: 'getCurrent',
+        value: function getCurrent() {
+            return Window.current;
+        }
+    }]);
+    return Window;
+}(_index.EventHandler);
+
+// Handle current window in this context:
+
+
+Window.current = new Window(currentWin);
+
+(function () {
+    // Setup handlers on this window:
+    var wX = 0;
+    var wY = 0;
+    var dragging = false;
+
+    window.addEventListener('focus', function () {
+        Window.current.bringToFront();
+    });
+
+    window.addEventListener('mousedown', function onDragStart(event) {
+        if (event.target.classList && event.target.classList.contains('window-drag')) {
+            dragging = true;
+            wX = event.screenX;
+            wY = event.screenY;
+            Window.current._window._dragStart();
+        }
+    });
+
+    window.addEventListener('touchstart', function (event) {
+        if (event.target.classList && event.target.classList.contains('window-drag')) {
+            event.preventDefault();
+            dragging = true;
+            wX = event.touches[0].screenX;
+            wY = event.touches[0].screenY;
+            Window.current._window._dragStart();
+        }
+    });
+
+    window.addEventListener('mousemove', function (event) {
+        if (dragging) {
+            // Stop text selection:
+            window.getSelection().removeAllRanges();
+            // Drag:
+            Window.current._window._dragBy(event.screenX - wX, event.screenY - wY);
+        }
+    });
+
+    window.addEventListener('touchmove', function (event) {
+        if (dragging) {
+            event.preventDefault();
+            // Stop text selection:
+            window.getSelection().removeAllRanges();
+            // Drag:
+            Window.current._window._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
+        }
+    });
+
+    window.addEventListener('mouseup', function (event) {
+        if (dragging) {
+            dragging = false;
+            Window.current._window._dragStop();
+        }
+    });
+
+    window.addEventListener('touchend', function (event) {
+        if (dragging) {
+            event.preventDefault();
+            dragging = false;
+            Window.current._window._dragStop();
+        }
+    });
+
+    // Add context menu:
+    var Menu = remote.Menu;
+    var MenuItem = remote.MenuItem;
+    var rightClickPosition = null;
+    var menu = new Menu();
+
+    menu.append(new MenuItem({
+        label: 'Reload',
+        accelerator: 'CmdOrCtrl+R',
+        click: function click() {
+            Window.current._window.reload();
+        }
+    }));
+    menu.append(new MenuItem({
+        label: 'Reload app and restart children',
+        click: function click() {
+            // Close ALL windows:
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = (0, _getIterator3.default)(_global2.default._windows.values()), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var _window = _step.value;
+
+                    _window.close();
+                }
+                // Relaunch app:
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            remote.app.relaunch();
+            remote.app.exit(0);
+        }
+    }));
+    menu.append(new MenuItem({ type: 'separator' }));
+    menu.append(new MenuItem({
+        label: 'Inspect Element',
+        accelerator: 'CmdOrCtrl+Shift+I',
+        click: function click() {
+            Window.current._window.inspectElement(rightClickPosition.x, rightClickPosition.y);
+        }
+    }));
+
+    window.addEventListener('contextmenu', function (event) {
+        event.preventDefault();
+        rightClickPosition = { x: event.x, y: event.y };
+        menu.popup(Window.current._window);
+    }, false);
+})();
+
+function resolveWindowWithID(id) {
+    var window = _global2.default._windows.get(id);
+
+    if (window) return window;
+
+    // Window isn't registered yet in windowmanager, so do so:
+    var electronWin = BrowserWindow.fromId(id);
+
+    if (electronWin !== null) {
+        return new Window(electronWin);
+    }
+}
+
+// Add other browser windows to global windows:
+var _iteratorNormalCompletion2 = true;
+var _didIteratorError2 = false;
+var _iteratorError2 = undefined;
+
+try {
+    for (var _iterator2 = (0, _getIterator3.default)(BrowserWindow.getAllWindows()), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var other = _step2.value;
+
+        resolveWindowWithID(other.id);
+    }
+} catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+} finally {
+    try {
+        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+        }
+    } finally {
+        if (_didIteratorError2) {
+            throw _iteratorError2;
+        }
+    }
+}
+
+ipcRenderer.on('window-create', function (event, otherID) {
+    _global2.default.emit('window-create', resolveWindowWithID(otherID));
+});
+
+_global2.default.Window = Window;
+exports.default = Window;
+module.exports = exports['default'];
+
+/***/ }),
+/* 125 */
+/*!********************************************************!*\
+  !*** ../node_modules/core-js/library/fn/array/from.js ***!
+  \********************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../../modules/es6.string.iterator */ 24);
+__webpack_require__(/*! ../../modules/es6.array.from */ 126);
+module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Array.from;
+
+/***/ }),
+/* 126 */
+/*!*****************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es6.array.from.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var ctx            = __webpack_require__(/*! ./_ctx */ 16)
+  , $export        = __webpack_require__(/*! ./_export */ 2)
+  , toObject       = __webpack_require__(/*! ./_to-object */ 23)
+  , call           = __webpack_require__(/*! ./_iter-call */ 73)
+  , isArrayIter    = __webpack_require__(/*! ./_is-array-iter */ 74)
+  , toLength       = __webpack_require__(/*! ./_to-length */ 30)
+  , createProperty = __webpack_require__(/*! ./_create-property */ 127)
+  , getIterFn      = __webpack_require__(/*! ./core.get-iterator-method */ 43);
+
+$export($export.S + $export.F * !__webpack_require__(/*! ./_iter-detect */ 128)(function(iter){ Array.from(iter); }), 'Array', {
+  // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
+  from: function from(arrayLike/*, mapfn = undefined, thisArg = undefined*/){
+    var O       = toObject(arrayLike)
+      , C       = typeof this == 'function' ? this : Array
+      , aLen    = arguments.length
+      , mapfn   = aLen > 1 ? arguments[1] : undefined
+      , mapping = mapfn !== undefined
+      , index   = 0
+      , iterFn  = getIterFn(O)
+      , length, result, step, iterator;
+    if(mapping)mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
+    // if object isn't iterable or it's array with default iterator - use simple case
+    if(iterFn != undefined && !(C == Array && isArrayIter(iterFn))){
+      for(iterator = iterFn.call(O), result = new C; !(step = iterator.next()).done; index++){
+        createProperty(result, index, mapping ? call(iterator, mapfn, [step.value, index], true) : step.value);
+      }
+    } else {
+      length = toLength(O.length);
+      for(result = new C(length); length > index; index++){
+        createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
+      }
+    }
+    result.length = index;
+    return result;
+  }
+});
+
+
+/***/ }),
+/* 127 */
+/*!*******************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_create-property.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $defineProperty = __webpack_require__(/*! ./_object-dp */ 4)
+  , createDesc      = __webpack_require__(/*! ./_property-desc */ 21);
+
+module.exports = function(object, index, value){
+  if(index in object)$defineProperty.f(object, index, createDesc(0, value));
+  else object[index] = value;
+};
+
+/***/ }),
+/* 128 */
+/*!***************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_iter-detect.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var ITERATOR     = __webpack_require__(/*! ./_wks */ 1)('iterator')
+  , SAFE_CLOSING = false;
+
+try {
+  var riter = [7][ITERATOR]();
+  riter['return'] = function(){ SAFE_CLOSING = true; };
+  Array.from(riter, function(){ throw 2; });
+} catch(e){ /* empty */ }
+
+module.exports = function(exec, skipClosing){
+  if(!skipClosing && !SAFE_CLOSING)return false;
+  var safe = false;
+  try {
+    var arr  = [7]
+      , iter = arr[ITERATOR]();
+    iter.next = function(){ return {done: safe = true}; };
+    arr[ITERATOR] = function(){ return iter; };
+    exec(arr);
+  } catch(e){ /* empty */ }
+  return safe;
+};
+
+/***/ }),
+/* 129 */
+/*!*********************************************************************!*\
+  !*** ../node_modules/core-js/library/fn/object/get-prototype-of.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../../modules/es6.object.get-prototype-of */ 130);
+module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Object.getPrototypeOf;
+
+/***/ }),
+/* 130 */
+/*!******************************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es6.object.get-prototype-of.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.9 Object.getPrototypeOf(O)
+var toObject        = __webpack_require__(/*! ./_to-object */ 23)
+  , $getPrototypeOf = __webpack_require__(/*! ./_object-gpo */ 68);
+
+__webpack_require__(/*! ./_object-sap */ 78)('getPrototypeOf', function(){
+  return function getPrototypeOf(it){
+    return $getPrototypeOf(toObject(it));
+  };
+});
+
+/***/ }),
+/* 131 */
+/*!****************************************************************!*\
+  !*** ../node_modules/babel-runtime/core-js/symbol/iterator.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol/iterator */ 132), __esModule: true };
+
+/***/ }),
+/* 132 */
+/*!*************************************************************!*\
+  !*** ../node_modules/core-js/library/fn/symbol/iterator.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../../modules/es6.string.iterator */ 24);
+__webpack_require__(/*! ../../modules/web.dom.iterable */ 27);
+module.exports = __webpack_require__(/*! ../../modules/_wks-ext */ 55).f('iterator');
+
+/***/ }),
+/* 133 */
+/*!*******************************************************!*\
+  !*** ../node_modules/babel-runtime/core-js/symbol.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol */ 134), __esModule: true };
+
+/***/ }),
+/* 134 */
+/*!**********************************************************!*\
+  !*** ../node_modules/core-js/library/fn/symbol/index.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../../modules/es6.symbol */ 135);
+__webpack_require__(/*! ../../modules/es6.object.to-string */ 47);
+__webpack_require__(/*! ../../modules/es7.symbol.async-iterator */ 139);
+__webpack_require__(/*! ../../modules/es7.symbol.observable */ 140);
+module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Symbol;
+
+/***/ }),
+/* 135 */
+/*!*************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es6.symbol.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// ECMAScript 6 symbols shim
+var global         = __webpack_require__(/*! ./_global */ 3)
+  , has            = __webpack_require__(/*! ./_has */ 15)
+  , DESCRIPTORS    = __webpack_require__(/*! ./_descriptors */ 6)
+  , $export        = __webpack_require__(/*! ./_export */ 2)
+  , redefine       = __webpack_require__(/*! ./_redefine */ 66)
+  , META           = __webpack_require__(/*! ./_meta */ 49).KEY
+  , $fails         = __webpack_require__(/*! ./_fails */ 17)
+  , shared         = __webpack_require__(/*! ./_shared */ 41)
+  , setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 32)
+  , uid            = __webpack_require__(/*! ./_uid */ 31)
+  , wks            = __webpack_require__(/*! ./_wks */ 1)
+  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 55)
+  , wksDefine      = __webpack_require__(/*! ./_wks-define */ 56)
+  , keyOf          = __webpack_require__(/*! ./_keyof */ 136)
+  , enumKeys       = __webpack_require__(/*! ./_enum-keys */ 137)
+  , isArray        = __webpack_require__(/*! ./_is-array */ 76)
+  , anObject       = __webpack_require__(/*! ./_an-object */ 8)
+  , toIObject      = __webpack_require__(/*! ./_to-iobject */ 13)
+  , toPrimitive    = __webpack_require__(/*! ./_to-primitive */ 38)
+  , createDesc     = __webpack_require__(/*! ./_property-desc */ 21)
+  , _create        = __webpack_require__(/*! ./_object-create */ 29)
+  , gOPNExt        = __webpack_require__(/*! ./_object-gopn-ext */ 138)
+  , $GOPD          = __webpack_require__(/*! ./_object-gopd */ 82)
+  , $DP            = __webpack_require__(/*! ./_object-dp */ 4)
+  , $keys          = __webpack_require__(/*! ./_object-keys */ 22)
+  , gOPD           = $GOPD.f
+  , dP             = $DP.f
+  , gOPN           = gOPNExt.f
+  , $Symbol        = global.Symbol
+  , $JSON          = global.JSON
+  , _stringify     = $JSON && $JSON.stringify
+  , PROTOTYPE      = 'prototype'
+  , HIDDEN         = wks('_hidden')
+  , TO_PRIMITIVE   = wks('toPrimitive')
+  , isEnum         = {}.propertyIsEnumerable
+  , SymbolRegistry = shared('symbol-registry')
+  , AllSymbols     = shared('symbols')
+  , OPSymbols      = shared('op-symbols')
+  , ObjectProto    = Object[PROTOTYPE]
+  , USE_NATIVE     = typeof $Symbol == 'function'
+  , QObject        = global.QObject;
+// Don't use setters in Qt Script, https://github.com/zloirock/core-js/issues/173
+var setter = !QObject || !QObject[PROTOTYPE] || !QObject[PROTOTYPE].findChild;
+
+// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
+var setSymbolDesc = DESCRIPTORS && $fails(function(){
+  return _create(dP({}, 'a', {
+    get: function(){ return dP(this, 'a', {value: 7}).a; }
+  })).a != 7;
+}) ? function(it, key, D){
+  var protoDesc = gOPD(ObjectProto, key);
+  if(protoDesc)delete ObjectProto[key];
+  dP(it, key, D);
+  if(protoDesc && it !== ObjectProto)dP(ObjectProto, key, protoDesc);
+} : dP;
+
+var wrap = function(tag){
+  var sym = AllSymbols[tag] = _create($Symbol[PROTOTYPE]);
+  sym._k = tag;
+  return sym;
+};
+
+var isSymbol = USE_NATIVE && typeof $Symbol.iterator == 'symbol' ? function(it){
+  return typeof it == 'symbol';
+} : function(it){
+  return it instanceof $Symbol;
+};
+
+var $defineProperty = function defineProperty(it, key, D){
+  if(it === ObjectProto)$defineProperty(OPSymbols, key, D);
+  anObject(it);
+  key = toPrimitive(key, true);
+  anObject(D);
+  if(has(AllSymbols, key)){
+    if(!D.enumerable){
+      if(!has(it, HIDDEN))dP(it, HIDDEN, createDesc(1, {}));
+      it[HIDDEN][key] = true;
+    } else {
+      if(has(it, HIDDEN) && it[HIDDEN][key])it[HIDDEN][key] = false;
+      D = _create(D, {enumerable: createDesc(0, false)});
+    } return setSymbolDesc(it, key, D);
+  } return dP(it, key, D);
+};
+var $defineProperties = function defineProperties(it, P){
+  anObject(it);
+  var keys = enumKeys(P = toIObject(P))
+    , i    = 0
+    , l = keys.length
+    , key;
+  while(l > i)$defineProperty(it, key = keys[i++], P[key]);
+  return it;
+};
+var $create = function create(it, P){
+  return P === undefined ? _create(it) : $defineProperties(_create(it), P);
+};
+var $propertyIsEnumerable = function propertyIsEnumerable(key){
+  var E = isEnum.call(this, key = toPrimitive(key, true));
+  if(this === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key))return false;
+  return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
+};
+var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key){
+  it  = toIObject(it);
+  key = toPrimitive(key, true);
+  if(it === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key))return;
+  var D = gOPD(it, key);
+  if(D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key]))D.enumerable = true;
+  return D;
+};
+var $getOwnPropertyNames = function getOwnPropertyNames(it){
+  var names  = gOPN(toIObject(it))
+    , result = []
+    , i      = 0
+    , key;
+  while(names.length > i){
+    if(!has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META)result.push(key);
+  } return result;
+};
+var $getOwnPropertySymbols = function getOwnPropertySymbols(it){
+  var IS_OP  = it === ObjectProto
+    , names  = gOPN(IS_OP ? OPSymbols : toIObject(it))
+    , result = []
+    , i      = 0
+    , key;
+  while(names.length > i){
+    if(has(AllSymbols, key = names[i++]) && (IS_OP ? has(ObjectProto, key) : true))result.push(AllSymbols[key]);
+  } return result;
+};
+
+// 19.4.1.1 Symbol([description])
+if(!USE_NATIVE){
+  $Symbol = function Symbol(){
+    if(this instanceof $Symbol)throw TypeError('Symbol is not a constructor!');
+    var tag = uid(arguments.length > 0 ? arguments[0] : undefined);
+    var $set = function(value){
+      if(this === ObjectProto)$set.call(OPSymbols, value);
+      if(has(this, HIDDEN) && has(this[HIDDEN], tag))this[HIDDEN][tag] = false;
+      setSymbolDesc(this, tag, createDesc(1, value));
+    };
+    if(DESCRIPTORS && setter)setSymbolDesc(ObjectProto, tag, {configurable: true, set: $set});
+    return wrap(tag);
+  };
+  redefine($Symbol[PROTOTYPE], 'toString', function toString(){
+    return this._k;
+  });
+
+  $GOPD.f = $getOwnPropertyDescriptor;
+  $DP.f   = $defineProperty;
+  __webpack_require__(/*! ./_object-gopn */ 81).f = gOPNExt.f = $getOwnPropertyNames;
+  __webpack_require__(/*! ./_object-pie */ 57).f  = $propertyIsEnumerable;
+  __webpack_require__(/*! ./_object-gops */ 80).f = $getOwnPropertySymbols;
+
+  if(DESCRIPTORS && !__webpack_require__(/*! ./_library */ 37)){
+    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
+  }
+
+  wksExt.f = function(name){
+    return wrap(wks(name));
+  }
+}
+
+$export($export.G + $export.W + $export.F * !USE_NATIVE, {Symbol: $Symbol});
+
+for(var symbols = (
+  // 19.4.2.2, 19.4.2.3, 19.4.2.4, 19.4.2.6, 19.4.2.8, 19.4.2.9, 19.4.2.10, 19.4.2.11, 19.4.2.12, 19.4.2.13, 19.4.2.14
+  'hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables'
+).split(','), i = 0; symbols.length > i; )wks(symbols[i++]);
+
+for(var symbols = $keys(wks.store), i = 0; symbols.length > i; )wksDefine(symbols[i++]);
+
+$export($export.S + $export.F * !USE_NATIVE, 'Symbol', {
+  // 19.4.2.1 Symbol.for(key)
+  'for': function(key){
+    return has(SymbolRegistry, key += '')
+      ? SymbolRegistry[key]
+      : SymbolRegistry[key] = $Symbol(key);
+  },
+  // 19.4.2.5 Symbol.keyFor(sym)
+  keyFor: function keyFor(key){
+    if(isSymbol(key))return keyOf(SymbolRegistry, key);
+    throw TypeError(key + ' is not a symbol!');
+  },
+  useSetter: function(){ setter = true; },
+  useSimple: function(){ setter = false; }
+});
+
+$export($export.S + $export.F * !USE_NATIVE, 'Object', {
+  // 19.1.2.2 Object.create(O [, Properties])
+  create: $create,
+  // 19.1.2.4 Object.defineProperty(O, P, Attributes)
+  defineProperty: $defineProperty,
+  // 19.1.2.3 Object.defineProperties(O, Properties)
+  defineProperties: $defineProperties,
+  // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
+  getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
+  // 19.1.2.7 Object.getOwnPropertyNames(O)
+  getOwnPropertyNames: $getOwnPropertyNames,
+  // 19.1.2.8 Object.getOwnPropertySymbols(O)
+  getOwnPropertySymbols: $getOwnPropertySymbols
+});
+
+// 24.3.2 JSON.stringify(value [, replacer [, space]])
+$JSON && $export($export.S + $export.F * (!USE_NATIVE || $fails(function(){
+  var S = $Symbol();
+  // MS Edge converts symbol values to JSON as {}
+  // WebKit converts symbol values to JSON as null
+  // V8 throws on boxed symbols
+  return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
+})), 'JSON', {
+  stringify: function stringify(it){
+    if(it === undefined || isSymbol(it))return; // IE8 returns string on undefined
+    var args = [it]
+      , i    = 1
+      , replacer, $replacer;
+    while(arguments.length > i)args.push(arguments[i++]);
+    replacer = args[1];
+    if(typeof replacer == 'function')$replacer = replacer;
+    if($replacer || !isArray(replacer))replacer = function(key, value){
+      if($replacer)value = $replacer.call(this, key, value);
+      if(!isSymbol(value))return value;
+    };
+    args[1] = replacer;
+    return _stringify.apply($JSON, args);
+  }
+});
+
+// 19.4.3.4 Symbol.prototype[@@toPrimitive](hint)
+$Symbol[PROTOTYPE][TO_PRIMITIVE] || __webpack_require__(/*! ./_hide */ 7)($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
+// 19.4.3.5 Symbol.prototype[@@toStringTag]
+setToStringTag($Symbol, 'Symbol');
+// 20.2.1.9 Math[@@toStringTag]
+setToStringTag(Math, 'Math', true);
+// 24.3.3 JSON[@@toStringTag]
+setToStringTag(global.JSON, 'JSON', true);
+
+/***/ }),
+/* 136 */
+/*!*********************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_keyof.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var getKeys   = __webpack_require__(/*! ./_object-keys */ 22)
+  , toIObject = __webpack_require__(/*! ./_to-iobject */ 13);
+module.exports = function(object, el){
+  var O      = toIObject(object)
+    , keys   = getKeys(O)
+    , length = keys.length
+    , index  = 0
+    , key;
+  while(length > index)if(O[key = keys[index++]] === el)return key;
+};
+
+/***/ }),
+/* 137 */
+/*!*************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_enum-keys.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+// all enumerable object keys, includes symbols
+var getKeys = __webpack_require__(/*! ./_object-keys */ 22)
+  , gOPS    = __webpack_require__(/*! ./_object-gops */ 80)
+  , pIE     = __webpack_require__(/*! ./_object-pie */ 57);
+module.exports = function(it){
+  var result     = getKeys(it)
+    , getSymbols = gOPS.f;
+  if(getSymbols){
+    var symbols = getSymbols(it)
+      , isEnum  = pIE.f
+      , i       = 0
+      , key;
+    while(symbols.length > i)if(isEnum.call(it, key = symbols[i++]))result.push(key);
+  } return result;
+};
+
+/***/ }),
+/* 138 */
+/*!*******************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_object-gopn-ext.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
+var toIObject = __webpack_require__(/*! ./_to-iobject */ 13)
+  , gOPN      = __webpack_require__(/*! ./_object-gopn */ 81).f
+  , toString  = {}.toString;
+
+var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
+  ? Object.getOwnPropertyNames(window) : [];
+
+var getWindowNames = function(it){
+  try {
+    return gOPN(it);
+  } catch(e){
+    return windowNames.slice();
+  }
+};
+
+module.exports.f = function getOwnPropertyNames(it){
+  return windowNames && toString.call(it) == '[object Window]' ? getWindowNames(it) : gOPN(toIObject(it));
+};
+
+
+/***/ }),
+/* 139 */
+/*!****************************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es7.symbol.async-iterator.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ./_wks-define */ 56)('asyncIterator');
+
+/***/ }),
+/* 140 */
+/*!************************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es7.symbol.observable.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ./_wks-define */ 56)('observable');
+
+/***/ }),
+/* 141 */
+/*!************************************************************************!*\
+  !*** ../node_modules/babel-runtime/core-js/object/set-prototype-of.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/set-prototype-of */ 142), __esModule: true };
+
+/***/ }),
+/* 142 */
+/*!*********************************************************************!*\
+  !*** ../node_modules/core-js/library/fn/object/set-prototype-of.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../../modules/es6.object.set-prototype-of */ 143);
+module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Object.setPrototypeOf;
+
+/***/ }),
+/* 143 */
+/*!******************************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es6.object.set-prototype-of.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.3.19 Object.setPrototypeOf(O, proto)
+var $export = __webpack_require__(/*! ./_export */ 2);
+$export($export.S, 'Object', {setPrototypeOf: __webpack_require__(/*! ./_set-proto */ 144).set});
+
+/***/ }),
+/* 144 */
+/*!*************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/_set-proto.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Works with __proto__ only. Old v8 can't work with null proto objects.
+/* eslint-disable no-proto */
+var isObject = __webpack_require__(/*! ./_is-object */ 14)
+  , anObject = __webpack_require__(/*! ./_an-object */ 8);
+var check = function(O, proto){
+  anObject(O);
+  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
+};
+module.exports = {
+  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
+    function(test, buggy, set){
+      try {
+        set = __webpack_require__(/*! ./_ctx */ 16)(Function.call, __webpack_require__(/*! ./_object-gopd */ 82).f(Object.prototype, '__proto__').set, 2);
+        set(test, []);
+        buggy = !(test instanceof Array);
+      } catch(e){ buggy = true; }
+      return function setPrototypeOf(O, proto){
+        check(O, proto);
+        if(buggy)O.__proto__ = proto;
+        else set(O, proto);
+        return O;
+      };
+    }({}, false) : undefined),
+  check: check
+};
+
+/***/ }),
+/* 145 */
+/*!***********************************************************!*\
+  !*** ../node_modules/core-js/library/fn/object/create.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../../modules/es6.object.create */ 146);
+var $Object = __webpack_require__(/*! ../../modules/_core */ 0).Object;
+module.exports = function create(P, D){
+  return $Object.create(P, D);
+};
+
+/***/ }),
+/* 146 */
+/*!********************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es6.object.create.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $export = __webpack_require__(/*! ./_export */ 2)
+// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+$export($export.S, 'Object', {create: __webpack_require__(/*! ./_object-create */ 29)});
+
+/***/ }),
+/* 147 */
+/*!**********************************!*\
+  !*** ./runtime/openfin/index.js ***!
+  \**********************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _set = __webpack_require__(/*! babel-runtime/core-js/set */ 51);
+
+var _set2 = _interopRequireDefault(_set);
+
+var _map = __webpack_require__(/*! babel-runtime/core-js/map */ 33);
+
+var _map2 = _interopRequireDefault(_map);
+
+var _global = __webpack_require__(/*! ./global */ 83);
+
+var _global2 = _interopRequireDefault(_global);
+
+var _Window = __webpack_require__(/*! ./Window */ 150);
+
+var _Window2 = _interopRequireDefault(_Window);
+
+var _index = __webpack_require__(/*! ../../geometry/index */ 9);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var APP_UUID = 'app_uuid'; /* global fin */
+
+
+_global2.default.monitors = new _index.CollisionMesh([]);
+
+function updateMonitors(monitorInfo) {
+    var boxes = [];
+
+    // Add the primary monitor:
+    boxes.push(new _index.BoundingBox(monitorInfo.primaryMonitor.monitorRect));
+
+    // Add the secondary monitors:
+    for (var monitor in monitorInfo.nonPrimaryMonitors) {
+        boxes.push(new _index.BoundingBox(monitor.monitorRect));
+    }
+
+    // Update monitors CollisionMesh:
+    _global2.default.monitors.boxes = boxes;
+}
+
+// Set up system to update monitors:
+fin.desktop.System.getMonitorInfo(updateMonitors);
+fin.desktop.System.addEventListener('monitor-info-changed', updateMonitors);
+
+_global2.default.messagebus = function () {
+    var wrappedListeners = {};
+    var windowWrappedListeners = {};
+
+    function wrapListener(listener) {
+        return function (message) {
+            var window = _Window2.default.getByID(message.winID);
+
+            // Don't execute listeners when the sender is the same as the listener:
+            if (window._id === _Window2.default.current._id) {
+                return;
+            }
+
+            listener.apply(window, message.args);
+            // TODO: Send response if response is expected
+        };
+    }
+
+    return {
+        send: function send(eventName) {
+            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                args[_key - 1] = arguments[_key];
+            }
+
+            // TODO: Check if ready? Dunno if needed
+            var curWin = _Window2.default.current;
+            var message = {
+                id: 0, // TODO: Randomly generate a unique id to avoid collision!
+                winID: curWin._id,
+                event: eventName,
+                args: args // If the first arg is a window, it gets removed later.
+            };
+
+            if (args.length > 0 && args[0] instanceof _Window2.default) {
+                // Remove window from args in message:
+                var window = args.shift(); // args is by reference in message currently
+
+                // Don't execute listeners when the sender is the same as the listener:
+                if (window._id === curWin._id) {
+                    return;
+                }
+
+                fin.desktop.InterApplicationBus.send(_Window2.default.current._window[APP_UUID], window._id, eventName, message);
+            } else {
+                // TODO: Possibly switch the below out for a loop through all windows?
+                fin.desktop.InterApplicationBus.send(_Window2.default.current._window[APP_UUID], eventName, message);
+            }
+        },
+        on: function on(eventName, window, listener) {
+            if (listener === undefined) {
+                listener = window;
+                window = undefined;
+            }
+
+            var onMessage = wrapListener(listener);
+
+            if (window !== undefined) {
+                // Don't execute listeners when the sender is the same as the listener:
+                if (window._id === _Window2.default.current._id) {
+                    return;
+                }
+
+                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
+
+                winLisGroup[eventName] = winLisGroup[eventName] || new _map2.default();
+                winLisGroup[eventName].set(listener, onMessage);
+                fin.desktop.InterApplicationBus.subscribe(_Window2.default.current._window[APP_UUID], window._id, eventName, onMessage);
+                // TODO: On window close, clear subscriptions in windowWrappedListeners!
+            } else {
+                wrappedListeners[eventName] = wrappedListeners[eventName] || new _map2.default();
+                wrappedListeners[eventName].set(listener, onMessage);
+                fin.desktop.InterApplicationBus.subscribe(_Window2.default.current._window[APP_UUID], eventName, onMessage);
+            }
+        },
+        off: function off(eventName, window, listener) {
+            if (listener === undefined) {
+                listener = window;
+                window = undefined;
+            }
+
+            if (window !== undefined) {
+                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
+
+                winLisGroup[eventName] = winLisGroup[eventName] || new _map2.default();
+                // delete on a Map returns the deleted value (desired onMessage):
+                fin.desktop.InterApplicationBus.unsubscribe(_Window2.default.current._window[APP_UUID], window._window._id, eventName, winLisGroup[eventName].delete(listener));
+            } else {
+                wrappedListeners[eventName] = wrappedListeners[eventName] || new _set2.default();
+                // delete on a Map returns the deleted value (desired onMessage):
+                fin.desktop.InterApplicationBus.unsubscribe(_Window2.default.current._window[APP_UUID], eventName, wrappedListeners[eventName].delete(listener));
+            }
+        }
+    };
+}();
+
+/***/ }),
+/* 148 */
+/*!*********************************************************!*\
+  !*** ../node_modules/core-js/library/fn/object/keys.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../../modules/es6.object.keys */ 149);
+module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Object.keys;
+
+/***/ }),
+/* 149 */
+/*!******************************************************************!*\
+  !*** ../node_modules/core-js/library/modules/es6.object.keys.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.14 Object.keys(O)
+var toObject = __webpack_require__(/*! ./_to-object */ 23)
+  , $keys    = __webpack_require__(/*! ./_object-keys */ 22);
+
+__webpack_require__(/*! ./_object-sap */ 78)('keys', function(){
+  return function keys(it){
+    return $keys(toObject(it));
+  };
+});
+
+/***/ }),
+/* 150 */
+/*!***********************************!*\
+  !*** ./runtime/openfin/Window.js ***!
+  \***********************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _from = __webpack_require__(/*! babel-runtime/core-js/array/from */ 52);
+
+var _from2 = _interopRequireDefault(_from);
+
+var _getPrototypeOf = __webpack_require__(/*! babel-runtime/core-js/object/get-prototype-of */ 53);
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 10);
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 11);
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = __webpack_require__(/*! babel-runtime/helpers/possibleConstructorReturn */ 54);
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = __webpack_require__(/*! babel-runtime/helpers/inherits */ 58);
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _global = __webpack_require__(/*! ./global */ 83);
+
+var _global2 = _interopRequireDefault(_global);
+
+var _ready = __webpack_require__(/*! ../ready */ 18);
+
+var _ready2 = _interopRequireDefault(_ready);
+
+var _index = __webpack_require__(/*! ../../utils/index */ 12);
+
+var _index2 = __webpack_require__(/*! ../../geometry/index */ 9);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* global fin */
+var defaultConfig = {
+    defaultWidth: 600,
+    defaultHeight: 600,
+    frame: false,
+    resizable: true,
+    saveWindowState: false,
+    autoShow: true,
+    icon: location.href + 'favicon.ico'
+};
+var configMap = {
+    title: 'name',
+    left: 'defaultLeft',
+    top: 'defaultTop',
+    width: 'defaultWidth',
+    height: 'defaultHeight'
+};
+var acceptedEventHandlers = ['ready', 'drag-start', 'drag-before', 'drag-stop', 'dock-before', 'move', 'move-before', 'resize-before', 'close', 'show', 'hide', 'restore', 'minimize', 'maximize', 'focus', 'blur'];
+var currentWin = void 0;
+
+function _setupDOM(config) {
+    var thisWindow = this;
+
+    // TODO: Rewrite to remove setTimeout for the following:
+    function setWindows() {
+        if (thisWindow._window.contentWindow.windowmanager) {
+            thisWindow._window.contentWindow.windowmanager._launcher = _global2.default._launcher;
+            thisWindow._window.contentWindow.windowmanager._windows = _global2.default._windows;
+            thisWindow._window.contentWindow.windowmanager._internalBus = _global2.default._internalBus;
+        } else {
+            setTimeout(setWindows, 5);
+        }
+    }
+    setWindows();
+
+    this._window.getBounds(function (bounds) {
+        bounds.right = bounds.left + bounds.width;
+        bounds.bottom = bounds.top + bounds.height;
+        thisWindow._bounds.set(new _index2.BoundingBox(bounds));
+    });
+
+    // Setup _window event listeners:
+    // TODO: look into moving these elsewhere, might not work if currentWin is closed, and thisWindow is not.
+    function onBoundsChange(event) {
+        event.right = event.left + event.width;
+        event.bottom = event.top + event.height;
+        thisWindow._bounds.set(new _index2.BoundingBox(event));
+
+        if (event.changeType !== 0) {
+            thisWindow.undock(); // Undock on resize. TODO: Allow resize with docking
+        }
+        if (event.changeType !== 1) {
+            thisWindow.emit('move'); // TODO: Pass what position it is at.
+        }
+    }
+    this._window.addEventListener('bounds-changing', onBoundsChange);
+    this._window.addEventListener('bounds-changed', onBoundsChange);
+
+    function onClose() {
+        // TODO: Is it possible that onClose might not be called when the window is closed?
+        //       What if this event is set up on a window that has closed already, and then this window closes?
+        thisWindow._isClosed = true;
+        _global2.default._windows.delete(thisWindow._id);
+
+        // Undock:
+        thisWindow.undock();
+
+        // Move children to parent:
+        var parent = thisWindow.getParent();
+
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = (0, _getIterator3.default)(thisWindow.getChildren()), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var child = _step.value;
+
+                // We use getChildren to have a copy of the list, so child.setParent doesn't modify this loop's list!
+                // TODO: Optimize this loop, by not making a copy of children, and not executing splice in each setParent!
+                child.setParent(parent);
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        thisWindow.setParent(undefined); // Remove from parent
+
+        thisWindow.emit('close');
+        _global2.default._internalBus.emit('window-close', thisWindow);
+        thisWindow._window = undefined;
+        // TODO: Clean up ALL listeners
+    }
+    this._window.addEventListener('closed', onClose);
+
+    // Setup event listeners:
+    this._window.addEventListener('shown', function () {
+        thisWindow.emit('show');
+    });
+    this._window.addEventListener('hidden', function () {
+        thisWindow.emit('hide');
+    });
+    this._window.addEventListener('restored', function () {
+        thisWindow.emit('restore');
+    });
+    this._window.addEventListener('minimized', function () {
+        thisWindow.emit('minimize');
+    });
+    this._window.addEventListener('maximized', function () {
+        thisWindow.emit('maximize');
+    });
+    this._window.addEventListener('focused', function () {
+        thisWindow.emit('focus');
+    });
+    this._window.addEventListener('blurred', function () {
+        thisWindow.emit('blur');
+    });
+
+    // Setup title element:
+    this._titleEl = this._window.contentWindow.document.createElement('title');
+    this._titleEl.innerText = this._title;
+    this._window.contentWindow.document.head.appendChild(this._titleEl);
+
+    this._isFramed = config.frame;
+    this._ready = true;
+    this.emit('ready');
+    _global2.default._internalBus.emit('window-create', this);
+};
+
+var Window = function (_EventHandler) {
+    (0, _inherits3.default)(Window, _EventHandler);
+
+    function Window(config) {
+        (0, _classCallCheck3.default)(this, Window);
+
+        var _this = (0, _possibleConstructorReturn3.default)(this, (Window.__proto__ || (0, _getPrototypeOf2.default)(Window)).call(this, acceptedEventHandlers));
+        // Call the parent constructor:
+
+
+        config = config || {}; // If no arguments are passed, assume we are creating a default blank window
+        var isArgConfig = config.app_uuid === undefined;
+
+        // Setup private variables:
+        _this._bounds = new _index2.BoundingBox();
+        _this._ready = false;
+        // TODO: Identify current states.
+        _this._isClosed = false;
+        _this._isHidden = false;
+        _this._isMinimized = false;
+        _this._isMaximized = false;
+        _this._dockedGroup = [_this];
+        _this._children = [];
+        _this._parent = undefined;
+        _this._title = undefined;
+
+        if (isArgConfig) {
+            for (var prop in config) {
+                if (config.hasOwnProperty(prop) && configMap[prop] !== undefined) {
+                    config[configMap[prop]] = config[prop];
+                    delete config[prop];
+                }
+            }
+            for (var _prop in defaultConfig) {
+                if (defaultConfig.hasOwnProperty(_prop)) {
+                    config[_prop] = config[_prop] != null ? config[_prop] : defaultConfig[_prop];
+                }
+            }
+            _this._id = (0, _index.getUniqueWindowName)();
+            _this._title = config.name == null ? _this._id : config.name;
+            config.name = _this._id; // Need name to be unique
+
+            if (config.parent) {
+                config.parent._children.push(_this);
+                _this._parent = config.parent;
+                // TODO: Emit event 'child-added' on parent
+                delete config.parent;
+            }
+
+            _global2.default._windows.set(_this._id, _this);
+            _this._window = new fin.desktop.Window(config, _setupDOM.bind(_this, config), function (err) {
+                console.error(err, config);
+            });
+        } else {
+            _this._id = config._id || config.name;
+            _this._title = _this._id;
+            _this._window = config;
+            _global2.default._windows.set(_this._id, _this);
+            _this._window.getOptions(_setupDOM.bind(_this), function (err) {
+                console.error(err);
+            });
+        }
+
+        // TODO: Ensure docking system
+        return _this;
+    }
+
+    (0, _createClass3.default)(Window, [{
+        key: 'isReady',
+        value: function isReady() {
+            return this._ready;
+        }
+    }, {
+        key: 'onReady',
+        value: function onReady(callback) {
+            if (this.isClosed()) {
+                throw new Error('onReady can\'t be called on a closed window');
+            }
+            if (this.isReady()) {
+                return callback.call(this);
+            }
+
+            this.once('ready', callback);
+        }
+    }, {
+        key: 'isClosed',
+        value: function isClosed() {
+            return this._isClosed;
+        }
+    }, {
+        key: 'getPosition',
+        value: function getPosition() {
+            return this._bounds.getPosition();
+        }
+    }, {
+        key: 'getWidth',
+        value: function getWidth() {
+            return this._bounds.getWidth();
+        }
+    }, {
+        key: 'getHeight',
+        value: function getHeight() {
+            return this._bounds.getHeight();
+        }
+    }, {
+        key: 'getSize',
+        value: function getSize() {
+            return this._bounds.getSize();
+        }
+    }, {
+        key: 'getBounds',
+        value: function getBounds() {
+            return this._bounds.clone();
+        }
+    }, {
+        key: 'getParent',
+        value: function getParent() {
+            return this._parent;
+        }
+    }, {
+        key: 'setParent',
+        value: function setParent(parent) {
+            // TODO: Execute appropriate checks (if not closed, and is this new parent a window)
+
+            if (parent === this._parent) {
+                return;
+            }
+
+            if (this._parent) {
+                var index = this._parent._children.indexOf(this);
+
+                if (index >= 0) {
+                    this._parent._children.splice(index, 1);
+                }
+                // TODO: Emit event 'child-removed' on current parent.
+            }
+
+            if (parent) {
+                this._parent = parent;
+                this._parent._children.push(this);
+                // TODO: Emit event 'child-added on parent'.
+            }
+        }
+    }, {
+        key: 'getChildren',
+        value: function getChildren() {
+            return this._children.slice();
+        }
+    }, {
+        key: 'addChild',
+        value: function addChild(child) {
+            child.setParent(this);
+        }
+    }, {
+        key: 'getTitle',
+        value: function getTitle() {
+            return this._title;
+        }
+    }, {
+        key: 'setTitle',
+        value: function setTitle(newTitle) {
+            if (!newTitle) {
+                throw new Error('setTitle requires one argument of type String');
+            }
+            this._titleEl.innerText = this._title = newTitle;
+        }
+    }, {
+        key: 'isHidden',
+        value: function isHidden() {
+            return this._isHidden;
+        }
+    }, {
+        key: 'isShown',
+        value: function isShown() {
+            return !this._isHidden;
+        }
+    }, {
+        key: 'isMinimized',
+        value: function isMinimized() {
+            return this._isMinimized;
+        }
+    }, {
+        key: 'isMaximized',
+        value: function isMaximized() {
+            return this._isMaximized;
+        }
+    }, {
+        key: 'isRestored',
+        value: function isRestored() {
+            return this.isShown() && !this.isMinimized() && !this.isMaximized();
+        }
+    }, {
+        key: 'close',
+        value: function close(callback) {
+            if (this.isClosed()) {
+                return callback && callback();
+            }
+            this._window.close(callback);
+        }
+    }, {
+        key: 'minimize',
+        value: function minimize(callback) {
+            if (!this._ready) {
+                throw new Error('minimize can\'t be called on an unready window');
+            }
+
+            callback = new _index.SyncCallback(callback);
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = (0, _getIterator3.default)(this._dockedGroup), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var _window = _step2.value;
+
+                    _window._isMinimized = true;
+                    _window._window.minimize(callback.ref());
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'maximize',
+        value: function maximize(callback) {
+            if (!this._ready) {
+                throw new Error('maximize can\'t be called on an unready window');
+            }
+
+            this._isMaximized = true;
+            this._window.maximize(callback);
+        }
+    }, {
+        key: 'show',
+        value: function show(callback) {
+            if (!this._ready) {
+                throw new Error('show can\'t be called on an unready window');
+            }
+
+            callback = new _index.SyncCallback(callback);
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+                for (var _iterator3 = (0, _getIterator3.default)(this._dockedGroup), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var _window2 = _step3.value;
+
+                    _window2._isHidden = false;
+                    _window2._window.show(callback.ref());
+                }
+            } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
+                    }
+                } finally {
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'hide',
+        value: function hide(callback) {
+            if (!this._ready) {
+                throw new Error('hide can\'t be called on an unready window');
+            }
+
+            callback = new _index.SyncCallback(callback);
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = (0, _getIterator3.default)(this._dockedGroup), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var _window3 = _step4.value;
+
+                    _window3._isHidden = true;
+                    _window3._window.hide(callback.ref());
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'restore',
+        value: function restore(callback) {
+            if (!this._ready) {
+                throw new Error('restore can\'t be called on an unready window');
+            }
+
+            callback = new _index.SyncCallback(callback);
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
+
+            try {
+                for (var _iterator5 = (0, _getIterator3.default)(this._dockedGroup), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var _window4 = _step5.value;
+
+                    _window4._isHidden = false;
+                    _window4._isMinimized = false;
+                    _window4._isMaximized = false;
+                    _window4._window.restore(callback.ref());
+                }
+            } catch (err) {
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
+                    }
+                } finally {
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'resizable',
+        value: function resizable(_resizable, callback) {
+            if (!this._ready) {
+                throw new Error('restore can\'t be called on an unready window');
+            }
+
+            this._window.updateOptions({
+                resizable: _resizable
+            }, callback);
+        }
+    }, {
+        key: 'bringToFront',
+        value: function bringToFront(callback) {
+            if (!this._ready) {
+                throw new Error('bringToFront can\'t be called on an unready window');
+            }
+            var thisWindow = this;
+
+            var beforeCallback = new _index.SyncCallback(function () {
+                thisWindow._window.bringToFront(callback);
+            });
+
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+                for (var _iterator6 = (0, _getIterator3.default)(this._dockedGroup), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var _window5 = _step6.value;
+
+                    if (_window5 !== this) {
+                        _window5._window.bringToFront(beforeCallback.ref());
+                    }
+                }
+            } catch (err) {
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
+                    }
+                } finally {
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'focus',
+        value: function focus(callback) {
+            if (!this._ready) {
+                throw new Error('focus can\'t be called on an unready window');
+            }
+            var thisWindow = this;
+
+            var beforeCallback = new _index.SyncCallback(function () {
+                thisWindow._window.focus(callback);
+            });
+
+            var _iteratorNormalCompletion7 = true;
+            var _didIteratorError7 = false;
+            var _iteratorError7 = undefined;
+
+            try {
+                for (var _iterator7 = (0, _getIterator3.default)(this._dockedGroup), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                    var _window6 = _step7.value;
+
+                    if (_window6 !== this) {
+                        _window6._window.focus(beforeCallback.ref());
+                    }
+                }
+            } catch (err) {
+                _didIteratorError7 = true;
+                _iteratorError7 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                        _iterator7.return();
+                    }
+                } finally {
+                    if (_didIteratorError7) {
+                        throw _iteratorError7;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'resizeTo',
+        value: function resizeTo(width, height, callback) {
+            if (!this._ready) {
+                throw new Error('resizeTo can\'t be called on an unready window');
+            }
+            if (!this.emit('resize-before')) {
+                return;
+            } // Allow preventing resize
+            var size = new _index2.Position(width, height);
+
+            this._window.resizeTo(size.left, size.top, 'top-left', callback);
+        }
+    }, {
+        key: 'moveTo',
+        value: function moveTo(left, top, callback) {
+            if (!this._ready) {
+                throw new Error('moveTo can\'t be called on an unready window');
+            }
+            if (!this.emit('move-before')) {
+                return;
+            } // Allow preventing move
+            var deltaPos = new _index2.Position(left, top).subtract(this.getPosition());
+
+            callback = new _index.SyncCallback(callback);
+            var _iteratorNormalCompletion8 = true;
+            var _didIteratorError8 = false;
+            var _iteratorError8 = undefined;
+
+            try {
+                for (var _iterator8 = (0, _getIterator3.default)(this._dockedGroup), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                    var _window7 = _step8.value;
+
+                    var pos = _window7.getPosition().add(deltaPos);
+
+                    _window7._bounds.moveTo(pos);
+                    _window7._window.moveTo(pos.left, pos.top, callback.ref());
+                }
+            } catch (err) {
+                _didIteratorError8 = true;
+                _iteratorError8 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                        _iterator8.return();
+                    }
+                } finally {
+                    if (_didIteratorError8) {
+                        throw _iteratorError8;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'moveBy',
+        value: function moveBy(deltaLeft, deltaTop, callback) {
+            if (!this._ready) {
+                throw new Error('moveBy can\'t be called on an unready window');
+            }
+            if (!this.emit('move-before')) {
+                return;
+            } // Allow preventing move
+            var deltaPos = new _index2.Position(deltaLeft, deltaTop);
+
+            callback = new _index.SyncCallback(callback);
+            var _iteratorNormalCompletion9 = true;
+            var _didIteratorError9 = false;
+            var _iteratorError9 = undefined;
+
+            try {
+                for (var _iterator9 = (0, _getIterator3.default)(this._dockedGroup), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                    var _window8 = _step9.value;
+
+                    var pos = _window8.getPosition().add(deltaPos);
+
+                    _window8._bounds.moveTo(pos);
+                    _window8._window.moveTo(pos.left, pos.top, callback.ref());
+                }
+            } catch (err) {
+                _didIteratorError9 = true;
+                _iteratorError9 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                        _iterator9.return();
+                    }
+                } finally {
+                    if (_didIteratorError9) {
+                        throw _iteratorError9;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'setSize',
+        value: function setSize(width, height, callback) {
+            if (!this._ready) {
+                throw new Error('setSize can\'t be called on an unready window');
+            }
+            var size = new _index2.Size(width, height);
+
+            this._window.resizeTo(size.left, size.top, 'top-left', callback);
+        }
+    }, {
+        key: 'setBounds',
+        value: function setBounds(left, top, right, bottom, callback) {
+            if (!this._ready) {
+                throw new Error('resizeTo can\'t be called on an unready window');
+            }
+            var bounds = new _index2.BoundingBox(left, top, right, bottom);
+
+            this._window.setBounds(bounds.left, bounds.top, bounds.right, bounds.bottom, callback);
+        }
+    }, {
+        key: 'dock',
+        value: function dock(other) {
+            if (!this.emit('dock-before')) {
+                return;
+            } // Allow preventing dock
+            if (other == null) {
+                return;
+            } // Failed to find other. TODO: Return error
+            if (this._isFramed || other._isFramed) return; // If window is framed, don't support dock system.
+
+            // If other is already in the group, return:
+            if (this._dockedGroup.indexOf(other) >= 0) {
+                return;
+            }
+
+            // Loop through all windows in otherGroup and add them to this's group:
+            var _iteratorNormalCompletion10 = true;
+            var _didIteratorError10 = false;
+            var _iteratorError10 = undefined;
+
+            try {
+                for (var _iterator10 = (0, _getIterator3.default)(other._dockedGroup), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                    var otherWin = _step10.value;
+
+                    this._dockedGroup.push(otherWin);
+                    // Sharing the array between window objects makes it easier to manage:
+                    otherWin._dockedGroup = this._dockedGroup;
+                }
+
+                // TODO: Check if otherGroup is touching
+            } catch (err) {
+                _didIteratorError10 = true;
+                _iteratorError10 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                        _iterator10.return();
+                    }
+                } finally {
+                    if (_didIteratorError10) {
+                        throw _iteratorError10;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'undock',
+        value: function undock(other) {
+            // Check to see if window is already undocked:
+            if (this._dockedGroup.length === 1) {
+                return;
+            }
+
+            // Undock this:
+            this._dockedGroup.splice(this._dockedGroup.indexOf(this), 1);
+            this._dockedGroup = [this];
+
+            // TODO: Redock those still touching, EXCEPT 'this'.
+        }
+    }, {
+        key: '_dragStart',
+        value: function _dragStart() {
+            if (!this.emit('drag-start')) {
+                return;
+            } // Allow preventing drag
+            var _iteratorNormalCompletion11 = true;
+            var _didIteratorError11 = false;
+            var _iteratorError11 = undefined;
+
+            try {
+                for (var _iterator11 = (0, _getIterator3.default)(this._dockedGroup), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                    var _window9 = _step11.value;
+
+                    _window9._dragStartPos = _window9.getPosition();
+                }
+            } catch (err) {
+                _didIteratorError11 = true;
+                _iteratorError11 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                        _iterator11.return();
+                    }
+                } finally {
+                    if (_didIteratorError11) {
+                        throw _iteratorError11;
+                    }
+                }
+            }
+        }
+    }, {
+        key: '_dragBy',
+        value: function _dragBy(deltaLeft, deltaTop) {
+            if (!this.emit('drag-before')) {
+                return;
+            } // Allow preventing drag
+            // Perform Snap:
+            var thisBounds = this.getBounds().moveTo(this._dragStartPos.left + deltaLeft, this._dragStartPos.top + deltaTop);
+            var snapDelta = new _index2.Vector(NaN, NaN);
+
+            if (!this._isFramed) {
+                // If window is framed, don't support snap system.
+                var _iteratorNormalCompletion12 = true;
+                var _didIteratorError12 = false;
+                var _iteratorError12 = undefined;
+
+                try {
+                    for (var _iterator12 = (0, _getIterator3.default)(_global2.default._windows.values()), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+                        var other = _step12.value;
+
+                        if (!other._isFramed && other._dockedGroup !== this._dockedGroup) {
+                            snapDelta.setMin(thisBounds.getSnapDelta(other.getBounds()));
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError12 = true;
+                    _iteratorError12 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                            _iterator12.return();
+                        }
+                    } finally {
+                        if (_didIteratorError12) {
+                            throw _iteratorError12;
+                        }
+                    }
+                }
+            }
+            deltaLeft += snapDelta.left || 0;
+            deltaTop += snapDelta.top || 0;
+
+            var _iteratorNormalCompletion13 = true;
+            var _didIteratorError13 = false;
+            var _iteratorError13 = undefined;
+
+            try {
+                for (var _iterator13 = (0, _getIterator3.default)(this._dockedGroup), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+                    var _other = _step13.value;
+
+                    var pos = _other._dragStartPos;
+
+                    // If other doesn't have a drag position, start it:
+                    if (pos === undefined) {
+                        pos = _other._dragStartPos = _other.getPosition();
+                        pos.left -= deltaLeft;
+                        pos.top -= deltaTop;
+                    }
+
+                    _other._window.moveTo(pos.left + deltaLeft, pos.top + deltaTop);
+                }
+            } catch (err) {
+                _didIteratorError13 = true;
+                _iteratorError13 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion13 && _iterator13.return) {
+                        _iterator13.return();
+                    }
+                } finally {
+                    if (_didIteratorError13) {
+                        throw _iteratorError13;
+                    }
+                }
+            }
+        }
+    }, {
+        key: '_dragStop',
+        value: function _dragStop() {
+            // Dock to those it snapped to:
+            var thisBounds = this.getBounds();
+
+            if (!this._isFramed) {
+                // If window is framed, don't support dock system.
+                var _iteratorNormalCompletion14 = true;
+                var _didIteratorError14 = false;
+                var _iteratorError14 = undefined;
+
+                try {
+                    for (var _iterator14 = (0, _getIterator3.default)(_global2.default._windows.values()), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+                        var other = _step14.value;
+
+                        if (!other._isFramed && thisBounds.isTouching(other.getBounds())) {
+                            this.dock(other);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError14 = true;
+                    _iteratorError14 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion14 && _iterator14.return) {
+                            _iterator14.return();
+                        }
+                    } finally {
+                        if (_didIteratorError14) {
+                            throw _iteratorError14;
+                        }
+                    }
+                }
+            }
+
+            var _iteratorNormalCompletion15 = true;
+            var _didIteratorError15 = false;
+            var _iteratorError15 = undefined;
+
+            try {
+                for (var _iterator15 = (0, _getIterator3.default)(this._dockedGroup), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+                    var _window10 = _step15.value;
+
+                    delete _window10._dragStartPos;
+                }
+            } catch (err) {
+                _didIteratorError15 = true;
+                _iteratorError15 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion15 && _iterator15.return) {
+                        _iterator15.return();
+                    }
+                } finally {
+                    if (_didIteratorError15) {
+                        throw _iteratorError15;
+                    }
+                }
+            }
+
+            this.emit('drag-stop');
+        }
+    }], [{
+        key: 'getAll',
+        value: function getAll() {
+            return (0, _from2.default)(_global2.default._windows.values());
+        }
+    }, {
+        key: 'getByID',
+        value: function getByID(id) {
+            return _global2.default._windows.get(id);
+        }
+    }, {
+        key: 'getMain',
+        value: function getMain(id) {
+            return _global2.default._windows.get(_global2.default._launcher.name);
+        }
+    }, {
+        key: 'getCurrent',
+        value: function getCurrent() {
+            return Window.current;
+        }
+    }]);
+    return Window;
+}(_index.EventHandler);
+
+function setupCurrentWindow() {
+    Window.current = _global2.default._windows.get(currentWin.name) || new Window(currentWin);
+
+    // Setup handlers on this window:
+    var wX = 0;
+    var wY = 0;
+    var dragging = false;
+
+    window.addEventListener('focus', function () {
+        Window.current.bringToFront();
+    });
+
+    window.addEventListener('mousedown', function onDragStart(event) {
+        if (event.target.classList && event.target.classList.contains('window-drag')) {
+            dragging = true;
+            wX = event.screenX;
+            wY = event.screenY;
+            Window.current._dragStart();
+        }
+    });
+
+    window.addEventListener('touchstart', function (event) {
+        if (event.target.classList && event.target.classList.contains('window-drag')) {
+            event.preventDefault();
+            dragging = true;
+            wX = event.touches[0].screenX;
+            wY = event.touches[0].screenY;
+            Window.current._dragStart();
+        }
+    });
+
+    window.addEventListener('mousemove', function (event) {
+        if (dragging) {
+            // Stop text selection:
+            window.getSelection().removeAllRanges();
+            // Drag:
+            Window.current._dragBy(event.screenX - wX, event.screenY - wY);
+        }
+    });
+
+    window.addEventListener('touchmove', function (event) {
+        if (dragging) {
+            event.preventDefault();
+            // Stop text selection:
+            window.getSelection().removeAllRanges();
+            // Drag:
+            Window.current._dragBy(event.touches[0].screenX - wX, event.touches[0].screenY - wY);
+        }
+    });
+
+    window.addEventListener('mouseup', function (event) {
+        if (dragging) {
+            dragging = false;
+            Window.current._dragStop();
+        }
+    });
+
+    window.addEventListener('touchend', function (event) {
+        if (dragging) {
+            event.preventDefault();
+            dragging = false;
+            Window.current._dragStop();
+        }
+    });
+}
+
+// Handle current window in this context:
+// TODO: Rewrite to remove setTimeout for the following:
+fin.desktop.main(_ready2.default.ref(function () {
+    currentWin = fin.desktop.Window.getCurrent();
+    var currentReady = _ready2.default.ref(setupCurrentWindow);
+
+    function getCurrent() {
+        if (_global2.default._windows) {
+            currentReady();
+        } else {
+            setTimeout(getCurrent, 5);
+        }
+    }
+    getCurrent();
+}));
+
+_global2.default.Window = Window;
+exports.default = Window;
+module.exports = exports['default'];
+
+/***/ }),
+/* 151 */
+/*!**********************************!*\
+  !*** ./runtime/browser/index.js ***!
+  \**********************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _set = __webpack_require__(/*! babel-runtime/core-js/set */ 51);
+
+var _set2 = _interopRequireDefault(_set);
+
+var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 5);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _global = __webpack_require__(/*! ./global */ 85);
+
+var _global2 = _interopRequireDefault(_global);
+
+var _ready = __webpack_require__(/*! ../ready */ 18);
+
+var _ready2 = _interopRequireDefault(_ready);
+
+var _Window = __webpack_require__(/*! ./Window */ 86);
+
+var _Window2 = _interopRequireDefault(_Window);
+
+var _index = __webpack_require__(/*! ../../geometry/index */ 9);
+
+var _layout = __webpack_require__(/*! ./layout */ 174);
+
+var _layout2 = _interopRequireDefault(_layout);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Contains the monitor space.
+ * @type {CollisionMesh}
+ */
+_global2.default.monitors = new _index.CollisionMesh([]);
+
+function updateMonitors() {
+    // Update monitors CollisionMesh with the primary "fake" monitor:
+    _global2.default.monitors.boxes = [new _index.BoundingBox(0, 0, Math.max(document.documentElement.clientWidth, window.innerWidth || 0), Math.max(document.documentElement.clientHeight, window.innerHeight || 0))];
+}
+
+// Set up system to update monitors:
+updateMonitors();
+window.addEventListener('resize', updateMonitors);
+
+/**
+ * Add layout to windowmanager object.
+ */
+_global2.default.Layout = _layout2.default;
+
+/**
+ * Message bus for application.
+ * @namespace
+ * @alias messagebus
+ */
+_global2.default.messagebus = function () {
+    // TODO: Utilize iframe communication? Or use messagebus that is currently shared in setup.js?
+    var wrappedListeners = {};
+    var windowWrappedListeners = {};
+
+    window.addEventListener('message', function (event) {
+        var message = event.data;
+        var win = _Window2.default.getByID(message.winID);
+
+        // Don't execute listeners when the sender is the same as the listener:
+        if (win._id === _Window2.default.current._id) {
+            return;
+        }
+
+        if (windowWrappedListeners[message.event] != null) {
+            // Check to see if the called window is being listened to directly:
+            if (windowWrappedListeners[message.event][message.winID] != null) {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = (0, _getIterator3.default)(windowWrappedListeners[message.event][message.winID]), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var listener = _step.value;
+
+                        listener.apply(win, message.args); // TODO: Make apply's this point to window who sent messsage
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+        }
+        if (wrappedListeners[message.event] != null) {
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = (0, _getIterator3.default)(wrappedListeners[message.event]), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var _listener = _step2.value;
+
+                    _listener.apply(win, message.args); // TODO: Make apply's this point to window who sent messsage
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+        }
+    }, false);
+
+    return {
+        /**
+         * @method
+         * @alias messagebus.send
+         * @param {String} eventName - the event to send to
+         * @param {Window} [window=undefined] - the target window to send to (if not specified, sends to all windows)
+         * @param {...*} args Arguments to send to listeners
+         */
+        send: function send(eventName) {
+            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                args[_key - 1] = arguments[_key];
+            }
+
+            // TODO: Check if ready? Dunno if needed
+            // TODO: Do we need to add a way to identify if a return is needed?
+            var curWin = _Window2.default.current;
+            var message = {
+                id: 0, // TODO: Randomly generate a unique id to avoid collision!
+                winID: curWin._id,
+                event: eventName,
+                args: args // If the first arg is a window, it gets removed later.
+            };
+
+            if (args.length > 0 && args[0] instanceof _Window2.default) {
+                // Remove window from args in message:
+                var _window = args.shift(); // args is by reference in message currently
+
+                // Don't execute listeners when the sender is the same as the listener:
+                if (_window._id === curWin._id) {
+                    return;
+                }
+                // TODO: Save the id of message so we can get the response
+                _window._window.contentWindow.postMessage(message, '*');
+            } else {
+                var _iteratorNormalCompletion3 = true;
+                var _didIteratorError3 = false;
+                var _iteratorError3 = undefined;
+
+                try {
+                    for (var _iterator3 = (0, _getIterator3.default)(_global2.default._windows.values()), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                        var _window2 = _step3.value;
+
+                        if (curWin !== _window2) {
+                            // Don't send to current window
+                            _window2._window.contentWindow.postMessage(message, '*');
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError3 = true;
+                    _iteratorError3 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                            _iterator3.return();
+                        }
+                    } finally {
+                        if (_didIteratorError3) {
+                            throw _iteratorError3;
+                        }
+                    }
+                }
+            }
+        },
+        /**
+         * @method
+         * @alias messagebus.on
+         * @param {String} eventName - the event to listen to
+         * @param {Window} [window=undefined] - the window to listen to events from (if null, listens to all windows)
+         * @param {Function} listener - the callback function to call when event is triggered for this window
+         */
+        on: function on(eventName, window, listener) {
+            if (listener === undefined) {
+                listener = window;
+                window = undefined;
+            }
+
+            if (window !== undefined) {
+                // Don't execute listeners when the sender is the same as the listener:
+                if (window._id === _Window2.default.current._id) {
+                    return;
+                }
+                // Replace window.name with some way to identify the unique window
+                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
+
+                winLisGroup[eventName] = winLisGroup[eventName] || new _set2.default();
+                winLisGroup[eventName].add(listener);
+                // TODO: On window close, clear subscriptions in windowWrappedListeners!
+            } else {
+                wrappedListeners[eventName] = wrappedListeners[eventName] || new _set2.default();
+                wrappedListeners[eventName].add(listener);
+            }
+        },
+        /**
+         * @method
+         * @alias messagebus.off
+         * @param {String} eventName - the event to remove listener from
+         * @param {Window} [window=undefined] - the window to listen to events from (if null, listens to all windows)
+         * @param {Function} listener - the callback function to call when event is triggered for this window
+         */
+        off: function off(eventName, window, listener) {
+            if (listener === undefined) {
+                listener = window;
+                window = undefined;
+            }
+
+            if (window !== undefined) {
+                // Replace window.name with some way to identify the unique window
+                var winLisGroup = windowWrappedListeners[window._id] = windowWrappedListeners[window._id] || {};
+
+                winLisGroup[eventName] = winLisGroup[eventName] || new _set2.default();
+                winLisGroup[eventName].delete(listener);
+            } else {
+                wrappedListeners[eventName] = wrappedListeners[eventName] || new _set2.default();
+                wrappedListeners[eventName].delete(listener);
+            }
+        }
+    };
+}();
+
+// Notify everyone that windowmanager is setup for this window:
+_ready2.default._deref();
+
+/***/ }),
 /* 152 */
 /*!*****************************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/number/is-finite.js ***!
@@ -10985,7 +10994,7 @@ $export($export.P + $export.F * __webpack_require__(/*! ./_fails-is-regexp */ 17
 
 var global    = __webpack_require__(/*! ./_global */ 26)
   , core      = __webpack_require__(/*! ./_core */ 60)
-  , hide      = __webpack_require__(/*! ./_hide */ 86)
+  , hide      = __webpack_require__(/*! ./_hide */ 87)
   , redefine  = __webpack_require__(/*! ./_redefine */ 164)
   , ctx       = __webpack_require__(/*! ./_ctx */ 166)
   , PROTOTYPE = 'prototype';
@@ -11077,7 +11086,7 @@ module.exports = function(it){
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = !__webpack_require__(/*! ./_descriptors */ 61) && !__webpack_require__(/*! ./_fails */ 87)(function(){
+module.exports = !__webpack_require__(/*! ./_descriptors */ 61) && !__webpack_require__(/*! ./_fails */ 88)(function(){
   return Object.defineProperty(__webpack_require__(/*! ./_dom-create */ 161)('div'), 'a', {get: function(){ return 7; }}).a != 7;
 });
 
@@ -11148,9 +11157,9 @@ module.exports = function(bitmap, value){
 /***/ (function(module, exports, __webpack_require__) {
 
 var global    = __webpack_require__(/*! ./_global */ 26)
-  , hide      = __webpack_require__(/*! ./_hide */ 86)
+  , hide      = __webpack_require__(/*! ./_hide */ 87)
   , has       = __webpack_require__(/*! ./_has */ 165)
-  , SRC       = __webpack_require__(/*! ./_uid */ 88)('src')
+  , SRC       = __webpack_require__(/*! ./_uid */ 89)('src')
   , TO_STRING = 'toString'
   , $toString = Function[TO_STRING]
   , TPL       = ('' + $toString).split(TO_STRING);
@@ -11268,7 +11277,7 @@ module.exports = function(that, searchString, NAME){
 // 7.2.8 IsRegExp(argument)
 var isObject = __webpack_require__(/*! ./_is-object */ 34)
   , cof      = __webpack_require__(/*! ./_cof */ 170)
-  , MATCH    = __webpack_require__(/*! ./_wks */ 89)('match');
+  , MATCH    = __webpack_require__(/*! ./_wks */ 90)('match');
 module.exports = function(it){
   var isRegExp;
   return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
@@ -11329,7 +11338,7 @@ module.exports = function(it){
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-var MATCH = __webpack_require__(/*! ./_wks */ 89)('match');
+var MATCH = __webpack_require__(/*! ./_wks */ 90)('match');
 module.exports = function(KEY){
   var re = /./;
   try {
@@ -11341,6 +11350,93 @@ module.exports = function(KEY){
     } catch(f){ /* empty */ }
   } return true;
 };
+
+/***/ }),
+/* 174 */
+/*!***********************************!*\
+  !*** ./runtime/browser/layout.js ***!
+  \***********************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 10);
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 11);
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _Window = __webpack_require__(/*! ./Window.js */ 86);
+
+var _Window2 = _interopRequireDefault(_Window);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Layout namespace.
+ */
+var Layout = function () {
+  /**
+   * Constructor for the layout class.
+   * 
+   * @param {string} type - The type of layout: 'tile', etc. 
+   * @param {Object} configs - The config objects to create the windows from
+   */
+  function Layout(type, configs) {
+    var _this = this;
+
+    (0, _classCallCheck3.default)(this, Layout);
+
+    this.windows = [];
+
+    // First create the windows.
+    configs.forEach(function (config) {
+      _this.windows.push(new _Window2.default(config));
+    });
+
+    this.getWindows();
+  }
+
+  /**
+   * Function to retrieve all windows.
+   */
+
+
+  (0, _createClass3.default)(Layout, [{
+    key: 'getWindows',
+    value: function getWindows() {
+      return this.windows;
+    }
+
+    /**
+     * Function to add a window to the layout scheme.
+     * @param {Object} config 
+     */
+
+  }, {
+    key: 'addWindow',
+    value: function addWindow(config) {
+      return this.windows.push(new _Window2.default(config));
+    }
+  }]);
+  return Layout;
+}(); /**
+      * A library for laying out windowmanager windows.
+      */
+
+;
+
+exports.default = Layout;
+module.exports = exports['default'];
 
 /***/ })
 /******/ ]);
