@@ -4369,6 +4369,8 @@ var Window = function (_EventHandler) {
      * @param {Boolean} [config.show=true] - When true, starts the window in the "show" state rather than "hidden"
      * @param {String} [config.icon='favicon.ico'] - Location to favicon
      * @param {String} [config.url='.'] - Location to page that the window should load
+     * @param {Boolean} [config.draggable=true] - When true, enables dragging of window.
+     * @param {String} [config.container] - The id of the div to attach the window to
      */
     function Window(config) {
         (0, _classCallCheck3.default)(this, Window);
@@ -4425,7 +4427,12 @@ var Window = function (_EventHandler) {
                 var newWindow = _global2.default._launcher.document.createElement('div');
                 var iframe = _global2.default._launcher.document.createElement('iframe');
 
-                newWindow.style.position = 'absolute';
+                // Only give the window an absolute position if it is not being put in a container.
+                // This makes it possible for a Layout object to control the position.
+                if (!config.container) {
+                    newWindow.style.position = 'absolute';
+                }
+
                 iframe.style.margin = iframe.style.padding = iframe.style.border = 0;
                 newWindow.style.resize = 'both';
                 newWindow.style.overflow = 'visible';
@@ -4449,8 +4456,21 @@ var Window = function (_EventHandler) {
                 newWindow.addEventListener('blur', function () {
                     that.emit('blur');
                 });
-                _global2.default._launcher.document.body.appendChild(newWindow);
 
+                // Attach our new window to its container if one is specified.
+                if (config.container) {
+                    var containerElem = void 0;
+
+                    if (typeof config.container === 'string') {
+                        containerElem = document.getElementById(config.container);
+                    } else {
+                        containerElem = config.container;
+                    }
+
+                    containerElem.appendChild(newWindow);
+                } else {
+                    _global2.default._launcher.document.body.appendChild(newWindow);
+                }
                 // Set up iframe for page:
                 iframe.src = config.url;
                 iframe.style.margin = iframe.style.padding = iframe.style.border = 0;
@@ -4459,43 +4479,45 @@ var Window = function (_EventHandler) {
 
                 // Set up resize:
                 _this._resize = (0, _create2.default)(null);
-                var _arr = ['w', 'nw', 'n', 'ne', 'e', 'se', 's', 'sw'];
+                if (config.draggable) {
+                    var _arr = ['w', 'nw', 'n', 'ne', 'e', 'se', 's', 'sw'];
 
-                var _loop = function _loop() {
-                    var dir = _arr[_i];
-                    var edge = _global2.default._launcher.document.createElement('div');
+                    var _loop = function _loop() {
+                        var dir = _arr[_i];
+                        var edge = _global2.default._launcher.document.createElement('div');
 
-                    _this._resize[dir] = edge;
-                    // Setup styling:
-                    edge.style.display = _this._isResizable ? '' : 'none';
-                    edge.style.position = 'absolute';
-                    edge.style['user-select'] = 'none';
-                    edge.style.cursor = dir + '-resize';
-                    edge.style.width = dir === 'n' || dir === 's' ? 'calc(100% - 6px)' : '6px';
-                    edge.style.height = dir === 'w' || dir === 'e' ? 'calc(100% - 6px)' : '6px';
-                    edge.style[dir.includes('e') ? 'right' : 'left'] = dir === 'n' || dir === 's' ? '3px' : '-3px';
-                    edge.style[dir.includes('s') ? 'bottom' : 'top'] = dir === 'w' || dir === 'e' ? '3px' : '-3px';
+                        _this._resize[dir] = edge;
+                        // Setup styling:
+                        edge.style.display = _this._isResizable ? '' : 'none';
+                        edge.style.position = 'absolute';
+                        edge.style['user-select'] = 'none';
+                        edge.style.cursor = dir + '-resize';
+                        edge.style.width = dir === 'n' || dir === 's' ? 'calc(100% - 6px)' : '6px';
+                        edge.style.height = dir === 'w' || dir === 'e' ? 'calc(100% - 6px)' : '6px';
+                        edge.style[dir.includes('e') ? 'right' : 'left'] = dir === 'n' || dir === 's' ? '3px' : '-3px';
+                        edge.style[dir.includes('s') ? 'bottom' : 'top'] = dir === 'w' || dir === 'e' ? '3px' : '-3px';
 
-                    // Setup event handler to start dragging edge:
-                    edge.addEventListener('mousedown', function (event) {
-                        if (!that._isResizable) return;
+                        // Setup event handler to start dragging edge:
+                        edge.addEventListener('mousedown', function (event) {
+                            if (!that._isResizable) return;
 
-                        // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
-                        //       It also prevents css rendering that changes cursor, is there something better?
-                        _global2.default._overlay.style.display = '';
-                        _global2.default._overlay.style.cursor = dir + '-resize';
-                        _global2.default._drag.down = dir;
-                        _global2.default._drag.mouseStart = new _index2.Position(event.screenX, event.screenY);
-                        _global2.default._drag.target = that;
-                        _global2.default._drag.targetStartBounds = that.getBounds();
-                    });
+                            // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
+                            //       It also prevents css rendering that changes cursor, is there something better?
+                            _global2.default._overlay.style.display = '';
+                            _global2.default._overlay.style.cursor = dir + '-resize';
+                            _global2.default._drag.down = dir;
+                            _global2.default._drag.mouseStart = new _index2.Position(event.screenX, event.screenY);
+                            _global2.default._drag.target = that;
+                            _global2.default._drag.targetStartBounds = that.getBounds();
+                        });
 
-                    // Add to window wrapper:
-                    newWindow.appendChild(edge);
-                };
+                        // Add to window wrapper:
+                        newWindow.appendChild(edge);
+                    };
 
-                for (var _i = 0; _i < _arr.length; _i++) {
-                    _loop();
+                    for (var _i = 0; _i < _arr.length; _i++) {
+                        _loop();
+                    }
                 }
 
                 _this._window = iframe;
@@ -10682,9 +10704,9 @@ var _Window2 = _interopRequireDefault(_Window);
 
 var _index = __webpack_require__(/*! ../../geometry/index */ 9);
 
-var _layout = __webpack_require__(/*! ./layout */ 174);
+var _Layout = __webpack_require__(/*! ./Layout/Layout */ 174);
 
-var _layout2 = _interopRequireDefault(_layout);
+var _Layout2 = _interopRequireDefault(_Layout);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10706,7 +10728,7 @@ window.addEventListener('resize', updateMonitors);
 /**
  * Add layout to windowmanager object.
  */
-_global2.default.Layout = _layout2.default;
+_global2.default.Layout = _Layout2.default;
 
 /**
  * Message bus for application.
@@ -11353,9 +11375,9 @@ module.exports = function(KEY){
 
 /***/ }),
 /* 174 */
-/*!***********************************!*\
-  !*** ./runtime/browser/layout.js ***!
-  \***********************************/
+/*!******************************************!*\
+  !*** ./runtime/browser/Layout/Layout.js ***!
+  \******************************************/
 /*! no static exports found */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
@@ -11364,7 +11386,7 @@ module.exports = function(KEY){
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 10);
@@ -11375,7 +11397,7 @@ var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _Window = __webpack_require__(/*! ./Window.js */ 86);
+var _Window = __webpack_require__(/*! ../Window.js */ 86);
 
 var _Window2 = _interopRequireDefault(_Window);
 
@@ -11385,50 +11407,79 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Layout namespace.
  */
 var Layout = function () {
-  /**
-   * Constructor for the layout class.
-   * 
-   * @param {string} type - The type of layout: 'tile', etc. 
-   * @param {Object} configs - The config objects to create the windows from
-   */
-  function Layout(type, configs) {
-    var _this = this;
+    /**
+     * Constructor for the layout class.
+     *
+     * @param {string} type - The type of layout: 'tile', etc. 
+     * @param {string} id - The id to give to the layout container
+     * @param {Object} configs - The config objects to create the windows from
+     */
+    function Layout(type, id, configs) {
+        var _this = this;
 
-    (0, _classCallCheck3.default)(this, Layout);
+        (0, _classCallCheck3.default)(this, Layout);
 
-    this.windows = [];
+        this.windows = [];
 
-    // First create the windows.
-    configs.forEach(function (config) {
-      _this.windows.push(new _Window2.default(config));
-    });
+        // // Create the div to host the windows.
+        var layoutDiv = document.createElement('div');
+        var layoutList = document.createElement('ul');
 
-    this.getWindows();
-  }
+        layoutDiv.setAttribute('id', id || 'layout-manager-container');
+        document.body.appendChild(layoutDiv);
+        layoutDiv.appendChild(layoutList);
 
-  /**
-   * Function to retrieve all windows.
-   */
+        // Create the windows.
+        configs.forEach(function (config) {
+            // Create a list element for each window.
+            var layoutItem = document.createElement('li');
 
+            layoutItem.style.display = 'inline-block';
+            layoutItem.style.padding = '0 10px 0 10px';
 
-  (0, _createClass3.default)(Layout, [{
-    key: 'getWindows',
-    value: function getWindows() {
-      return this.windows;
+            layoutList.appendChild(layoutItem);
+
+            // Set the windows container to be the list item.
+            config.container = layoutItem;
+
+            // Create the new window and add it to our windows store.
+            var newWindow = new _Window2.default(config);
+
+            _this.windows.push(newWindow);
+        });
+
+        return this.getWindows();
     }
 
     /**
-     * Function to add a window to the layout scheme.
-     * @param {Object} config 
+     * Function to retrieve all windows.
      */
 
-  }, {
-    key: 'addWindow',
-    value: function addWindow(config) {
-      return this.windows.push(new _Window2.default(config));
-    }
-  }]);
-  return Layout;
+
+    (0, _createClass3.default)(Layout, [{
+        key: 'getWindows',
+        value: function getWindows() {
+            return this.windows;
+        }
+
+        /**
+         * Function to add a window to the layout scheme.
+         * @param {Object} config - The configuration object for the window
+         */
+
+    }, {
+        key: 'addWindow',
+        value: function addWindow(config) {
+            var win = new _Window2.default(config);
+
+            this.windows.push(win);
+
+            // Add to our layout div.
+
+            return win;
+        }
+    }]);
+    return Layout;
 }(); /**
       * A library for laying out windowmanager windows.
       */

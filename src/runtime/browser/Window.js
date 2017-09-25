@@ -79,6 +79,8 @@ class Window extends EventHandler {
      * @param {Boolean} [config.show=true] - When true, starts the window in the "show" state rather than "hidden"
      * @param {String} [config.icon='favicon.ico'] - Location to favicon
      * @param {String} [config.url='.'] - Location to page that the window should load
+     * @param {Boolean} [config.draggable=true] - When true, enables dragging of window.
+     * @param {String} [config.container] - The id of the div to attach the window to
      */
     constructor(config) {
         // Call the parent constructor:
@@ -131,7 +133,12 @@ class Window extends EventHandler {
             let newWindow = windowmanager._launcher.document.createElement('div');
             let iframe = windowmanager._launcher.document.createElement('iframe');
 
-            newWindow.style.position = 'absolute';
+            // Only give the window an absolute position if it is not being put in a container.
+            // This makes it possible for a Layout object to control the position.
+            if (!config.container) {
+                newWindow.style.position = 'absolute';
+            }
+
             iframe.style.margin = iframe.style.padding = iframe.style.border = 0;
             newWindow.style.resize = 'both';
             newWindow.style.overflow = 'visible';
@@ -155,8 +162,21 @@ class Window extends EventHandler {
             newWindow.addEventListener('blur', () => {
                 that.emit('blur');
             });
-            windowmanager._launcher.document.body.appendChild(newWindow);
 
+            // Attach our new window to its container if one is specified.
+            if (config.container) {
+                let containerElem;
+
+                if (typeof config.container === 'string') {
+                    containerElem = document.getElementById(config.container);
+                } else {
+                    containerElem = config.container;
+                }
+
+                containerElem.appendChild(newWindow);
+            } else {
+                windowmanager._launcher.document.body.appendChild(newWindow);
+            }
             // Set up iframe for page:
             iframe.src = config.url;
             iframe.style.margin = iframe.style.padding = iframe.style.border = 0;
@@ -165,36 +185,38 @@ class Window extends EventHandler {
 
             // Set up resize:
             this._resize = Object.create(null);
-            for (const dir of ['w', 'nw', 'n', 'ne', 'e', 'se', 's', 'sw']) {
-                let edge = windowmanager._launcher.document.createElement('div');
+            if (config.draggable) {
+                for (const dir of ['w', 'nw', 'n', 'ne', 'e', 'se', 's', 'sw']) {
+                    let edge = windowmanager._launcher.document.createElement('div');
 
-                this._resize[dir] = edge;
-                // Setup styling:
-                edge.style.display = (this._isResizable ? '' : 'none');
-                edge.style.position = 'absolute';
-                edge.style['user-select'] = 'none';
-                edge.style.cursor = `${dir}-resize`;
-                edge.style.width = (dir === 'n' || dir === 's' ? 'calc(100% - 6px)' : '6px');
-                edge.style.height = (dir === 'w' || dir === 'e' ? 'calc(100% - 6px)' : '6px');
-                edge.style[dir.includes('e') ? 'right' : 'left'] = (dir === 'n' || dir === 's' ? '3px' : '-3px');
-                edge.style[dir.includes('s') ? 'bottom' : 'top'] = (dir === 'w' || dir === 'e' ? '3px' : '-3px');
+                    this._resize[dir] = edge;
+                    // Setup styling:
+                    edge.style.display = (this._isResizable ? '' : 'none');
+                    edge.style.position = 'absolute';
+                    edge.style['user-select'] = 'none';
+                    edge.style.cursor = `${dir}-resize`;
+                    edge.style.width = (dir === 'n' || dir === 's' ? 'calc(100% - 6px)' : '6px');
+                    edge.style.height = (dir === 'w' || dir === 'e' ? 'calc(100% - 6px)' : '6px');
+                    edge.style[dir.includes('e') ? 'right' : 'left'] = (dir === 'n' || dir === 's' ? '3px' : '-3px');
+                    edge.style[dir.includes('s') ? 'bottom' : 'top'] = (dir === 'w' || dir === 'e' ? '3px' : '-3px');
 
-                // Setup event handler to start dragging edge:
-                edge.addEventListener('mousedown', (event) => {
-                    if (!that._isResizable) return;
+                    // Setup event handler to start dragging edge:
+                    edge.addEventListener('mousedown', (event) => {
+                        if (!that._isResizable) return;
 
-                    // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
-                    //       It also prevents css rendering that changes cursor, is there something better?
-                    windowmanager._overlay.style.display = '';
-                    windowmanager._overlay.style.cursor = `${dir}-resize`;
-                    windowmanager._drag.down = dir;
-                    windowmanager._drag.mouseStart = new Position(event.screenX, event.screenY);
-                    windowmanager._drag.target = that;
-                    windowmanager._drag.targetStartBounds = that.getBounds();
-                });
+                        // TODO: The overlay prevents underlying clicks and triggered mousemove events while resizing.
+                        //       It also prevents css rendering that changes cursor, is there something better?
+                        windowmanager._overlay.style.display = '';
+                        windowmanager._overlay.style.cursor = `${dir}-resize`;
+                        windowmanager._drag.down = dir;
+                        windowmanager._drag.mouseStart = new Position(event.screenX, event.screenY);
+                        windowmanager._drag.target = that;
+                        windowmanager._drag.targetStartBounds = that.getBounds();
+                    });
 
-                // Add to window wrapper:
-                newWindow.appendChild(edge);
+                    // Add to window wrapper:
+                    newWindow.appendChild(edge);
+                }
             }
 
             this._window = iframe;
