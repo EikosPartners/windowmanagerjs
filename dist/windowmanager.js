@@ -11407,19 +11407,39 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Layout namespace.
  */
 var Layout = function () {
-    /**
-     * Constructor for the layout class.
-     *
-     * @param {string} type - The type of layout: 'tile', etc. 
-     * @param {string} id - The id to give to the layout container
-     * @param {Object} configs - The config objects to create the windows from
-     */
+    (0, _createClass3.default)(Layout, [{
+        key: '_createLayoutItem',
+
+        /**
+         * Method for creating a list element to add a window to.
+         */
+        value: function _createLayoutItem() {
+            var layoutItem = document.createElement('li');
+
+            layoutItem.style.display = 'inline-block';
+            layoutItem.style.padding = '10px';
+
+            this._list.appendChild(layoutItem);
+
+            return layoutItem;
+        }
+
+        /**
+         * Constructor for the layout class.
+         *
+         * @param {string} type - The type of layout, defaults to tiled
+         * @param {string} id - The id to give to the layout container
+         * @param {Object} configs - The config objects to create the windows from
+         */
+
+    }]);
+
     function Layout(type, id, configs) {
         var _this = this;
 
         (0, _classCallCheck3.default)(this, Layout);
 
-        this.windows = [];
+        this._windows = [];
 
         // // Create the div to host the windows.
         var layoutDiv = document.createElement('div');
@@ -11429,15 +11449,15 @@ var Layout = function () {
         document.body.appendChild(layoutDiv);
         layoutDiv.appendChild(layoutList);
 
+        // Keep a reference to the list for adding new windows.
+        this._list = layoutList;
+        // Keep a reference to the container.
+        this._container = layoutDiv;
+
         // Create the windows.
         configs.forEach(function (config) {
             // Create a list element for each window.
-            var layoutItem = document.createElement('li');
-
-            layoutItem.style.display = 'inline-block';
-            layoutItem.style.padding = '0 10px 0 10px';
-
-            layoutList.appendChild(layoutItem);
+            var layoutItem = _this._createLayoutItem();
 
             // Set the windows container to be the list item.
             config.container = layoutItem;
@@ -11445,21 +11465,19 @@ var Layout = function () {
             // Create the new window and add it to our windows store.
             var newWindow = new _Window2.default(config);
 
-            _this.windows.push(newWindow);
+            _this._windows.push(newWindow);
         });
-
-        return this.getWindows();
     }
 
     /**
-     * Function to retrieve all windows.
+     * Function to retrieve all _windows.
      */
 
 
     (0, _createClass3.default)(Layout, [{
         key: 'getWindows',
         value: function getWindows() {
-            return this.windows;
+            return this._windows;
         }
 
         /**
@@ -11470,11 +11488,14 @@ var Layout = function () {
     }, {
         key: 'addWindow',
         value: function addWindow(config) {
+            // Create a list element for each window.
+            var layoutItem = this._createLayoutItem();
+
+            config.container = layoutItem;
+
             var win = new _Window2.default(config);
 
-            this.windows.push(win);
-
-            // Add to our layout div.
+            this._windows.push(win);
 
             return win;
         }
