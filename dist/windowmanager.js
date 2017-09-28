@@ -11407,33 +11407,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Layout namespace.
  */
 var Layout = function () {
-    (0, _createClass3.default)(Layout, [{
-        key: '_createLayoutItem',
-
-        /**
-         * Method for creating a list element to add a window to.
-         */
-        value: function _createLayoutItem() {
-            var layoutItem = document.createElement('li');
-
-            layoutItem.style.display = 'inline-block';
-            layoutItem.style.padding = '10px';
-
-            this._list.appendChild(layoutItem);
-
-            return layoutItem;
-        }
-
-        /**
-         * Constructor for the layout class.
-         *
-         * @param {string} type - The type of layout, defaults to tiled
-         * @param {string} id - The id to give to the layout container
-         * @param {Object} configs - The config objects to create the windows from
-         */
-
-    }]);
-
+    /**
+     * Constructor for the layout class.
+     *
+     * @param {string} type - The type of layout, defaults to tiled
+     * @param {string} id - The id to give to the layout container
+     * @param {Object} configs - The config objects to create the windows from
+     */
     function Layout(type, id, configs) {
         var _this = this;
 
@@ -11454,6 +11434,9 @@ var Layout = function () {
         // Keep a reference to the container.
         this._container = layoutDiv;
 
+        // Need to save a copy of 'this' context to use when a window is closed.
+        var that = this;
+
         // Create the windows.
         configs.forEach(function (config) {
             // Create a list element for each window.
@@ -11462,9 +11445,15 @@ var Layout = function () {
             // Set the windows container to be the list item.
             config.container = layoutItem;
 
-            // Create the new window and add it to our windows store.
+            // Create the new window.
             var newWindow = new _Window2.default(config);
 
+            // Set up an onclose listener for the window.
+            newWindow.on('close', function () {
+                that.removeWindow(this._id);
+            });
+
+            // Add to our windows store.
             _this._windows.push(newWindow);
         });
     }
@@ -11498,6 +11487,49 @@ var Layout = function () {
             this._windows.push(win);
 
             return win;
+        }
+
+        /**
+         * Function to remove a window from the layout scheme.
+         * @param {String} id - The id of the window to remove.
+         */
+
+    }, {
+        key: 'removeWindow',
+        value: function removeWindow(id) {
+            var _this2 = this;
+
+            this._windows.some(function (window, idx) {
+                if (window._id === id) {
+                    _this2._windows.splice(idx, 1);
+
+                    // Call close on the window to ensure its removed from the DOM.
+                    // If the window was removed via removeWindow programatically,
+                    // it may not have been removed from the DOM yet.
+                    window.close();
+
+                    return true;
+                }
+            });
+        }
+
+        /* Private methods */
+
+        /**
+         * Method for creating a list element to add a window to.
+         */
+
+    }, {
+        key: '_createLayoutItem',
+        value: function _createLayoutItem() {
+            var layoutItem = document.createElement('li');
+
+            layoutItem.style.display = 'inline-block';
+            layoutItem.style.padding = '10px';
+
+            this._list.appendChild(layoutItem);
+
+            return layoutItem;
         }
     }]);
     return Layout;
