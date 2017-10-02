@@ -177,6 +177,11 @@ class Window extends EventHandler {
             } else {
                 windowmanager._launcher.document.body.appendChild(newWindow);
             }
+
+            // Check whether to show the window or not.
+            if (!config.show) {
+                newWindow.style.display = 'none';
+            }
             // Set up iframe for page:
             iframe.src = config.url;
             iframe.style.margin = iframe.style.padding = iframe.style.border = 0;

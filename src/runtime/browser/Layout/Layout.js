@@ -4,6 +4,11 @@
 
 import Window from '../Window.js';
 
+const ACTIVE_WINDOW_DIV_ID = 'active-window-container';
+const TABBED_LAYOUT_DIV_ID = 'tabbed-layout-container';
+const TAB_LIST_CONTAINER_ID = 'layout-tabs-list-container';
+const TAB_LIST_ID = 'layout-tabs-list';
+
 /**
  * Layout namespace.
  */
@@ -12,47 +17,23 @@ class Layout {
      * Constructor for the layout class.
      *
      * @param {string} type - The type of layout, defaults to tiled
-     * @param {string} id - The id to give to the layout container
-     * @param {Object} configs - The config objects to create the windows from
+     * @param {string} id - The id of the element to attach to, if none provided the layout will attach to the body
+     * @param {Array.Object} configs - The config objects to create the windows from
      */
     constructor(type, id, configs) {
         this._windows = [];
 
-        // // Create the div to host the windows.
-        let layoutDiv = document.createElement('div');
-        let layoutList = document.createElement('ul');
+        // Create the layout based on the type given.
+        switch (type) {
+            case 'tabbed':
+                this._tabbed(configs, id);
+                break;
+            default:
+                this._tiled(configs, id);
+                break;
+        }
 
-        layoutDiv.setAttribute('id', id || 'layout-manager-container');
-        document.body.appendChild(layoutDiv);
-        layoutDiv.appendChild(layoutList);
-
-        // Keep a reference to the list for adding new windows.
-        this._list = layoutList;
-        // Keep a reference to the container.
-        this._container = layoutDiv;
-
-        // Need to save a copy of 'this' context to use when a window is closed.
-        let that = this;
-
-        // Create the windows.
-        configs.forEach((config) => {
-            // Create a list element for each window.
-            let layoutItem = this._createLayoutItem();
-
-            // Set the windows container to be the list item.
-            config.container = layoutItem;
-
-            // Create the new window.
-            let newWindow = new Window(config);
-
-            // Set up an onclose listener for the window.
-            newWindow.on('close', function () {
-                that.removeWindow(this._id);
-            });
-
-            // Add to our windows store.
-            this._windows.push(newWindow);
-        });
+        this._layoutType = type;
     }
 
     /**
@@ -63,8 +44,30 @@ class Layout {
     }
 
     /**
+     * Method to get a window by its id.
+     * 
+     * @param {string} id - the id of the window to find.
+     * 
+     * @return Returns a window object
+     */
+    getWindow(id) {
+        let ret;
+
+        this.getWindows().some((window) => {
+            if (window._id === id) {
+                ret = window;
+                return true;
+            }
+        });
+
+        return ret;
+    }
+
+    /**
      * Function to add a window to the layout scheme.
      * @param {Object} config - The configuration object for the window
+     * 
+     * @return Returns the newly created Window
      */
     addWindow(config) {
         // Create a list element for each window.
@@ -72,11 +75,18 @@ class Layout {
 
         config.container = layoutItem;
 
-        let win = new Window(config);
+        let newWindow = new Window(config);
 
-        this._windows.push(win);
+        // Set up an onclose listener for the window.
+        let that = this;
 
-        return win;
+        newWindow.on('close', function () {
+            that.removeWindow(this._id);
+        });
+
+        this._windows.push(newWindow);
+
+        return newWindow;
     }
 
     /**
@@ -99,11 +109,116 @@ class Layout {
     }
 
     /* Private methods */
+    /**
+     * Method for creating a tiled layout of windows.
+     * @param {Array.Object} configs - The config objects to create the windows from
+     * @param {string} id - The id of the element to attach to, if none provided the layout will attach to the body
+     */
+    _tiled(configs, id) {
+        // Save the this context to be used when removing a window.
+        let that = this;
+
+        // Create the div to host the windows.
+        let layoutDiv = document.createElement('div');
+        let layoutList = document.createElement('ul');
+
+        layoutDiv.setAttribute('id', 'tiled-layout-container');
+
+        if (id) {
+            let container = document.getElementById(id);
+
+            container.appendChild(layoutDiv);
+        } else {
+            document.body.appendChild(layoutDiv);
+        }
+
+        layoutDiv.appendChild(layoutList);
+
+        // Keep a reference to the list for adding new windows.
+        this._list = layoutList;
+        // Keep a reference to the container.
+        this._container = layoutDiv;
+
+        // Create the windows.
+        configs.forEach((config) => {
+            // Create a list element for each window.
+            let layoutItem = this._createTiledLayoutItem();
+
+            // Set the windows container to be the list item.
+            config.container = layoutItem;
+
+            // Create the new window.
+            let newWindow = new Window(config);
+
+            // Set up an onclose listener for the window.
+            newWindow.on('close', function () {
+                that.removeWindow(this._id);
+            });
+
+            // Add to our windows store.
+            this._windows.push(newWindow);
+        });
+    }
+
+    /**
+     * Method for creating a tabbed layout.
+     * @param {Array.Object} configs - The config objects to create the windows from
+     * @param {string} id - The id of the element to attach to, if none provided the layout will attach to the body
+     */
+    _tabbed(configs, id) {
+        // Create the outer container.
+        let layoutDiv = document.createElement('div');
+        // Create the tabs div.
+        let tabDiv = document.createElement('div');
+        // Create the window div.
+        let activeWindowDiv = document.createElement('div');
+        // Create the tabs ul.
+        let tabList = document.createElement('ul');
+
+        layoutDiv.setAttribute('id', TABBED_LAYOUT_DIV_ID);
+        activeWindowDiv.setAttribute('id', ACTIVE_WINDOW_DIV_ID);
+        tabDiv.setAttribute('id', TAB_LIST_CONTAINER_ID);
+        tabList.setAttribute('id', TAB_LIST_ID);
+
+        this._list = tabList;
+
+        if (id) {
+            let container = document.getElementById(id);
+
+            container.appendChild(layoutDiv);
+        } else {
+            document.body.appendChild(layoutDiv);
+        }
+
+        layoutDiv.appendChild(tabDiv);
+        layoutDiv.appendChild(activeWindowDiv);
+        tabDiv.appendChild(tabList);
+
+        // Create the windows.
+        configs.forEach((config) => {
+            // Set up the config to have the active window as its container and to be hidden on start.
+            config.container = ACTIVE_WINDOW_DIV_ID;
+            config.show = false;
+
+            // Create the window.
+            let newWindow = new Window(config);
+
+            // Create the tab for the window.
+            this._createTabbedLayoutItem(newWindow._title, newWindow._id);
+
+            // Add the window to the internal windows store.
+            this._windows.push(newWindow);
+        });
+
+        // Change the active window.
+        this._activeWindowId = this._windows[0]._id;
+        this._changeActiveWindow(this._windows[0]._id);
+    }
 
     /**
      * Method for creating a list element to add a window to.
      */
-    _createLayoutItem() {
+    _createTiledLayoutItem() {
         let layoutItem = document.createElement('li');
 
         layoutItem.style.display = 'inline-block';
@@ -112,6 +227,46 @@ class Layout {
         this._list.appendChild(layoutItem);
 
         return layoutItem;
+    }
+
+    /**
+     * Method for creating a tab in the tabbed layout.
+     * 
+     * @param {string} title - The title of the window being created to display in the tab's text
+     * @param {string} id - The id of the window being created
+     */
+    _createTabbedLayoutItem(title, id) {
+        let layoutItem = document.createElement('li');
+
+        layoutItem.style.display = 'inline-block';
+        layoutItem.style.padding = '10px';
+        layoutItem.style.border = '2px solid black';
+        layoutItem.innerText = title;
+
+        // Set up the onclick listener to load the window into the activeWindow tab.
+        layoutItem.onclick = () => {
+            this._changeActiveWindow.call(this, id);
+        };
+
+        this._list.appendChild(layoutItem);
+
+        return layoutItem;
+    }
+
+    /**
+     * Method for changing the active window.
+     * 
+     * @param {string} id - The id of the window to show
+     */
+    _changeActiveWindow(id) {
+        let newActiveWindow = this.getWindow(id);
+        let oldActiveWindow = this.getWindow(this._activeWindowId);
+
+        if (oldActiveWindow) oldActiveWindow.hide();
+
+        newActiveWindow.show();
+
+        this._activeWindowId = id;
     }
 };
 
