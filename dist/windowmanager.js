@@ -11490,22 +11490,35 @@ var Layout = function () {
     }, {
         key: 'addWindow',
         value: function addWindow(config) {
+            var newWindow = void 0;
+
             // Create a list element for each window.
-            var layoutItem = this._createLayoutItem();
+            if (this._layoutType === 'tiled') {
+                var layoutItem = this._createLayoutItem();
 
-            config.container = layoutItem;
+                config.container = layoutItem;
 
-            var newWindow = new _Window2.default(config);
+                newWindow = new _Window2.default(config);
 
-            // Set up an onclose listener for the window.
-            var that = this;
+                // Set up an onclose listener for the window.
+                var that = this;
 
-            newWindow.on('close', function () {
-                that.removeWindow(this._id);
-            });
+                newWindow.on('close', function () {
+                    that.removeWindow(this._id);
+                });
+            } else if (this._layoutType === 'tabbed') {
+                // Set up the config to have the active window as its container and to be hidden on start.
+                config.container = ACTIVE_WINDOW_DIV_ID;
+                config.show = false;
+
+                // Create the window.
+                newWindow = new _Window2.default(config);
+
+                // Create the tab for the window.
+                this._createTabbedLayoutItem(newWindow._title, newWindow._id);
+            }
 
             this._windows.push(newWindow);
-
             return newWindow;
         }
 
@@ -11527,6 +11540,14 @@ var Layout = function () {
                     // If the window was removed via removeWindow programatically,
                     // it may not have been removed from the DOM yet.
                     window.close();
+
+                    // If in tabbed view, remove the element from the tab list.
+                    if (_this._layoutType === 'tabbed') {
+                        var tabElem = document.getElementById('tab-' + window._id);
+
+                        _this._list.removeChild(tabElem);
+                        _this._changeActiveWindow(_this._windows[0]._id);
+                    }
 
                     return true;
                 }
@@ -11685,6 +11706,7 @@ var Layout = function () {
             layoutItem.style.padding = '10px';
             layoutItem.style.border = '2px solid black';
             layoutItem.innerText = title;
+            layoutItem.setAttribute('id', 'tab-' + id);
 
             // Set up the onclick listener to load the window into the activeWindow tab.
             layoutItem.onclick = function () {

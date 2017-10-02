@@ -70,22 +70,35 @@ class Layout {
      * @return Returns the newly created Window
      */
     addWindow(config) {
+        let newWindow;
+
         // Create a list element for each window.
-        let layoutItem = this._createLayoutItem();
+        if (this._layoutType === 'tiled') {
+            let layoutItem = this._createLayoutItem();
 
-        config.container = layoutItem;
+            config.container = layoutItem;
 
-        let newWindow = new Window(config);
+            newWindow = new Window(config);
 
-        // Set up an onclose listener for the window.
-        let that = this;
+            // Set up an onclose listener for the window.
+            let that = this;
 
-        newWindow.on('close', function () {
-            that.removeWindow(this._id);
-        });
+            newWindow.on('close', function () {
+                that.removeWindow(this._id);
+            });
+        } else if (this._layoutType === 'tabbed') {
+            // Set up the config to have the active window as its container and to be hidden on start.
+            config.container = ACTIVE_WINDOW_DIV_ID;
+            config.show = false;
+
+            // Create the window.
+            newWindow = new Window(config);
+
+            // Create the tab for the window.
+            this._createTabbedLayoutItem(newWindow._title, newWindow._id);
+        }
 
         this._windows.push(newWindow);
-
         return newWindow;
     }
 
@@ -102,6 +115,14 @@ class Layout {
                 // If the window was removed via removeWindow programatically,
                 // it may not have been removed from the DOM yet.
                 window.close();
+
+                // If in tabbed view, remove the element from the tab list.
+                if (this._layoutType === 'tabbed') {
+                    let tabElem = document.getElementById('tab-' + window._id);
+
+                    this._list.removeChild(tabElem);
+                    this._changeActiveWindow(this._windows[0]._id);
+                }
 
                 return true;
             }
@@ -242,6 +263,7 @@ class Layout {
         layoutItem.style.padding = '10px';
         layoutItem.style.border = '2px solid black';
         layoutItem.innerText = title;
+        layoutItem.setAttribute('id', 'tab-' + id);
 
         // Set up the onclick listener to load the window into the activeWindow tab.
         layoutItem.onclick = () => {
