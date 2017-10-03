@@ -5651,7 +5651,7 @@ BrowserWindow.prototype._ensureSetup = function () {
             //       (they must be docked to edges of windows, not the windows themselves)
             /* for (let index = 0; index < this._dockedGroup.length; index += 1) {
                 const other = this._dockedGroup[index];
-                  if (other !== this) {
+                 if (other !== this) {
                     other.setPosition()
                 }
             }*/
@@ -8979,7 +8979,7 @@ _global2.default.messagebus = function () {
         var win = _Window2.default.getByID(message.winID);
 
         // Don't execute listeners when the sender is the same as the listener:
-        if (win._id === _Window2.default.current._id) {
+        if (win && win._id === _Window2.default.current._id) {
             return;
         }
 
@@ -9068,7 +9068,7 @@ _global2.default.messagebus = function () {
                 var _window = args.shift(); // args is by reference in message currently
 
                 // Don't execute listeners when the sender is the same as the listener:
-                if (_window._id === curWin._id) {
+                if (_window && _window._id === curWin._id) {
                     return;
                 }
                 // TODO: Save the id of message so we can get the response

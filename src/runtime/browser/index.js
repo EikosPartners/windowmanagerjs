@@ -35,7 +35,7 @@ windowmanager.messagebus = (() => {
         const win = Window.getByID(message.winID);
 
         // Don't execute listeners when the sender is the same as the listener:
-        if (win._id === Window.current._id) { return; }
+        if (win && win._id === Window.current._id) { return; }
 
         if (windowWrappedListeners[message.event] != null) {
             // Check to see if the called window is being listened to directly:
@@ -76,7 +76,7 @@ windowmanager.messagebus = (() => {
                 const window = args.shift(); // args is by reference in message currently
 
                 // Don't execute listeners when the sender is the same as the listener:
-                if (window._id === curWin._id) { return; }
+                if (window && window._id === curWin._id) { return; }
                 // TODO: Save the id of message so we can get the response
                 window._window.contentWindow.postMessage(message, '*');
             } else {
