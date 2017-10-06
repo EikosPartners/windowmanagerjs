@@ -3,6 +3,7 @@
  */
 
 import Window from '../Window.js';
+import windowmanager from '../global';
 
 const ACTIVE_WINDOW_DIV_ID = 'active-window-container';
 const TABBED_LAYOUT_DIV_ID = 'tabbed-layout-container';
@@ -34,6 +35,8 @@ class Layout {
         }
 
         this._layoutType = type;
+
+        windowmanager._layouts.set(id, this);
     }
 
     /**
@@ -127,6 +130,31 @@ class Layout {
                 return true;
             }
         });
+    }
+    /**
+     * Returns a list of all {@link Layout} instances open.
+     * <h5>Example:</h5>
+     * ```javascript
+     * // Close all windows:
+     * let allWindows = windowmanager.Layout.getAll();
+     * ```
+     * @returns {Window[]}
+     */
+    static getAll() {
+        return Array.from(windowmanager._layouts.values());
+    }
+    /**
+     * Returns the {@link Layout} instance that has `id`.
+     * <h5>Example:</h5>
+     * ```javascript
+     * // Get layout with ID:
+     * let layout = windowmanager.Layout.getById(windowID);
+     * ```
+     * @param {String|Number}
+     * @returns {Layout|undefined}
+     */
+    static getByID(id) {
+        return windowmanager._layouts.get(id);
     }
 
     /* Private methods */
