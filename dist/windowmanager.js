@@ -11464,7 +11464,7 @@ var Layout = function () {
         //     subWindow.resizeTo(window.outerWidth, formerSize.top);
         // });
         window.addEventListener('resize', function (event) {
-            window.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
+            window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
         });
     }
 
