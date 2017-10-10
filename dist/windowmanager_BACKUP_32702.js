@@ -11464,9 +11464,19 @@ var Layout = function () {
             subWindow.resizeTo(window.outerWidth, formerSize.top);
         });
         window.addEventListener('resize', function (event) {
+<<<<<<< HEAD
+            _global2.default.Layout.getAllTabbed()[0]._windows.forEach(function (subWindow) {
+                var formerSize = void 0;
+
+                formerSize = subWindow.getSize();
+                console.table(formerSize);
+                subWindow.resizeTo(window.outerWidth, formerSize.top);
+=======
             window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
             _global2.default.Layout.getAllTabbed()[0]._windows.forEach(function (subWindow) {
                 subWindow.resizeTo(window.outerWidth, window.outerHeight);
+                console.log('resize children')
+>>>>>>> test-branch
             });
         });
     }

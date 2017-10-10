@@ -11467,6 +11467,7 @@ var Layout = function () {
             window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
             _global2.default.Layout.getAllTabbed()[0]._windows.forEach(function (subWindow) {
                 subWindow.resizeTo(window.outerWidth, window.outerHeight);
+                console.log('resize children')
             });
         });
     }
