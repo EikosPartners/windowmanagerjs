@@ -11780,6 +11780,22 @@ var Layout = function () {
             return (0, _from2.default)(_global2.default._layouts.values());
         }
         /**
+         * Returns all tab style {@link Layout} instances open.
+         * <h5>Example:</h5>
+         * ```javascript
+         * let allTabSets = windowmanager.Layout.getAllTabbed();
+         * ```
+         * @returns {Layout[]}
+         */
+
+    }, {
+        key: 'getAllTabbed',
+        value: function getAllTabbed() {
+            return (0, _from2.default)(_global2.default._layouts.values().filter(function (item) {
+                return item._layoutType === 'tabbed';
+            }));
+        }
+        /**
          * Returns the {@link Layout} instance that has `id`.
          * <h5>Example:</h5>
          * ```javascript
