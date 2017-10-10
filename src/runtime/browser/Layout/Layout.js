@@ -43,7 +43,7 @@ class Layout {
             formerSize = subWindow.getSize();
             subWindow.resizeTo(window.outerWidth, formerSize.top);
         });
-        window.addEventListener('resize', function () {
+        window.addEventListener('resize', function (event) {
             this._windows.forEach(subWindow=> {
                 let formerSize;
 
@@ -51,7 +51,7 @@ class Layout {
                 console.table(formerSize);
                 subWindow.resizeTo(window.outerWidth, formerSize.top);
             });
-        });
+        }, this);
     }
 
     /**

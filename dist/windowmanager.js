@@ -11463,7 +11463,7 @@ var Layout = function () {
             formerSize = subWindow.getSize();
             subWindow.resizeTo(window.outerWidth, formerSize.top);
         });
-        window.addEventListener('resize', function () {
+        window.addEventListener('resize', function (event) {
             this._windows.forEach(function (subWindow) {
                 var formerSize = void 0;
 
@@ -11471,7 +11471,7 @@ var Layout = function () {
                 console.table(formerSize);
                 subWindow.resizeTo(window.outerWidth, formerSize.top);
             });
-        });
+        }, this);
     }
 
     /**
