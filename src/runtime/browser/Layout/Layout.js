@@ -35,8 +35,18 @@ class Layout {
         }
 
         this._layoutType = type;
-
+        // setAttribute('scrolling', 'no') ??? HTK
         windowmanager._layouts.set(id, this);
+        this._windows.forEach(subWindow=>{
+            subWindow.resizeTo(window.outerWidth, window.outerHeight);
+        });
+        window.addEventListener('resize', function (event) {
+            window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
+            windowmanager.Layout.getAllTabbed()[0]._windows.forEach(subWindow=> {
+                subWindow.resizeTo(window.outerWidth, window.outerHeight);
+            });
+
+        });
     }
 
     /**
@@ -96,9 +106,9 @@ class Layout {
 
             // Create the window.
             newWindow = new Window(config);
-
             // Create the tab for the window.
             this._createTabbedLayoutItem(newWindow._title, newWindow._id);
+            newWindow.resizeTo(window.outerWidth, window.outerHeight);
         }
 
         this._windows.push(newWindow);
@@ -142,6 +152,21 @@ class Layout {
      */
     static getAll() {
         return Array.from(windowmanager._layouts.values());
+    }
+    /**
+     * Returns all tab style {@link Layout} instances open.
+     * <h5>Example:</h5>
+     * ```javascript
+     * let allTabSets = windowmanager.Layout.getAllTabbed();
+     * ```
+     * @returns {Layout[]}
+     */
+
+    static getAllTabbed() {
+        return Array.from(windowmanager._layouts.values().filter((item)=>{
+            return item._layoutType === 'tabbed';
+        })
+        );
     }
     /**
      * Returns the {@link Layout} instance that has `id`.
@@ -262,6 +287,7 @@ class Layout {
         // Change the active window.
         this._activeWindowId = this._windows[0]._id;
         this._changeActiveWindow(this._windows[0]._id);
+
     }
 
     /**

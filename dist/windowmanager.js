@@ -11455,8 +11455,17 @@ var Layout = function () {
         }
 
         this._layoutType = type;
-
+        // setAttribute('scrolling', 'no') ??? HTK
         _global2.default._layouts.set(id, this);
+        this._windows.forEach(function (subWindow) {
+            subWindow.resizeTo(window.outerWidth, window.outerHeight);
+        });
+        window.addEventListener('resize', function (event) {
+            window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
+            _global2.default.Layout.getAllTabbed()[0]._windows.forEach(function (subWindow) {
+                subWindow.resizeTo(window.outerWidth, window.outerHeight);
+            });
+        });
     }
 
     /**
@@ -11526,9 +11535,9 @@ var Layout = function () {
 
                 // Create the window.
                 newWindow = new _Window2.default(config);
-
                 // Create the tab for the window.
                 this._createTabbedLayoutItem(newWindow._title, newWindow._id);
+                newWindow.resizeTo(window.outerWidth, window.outerHeight);
             }
 
             this._windows.push(newWindow);
@@ -11763,6 +11772,22 @@ var Layout = function () {
         key: 'getAll',
         value: function getAll() {
             return (0, _from2.default)(_global2.default._layouts.values());
+        }
+        /**
+         * Returns all tab style {@link Layout} instances open.
+         * <h5>Example:</h5>
+         * ```javascript
+         * let allTabSets = windowmanager.Layout.getAllTabbed();
+         * ```
+         * @returns {Layout[]}
+         */
+
+    }, {
+        key: 'getAllTabbed',
+        value: function getAllTabbed() {
+            return (0, _from2.default)(_global2.default._layouts.values().filter(function (item) {
+                return item._layoutType === 'tabbed';
+            }));
         }
         /**
          * Returns the {@link Layout} instance that has `id`.
