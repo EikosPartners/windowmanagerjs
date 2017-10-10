@@ -11455,22 +11455,16 @@ var Layout = function () {
         }
 
         this._layoutType = type;
-
+        // setAttribute('scrolling', 'no') ??? HTK
         _global2.default._layouts.set(id, this);
-        this._windows.forEach(function (subWindow) {
-            var formerSize = void 0;
+        // this._windows.forEach(subWindow=>{
+        //     let formerSize;
 
-            formerSize = subWindow.getSize();
-            subWindow.resizeTo(window.outerWidth, formerSize.top);
-        });
+        //     formerSize = subWindow.getSize();
+        //     subWindow.resizeTo(window.outerWidth, formerSize.top);
+        // });
         window.addEventListener('resize', function (event) {
-            _global2.default.Layout.getAllTabbed()[0]._windows.forEach(function (subWindow) {
-                var formerSize = void 0;
-
-                formerSize = subWindow.getSize();
-                console.table(formerSize);
-                subWindow.resizeTo(window.outerWidth, formerSize.top);
-            });
+            window.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
         });
     }
 
