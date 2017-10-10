@@ -37,14 +37,19 @@ class Layout {
         this._layoutType = type;
         // setAttribute('scrolling', 'no') ??? HTK
         windowmanager._layouts.set(id, this);
-        // this._windows.forEach(subWindow=>{
-        //     let formerSize;
+        this._windows.forEach(subWindow=>{
+            let formerSize;
 
-        //     formerSize = subWindow.getSize();
-        //     subWindow.resizeTo(window.outerWidth, formerSize.top);
-        // });
+            formerSize = subWindow.getSize();
+            subWindow.resizeTo(window.outerWidth, formerSize.top);
+        });
         window.addEventListener('resize', function (event) {
             window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
+            let layouts;
+
+            layouts = windowmanager.Layout.getAll();
+            console.log(layouts);
+            // debugger
         });
     }
 

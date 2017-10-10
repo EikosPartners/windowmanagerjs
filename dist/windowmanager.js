@@ -11457,14 +11457,19 @@ var Layout = function () {
         this._layoutType = type;
         // setAttribute('scrolling', 'no') ??? HTK
         _global2.default._layouts.set(id, this);
-        // this._windows.forEach(subWindow=>{
-        //     let formerSize;
+        this._windows.forEach(function (subWindow) {
+            var formerSize = void 0;
 
-        //     formerSize = subWindow.getSize();
-        //     subWindow.resizeTo(window.outerWidth, formerSize.top);
-        // });
+            formerSize = subWindow.getSize();
+            subWindow.resizeTo(window.outerWidth, formerSize.top);
+        });
         window.addEventListener('resize', function (event) {
             window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
+            var layouts = void 0;
+
+            layouts = _global2.default.Layout.getAll();
+            console.log(layouts);
+            // debugger
         });
     }
 
