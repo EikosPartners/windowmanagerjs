@@ -45,11 +45,10 @@ class Layout {
         });
         window.addEventListener('resize', function (event) {
             window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
-            let layouts;
+            windowmanager.Layout.getAllTabbed()[0]._windows.forEach(subWindow=> {
+                subWindow.resizeTo(window.outerWidth, window.outerHeight);
+            });
 
-            layouts = windowmanager.Layout.getAll();
-            console.log(layouts);
-            // debugger
         });
     }
 
