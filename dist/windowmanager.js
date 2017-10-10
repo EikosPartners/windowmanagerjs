@@ -11457,6 +11457,21 @@ var Layout = function () {
         this._layoutType = type;
 
         _global2.default._layouts.set(id, this);
+        this._windows.forEach(function (subWindow) {
+            var formerSize = void 0;
+
+            formerSize = subWindow.getSize();
+            subWindow.resizeTo(window.outerWidth, formerSize.top);
+        });
+        window.addEventListener('resize', function () {
+            this._windows.forEach(function (subWindow) {
+                var formerSize = void 0;
+
+                formerSize = subWindow.getSize();
+                console.table(formerSize);
+                subWindow.resizeTo(window.outerWidth, formerSize.top);
+            });
+        });
     }
 
     /**

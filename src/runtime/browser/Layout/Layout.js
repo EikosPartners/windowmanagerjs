@@ -37,6 +37,21 @@ class Layout {
         this._layoutType = type;
 
         windowmanager._layouts.set(id, this);
+        this._windows.forEach(subWindow=>{
+            let formerSize;
+
+            formerSize = subWindow.getSize();
+            subWindow.resizeTo(window.outerWidth, formerSize.top);
+        });
+        window.addEventListener('resize', function () {
+            this._windows.forEach(subWindow=> {
+                let formerSize;
+
+                formerSize = subWindow.getSize();
+                console.table(formerSize);
+                subWindow.resizeTo(window.outerWidth, formerSize.top);
+            });
+        });
     }
 
     /**
@@ -262,6 +277,7 @@ class Layout {
         // Change the active window.
         this._activeWindowId = this._windows[0]._id;
         this._changeActiveWindow(this._windows[0]._id);
+
     }
 
     /**
