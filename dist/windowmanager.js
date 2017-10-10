@@ -11464,14 +11464,14 @@ var Layout = function () {
             subWindow.resizeTo(window.outerWidth, formerSize.top);
         });
         window.addEventListener('resize', function (event) {
-            this._windows.forEach(function (subWindow) {
+            _global2.default.Layout.getAllTabbed()[0]._windows.forEach(function (subWindow) {
                 var formerSize = void 0;
 
                 formerSize = subWindow.getSize();
                 console.table(formerSize);
                 subWindow.resizeTo(window.outerWidth, formerSize.top);
             });
-        }, this);
+        });
     }
 
     /**

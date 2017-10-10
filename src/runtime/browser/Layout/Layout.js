@@ -44,14 +44,14 @@ class Layout {
             subWindow.resizeTo(window.outerWidth, formerSize.top);
         });
         window.addEventListener('resize', function (event) {
-            this._windows.forEach(subWindow=> {
+            windowmanager.Layout.getAllTabbed()[0]._windows.forEach(subWindow=> {
                 let formerSize;
 
                 formerSize = subWindow.getSize();
                 console.table(formerSize);
                 subWindow.resizeTo(window.outerWidth, formerSize.top);
             });
-        }, this);
+        });
     }
 
     /**
