@@ -11664,10 +11664,12 @@ var Layout = function () {
             var tabList = document.createElement('ul');
 
             layoutDiv.setAttribute('id', TABBED_LAYOUT_DIV_ID);
+            layoutDiv.setAttribute('class', 'row');
             activeWindowDiv.setAttribute('id', ACTIVE_WINDOW_DIV_ID);
             tabDiv.setAttribute('id', TAB_LIST_CONTAINER_ID);
+            tabDiv.setAttribute('class', 'col s12');
             tabList.setAttribute('id', TAB_LIST_ID);
-
+            tabList.setAttribute('class', 'tabs');
             this._list = tabList;
 
             if (id) {
@@ -11714,7 +11716,6 @@ var Layout = function () {
 
             layoutItem.style.display = 'inline-block';
             layoutItem.style.padding = '10px';
-
             this._list.appendChild(layoutItem);
 
             return layoutItem;
@@ -11732,13 +11733,18 @@ var Layout = function () {
         value: function _createTabbedLayoutItem(title, id) {
             var _this4 = this;
 
-            var layoutItem = document.createElement('li');
+            var layoutParent = document.createElement('li');
 
-            layoutItem.style.display = 'inline-block';
-            layoutItem.style.padding = '10px';
-            layoutItem.style.border = '2px solid black';
+            var layoutItem = document.createElement('a');
+
+            layoutParent.appendChild(layoutItem);
+            // layoutItem.style.display = 'inline-block';
+            // layoutItem.style.padding = '10px';
+            // layoutItem.style.border = '2px solid black';
             layoutItem.innerText = title;
             layoutItem.setAttribute('id', 'tab-' + id);
+            layoutParent.className = 'tab col';
+            layoutItem.style.cursor = 'pointer';
 
             // Set up the onclick listener to load the window into the activeWindow tab.
             layoutItem.onclick = function () {
