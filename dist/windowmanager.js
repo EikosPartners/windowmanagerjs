@@ -11823,14 +11823,22 @@ var Layout = function () {
     }, {
         key: '_changeActiveWindow',
         value: function _changeActiveWindow(id) {
+            if (!id) {
+                console.error('Must provide id to change window to.');
+                return;
+            }
+
             if (id === this._activeWindowId) {
                 return;
             }
 
             var newActiveWindow = this.getWindow(id);
-            var oldActiveWindow = this.getWindow(this._activeWindowId);
 
-            if (oldActiveWindow) oldActiveWindow.hide();
+            if (this._activeWindowId) {
+                var oldActiveWindow = this.getWindow(this._activeWindowId);
+
+                if (oldActiveWindow) oldActiveWindow.hide();
+            }
 
             if (newActiveWindow) {
                 newActiveWindow.show();

@@ -399,12 +399,20 @@ class Layout {
      * @param {string} id - The id of the window to show
      */
     _changeActiveWindow(id) {
+        if (!id) {
+            console.error('Must provide id to change window to.');
+            return;
+        }
+
         if (id === this._activeWindowId) { return; }
 
         let newActiveWindow = this.getWindow(id);
-        let oldActiveWindow = this.getWindow(this._activeWindowId);
 
-        if (oldActiveWindow) oldActiveWindow.hide();
+        if (this._activeWindowId) {
+            let oldActiveWindow = this.getWindow(this._activeWindowId);
+
+            if (oldActiveWindow) oldActiveWindow.hide();
+        }
 
         if (newActiveWindow) {
             newActiveWindow.show();
