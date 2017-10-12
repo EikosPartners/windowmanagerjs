@@ -11771,12 +11771,14 @@ var Layout = function () {
             var layoutItem = document.createElement('a');
 
             layoutParent.appendChild(layoutItem);
+            layoutItem.href = '#';
             // layoutItem.style.display = 'inline-block';
             // layoutItem.style.padding = '10px';
             // layoutItem.style.border = '2px solid black';
             layoutItem.innerText = title;
             layoutItem.setAttribute('id', 'tab-' + id);
             layoutParent.className = 'tab col';
+            layoutParent.style = 'float:right!important';
             layoutItem.style.cursor = 'pointer';
 
             // Set up the onclick listener to load the window into the activeWindow tab.
@@ -11784,9 +11786,9 @@ var Layout = function () {
                 _this4._changeActiveWindow.call(_this4, id);
             };
 
-            this._list.appendChild(layoutItem);
+            this._list.appendChild(layoutParent);
 
-            return layoutItem;
+            return layoutParent;
         }
 
         /**

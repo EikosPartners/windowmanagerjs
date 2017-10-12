@@ -333,17 +333,20 @@ class Layout {
      * @param {string} id - The id of the window being created
      */
     _createTabbedLayoutItem(title, id) {
+
         let layoutParent = document.createElement('li');
 
         let layoutItem = document.createElement('a');
 
         layoutParent.appendChild(layoutItem);
+        layoutItem.href = '#';
         // layoutItem.style.display = 'inline-block';
         // layoutItem.style.padding = '10px';
         // layoutItem.style.border = '2px solid black';
         layoutItem.innerText = title;
         layoutItem.setAttribute('id', 'tab-' + id);
         layoutParent.className = 'tab col';
+        layoutParent.style = 'float:right!important';
         layoutItem.style.cursor = 'pointer';
 
         // Set up the onclick listener to load the window into the activeWindow tab.
@@ -351,9 +354,9 @@ class Layout {
             this._changeActiveWindow.call(this, id);
         };
 
-        this._list.appendChild(layoutItem);
+        this._list.appendChild(layoutParent);
 
-        return layoutItem;
+        return layoutParent;
     }
 
     /**
