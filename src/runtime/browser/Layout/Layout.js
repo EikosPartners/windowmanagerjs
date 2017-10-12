@@ -22,6 +22,23 @@ class Layout {
      * @param {Array.Object} configs - The config objects to create the windows from
      */
     constructor(type, id, configs) {
+        // If no type is defined let the user know that it will default to tiled.
+        if (!type) {
+            console.warn('Type not provided, defaulting to tiled view.');
+        }
+
+        // If no configs given, error out.
+        if (!configs || configs.length === 0) {
+            console.error('Must provide window configurations in constructor.');
+            return;
+        }
+
+        // If configs is only one object, convert it to an array.
+        if (!Array.isArray(configs)) {
+            console.warn('Parameter configs should be an array of window configuration objects.');
+            configs = [configs];
+        }
+
         this._windows = [];
 
         // Create the layout based on the type given.
@@ -35,11 +52,14 @@ class Layout {
         }
 
         this._layoutType = type;
+
         // setAttribute('scrolling', 'no') ??? HTK
         windowmanager._layouts.set(id, this);
+
         this._windows.forEach(subWindow=>{
             subWindow.resizeTo(window.outerWidth, window.outerHeight);
         });
+
         window.addEventListener('resize', function (event) {
             window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
             windowmanager.Layout.getAllTabbed()[0]._windows.forEach(subWindow=> {
@@ -66,6 +86,11 @@ class Layout {
     getWindow(id) {
         let ret;
 
+        if (!id) {
+            console.error('No id provided for window to find.');
+            return ret;
+        }
+
         this.getWindows().some((window) => {
             if (window._id === id) {
                 ret = window;
@@ -84,6 +109,11 @@ class Layout {
      */
     addWindow(config) {
         let newWindow;
+
+        if (!config) {
+            console.error('Must provide configuration object to create window from.');
+            return;
+        }
 
         // Create a list element for each window.
         if (this._layoutType === 'tiled') {
@@ -133,6 +163,11 @@ class Layout {
      * @param {String} id - The id of the window to remove.
      */
     removeWindow(id) {
+        if (!id) {
+            console.error('Must provide id of window to remove.');
+            return;
+        }
+
         this._windows.some((window, idx) => {
             if (window._id === id) {
                 this._windows.splice(idx, 1);
@@ -202,6 +237,11 @@ class Layout {
      * @param {string} id - The id of the element to attach to, if none provided the layout will attach to the body
      */
     _tiled(configs, id) {
+        if (!configs || !Array.isArray(configs) || configs.length === 0) {
+            console.error('Must provide array of configuration objects to create windows from.');
+            return;
+        }
+
         // Save the this context to be used when removing a window.
         let that = this;
 
@@ -253,6 +293,11 @@ class Layout {
      * @param {string} id - The id of the element to attach to, if none provided the layout will attach to the body
      */
     _tabbed(configs, id) {
+        if (!configs || !Array.isArray(configs) || configs.length === 0) {
+            console.error('Must provide array of configuration objects to create windows from.');
+            return;
+        }
+
         // Create the outer container.
         let layoutDiv = document.createElement('div');
         // Create the tabs div.
@@ -305,7 +350,6 @@ class Layout {
         });
 
         // Change the active window.
-        this._activeWindowId = this._windows[0]._id;
         this._changeActiveWindow(this._windows[0]._id);
 
     }
@@ -355,14 +399,17 @@ class Layout {
      * @param {string} id - The id of the window to show
      */
     _changeActiveWindow(id) {
+        if (id === this._activeWindowId) { return; }
+
         let newActiveWindow = this.getWindow(id);
         let oldActiveWindow = this.getWindow(this._activeWindowId);
 
         if (oldActiveWindow) oldActiveWindow.hide();
 
-        newActiveWindow.show();
-
-        this._activeWindowId = id;
+        if (newActiveWindow) {
+            newActiveWindow.show();
+            this._activeWindowId = id;
+        }
     }
 };
 
