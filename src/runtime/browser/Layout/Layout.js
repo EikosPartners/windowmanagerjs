@@ -99,6 +99,8 @@ class Layout {
             newWindow.on('close', function () {
                 that.removeWindow(this._id);
             });
+
+            this._windows.push(newWindow);
         } else if (this._layoutType === 'tabbed') {
             // Set up the config to have the active window as its container and to be hidden on start.
             config.container = ACTIVE_WINDOW_DIV_ID;
@@ -109,9 +111,20 @@ class Layout {
             // Create the tab for the window.
             this._createTabbedLayoutItem(newWindow._title, newWindow._id);
             newWindow.resizeTo(window.outerWidth, window.outerHeight);
+
+            // Set up an on close listener for the window.
+            let that = this;
+
+            newWindow.on('close', function () {
+                that.removeWindow(this._id);
+            });
+
+            this._windows.push(newWindow);
+
+            // Set the newly created window to be the active window.
+            this._changeActiveWindow(newWindow._id);
         }
 
-        this._windows.push(newWindow);
         return newWindow;
     }
 
@@ -268,6 +281,8 @@ class Layout {
         layoutDiv.appendChild(activeWindowDiv);
         tabDiv.appendChild(tabList);
 
+        let that = this;
+
         // Create the windows.
         configs.forEach((config) => {
             // Set up the config to have the active window as its container and to be hidden on start.
@@ -276,6 +291,11 @@ class Layout {
 
             // Create the window.
             let newWindow = new Window(config);
+
+            // Set up an onclose listener for the window.
+            newWindow.on('close', function () {
+                that.removeWindow(this._id);
+            });
 
             // Create the tab for the window.
             this._createTabbedLayoutItem(newWindow._title, newWindow._id);

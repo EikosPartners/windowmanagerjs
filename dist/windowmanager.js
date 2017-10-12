@@ -11528,6 +11528,8 @@ var Layout = function () {
                 newWindow.on('close', function () {
                     that.removeWindow(this._id);
                 });
+
+                this._windows.push(newWindow);
             } else if (this._layoutType === 'tabbed') {
                 // Set up the config to have the active window as its container and to be hidden on start.
                 config.container = ACTIVE_WINDOW_DIV_ID;
@@ -11538,9 +11540,20 @@ var Layout = function () {
                 // Create the tab for the window.
                 this._createTabbedLayoutItem(newWindow._title, newWindow._id);
                 newWindow.resizeTo(window.outerWidth, window.outerHeight);
+
+                // Set up an on close listener for the window.
+                var _that = this;
+
+                newWindow.on('close', function () {
+                    _that.removeWindow(this._id);
+                });
+
+                this._windows.push(newWindow);
+
+                // Set the newly created window to be the active window.
+                this._changeActiveWindow(newWindow._id);
             }
 
-            this._windows.push(newWindow);
             return newWindow;
         }
 
@@ -11682,6 +11695,8 @@ var Layout = function () {
             layoutDiv.appendChild(activeWindowDiv);
             tabDiv.appendChild(tabList);
 
+            var that = this;
+
             // Create the windows.
             configs.forEach(function (config) {
                 // Set up the config to have the active window as its container and to be hidden on start.
@@ -11690,6 +11705,11 @@ var Layout = function () {
 
                 // Create the window.
                 var newWindow = new _Window2.default(config);
+
+                // Set up an onclose listener for the window.
+                newWindow.on('close', function () {
+                    that.removeWindow(this._id);
+                });
 
                 // Create the tab for the window.
                 _this3._createTabbedLayoutItem(newWindow._title, newWindow._id);
