@@ -11444,6 +11444,7 @@ var Layout = function () {
 
         this._windows = [];
         this._isClosed = false;
+        this._id = id;
         // Create the layout based on the type given.
         switch (type) {
             case 'tabbed':
