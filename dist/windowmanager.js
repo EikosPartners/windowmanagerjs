@@ -11443,7 +11443,7 @@ var Layout = function () {
         (0, _classCallCheck3.default)(this, Layout);
 
         this._windows = [];
-
+        this._isClosed = false;
         // Create the layout based on the type given.
         switch (type) {
             case 'tabbed':
@@ -11574,6 +11574,37 @@ var Layout = function () {
                     return true;
                 }
             });
+        }
+        /**
+         * Returns whether window has been closed already.
+         * @returns {Boolean}
+         */
+
+    }, {
+        key: 'isClosed',
+        value: function isClosed() {
+            return this._isClosed;
+        }
+        /**
+         * Closes the layout instance.
+         * @param {Callback=}
+         */
+
+    }, {
+        key: 'close',
+        value: function close(callback) {
+            if (this.isClosed()) {
+                return callback && callback();
+            }
+
+            _global2.default._layouts.delete(this._id);
+
+            this._isClosed = true;
+            if (callback) {
+                callback();
+            }
+            this.emit('close');
+            _global2.default._internalBus.emit('layout-close', this);
         }
         /**
          * Returns a list of all {@link Layout} instances open.

@@ -23,7 +23,7 @@ class Layout {
      */
     constructor(type, id, configs) {
         this._windows = [];
-
+        this._isClosed = false;
         // Create the layout based on the type given.
         switch (type) {
             case 'tabbed':
@@ -140,6 +140,27 @@ class Layout {
                 return true;
             }
         });
+    }
+    /**
+     * Returns whether window has been closed already.
+     * @returns {Boolean}
+     */
+    isClosed() {
+        return this._isClosed;
+    }
+    /**
+     * Closes the layout instance.
+     * @param {Callback=}
+     */
+    close(callback) {
+        if (this.isClosed()) { return callback && callback(); }
+
+        windowmanager._layouts.delete(this._id);
+
+        this._isClosed = true;
+        if (callback) { callback(); }
+        this.emit('close');
+        windowmanager._internalBus.emit('layout-close', this);
     }
     /**
      * Returns a list of all {@link Layout} instances open.
