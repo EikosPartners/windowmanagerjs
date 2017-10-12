@@ -11596,15 +11596,16 @@ var Layout = function () {
             if (this.isClosed()) {
                 return callback && callback();
             }
-
+            // var doubleCheck = confirm('Are you sure? Closing this Layout will close all related tabs');
             _global2.default._layouts.delete(this._id);
-
+            this._windows.forEach(function (childWindow) {
+                childWindow.close();
+            });
+            document.getElementById(TABBED_LAYOUT_DIV_ID).remove();
             this._isClosed = true;
             if (callback) {
                 callback();
             }
-            this.emit('close');
-            _global2.default._internalBus.emit('layout-close', this);
         }
         /**
          * Returns a list of all {@link Layout} instances open.
