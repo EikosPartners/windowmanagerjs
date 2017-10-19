@@ -30,6 +30,19 @@ let childWindow = new windowmanager.Window({
 childWindow.onReady(() => {
     childWindow.focus(); // Set focus to childWindow.
 });
+
+// Use the layout manager.
+let state = {
+    width: 400, 
+    height: 400,
+    url: 'child.html',
+    title: 'Child Window',
+    frame: false 
+};
+
+let configs = [state, state, state];
+
+let layout = new windowmanager.Layout('tabbed', 'layout-div', configs);
 ```
 
 ## Installation

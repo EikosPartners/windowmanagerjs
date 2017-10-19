@@ -11,11 +11,35 @@ const TAB_LIST_CONTAINER_ID = 'layout-tabs-list-container';
 const TAB_LIST_ID = 'layout-tabs-list';
 
 /**
- * Layout namespace.
+ * A Layout class, used to create a layout of {@link Window} objects.
+ * 
+ * <h5>Example:</h5>
+ * ```javascript
+ * // Create window(s).
+ * let state = {
+ *       width: 400, 
+ *       height: 400,
+ *       url: 'child.html',
+ *       title: 'Window X',
+ *       frame: false 
+ *   };
+ * 
+ * // Make an array of windows.
+ * let configs = [state, state, state];
+ * 
+ * // Create the layout.
+ * let layout = new windowmanager.Layout('tabbed', 'layout-div', configs);
+ * ```
  */
 class Layout {
     /**
      * Constructor for the layout class.
+     * 
+     * <h5>Example:</h5>
+     * ```javascript
+     * // Create the layout.
+     * let layout = new windowmanager.Layout('tiled', 'layout-div', configs);
+     * ```
      *
      * @param {string} type - The type of layout, defaults to tiled
      * @param {string} id - The id of the element to attach to, if none provided the layout will attach to the body
@@ -70,10 +94,12 @@ class Layout {
     }
 
     /**
-     * Function to retrieve all _windows.
+     * Function to retrieve all windows being managed.
+     * 
+     * @returns {Array.Window}
      */
     getWindows() {
-        return this._windows;
+        return this._windows.slice();
     }
 
     /**
@@ -81,7 +107,7 @@ class Layout {
      * 
      * @param {string} id - the id of the window to find.
      * 
-     * @return Returns a window object
+     * @returns {Window}
      */
     getWindow(id) {
         let ret;
@@ -105,7 +131,7 @@ class Layout {
      * Function to add a window to the layout scheme.
      * @param {Object} config - The configuration object for the window
      * 
-     * @return Returns the newly created Window
+     * @returns {Windowlo}
      */
     addWindow(config) {
         let newWindow;
