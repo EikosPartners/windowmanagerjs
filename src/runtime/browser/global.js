@@ -77,6 +77,7 @@ if (windowmanager.runtime.isMain) {
     windowmanager._launcher = window;
     windowmanager._internalBus = new EventHandler(Object.keys(windowmanager._eventListeners));
     windowmanager._windows = new _Map();
+    windowmanager._layouts = new _Map();
 
     // Create overlay:
     let overlay = window.document.createElement('div');
@@ -189,6 +190,7 @@ if (windowmanager.runtime.isMain) {
     windowmanager._launcher = window.parent.windowmanager._launcher || window.parent;
     windowmanager._internalBus = window.parent.windowmanager._internalBus;
     windowmanager._windows = window.parent.windowmanager._windows;
+    windowmanager._layouts = window.parent.windowmanager._layouts;
     windowmanager._getNextZIndex = window.parent.windowmanager._getNextZIndex;
     windowmanager._overlay = window.parent.windowmanager._overlay;
     windowmanager._drag = window.parent.windowmanager._drag;
