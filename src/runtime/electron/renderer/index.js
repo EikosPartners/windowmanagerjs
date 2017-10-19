@@ -11,11 +11,11 @@ function updateMonitors() {
     let boxes = [];
 
     // Add monitors:
-    for (const display in displays) {
+    (displays || []).forEach((display) => {
         boxes.push(new BoundingBox(display.bounds.x, display.bounds.y,
             display.bounds.x + display.bounds.width,
             display.bounds.y + display.bounds.height));
-    }
+    });
 
     // Update monitors CollisionMesh:
     windowmanager.monitors.boxes = boxes;
