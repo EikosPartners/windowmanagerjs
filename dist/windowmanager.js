@@ -687,7 +687,7 @@ var windowmanagerEventNames = ['window-create', 'window-close'];
  */
 var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 
-windowmanager.version = "0.14.4";
+windowmanager.version = "0.14.5";
 // runtime is set in the respective runtime
 windowmanager.runtime = {
     name: undefined,
@@ -11751,6 +11751,12 @@ var Layout = function () {
             activeWindowDiv.setAttribute('id', ACTIVE_WINDOW_DIV_ID);
             tabDiv.setAttribute('id', TAB_LIST_CONTAINER_ID);
             tabList.setAttribute('id', TAB_LIST_ID);
+
+            // Set up the fixed tab bar.
+            tabDiv.style.position = 'fixed';
+            tabDiv.style.top = 0;
+            tabDiv.style.zIndex = 1000;
+            activeWindowDiv.style.marginTop = '74px';
 
             this._list = tabList;
 

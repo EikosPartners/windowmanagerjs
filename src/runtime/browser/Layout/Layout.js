@@ -338,6 +338,12 @@ class Layout {
         tabDiv.setAttribute('id', TAB_LIST_CONTAINER_ID);
         tabList.setAttribute('id', TAB_LIST_ID);
 
+        // Set up the fixed tab bar.
+        tabDiv.style.position = 'fixed';
+        tabDiv.style.top = 0;
+        tabDiv.style.zIndex = 1000;
+        activeWindowDiv.style.marginTop = '74px';
+
         this._list = tabList;
 
         if (id) {
