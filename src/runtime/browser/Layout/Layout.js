@@ -450,10 +450,22 @@ class Layout {
         if (this._activeWindowId) {
             let oldActiveWindow = this.getWindow(this._activeWindowId);
 
-            if (oldActiveWindow) oldActiveWindow.hide();
+            if (oldActiveWindow) {
+                // Remove the active class from the old active tab.]
+                let oldActiveTab = document.getElementById('tab-' + oldActiveWindow._id);
+
+                oldActiveTab.classList.remove('active-tab');
+
+                oldActiveWindow.hide();
+            }
         }
 
         if (newActiveWindow) {
+            // Add the active class to the tab that is active.
+            let activeTab = document.getElementById('tab-' + id);
+
+            activeTab.classList.add('active-tab');
+
             newActiveWindow.show();
             this._activeWindowId = id;
         }

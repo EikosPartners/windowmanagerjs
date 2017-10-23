@@ -687,7 +687,7 @@ var windowmanagerEventNames = ['window-create', 'window-close'];
  */
 var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 
-windowmanager.version = "0.14.5";
+windowmanager.version = "0.14.6";
 // runtime is set in the respective runtime
 windowmanager.runtime = {
     name: undefined,
@@ -11876,10 +11876,22 @@ var Layout = function () {
             if (this._activeWindowId) {
                 var oldActiveWindow = this.getWindow(this._activeWindowId);
 
-                if (oldActiveWindow) oldActiveWindow.hide();
+                if (oldActiveWindow) {
+                    // Remove the active class from the old active tab.]
+                    var oldActiveTab = document.getElementById('tab-' + oldActiveWindow._id);
+
+                    oldActiveTab.classList.remove('active-tab');
+
+                    oldActiveWindow.hide();
+                }
             }
 
             if (newActiveWindow) {
+                // Add the active class to the tab that is active.
+                var activeTab = document.getElementById('tab-' + id);
+
+                activeTab.classList.add('active-tab');
+
                 newActiveWindow.show();
                 this._activeWindowId = id;
             }
