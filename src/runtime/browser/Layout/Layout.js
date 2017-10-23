@@ -9,6 +9,7 @@ const ACTIVE_WINDOW_DIV_ID = 'active-window-container';
 const TABBED_LAYOUT_DIV_ID = 'tabbed-layout-container';
 const TAB_LIST_CONTAINER_ID = 'layout-tabs-list-container';
 const TAB_LIST_ID = 'layout-tabs-list';
+let TAB_DIV_HEIGHT = '25px'; // Can be overwritten by developer. 
 
 /**
  * A Layout class, used to create a layout of {@link Window} objects.
@@ -44,8 +45,9 @@ class Layout {
      * @param {string} type - The type of layout, defaults to tiled
      * @param {string} id - The id of the element to attach to, if none provided the layout will attach to the body
      * @param {Array.Object} configs - The config objects to create the windows from
+     * @param {String} tabHeight - If in tabbed view, the height of the tab toolbar. Used to offset the active window div.
      */
-    constructor(type, id, configs) {
+    constructor(type, id, configs, tabHeight) {
         // If no type is defined let the user know that it will default to tiled.
         if (!type) {
             console.warn('Type not provided, defaulting to tiled view.');
@@ -61,6 +63,11 @@ class Layout {
         if (!Array.isArray(configs)) {
             console.warn('Parameter configs should be an array of window configuration objects.');
             configs = [configs];
+        }
+
+        // Set the internal tab toolbar height if supplied.
+        if (tabHeight) {
+            TAB_DIV_HEIGHT = tabHeight.indexOf('px') > 0 ? tabHeight : tabHeight + 'px';
         }
 
         this._windows = [];
@@ -342,7 +349,7 @@ class Layout {
         tabDiv.style.position = 'fixed';
         tabDiv.style.top = 0;
         tabDiv.style.zIndex = 1000;
-        activeWindowDiv.style.marginTop = '74px';
+        activeWindowDiv.style.marginTop = TAB_DIV_HEIGHT;
 
         this._list = tabList;
 
