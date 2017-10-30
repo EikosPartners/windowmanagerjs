@@ -49,5 +49,8 @@
     "release-it": "^2.8.0",
     "webpack": "^3.1.0",
     "yargs": "^8.0.2"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1"
   }
 }

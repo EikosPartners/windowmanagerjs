@@ -2,17 +2,18 @@ import windowmanager from './global';
 import { EventHandler, getUniqueWindowName } from '../../utils/index';
 import { BoundingBox, Position, Size, Vector } from '../../geometry/index';
 import 'core-js/fn/string/includes';
+import $ from 'jquery';
 
 const defaultConfig = {
-    width: 800,
-    height: 500,
-    frame: true,
-    resizable: true,
+    width: '100%',
+    height: '100%',
+    frame: false,
+    resizable: false,
     show: true,
     icon: location.href + 'favicon.ico',
     url: '.',
     minWidth: 100,
-    minHeight: 100,
+    minHeight: 0,
     maxWidth: Infinity,
     maxHeight: Infinity
 };
@@ -131,7 +132,7 @@ class Window extends EventHandler {
             this._isResizable = config.resizable;
 
             let newWindow = windowmanager._launcher.document.createElement('div');
-            let iframe = windowmanager._launcher.document.createElement('iframe');
+            let iframeIsh = windowmanager._launcher.document.createElement('div');
 
             // Only give the window an absolute position if it is not being put in a container.
             // This makes it possible for a Layout object to control the position.
@@ -139,7 +140,7 @@ class Window extends EventHandler {
                 newWindow.style.position = 'absolute';
             }
 
-            iframe.style.margin = iframe.style.padding = iframe.style.border = 0;
+            iframeIsh.style.margin = iframeIsh.style.padding = iframeIsh.style.border = 0;
             newWindow.style.resize = 'both';
             newWindow.style.overflow = 'visible';
             if (!Number.isFinite(config.left)) {
@@ -150,8 +151,8 @@ class Window extends EventHandler {
                 config.top = (windowmanager._launcher.innerHeight - config.height) / 2;
             }
             newWindow.style.top = config.top + 'px';
-            newWindow.style.width = config.width + 'px';
-            newWindow.style.height = config.height + 'px';
+            newWindow.style.width = config.width; // + 'px';
+            newWindow.style.height = config.height; // + 'px';
             newWindow.style.minWidth = this._minSize.left + 'px';
             newWindow.style.minHeight = this._minSize.top + 'px';
             newWindow.style.maxWidth = this._maxSize.left + 'px';
@@ -179,14 +180,34 @@ class Window extends EventHandler {
             }
 
             // Check whether to show the window or not.
-            if (!config.show) {
-                newWindow.style.display = 'none';
-            }
+            // if (!config.show) {
+            //     newWindow.style.display = 'none';
+            // }
             // Set up iframe for page:
-            iframe.src = config.url;
-            iframe.style.margin = iframe.style.padding = iframe.style.border = 0;
-            iframe.style.width = iframe.style.height = '100%';
-            newWindow.appendChild(iframe);
+            // iframe.src = config.url;
+            iframeIsh.style.margin = iframeIsh.style.padding = iframeIsh.style.border = 0;
+            iframeIsh.style.width = iframeIsh.style.height = '100%';
+            newWindow.appendChild(iframeIsh);
+            iframeIsh.setAttribute('id', this._id);
+            // iframeIsh.innerHTML = config.url;
+
+            $(iframeIsh).load(config.url);
+
+            // let request = new XMLHttpRequest();
+
+            // request.open('GET', config.url, true);
+
+            // request.onload = function () {
+            //     let resp;
+
+            //     if (request.status >= 200 && request.status < 400) {
+            //         resp = request.responseText;
+
+            //         iframeIsh.innerHTML = resp;
+            //     }
+            // };
+
+            // request.send();
 
             // Set up resize:
             this._resize = Object.create(null);
@@ -224,7 +245,7 @@ class Window extends EventHandler {
                 }
             }
 
-            this._window = iframe;
+            this._window = iframeIsh;
             this._wrapper = newWindow;
             windowmanager._windows.set(this._id, this);
             this._ready = true;
@@ -591,9 +612,14 @@ class Window extends EventHandler {
         if (!this._ready) { throw new Error('focus can\'t be called on an unready window'); }
 
         for (let window of this._dockedGroup) {
-            if (window !== this) { window._window.contentWindow.focus(); }
+            if (window !== this) {
+            // HTK put debugger here?
+            // window._window.contentWindow.focus();
+                window._window.style.zIndex = 50000;
+            }
         }
-        this._window.contentWindow.focus();
+        this._window.style.zIndex = 50000;
+        // this._window.contentWindow.focus();
         this.emit('focus');
         if (callback) { callback(); }
     }

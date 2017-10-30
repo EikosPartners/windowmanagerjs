@@ -38,16 +38,16 @@ class Layout {
         this._layoutType = type;
         // setAttribute('scrolling', 'no') ??? HTK
         windowmanager._layouts.set(id, this);
-        this._windows.forEach(subWindow=>{
-            subWindow.resizeTo(window.outerWidth, window.outerHeight);
-        });
-        window.addEventListener('resize', function (event) {
-            window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
-            windowmanager.Layout.getAllTabbed()[0]._windows.forEach(subWindow=> {
-                subWindow.resizeTo(window.outerWidth, window.outerHeight);
-            });
+        // this._windows.forEach(subWindow=>{
+        //     subWindow.resizeTo(window.outerWidth, window.outerHeight);
+        // });
+        // window.addEventListener('resize', function (event) {
+        //     window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
+        //     windowmanager.Layout.getAllTabbed()[0]._windows.forEach(subWindow=> {
+        //         subWindow.resizeTo(window.outerWidth, window.outerHeight);
+        //     });
 
-        });
+        // });
     }
 
     /**
@@ -104,12 +104,17 @@ class Layout {
             // Set up the config to have the active window as its container and to be hidden on start.
             config.container = ACTIVE_WINDOW_DIV_ID;
             config.show = false;
-
-            // Create the window.
+            // Create the window. HTK 
             newWindow = new Window(config);
             // Create the tab for the window.
+            newWindow._window.style.height = '100%';
+            newWindow._window.style.width = '100%';
+
+            // Create the tab for the window.
+
+            // Add the window to the internal windows store.
             this._createTabbedLayoutItem(newWindow._title, newWindow._id);
-            newWindow.resizeTo(window.outerWidth, window.outerHeight);
+            this._changeActiveWindow(newWindow._id);
         }
 
         this._windows.push(newWindow);
@@ -271,12 +276,19 @@ class Layout {
         let tabList = document.createElement('ul');
 
         layoutDiv.setAttribute('id', TABBED_LAYOUT_DIV_ID);
-        layoutDiv.setAttribute('class', 'row');
+        // layoutDiv.setAttribute('height', window.innerHeight);
+        // layoutDiv.setAttribute('width', window.innerWidth);
+        layoutDiv.setAttribute('display', 'inline-block');
+        layoutDiv.setAttribute('position', 'absolute');
+        layoutDiv.setAttribute('top', '164px');
         activeWindowDiv.setAttribute('id', ACTIVE_WINDOW_DIV_ID);
+        activeWindowDiv.setAttribute('height', '100%');
+        activeWindowDiv.setAttribute('width', '100%');
+        activeWindowDiv.setAttribute('display', 'block');
         tabDiv.setAttribute('id', TAB_LIST_CONTAINER_ID);
-        tabDiv.setAttribute('class', 'col s12');
+        tabDiv.setAttribute('style', 'height: 30px; min-height:30px');
         tabList.setAttribute('id', TAB_LIST_ID);
-        tabList.setAttribute('class', 'tabs');
+        tabList.setAttribute('style', 'height: 30px; min-height:30px');
         this._list = tabList;
 
         if (id) {
@@ -299,6 +311,9 @@ class Layout {
 
             // Create the window.
             let newWindow = new Window(config);
+
+            newWindow._window.style.height = '100%';
+            newWindow._window.style.width = '100%';
 
             // Create the tab for the window.
             this._createTabbedLayoutItem(newWindow._title, newWindow._id);
@@ -351,7 +366,8 @@ class Layout {
 
         // Set up the onclick listener to load the window into the activeWindow tab.
         layoutItem.onclick = () => {
-            this._changeActiveWindow.call(this, id);
+            this._changeActiveWindow(id);
+            // this._changeActiveWindow.call(this._id);
         };
 
         this._list.appendChild(layoutParent);
@@ -366,11 +382,16 @@ class Layout {
      */
     _changeActiveWindow(id) {
         let newActiveWindow = this.getWindow(id);
+
         let oldActiveWindow = this.getWindow(this._activeWindowId);
 
-        if (oldActiveWindow) oldActiveWindow.hide();
-
-        newActiveWindow.show();
+        if (oldActiveWindow) {
+            oldActiveWindow._window.style.display = 'none';
+        };
+        if (newActiveWindow) {
+            newActiveWindow._window.style.display = 'block';
+        };
+        // newActiveWindow.show();
 
         this._activeWindowId = id;
     }
