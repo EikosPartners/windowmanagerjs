@@ -21731,12 +21731,15 @@ var Layout = function () {
      * @param {string} id - The id of the element to attach to, if none provided the layout will attach to the body
      * @param {Array.Object} configs - The config objects to create the windows from
      */
-    function Layout(type, id, configs) {
+    function Layout(type, id, configs, parentWindowId) {
         (0, _classCallCheck3.default)(this, Layout);
 
         this._windows = [];
         this._isClosed = false;
         this._id = id;
+        this._parentId = parentWindowId;
+        this._parentWindow = _global2.default.Window.getByID(this._parentId);
+        this._list = [];
         // Create the layout based on the type given.
         switch (type) {
             case 'tabbed':
@@ -22005,10 +22008,9 @@ var Layout = function () {
             activeWindowDiv.setAttribute('width', '100%');
             activeWindowDiv.setAttribute('display', 'block');
             tabDiv.setAttribute('id', TAB_LIST_CONTAINER_ID);
-            tabDiv.setAttribute('style', 'height: 30px; min-height:30px');
+            // tabDiv.setAttribute('style', 'height: 30px; min-height:30px');
             tabList.setAttribute('id', TAB_LIST_ID);
-            tabList.setAttribute('style', 'height: 30px; min-height:30px');
-            this._list = tabList;
+            // tabList.setAttribute('style', 'height: 30px; min-height:30px');
 
             if (id) {
                 var container = document.getElementById(id);
@@ -22020,7 +22022,7 @@ var Layout = function () {
 
             layoutDiv.appendChild(tabDiv);
             layoutDiv.appendChild(activeWindowDiv);
-            tabDiv.appendChild(tabList);
+            // tabDiv.appendChild(tabList);
 
             // Create the windows.
             configs.forEach(function (config) {
@@ -22072,32 +22074,37 @@ var Layout = function () {
     }, {
         key: '_createTabbedLayoutItem',
         value: function _createTabbedLayoutItem(title, id) {
-            var _this4 = this;
 
-            var layoutParent = document.createElement('li');
+            // let layoutParent = document.createElement('li');
 
-            var layoutItem = document.createElement('a');
+            // let layoutItem = document.createElement('a');
 
-            layoutParent.appendChild(layoutItem);
-            layoutItem.href = '#';
+            var item = {};
+
+            item.text = title;
+            item.id = id;
+            this._list.push(item);
+
+            // layoutParent.appendChild(layoutItem);
+            // layoutItem.href = '#';
             // layoutItem.style.display = 'inline-block';
             // layoutItem.style.padding = '10px';
             // layoutItem.style.border = '2px solid black';
-            layoutItem.innerText = title;
-            layoutItem.setAttribute('id', 'tab-' + id);
-            layoutParent.className = 'tab col';
-            layoutParent.style = 'float:right!important';
-            layoutItem.style.cursor = 'pointer';
+            // layoutItem.innerText = title;
+            // layoutItem.setAttribute('id', 'tab-' + id);
+            // layoutParent.className = 'tab col';
+            // layoutParent.style = 'float:right!important';
+            // layoutItem.style.cursor = 'pointer';
 
             // Set up the onclick listener to load the window into the activeWindow tab.
-            layoutItem.onclick = function () {
-                _this4._changeActiveWindow(id);
-                // this._changeActiveWindow.call(this._id);
-            };
+            // // layoutItem.onclick = () => {
+            // //     this._changeActiveWindow(id);
+            // //     // this._changeActiveWindow.call(this._id);
+            // // };
 
-            this._list.appendChild(layoutParent);
+            // this._list.appendChild(layoutParent);
 
-            return layoutParent;
+            // return layoutParent;
         }
 
         /**
@@ -22120,6 +22127,7 @@ var Layout = function () {
                 newActiveWindow._window.style.display = 'block';
             };
             // newActiveWindow.show();
+            // let size = newActiveWindow.getSize();
 
             this._activeWindowId = id;
         }
