@@ -11492,6 +11492,9 @@ var Layout = function () {
 
         this._windows = [];
 
+        // Give the active window div a unique id.
+        ACTIVE_WINDOW_DIV_ID += '-' + type + '-' + _global2.default.Layout.getAll().length;
+
         // Create the layout based on the type given.
         switch (type) {
             case 'tabbed':

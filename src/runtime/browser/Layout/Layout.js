@@ -5,7 +5,7 @@
 import Window from '../Window.js';
 import windowmanager from '../global';
 
-const ACTIVE_WINDOW_DIV_ID = 'active-window-container';
+let ACTIVE_WINDOW_DIV_ID = 'active-window-container';
 const TABBED_LAYOUT_DIV_ID = 'tabbed-layout-container';
 const TAB_LIST_CONTAINER_ID = 'layout-tabs-list-container';
 const TAB_LIST_ID = 'layout-tabs-list';
@@ -71,6 +71,9 @@ class Layout {
         }
 
         this._windows = [];
+
+        // Give the active window div a unique id.
+        ACTIVE_WINDOW_DIV_ID += '-' + type + '-' + windowmanager.Layout.getAll().length;
 
         // Create the layout based on the type given.
         switch (type) {
