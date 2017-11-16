@@ -6774,7 +6774,11 @@ function ajax(type, url, cb) {
 
             // Successful request.
             if (request.status === 200) {
-                cb(request.response);
+                cb(null, request.response);
+            } else {
+                cb({
+                    error: 'There was an error requesting that URL'
+                });
             }
         }
     };
@@ -6789,7 +6793,7 @@ function ajax(type, url, cb) {
  * @param url {String} - The url to load
  * @param params {Object} - Object of key/value pairs for parameters
  * @param id {String} - The id of the element to attach the response to
- * @param callback {Function} - Function to call after the load completes
+ * @param callback {Function} - Function to call after the load completes, will be passed an error if one occurred
  */
 function load(url, params, id, callback) {
     var type = 'GET';
@@ -6799,7 +6803,12 @@ function load(url, params, id, callback) {
         type = 'POST';
     }
 
-    ajax(type, url, function (response) {
+    ajax(type, url, function (err, response) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
         var elem = document.getElementById(id);
         var div = document.createElement('div');
 
@@ -6810,8 +6819,6 @@ function load(url, params, id, callback) {
         }
 
         elem.appendChild(div);
-
-        console.log(response);
 
         if (callback && typeof callback === 'function') {
             callback();
