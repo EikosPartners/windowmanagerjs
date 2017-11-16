@@ -1,4 +1,4 @@
-function ajax(type, url, cb) {
+function ajax(type, url, params, cb) {
     let request = new XMLHttpRequest();
 
     request.onreadystatechange = function () {
@@ -16,7 +16,13 @@ function ajax(type, url, cb) {
     };
 
     request.open(type, url, true);
-    request.send();
+
+    // Set the content-type header if we're making a POST request.
+    if (params && type === 'POST') {
+        request.setRequestHeader('Content-type', 'application/json');
+    }
+
+    request.send(params ? JSON.stringify(params) : null);
 }
 
 /**
@@ -35,9 +41,13 @@ function load(url, params, id, callback) {
         type = 'POST';
     }
 
-    ajax(type, url, (err, response) => {
+    ajax(type, url, params, (err, response) => {
         if (err) {
-            callback(err);
+            if (callback && typeof callback === 'function') {
+                callback(err);
+            } else {
+                console.error('Error not being handled: ', err);
+            }
             return;
         }
 
