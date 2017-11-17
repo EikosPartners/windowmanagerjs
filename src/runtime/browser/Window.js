@@ -2,7 +2,6 @@ import windowmanager from './global';
 import { EventHandler, getUniqueWindowName } from '../../utils/index';
 import { BoundingBox, Position, Size, Vector } from '../../geometry/index';
 import 'core-js/fn/string/includes';
-import $ from 'jquery';
 
 const defaultConfig = {
     width: '100%',
@@ -190,8 +189,8 @@ class Window extends EventHandler {
             newWindow.appendChild(iframeIsh);
             iframeIsh.setAttribute('id', this._id);
             // iframeIsh.innerHTML = config.url;
-
-            $(iframeIsh).load(config.url);
+            windowmanager.load(config.url, '', this._id);
+            // $(iframeIsh).load(config.url);
 
             // let request = new XMLHttpRequest();
 

@@ -1,5 +1,5 @@
 /* global VERSION */
-import { EventHandler } from './utils/index';
+import { EventHandler, load } from './utils/index';
 import geometry from './geometry/index';
 
 const windowmanagerEventNames = ['window-create', 'window-close'];
@@ -48,6 +48,8 @@ if (typeof navigator !== 'undefined') {
 // Add geometry to global:
 windowmanager.geometry = geometry;
 
+// Add the load function
+windowmanager.load = load;
 // messagebus is set in the respective runtime
 
 export default windowmanager;

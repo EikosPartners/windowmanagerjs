@@ -1,5 +1,6 @@
 import EventHandler from './EventHandler';
 import SyncCallback from './SyncCallback';
+import load from './load';
 
 const genUIDE7 = (() => {
     let lut = [];
@@ -26,5 +27,6 @@ function getUniqueWindowName() {
 export default {
     getUniqueWindowName,
     EventHandler,
-    SyncCallback
+    SyncCallback,
+    load
 };
