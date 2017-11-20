@@ -6819,6 +6819,15 @@ function ajax(type, url, params, cb) {
     request.send(params ? (0, _stringify2.default)(params) : null);
 }
 
+function evalScript(script) {
+    if (script && script.src !== '') {
+        var tag = document.createElement('script');
+
+        tag.src = script.src;
+        document.getElementsByTagName('head')[0].appendChild(tag);
+    }
+}
+
 /**
  * Load a url into a page.
  * Taken from jquery's load function https://github.com/jquery/jquery/blob/f18ca7bfe0f5e3184bf1ed55daf1668702c5577a/src/ajax/load.js
@@ -6845,6 +6854,9 @@ function load(url, params, id, callback) {
             return;
         }
 
+        // Find the scripts that were already there so we can execute only new ones.
+        var oldScripts = Array.prototype.slice.call(document.getElementsByTagName('script'));
+
         var elem = document.getElementById(id);
         var div = document.createElement('div');
 
@@ -6855,6 +6867,27 @@ function load(url, params, id, callback) {
         }
 
         elem.appendChild(div);
+
+        // Find the new scripts.
+        var scripts = document.getElementsByTagName('script');
+        var newScripts = [];
+
+        for (var i = 0; i < scripts.length; i++) {
+            if (oldScripts.indexOf(scripts[i]) < 0) {
+                newScripts.push(scripts[i]);
+            }
+        }
+
+        for (var _i = 0; _i < scripts.length; _i++) {
+            var script = scripts[_i];
+
+            if (script.parentNode) {
+                script.parentNode.removeChild(script);
+            }
+            evalScript(scripts[_i]);
+        }
+
+        console.log(newScripts);
 
         if (callback && typeof callback === 'function') {
             callback();
