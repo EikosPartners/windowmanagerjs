@@ -150,7 +150,7 @@
     "no-unneeded-ternary": "error",
     "no-unreachable": "error",
     "no-unused-expressions": "off",
-    "no-unused-vars": ["error", { "vars": "all", "args": "none" }],
+    "no-unused-vars": ["off", { "vars": "all", "args": "none" }],
     "no-use-before-define": "error",
     "no-useless-concat": "error",
     "no-var": "error",

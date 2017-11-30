@@ -176,7 +176,7 @@ class Layout {
             newWindow = new Window(config);
             // Create the tab for the window.
             this._createTabbedLayoutItem(newWindow._title, newWindow._id);
-            newWindow.resizeTo(window.outerWidth, window.outerHeight);
+            // newWindow.resizeTo(window.outerWidth, window.outerHeight);
 
             // Set up an on close listener for the window.
             let that = this;
@@ -186,6 +186,7 @@ class Layout {
             });
 
             this._windows.push(newWindow);
+            newWindow._window.parentElement.style.display = 'block';
 
             // Set the newly created window to be the active window.
             this._changeActiveWindow(newWindow._id);
@@ -218,6 +219,7 @@ class Layout {
                     let tabElem = document.getElementById('tab-' + window._id);
 
                     this._list.removeChild(tabElem);
+
                     this._changeActiveWindow(this._windows[0]._id);
                 }
 
@@ -266,6 +268,12 @@ class Layout {
         return windowmanager._layouts.get(id);
     }
 
+    static getListAsObj(id) {
+        let currentLayout = this.getByID(id);
+
+        return Array.from(currentLayout._list.children).map(item=>{ return {id: item.id.slice(4), text: item.innerText};});
+    }
+
     /* Private methods */
     /**
      * Method for creating a tiled layout of windows.
@@ -299,6 +307,7 @@ class Layout {
 
         // Keep a reference to the list for adding new windows.
         this._list = layoutList;
+
         // Keep a reference to the container.
         this._container = layoutDiv;
 
@@ -344,15 +353,21 @@ class Layout {
         let tabList = document.createElement('ul');
 
         layoutDiv.setAttribute('id', TABBED_LAYOUT_DIV_ID);
+        layoutDiv.setAttribute('display', 'inline-block');
+        layoutDiv.setAttribute('position', 'absolute');
+        layoutDiv.setAttribute('top', '164px');
         activeWindowDiv.setAttribute('id', ACTIVE_WINDOW_DIV_ID);
+        activeWindowDiv.setAttribute('height', '100%');
+        activeWindowDiv.setAttribute('width', '100%');
+        activeWindowDiv.setAttribute('display', 'block');
         tabDiv.setAttribute('id', TAB_LIST_CONTAINER_ID);
         tabList.setAttribute('id', TAB_LIST_ID);
 
         // Set up the fixed tab bar.
-        tabDiv.style.position = 'fixed';
-        tabDiv.style.top = 0;
-        tabDiv.style.zIndex = 1000;
-        activeWindowDiv.style.marginTop = TAB_DIV_HEIGHT;
+        // tabDiv.style.position = 'fixed';
+        // tabDiv.style.top = 0;
+        // tabDiv.style.zIndex = 1000;
+        // activeWindowDiv.style.marginTop = TAB_DIV_HEIGHT;
 
         this._list = tabList;
 
@@ -379,6 +394,9 @@ class Layout {
             // Create the window.
             let newWindow = new Window(config);
 
+            newWindow._window.style.height = '100%';
+            newWindow._window.style.width = '100%';
+
             // Set up an onclose listener for the window.
             newWindow.on('close', function () {
                 that.removeWindow(this._id);
@@ -390,7 +408,9 @@ class Layout {
             // Add the window to the internal windows store.
             this._windows.push(newWindow);
         });
-
+        this._activeWindowId = this._windows[0]._id;
+        this.getWindow(this._windows[0]._id).show();
+        this.getWindow(this._windows[0]._id)._window.parentElement.style.display = 'block';
         // Change the active window.
         this._changeActiveWindow(this._windows[0]._id);
 
@@ -419,7 +439,7 @@ class Layout {
     _createTabbedLayoutItem(title, id) {
         let layoutItem = document.createElement('li');
 
-        layoutItem.style.display = 'inline-block';
+        layoutItem.style.display = 'none'; // none out for ckm, inline-block regularly
         layoutItem.style.padding = '10px';
         layoutItem.style.border = '2px solid black';
         layoutItem.innerText = title;
@@ -454,12 +474,14 @@ class Layout {
             let oldActiveWindow = this.getWindow(this._activeWindowId);
 
             if (oldActiveWindow) {
+                oldActiveWindow._window.parentElement.style.display = 'none';
+                oldActiveWindow._window.style.display = 'none';
+                oldActiveWindow.hide();
                 // Remove the active class from the old active tab.]
                 let oldActiveTab = document.getElementById('tab-' + oldActiveWindow._id);
 
                 oldActiveTab.classList.remove('active-tab');
 
-                oldActiveWindow.hide();
             }
         }
 
@@ -468,7 +490,8 @@ class Layout {
             let activeTab = document.getElementById('tab-' + id);
 
             activeTab.classList.add('active-tab');
-
+            newActiveWindow._window.style.display = 'block';
+            newActiveWindow._window.parentElement.style.display = 'block';
             newActiveWindow.show();
             this._activeWindowId = id;
         }
