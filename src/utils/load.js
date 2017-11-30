@@ -84,14 +84,12 @@ function load(url, params, id, callback) {
             }
         }
 
-        for (let i = 0; i < scripts.length; i++) {
-            let script = scripts[i];
+        for (let i = 0; i < newScripts.length; i++) {
+            let script = newScripts[i];
 
-            if (script.parentNode) {script.parentNode.removeChild(script);}
-            evalScript(scripts[i]);
+            if (newScripts.parentNode) {newScripts.parentNode.removeChild(script);}
+            evalScript(newScripts[i]);
         }
-
-        console.log(newScripts);
 
         if (callback && typeof callback === 'function') {
             callback();

@@ -179,9 +179,10 @@ class Window extends EventHandler {
             }
 
             // Check whether to show the window or not.
-            // if (!config.show) {
-            //     newWindow.style.display = 'none';
-            // }
+            if (!config.show) {
+                newWindow.style.display = 'none';
+            }
+
             // Set up iframe for page:
             // iframe.src = config.url;
             iframeIsh.style.margin = iframeIsh.style.padding = iframeIsh.style.border = 0;
@@ -190,23 +191,6 @@ class Window extends EventHandler {
             iframeIsh.setAttribute('id', this._id);
             // iframeIsh.innerHTML = config.url;
             windowmanager.load(config.url, '', this._id);
-            // $(iframeIsh).load(config.url);
-
-            // let request = new XMLHttpRequest();
-
-            // request.open('GET', config.url, true);
-
-            // request.onload = function () {
-            //     let resp;
-
-            //     if (request.status >= 200 && request.status < 400) {
-            //         resp = request.responseText;
-
-            //         iframeIsh.innerHTML = resp;
-            //     }
-            // };
-
-            // request.send();
 
             // Set up resize:
             this._resize = Object.create(null);

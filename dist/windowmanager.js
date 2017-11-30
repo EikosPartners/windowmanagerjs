@@ -4482,9 +4482,10 @@ var Window = function (_EventHandler) {
                 }
 
                 // Check whether to show the window or not.
-                // if (!config.show) {
-                //     newWindow.style.display = 'none';
-                // }
+                if (!config.show) {
+                    newWindow.style.display = 'none';
+                }
+
                 // Set up iframe for page:
                 // iframe.src = config.url;
                 iframeIsh.style.margin = iframeIsh.style.padding = iframeIsh.style.border = 0;
@@ -4493,23 +4494,6 @@ var Window = function (_EventHandler) {
                 iframeIsh.setAttribute('id', _this._id);
                 // iframeIsh.innerHTML = config.url;
                 _global2.default.load(config.url, '', _this._id);
-                // $(iframeIsh).load(config.url);
-
-                // let request = new XMLHttpRequest();
-
-                // request.open('GET', config.url, true);
-
-                // request.onload = function () {
-                //     let resp;
-
-                //     if (request.status >= 200 && request.status < 400) {
-                //         resp = request.responseText;
-
-                //         iframeIsh.innerHTML = resp;
-                //     }
-                // };
-
-                // request.send();
 
                 // Set up resize:
                 _this._resize = (0, _create2.default)(null);
@@ -6878,16 +6862,14 @@ function load(url, params, id, callback) {
             }
         }
 
-        for (var _i = 0; _i < scripts.length; _i++) {
-            var script = scripts[_i];
+        for (var _i = 0; _i < newScripts.length; _i++) {
+            var script = newScripts[_i];
 
-            if (script.parentNode) {
-                script.parentNode.removeChild(script);
+            if (newScripts.parentNode) {
+                newScripts.parentNode.removeChild(script);
             }
-            evalScript(scripts[_i]);
+            evalScript(newScripts[_i]);
         }
-
-        console.log(newScripts);
 
         if (callback && typeof callback === 'function') {
             callback();
@@ -11614,28 +11596,75 @@ var ACTIVE_WINDOW_DIV_ID = 'active-window-container';
 var TABBED_LAYOUT_DIV_ID = 'tabbed-layout-container';
 var TAB_LIST_CONTAINER_ID = 'layout-tabs-list-container';
 var TAB_LIST_ID = 'layout-tabs-list';
+var TAB_DIV_HEIGHT = '25px'; // Can be overwritten by developer. 
 
 /**
- * Layout namespace.
+ * A Layout class, used to create a layout of {@link Window} objects.
+ * 
+ * <h5>Example:</h5>
+ * ```javascript
+ * // Create window(s).
+ * let state = {
+ *       width: 400, 
+ *       height: 400,
+ *       url: 'child.html',
+ *       title: 'Window X',
+ *       frame: false 
+ *   };
+ * 
+ * // Make an array of windows.
+ * let configs = [state, state, state];
+ * 
+ * // Create the layout.
+ * let layout = new windowmanager.Layout('tabbed', 'layout-div', configs);
+ * ```
  */
 
 var Layout = function () {
     /**
      * Constructor for the layout class.
+     * 
+     * <h5>Example:</h5>
+     * ```javascript
+     * // Create the layout.
+     * let layout = new windowmanager.Layout('tiled', 'layout-div', configs);
+     * ```
      *
      * @param {string} type - The type of layout, defaults to tiled
      * @param {string} id - The id of the element to attach to, if none provided the layout will attach to the body
      * @param {Array.Object} configs - The config objects to create the windows from
+     * @param {String} tabHeight - If in tabbed view, the height of the tab toolbar. Used to offset the active window div.
      */
-    function Layout(type, id, configs, parentWindowId) {
+    function Layout(type, id, configs, tabHeight) {
         (0, _classCallCheck3.default)(this, Layout);
 
+        // If no type is defined let the user know that it will default to tiled.
+        if (!type) {
+            console.warn('Type not provided, defaulting to tiled view.');
+        }
+
+        // If no configs given, error out.
+        if (!configs || configs.length === 0) {
+            console.error('Must provide window configurations in constructor.');
+            return;
+        }
+
+        // If configs is only one object, convert it to an array.
+        if (!Array.isArray(configs)) {
+            console.warn('Parameter configs should be an array of window configuration objects.');
+            configs = [configs];
+        }
+
+        // Set the internal tab toolbar height if supplied.
+        if (tabHeight) {
+            TAB_DIV_HEIGHT = tabHeight.indexOf('px') > 0 ? tabHeight : tabHeight + 'px';
+        }
+
         this._windows = [];
-        this._isClosed = false;
-        this._id = id;
-        this._parentId = parentWindowId;
-        this._parentWindow = _global2.default.Window.getByID(this._parentId);
-        this._list = [];
+
+        // Give the active window div a unique id.
+        ACTIVE_WINDOW_DIV_ID += '-' + type + '-' + _global2.default.Layout.getAll().length;
+
         // Create the layout based on the type given.
         switch (type) {
             case 'tabbed':
@@ -11647,29 +11676,33 @@ var Layout = function () {
         }
 
         this._layoutType = type;
+
         // setAttribute('scrolling', 'no') ??? HTK
         _global2.default._layouts.set(id, this);
-        // this._windows.forEach(subWindow=>{
-        //     subWindow.resizeTo(window.outerWidth, window.outerHeight);
-        // });
-        // window.addEventListener('resize', function (event) {
-        //     window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
-        //     windowmanager.Layout.getAllTabbed()[0]._windows.forEach(subWindow=> {
-        //         subWindow.resizeTo(window.outerWidth, window.outerHeight);
-        //     });
 
-        // });
+        this._windows.forEach(function (subWindow) {
+            subWindow.resizeTo(window.outerWidth, window.outerHeight);
+        });
+
+        window.addEventListener('resize', function (event) {
+            window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
+            _global2.default.Layout.getAllTabbed()[0]._windows.forEach(function (subWindow) {
+                subWindow.resizeTo(window.outerWidth, window.outerHeight);
+            });
+        });
     }
 
     /**
-     * Function to retrieve all _windows.
+     * Function to retrieve all windows being managed.
+     * 
+     * @returns {Array.Window}
      */
 
 
     (0, _createClass3.default)(Layout, [{
         key: 'getWindows',
         value: function getWindows() {
-            return this._windows;
+            return this._windows.slice();
         }
 
         /**
@@ -11677,13 +11710,18 @@ var Layout = function () {
          * 
          * @param {string} id - the id of the window to find.
          * 
-         * @return Returns a window object
+         * @returns {Window}
          */
 
     }, {
         key: 'getWindow',
         value: function getWindow(id) {
             var ret = void 0;
+
+            if (!id) {
+                console.error('No id provided for window to find.');
+                return ret;
+            }
 
             this.getWindows().some(function (window) {
                 if (window._id === id) {
@@ -11699,13 +11737,18 @@ var Layout = function () {
          * Function to add a window to the layout scheme.
          * @param {Object} config - The configuration object for the window
          * 
-         * @return Returns the newly created Window
+         * @returns {Windowlo}
          */
 
     }, {
         key: 'addWindow',
         value: function addWindow(config) {
             var newWindow = void 0;
+
+            if (!config) {
+                console.error('Must provide configuration object to create window from.');
+                return;
+            }
 
             // Create a list element for each window.
             if (this._layoutType === 'tiled') {
@@ -11721,24 +11764,32 @@ var Layout = function () {
                 newWindow.on('close', function () {
                     that.removeWindow(this._id);
                 });
+
+                this._windows.push(newWindow);
             } else if (this._layoutType === 'tabbed') {
                 // Set up the config to have the active window as its container and to be hidden on start.
                 config.container = ACTIVE_WINDOW_DIV_ID;
                 config.show = false;
-                // Create the window. HTK 
+
+                // Create the window.
                 newWindow = new _Window2.default(config);
                 // Create the tab for the window.
-                newWindow._window.style.height = '100%';
-                newWindow._window.style.width = '100%';
-
-                // Create the tab for the window.
-
-                // Add the window to the internal windows store.
                 this._createTabbedLayoutItem(newWindow._title, newWindow._id);
+                newWindow.resizeTo(window.outerWidth, window.outerHeight);
+
+                // Set up an on close listener for the window.
+                var _that = this;
+
+                newWindow.on('close', function () {
+                    _that.removeWindow(this._id);
+                });
+
+                this._windows.push(newWindow);
+
+                // Set the newly created window to be the active window.
                 this._changeActiveWindow(newWindow._id);
             }
 
-            this._windows.push(newWindow);
             return newWindow;
         }
 
@@ -11751,6 +11802,11 @@ var Layout = function () {
         key: 'removeWindow',
         value: function removeWindow(id) {
             var _this = this;
+
+            if (!id) {
+                console.error('Must provide id of window to remove.');
+                return;
+            }
 
             this._windows.some(function (window, idx) {
                 if (window._id === id) {
@@ -11774,38 +11830,6 @@ var Layout = function () {
             });
         }
         /**
-         * Returns whether window has been closed already.
-         * @returns {Boolean}
-         */
-
-    }, {
-        key: 'isClosed',
-        value: function isClosed() {
-            return this._isClosed;
-        }
-        /**
-         * Closes the layout instance.
-         * @param {Callback=}
-         */
-
-    }, {
-        key: 'close',
-        value: function close(callback) {
-            if (this.isClosed()) {
-                return callback && callback();
-            }
-            // var doubleCheck = confirm('Are you sure? Closing this Layout will close all related tabs');
-            _global2.default._layouts.delete(this._id);
-            this._windows.forEach(function (childWindow) {
-                childWindow.close();
-            });
-            document.getElementById(TABBED_LAYOUT_DIV_ID).remove();
-            this._isClosed = true;
-            if (callback) {
-                callback();
-            }
-        }
-        /**
          * Returns a list of all {@link Layout} instances open.
          * <h5>Example:</h5>
          * ```javascript
@@ -11827,6 +11851,11 @@ var Layout = function () {
          */
         value: function _tiled(configs, id) {
             var _this2 = this;
+
+            if (!configs || !Array.isArray(configs) || configs.length === 0) {
+                console.error('Must provide array of configuration objects to create windows from.');
+                return;
+            }
 
             // Save the this context to be used when removing a window.
             var that = this;
@@ -11884,6 +11913,11 @@ var Layout = function () {
         value: function _tabbed(configs, id) {
             var _this3 = this;
 
+            if (!configs || !Array.isArray(configs) || configs.length === 0) {
+                console.error('Must provide array of configuration objects to create windows from.');
+                return;
+            }
+
             // Create the outer container.
             var layoutDiv = document.createElement('div');
             // Create the tabs div.
@@ -11894,19 +11928,17 @@ var Layout = function () {
             var tabList = document.createElement('ul');
 
             layoutDiv.setAttribute('id', TABBED_LAYOUT_DIV_ID);
-            // layoutDiv.setAttribute('height', window.innerHeight);
-            // layoutDiv.setAttribute('width', window.innerWidth);
-            layoutDiv.setAttribute('display', 'inline-block');
-            layoutDiv.setAttribute('position', 'absolute');
-            layoutDiv.setAttribute('top', '164px');
             activeWindowDiv.setAttribute('id', ACTIVE_WINDOW_DIV_ID);
-            activeWindowDiv.setAttribute('height', '100%');
-            activeWindowDiv.setAttribute('width', '100%');
-            activeWindowDiv.setAttribute('display', 'block');
             tabDiv.setAttribute('id', TAB_LIST_CONTAINER_ID);
-            // tabDiv.setAttribute('style', 'height: 30px; min-height:30px');
             tabList.setAttribute('id', TAB_LIST_ID);
-            // tabList.setAttribute('style', 'height: 30px; min-height:30px');
+
+            // Set up the fixed tab bar.
+            tabDiv.style.position = 'fixed';
+            tabDiv.style.top = 0;
+            tabDiv.style.zIndex = 1000;
+            activeWindowDiv.style.marginTop = TAB_DIV_HEIGHT;
+
+            this._list = tabList;
 
             if (id) {
                 var container = document.getElementById(id);
@@ -11918,7 +11950,9 @@ var Layout = function () {
 
             layoutDiv.appendChild(tabDiv);
             layoutDiv.appendChild(activeWindowDiv);
-            // tabDiv.appendChild(tabList);
+            tabDiv.appendChild(tabList);
+
+            var that = this;
 
             // Create the windows.
             configs.forEach(function (config) {
@@ -11929,8 +11963,10 @@ var Layout = function () {
                 // Create the window.
                 var newWindow = new _Window2.default(config);
 
-                newWindow._window.style.height = '100%';
-                newWindow._window.style.width = '100%';
+                // Set up an onclose listener for the window.
+                newWindow.on('close', function () {
+                    that.removeWindow(this._id);
+                });
 
                 // Create the tab for the window.
                 _this3._createTabbedLayoutItem(newWindow._title, newWindow._id);
@@ -11940,7 +11976,6 @@ var Layout = function () {
             });
 
             // Change the active window.
-            this._activeWindowId = this._windows[0]._id;
             this._changeActiveWindow(this._windows[0]._id);
         }
 
@@ -11955,6 +11990,7 @@ var Layout = function () {
 
             layoutItem.style.display = 'inline-block';
             layoutItem.style.padding = '10px';
+
             this._list.appendChild(layoutItem);
 
             return layoutItem;
@@ -11970,37 +12006,24 @@ var Layout = function () {
     }, {
         key: '_createTabbedLayoutItem',
         value: function _createTabbedLayoutItem(title, id) {
+            var _this4 = this;
 
-            // let layoutParent = document.createElement('li');
+            var layoutItem = document.createElement('li');
 
-            // let layoutItem = document.createElement('a');
-
-            var item = {};
-
-            item.text = title;
-            item.id = id;
-            this._list.push(item);
-
-            // layoutParent.appendChild(layoutItem);
-            // layoutItem.href = '#';
-            // layoutItem.style.display = 'inline-block';
-            // layoutItem.style.padding = '10px';
-            // layoutItem.style.border = '2px solid black';
-            // layoutItem.innerText = title;
-            // layoutItem.setAttribute('id', 'tab-' + id);
-            // layoutParent.className = 'tab col';
-            // layoutParent.style = 'float:right!important';
-            // layoutItem.style.cursor = 'pointer';
+            layoutItem.style.display = 'inline-block';
+            layoutItem.style.padding = '10px';
+            layoutItem.style.border = '2px solid black';
+            layoutItem.innerText = title;
+            layoutItem.setAttribute('id', 'tab-' + id);
 
             // Set up the onclick listener to load the window into the activeWindow tab.
-            // // layoutItem.onclick = () => {
-            // //     this._changeActiveWindow(id);
-            // //     // this._changeActiveWindow.call(this._id);
-            // // };
+            layoutItem.onclick = function () {
+                _this4._changeActiveWindow.call(_this4, id);
+            };
 
-            // this._list.appendChild(layoutParent);
+            this._list.appendChild(layoutItem);
 
-            // return layoutParent;
+            return layoutItem;
         }
 
         /**
@@ -12012,20 +12035,39 @@ var Layout = function () {
     }, {
         key: '_changeActiveWindow',
         value: function _changeActiveWindow(id) {
+            if (!id) {
+                console.error('Must provide id to change window to.');
+                return;
+            }
+
+            if (id === this._activeWindowId) {
+                return;
+            }
+
             var newActiveWindow = this.getWindow(id);
 
-            var oldActiveWindow = this.getWindow(this._activeWindowId);
+            if (this._activeWindowId) {
+                var oldActiveWindow = this.getWindow(this._activeWindowId);
 
-            if (oldActiveWindow) {
-                oldActiveWindow._window.style.display = 'none';
-            };
+                if (oldActiveWindow) {
+                    // Remove the active class from the old active tab.]
+                    var oldActiveTab = document.getElementById('tab-' + oldActiveWindow._id);
+
+                    oldActiveTab.classList.remove('active-tab');
+
+                    oldActiveWindow.hide();
+                }
+            }
+
             if (newActiveWindow) {
-                newActiveWindow._window.style.display = 'block';
-            };
-            // newActiveWindow.show();
-            // let size = newActiveWindow.getSize();
+                // Add the active class to the tab that is active.
+                var activeTab = document.getElementById('tab-' + id);
 
-            this._activeWindowId = id;
+                activeTab.classList.add('active-tab');
+
+                newActiveWindow.show();
+                this._activeWindowId = id;
+            }
         }
     }], [{
         key: 'getAll',
