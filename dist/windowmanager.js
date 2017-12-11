@@ -6865,10 +6865,13 @@ function load(url, params, id, callback) {
         for (var _i = 0; _i < newScripts.length; _i++) {
             var script = newScripts[_i];
 
-            if (newScripts.parentNode) {
-                newScripts.parentNode.removeChild(script);
+            if (newScripts[_i].parentNode) {
+                newScripts[_i].parentNode.removeChild(script);
             }
-            evalScript(newScripts[_i]);
+
+            if (!newScripts[_i].src.includes('vendors')) {
+                evalScript(newScripts[_i]);
+            }
         }
 
         if (callback && typeof callback === 'function') {

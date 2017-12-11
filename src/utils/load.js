@@ -87,8 +87,12 @@ function load(url, params, id, callback) {
         for (let i = 0; i < newScripts.length; i++) {
             let script = newScripts[i];
 
-            if (newScripts.parentNode) {newScripts.parentNode.removeChild(script);}
-            evalScript(newScripts[i]);
+            if (newScripts[i].parentNode) {newScripts[i].parentNode.removeChild(script);}
+
+            if (!newScripts[i].src.includes('vendors')) {
+                evalScript(newScripts[i]);
+            }
+
         }
 
         if (callback && typeof callback === 'function') {
