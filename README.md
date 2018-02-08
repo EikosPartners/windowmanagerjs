@@ -44,8 +44,7 @@ let configs = [state, state, state];
 
 let layout = new windowmanager.Layout('tabbed', 'layout-div', configs);
 ```
-
-## Installation
+## Installation - NPM package / express server   
 ```bash
 npm install --save windowmanager
 ```
@@ -72,7 +71,22 @@ app.get('/js/windowmanager.min.js', function (req, res) {
     res.sendFile(windowmanager.min.scriptPath);
 });
 ```
-Or manually download either one of the following scripts from the dist folder (which contains the latest nightly version), and add it to the your application.<br>
-<b>NOTE:</b> Do not add it to a builder, since bundling or compiling with babelify will break the script.
+## Installation - dist script 
+Manually download either one of the following scripts from the dist folder (which contains the latest nightly version), and add it to your application.<br>
+<b>NOTE:</b> Bundling or compiling with babelify will break the script.
   * [windowmanager](https://raw.githubusercontent.com/EikosPartners/windowmanagerjs/master/dist/windowmanager.js)
   * [windowmanager.min](https://raw.githubusercontent.com/EikosPartners/windowmanagerjs/master/dist/windowmanager.min.js)<br>
+
+#### Example installation with dist script and webpack 
+* Download dist script
+* Put in its own folder in root directory 
+* in webpack config, under your `module:` `rules:` `test: /\.js$/,` make sure to `exclude:/folderName/`
+* npm install `copy-webpack-plugin` and 
+* in webpack config, import `const CopyWebpackPlugin = require('copy-webpack-plugin')`
+* under plugins include
+``` 
+    new CopyWebpackPlugin([
+      {from:'folderName',to:'folderName'} 
+    ]),    
+```
+* in your entry point html page, include `<script src="./folderName/windowmanager.js></script>`
