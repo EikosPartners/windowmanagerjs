@@ -11643,10 +11643,6 @@ var Layout = function () {
         // setAttribute('scrolling', 'no') ??? HTK
         _global2.default._layouts.set(id, this);
 
-        this._windows.forEach(function (subWindow) {
-            subWindow.resizeTo(window.outerWidth, window.outerHeight);
-        });
-
         window.addEventListener('resize', function (event) {
             window.document.getElementById(TABBED_LAYOUT_DIV_ID).setAttribute('width', window.outerWidth);
             _global2.default.Layout.getAllTabbed()[0]._windows.forEach(function (subWindow) {
@@ -11937,7 +11933,9 @@ var Layout = function () {
                 // Add the window to the internal windows store.
                 _this3._windows.push(newWindow);
             });
-
+            this._windows.forEach(function (subWindow) {
+                subWindow.resizeTo(window.outerWidth, window.outerHeight);
+            });
             // Change the active window.
             this._changeActiveWindow(this._windows[0]._id);
         }
