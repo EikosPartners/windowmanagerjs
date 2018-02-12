@@ -153,7 +153,7 @@ class Layout {
 
         // Create a list element for each window.
         if (this._layoutType === 'tiled') {
-            let layoutItem = this._createLayoutItem();
+            let layoutItem = this._createTiledLayoutItem();
 
             config.container = layoutItem;
 

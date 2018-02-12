@@ -11715,7 +11715,7 @@ var Layout = function () {
 
             // Create a list element for each window.
             if (this._layoutType === 'tiled') {
-                var layoutItem = this._createLayoutItem();
+                var layoutItem = this._createTiledLayoutItem();
 
                 config.container = layoutItem;
 
