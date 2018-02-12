@@ -7,7 +7,7 @@
 		exports["windowmanager"] = factory();
 	else
 		root["windowmanager"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -78,7 +78,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_core.js ***!
   \********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -90,7 +90,7 @@ if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 /*!*******************************************************!*\
   !*** ../node_modules/core-js/library/modules/_wks.js ***!
   \*******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -111,7 +111,7 @@ $exports.store = store;
 /*!**********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_export.js ***!
   \**********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -182,7 +182,7 @@ module.exports = $export;
 /*!**********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_global.js ***!
   \**********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -196,7 +196,7 @@ if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-dp.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -222,7 +222,7 @@ exports.f = __webpack_require__(/*! ./_descriptors */ 6) ? Object.defineProperty
 /*!*************************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/get-iterator.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -233,7 +233,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/get-ite
 /*!***************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_descriptors.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -247,7 +247,7 @@ module.exports = !__webpack_require__(/*! ./_fails */ 17)(function(){
 /*!********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_hide.js ***!
   \********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -265,7 +265,7 @@ module.exports = __webpack_require__(/*! ./_descriptors */ 6) ? function(object,
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_an-object.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -280,7 +280,7 @@ module.exports = function(it){
 /*!***************************!*\
   !*** ./geometry/index.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -347,7 +347,7 @@ module.exports = exports['default'];
 /*!***************************************************************!*\
   !*** ../node_modules/babel-runtime/helpers/classCallCheck.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -367,7 +367,7 @@ exports.default = function (instance, Constructor) {
 /*!************************************************************!*\
   !*** ../node_modules/babel-runtime/helpers/createClass.js ***!
   \************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -405,7 +405,7 @@ exports.default = function () {
 /*!************************!*\
   !*** ./utils/index.js ***!
   \************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -464,7 +464,7 @@ module.exports = exports['default'];
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_to-iobject.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -480,7 +480,7 @@ module.exports = function(it){
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_is-object.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -493,7 +493,7 @@ module.exports = function(it){
 /*!*******************************************************!*\
   !*** ../node_modules/core-js/library/modules/_has.js ***!
   \*******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -507,7 +507,7 @@ module.exports = function(it, key){
 /*!*******************************************************!*\
   !*** ../node_modules/core-js/library/modules/_ctx.js ***!
   \*******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -537,7 +537,7 @@ module.exports = function(fn, that, length){
 /*!*********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_fails.js ***!
   \*********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -554,7 +554,7 @@ module.exports = function(exec){
 /*!**************************!*\
   !*** ./runtime/ready.js ***!
   \**************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -650,7 +650,7 @@ module.exports = exports['default'];
 /*!*******************!*\
   !*** ./global.js ***!
   \*******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -692,7 +692,7 @@ var windowmanagerEventNames = ['window-create', 'window-close'];
  */
 var windowmanager = new _index.EventHandler(windowmanagerEventNames);
 
-windowmanager.version = "0.14.7";
+windowmanager.version = "0.14.8";
 // runtime is set in the respective runtime
 windowmanager.runtime = {
     name: undefined,
@@ -732,7 +732,7 @@ module.exports = exports['default'];
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_iterators.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -743,7 +743,7 @@ module.exports = {};
 /*!*****************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_property-desc.js ***!
   \*****************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -761,7 +761,7 @@ module.exports = function(bitmap, value){
 /*!***************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-keys.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -778,7 +778,7 @@ module.exports = Object.keys || function keys(O){
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_to-object.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -793,7 +793,7 @@ module.exports = function(it){
 /*!**********************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.string.iterator.js ***!
   \**********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -821,7 +821,7 @@ __webpack_require__(/*! ./_iter-define */ 37)(String, 'String', function(iterate
 /*!************************************!*\
   !*** ./runtime/electron/global.js ***!
   \************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -909,7 +909,7 @@ module.exports = exports['default'];
 /*!**************************************************!*\
   !*** ../node_modules/core-js/modules/_global.js ***!
   \**************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -923,7 +923,7 @@ if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
 /*!*******************************************************************!*\
   !*** ../node_modules/core-js/library/modules/web.dom.iterable.js ***!
   \*******************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -946,7 +946,7 @@ for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList'
 /*!***********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_defined.js ***!
   \***********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -961,7 +961,7 @@ module.exports = function(it){
 /*!*****************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-create.js ***!
   \*****************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1013,7 +1013,7 @@ module.exports = Object.create || function create(O, Properties){
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_to-length.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1029,7 +1029,7 @@ module.exports = function(it){
 /*!*******************************************************!*\
   !*** ../node_modules/core-js/library/modules/_uid.js ***!
   \*******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -1044,7 +1044,7 @@ module.exports = function(key){
 /*!*********************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_set-to-string-tag.js ***!
   \*********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1061,7 +1061,7 @@ module.exports = function(it, tag, stat){
 /*!****************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/map.js ***!
   \****************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1072,7 +1072,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/map */ 
 /*!***********************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/array/from.js ***!
   \***********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1083,7 +1083,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/array/f
 /*!*****************************************************!*\
   !*** ../node_modules/core-js/modules/_is-object.js ***!
   \*****************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -1096,7 +1096,7 @@ module.exports = function(it){
 /*!*******************************************************!*\
   !*** ../node_modules/core-js/library/modules/_cof.js ***!
   \*******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -1111,7 +1111,7 @@ module.exports = function(it){
 /*!***************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_iter-define.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1192,7 +1192,7 @@ module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED
 /*!***********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_library.js ***!
   \***********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -1203,7 +1203,7 @@ module.exports = true;
 /*!****************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_to-primitive.js ***!
   \****************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1225,7 +1225,7 @@ module.exports = function(it, S){
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_to-integer.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -1241,7 +1241,7 @@ module.exports = function(it){
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_shared-key.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1256,7 +1256,7 @@ module.exports = function(key){
 /*!**********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_shared.js ***!
   \**********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1272,7 +1272,7 @@ module.exports = function(key){
 /*!*****************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_enum-bug-keys.js ***!
   \*****************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -1286,7 +1286,7 @@ module.exports = (
 /*!***************************************************************************!*\
   !*** ../node_modules/core-js/library/modules/core.get-iterator-method.js ***!
   \***************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1304,7 +1304,7 @@ module.exports = __webpack_require__(/*! ./_core */ 0).getIteratorMethod = funct
 /*!*******************************************************!*\
   !*** ../node_modules/babel-runtime/helpers/typeof.js ***!
   \*******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1336,7 +1336,7 @@ exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.d
 /*!***********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_wks-ext.js ***!
   \***********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1347,7 +1347,7 @@ exports.f = __webpack_require__(/*! ./_wks */ 1);
 /*!********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_meta.js ***!
   \********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1410,7 +1410,7 @@ var meta = module.exports = {
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_wks-define.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1429,7 +1429,7 @@ module.exports = function(name){
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-pie.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -1440,7 +1440,7 @@ exports.f = {}.propertyIsEnumerable;
 /*!***********************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.object.to-string.js ***!
   \***********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -1451,7 +1451,7 @@ exports.f = {}.propertyIsEnumerable;
 /*!****************************!*\
   !*** ./geometry/Vector.js ***!
   \****************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1760,7 +1760,7 @@ module.exports = exports['default'];
 /*!*********************************!*\
   !*** ./geometry/BoundingBox.js ***!
   \*********************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2536,7 +2536,7 @@ module.exports = exports['default'];
 /*!***********************************!*\
   !*** ./geometry/CollisionMesh.js ***!
   \***********************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3171,7 +3171,7 @@ module.exports = exports['default'];
 /*!**********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_for-of.js ***!
   \**********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3206,7 +3206,7 @@ exports.RETURN = RETURN;
 /*!*************************************!*\
   !*** ./runtime/electron/require.js ***!
   \*************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3226,7 +3226,7 @@ module.exports = exports['default'];
 /*!****************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/set.js ***!
   \****************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3237,7 +3237,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/set */ 
 /*!************************************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/object/get-prototype-of.js ***!
   \************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3248,7 +3248,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/
 /*!**************************************************************************!*\
   !*** ../node_modules/babel-runtime/helpers/possibleConstructorReturn.js ***!
   \**************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3276,7 +3276,7 @@ exports.default = function (self, call) {
 /*!*********************************************************!*\
   !*** ../node_modules/babel-runtime/helpers/inherits.js ***!
   \*********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3320,7 +3320,7 @@ exports.default = function (subClass, superClass) {
 /*!**************************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/object/create.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3331,7 +3331,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/
 /*!***********************************!*\
   !*** ./runtime/browser/global.js ***!
   \***********************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3592,7 +3592,7 @@ module.exports = exports['default'];
 /*!************************************************!*\
   !*** ../node_modules/core-js/modules/_core.js ***!
   \************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -3604,7 +3604,7 @@ if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 /*!*******************************************************!*\
   !*** ../node_modules/core-js/modules/_descriptors.js ***!
   \*******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3618,7 +3618,7 @@ module.exports = !__webpack_require__(/*! ./_fails */ 88)(function(){
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_iter-step.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -3631,7 +3631,7 @@ module.exports = function(done, value){
 /*!***********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_iobject.js ***!
   \***********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3646,7 +3646,7 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
 /*!******************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_ie8-dom-define.js ***!
   \******************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3659,7 +3659,7 @@ module.exports = !__webpack_require__(/*! ./_descriptors */ 6) && !__webpack_req
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_dom-create.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3676,7 +3676,7 @@ module.exports = function(it){
 /*!************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_redefine.js ***!
   \************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3687,7 +3687,7 @@ module.exports = __webpack_require__(/*! ./_hide */ 7);
 /*!************************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-keys-internal.js ***!
   \************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3714,7 +3714,7 @@ module.exports = function(object, names){
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-gpo.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3737,7 +3737,7 @@ module.exports = Object.getPrototypeOf || function(O){
 /*!***********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_classof.js ***!
   \***********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3770,7 +3770,7 @@ module.exports = function(it){
 /*!***************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-gops.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -3781,7 +3781,7 @@ exports.f = Object.getOwnPropertySymbols;
 /*!************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_is-array.js ***!
   \************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3796,7 +3796,7 @@ module.exports = Array.isArray || function isArray(arg){
 /*!***************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-gopn.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3813,7 +3813,7 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O){
 /*!***************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-gopd.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3839,7 +3839,7 @@ exports.f = __webpack_require__(/*! ./_descriptors */ 6) ? gOPD : function getOw
 /*!*********************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_collection-strong.js ***!
   \*********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3992,7 +3992,7 @@ module.exports = {
 /*!****************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_redefine-all.js ***!
   \****************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4009,7 +4009,7 @@ module.exports = function(target, src, safe){
 /*!***************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_an-instance.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -4024,7 +4024,7 @@ module.exports = function(it, Constructor, name, forbiddenField){
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_iter-call.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4046,7 +4046,7 @@ module.exports = function(iterator, fn, value, entries){
 /*!*****************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_is-array-iter.js ***!
   \*****************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4064,7 +4064,7 @@ module.exports = function(it){
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_collection.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4134,7 +4134,7 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
 /*!**********************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_collection-to-json.js ***!
   \**********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4153,7 +4153,7 @@ module.exports = function(NAME){
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-sap.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4173,7 +4173,7 @@ module.exports = function(KEY, exec){
 /*!***********************************!*\
   !*** ./runtime/openfin/global.js ***!
   \***********************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4240,7 +4240,7 @@ module.exports = exports['default'];
 /*!************************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/object/keys.js ***!
   \************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4251,7 +4251,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/
 /*!***********************************!*\
   !*** ./runtime/browser/Window.js ***!
   \***********************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6013,7 +6013,7 @@ module.exports = exports['default'];
 /*!************************************************!*\
   !*** ../node_modules/core-js/modules/_hide.js ***!
   \************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6031,7 +6031,7 @@ module.exports = __webpack_require__(/*! ./_descriptors */ 63) ? function(object
 /*!*************************************************!*\
   !*** ../node_modules/core-js/modules/_fails.js ***!
   \*************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -6048,7 +6048,7 @@ module.exports = function(exec){
 /*!***********************************************!*\
   !*** ../node_modules/core-js/modules/_uid.js ***!
   \***********************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -6063,7 +6063,7 @@ module.exports = function(key){
 /*!***********************************************!*\
   !*** ../node_modules/core-js/modules/_wks.js ***!
   \***********************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6084,7 +6084,7 @@ $exports.store = store;
 /*!******************!*\
   !*** ./index.js ***!
   \******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6119,7 +6119,7 @@ module.exports = exports['default'];
 /*!*******************************!*\
   !*** ./utils/EventHandler.js ***!
   \*******************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6451,7 +6451,7 @@ module.exports = exports['default'];
 /*!**********************************************************!*\
   !*** ../node_modules/core-js/library/fn/get-iterator.js ***!
   \**********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6464,7 +6464,7 @@ module.exports = __webpack_require__(/*! ../modules/core.get-iterator */ 103);
 /*!*********************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.array.iterator.js ***!
   \*********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6509,7 +6509,7 @@ addToUnscopables('entries');
 /*!**********************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_add-to-unscopables.js ***!
   \**********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -6520,7 +6520,7 @@ module.exports = function(){ /* empty */ };
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_a-function.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -6534,7 +6534,7 @@ module.exports = function(it){
 /*!***************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_iter-create.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6558,7 +6558,7 @@ module.exports = function(Constructor, NAME, next){
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-dps.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6581,7 +6581,7 @@ module.exports = __webpack_require__(/*! ./_descriptors */ 6) ? Object.definePro
 /*!******************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_array-includes.js ***!
   \******************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6612,7 +6612,7 @@ module.exports = function(IS_INCLUDES){
 /*!************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_to-index.js ***!
   \************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6629,7 +6629,7 @@ module.exports = function(index, length){
 /*!********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_html.js ***!
   \********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6640,7 +6640,7 @@ module.exports = __webpack_require__(/*! ./_global */ 3).document && document.do
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_string-at.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6667,7 +6667,7 @@ module.exports = function(TO_STRING){
 /*!********************************************************************!*\
   !*** ../node_modules/core-js/library/modules/core.get-iterator.js ***!
   \********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6684,7 +6684,7 @@ module.exports = __webpack_require__(/*! ./_core */ 0).getIterator = function(it
 /*!*******************************!*\
   !*** ./utils/SyncCallback.js ***!
   \*******************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6749,7 +6749,7 @@ module.exports = exports["default"];
 /*!***********************!*\
   !*** ./utils/load.js ***!
   \***********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6848,7 +6848,7 @@ module.exports = exports['default'];
 /*!****************************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/symbol/iterator.js ***!
   \****************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6859,7 +6859,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol/
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/fn/symbol/iterator.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6872,7 +6872,7 @@ module.exports = __webpack_require__(/*! ../../modules/_wks-ext */ 46).f('iterat
 /*!*******************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/symbol.js ***!
   \*******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6883,7 +6883,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol 
 /*!**********************************************************!*\
   !*** ../node_modules/core-js/library/fn/symbol/index.js ***!
   \**********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6898,7 +6898,7 @@ module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Symbol;
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.symbol.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7144,7 +7144,7 @@ setToStringTag(global.JSON, 'JSON', true);
 /*!*********************************************************!*\
   !*** ../node_modules/core-js/library/modules/_keyof.js ***!
   \*********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7164,7 +7164,7 @@ module.exports = function(object, el){
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_enum-keys.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7189,7 +7189,7 @@ module.exports = function(it){
 /*!*******************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_object-gopn-ext.js ***!
   \*******************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7219,7 +7219,7 @@ module.exports.f = function getOwnPropertyNames(it){
 /*!****************************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es7.symbol.async-iterator.js ***!
   \****************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7230,7 +7230,7 @@ __webpack_require__(/*! ./_wks-define */ 48)('asyncIterator');
 /*!************************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es7.symbol.observable.js ***!
   \************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7241,7 +7241,7 @@ __webpack_require__(/*! ./_wks-define */ 48)('observable');
 /*!***************************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/json/stringify.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7252,7 +7252,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/json/st
 /*!************************************************************!*\
   !*** ../node_modules/core-js/library/fn/json/stringify.js ***!
   \************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7267,7 +7267,7 @@ module.exports = function stringify(it){ // eslint-disable-line no-unused-vars
 /*!***********************************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/object/define-property.js ***!
   \***********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7278,7 +7278,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/
 /*!********************************************************************!*\
   !*** ../node_modules/core-js/library/fn/object/define-property.js ***!
   \********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7293,7 +7293,7 @@ module.exports = function defineProperty(it, key, desc){
 /*!*****************************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.object.define-property.js ***!
   \*****************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7306,7 +7306,7 @@ $export($export.S + $export.F * !__webpack_require__(/*! ./_descriptors */ 6), '
 /*!**************************!*\
   !*** ./runtime/index.js ***!
   \**************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7342,7 +7342,7 @@ module.exports = exports['default'];
 /*!***********************************!*\
   !*** ./runtime/electron/index.js ***!
   \***********************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7371,7 +7371,7 @@ if (_global2.default._isNode) {
 /*!*************************************************!*\
   !*** ../node_modules/core-js/library/fn/map.js ***!
   \*************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7387,7 +7387,7 @@ module.exports = __webpack_require__(/*! ../modules/_core */ 0).Map;
 /*!**********************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.map.js ***!
   \**********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7415,7 +7415,7 @@ module.exports = __webpack_require__(/*! ./_collection */ 81)('Map', function(ge
 /*!***************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_set-species.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7440,7 +7440,7 @@ module.exports = function(KEY){
 /*!*****************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_array-methods.js ***!
   \*****************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7494,7 +7494,7 @@ module.exports = function(TYPE, $create){
 /*!************************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_array-species-create.js ***!
   \************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7510,7 +7510,7 @@ module.exports = function(original, length){
 /*!*****************************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_array-species-constructor.js ***!
   \*****************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7536,7 +7536,7 @@ module.exports = function(original){
 /*!******************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es7.map.to-json.js ***!
   \******************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7550,7 +7550,7 @@ $export($export.P + $export.R, 'Map', {toJSON: __webpack_require__(/*! ./_collec
 /*!***********************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_array-from-iterable.js ***!
   \***********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7568,7 +7568,7 @@ module.exports = function(iter, ITERATOR){
 /*!****************************************!*\
   !*** ./runtime/electron/node/index.js ***!
   \****************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7811,7 +7811,7 @@ app.on('activate', function () {
 /*!*****************************************!*\
   !*** ./runtime/electron/node/Window.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8363,7 +8363,7 @@ BrowserWindow._getMainID = function () {
 /*!********************************************!*\
   !*** ./runtime/electron/renderer/index.js ***!
   \********************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8556,7 +8556,7 @@ _ready2.default._deref();
 /*!*************************************************!*\
   !*** ../node_modules/core-js/library/fn/set.js ***!
   \*************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8572,7 +8572,7 @@ module.exports = __webpack_require__(/*! ../modules/_core */ 0).Set;
 /*!**********************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.set.js ***!
   \**********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8595,7 +8595,7 @@ module.exports = __webpack_require__(/*! ./_collection */ 81)('Set', function(ge
 /*!******************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es7.set.to-json.js ***!
   \******************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8609,7 +8609,7 @@ $export($export.P + $export.R, 'Set', {toJSON: __webpack_require__(/*! ./_collec
 /*!*********************************************!*\
   !*** ./runtime/electron/renderer/Window.js ***!
   \*********************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9304,7 +9304,7 @@ module.exports = exports['default'];
 /*!********************************************************!*\
   !*** ../node_modules/core-js/library/fn/array/from.js ***!
   \********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9317,7 +9317,7 @@ module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Array.from;
 /*!*****************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.array.from.js ***!
   \*****************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9366,7 +9366,7 @@ $export($export.S + $export.F * !__webpack_require__(/*! ./_iter-detect */ 141)(
 /*!*******************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_create-property.js ***!
   \*******************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9385,7 +9385,7 @@ module.exports = function(object, index, value){
 /*!***************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_iter-detect.js ***!
   \***************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9416,7 +9416,7 @@ module.exports = function(exec, skipClosing){
 /*!*********************************************************************!*\
   !*** ../node_modules/core-js/library/fn/object/get-prototype-of.js ***!
   \*********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9428,7 +9428,7 @@ module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Object.getPro
 /*!******************************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.object.get-prototype-of.js ***!
   \******************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9447,7 +9447,7 @@ __webpack_require__(/*! ./_object-sap */ 83)('getPrototypeOf', function(){
 /*!************************************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/object/set-prototype-of.js ***!
   \************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9458,7 +9458,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/
 /*!*********************************************************************!*\
   !*** ../node_modules/core-js/library/fn/object/set-prototype-of.js ***!
   \*********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9470,7 +9470,7 @@ module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Object.setPro
 /*!******************************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.object.set-prototype-of.js ***!
   \******************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9483,7 +9483,7 @@ $export($export.S, 'Object', {setPrototypeOf: __webpack_require__(/*! ./_set-pro
 /*!*************************************************************!*\
   !*** ../node_modules/core-js/library/modules/_set-proto.js ***!
   \*************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9518,7 +9518,7 @@ module.exports = {
 /*!***********************************************************!*\
   !*** ../node_modules/core-js/library/fn/object/create.js ***!
   \***********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9533,7 +9533,7 @@ module.exports = function create(P, D){
 /*!********************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.object.create.js ***!
   \********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9546,7 +9546,7 @@ $export($export.S, 'Object', {create: __webpack_require__(/*! ./_object-create *
 /*!**********************************!*\
   !*** ./runtime/openfin/index.js ***!
   \**********************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9697,7 +9697,7 @@ _global2.default.messagebus = function () {
 /*!*********************************************************!*\
   !*** ../node_modules/core-js/library/fn/object/keys.js ***!
   \*********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9709,7 +9709,7 @@ module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Object.keys;
 /*!******************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.object.keys.js ***!
   \******************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9728,7 +9728,7 @@ __webpack_require__(/*! ./_object-sap */ 83)('keys', function(){
 /*!***********************************!*\
   !*** ./runtime/openfin/Window.js ***!
   \***********************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10815,7 +10815,7 @@ module.exports = exports['default'];
 /*!**********************************!*\
   !*** ./runtime/browser/index.js ***!
   \**********************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11073,7 +11073,7 @@ _ready2.default._deref();
 /*!*****************************************************************!*\
   !*** ../node_modules/babel-runtime/core-js/number/is-finite.js ***!
   \*****************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11084,7 +11084,7 @@ module.exports = { "default": __webpack_require__(/*! core-js/library/fn/number/
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/library/fn/number/is-finite.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11096,7 +11096,7 @@ module.exports = __webpack_require__(/*! ../../modules/_core */ 0).Number.isFini
 /*!***********************************************************************!*\
   !*** ../node_modules/core-js/library/modules/es6.number.is-finite.js ***!
   \***********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11115,7 +11115,7 @@ $export($export.S, 'Number', {
 /*!*****************************************************!*\
   !*** ../node_modules/core-js/fn/string/includes.js ***!
   \*****************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11127,7 +11127,7 @@ module.exports = __webpack_require__(/*! ../../modules/_core */ 62).String.inclu
 /*!**************************************************************!*\
   !*** ../node_modules/core-js/modules/es6.string.includes.js ***!
   \**************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11150,7 +11150,7 @@ $export($export.P + $export.F * __webpack_require__(/*! ./_fails-is-regexp */ 17
 /*!**************************************************!*\
   !*** ../node_modules/core-js/modules/_export.js ***!
   \**************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11203,7 +11203,7 @@ module.exports = $export;
 /*!*****************************************************!*\
   !*** ../node_modules/core-js/modules/_object-dp.js ***!
   \*****************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11229,7 +11229,7 @@ exports.f = __webpack_require__(/*! ./_descriptors */ 63) ? Object.definePropert
 /*!*****************************************************!*\
   !*** ../node_modules/core-js/modules/_an-object.js ***!
   \*****************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11244,7 +11244,7 @@ module.exports = function(it){
 /*!**********************************************************!*\
   !*** ../node_modules/core-js/modules/_ie8-dom-define.js ***!
   \**********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11257,7 +11257,7 @@ module.exports = !__webpack_require__(/*! ./_descriptors */ 63) && !__webpack_re
 /*!******************************************************!*\
   !*** ../node_modules/core-js/modules/_dom-create.js ***!
   \******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11274,7 +11274,7 @@ module.exports = function(it){
 /*!********************************************************!*\
   !*** ../node_modules/core-js/modules/_to-primitive.js ***!
   \********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11296,7 +11296,7 @@ module.exports = function(it, S){
 /*!*********************************************************!*\
   !*** ../node_modules/core-js/modules/_property-desc.js ***!
   \*********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -11314,7 +11314,7 @@ module.exports = function(bitmap, value){
 /*!****************************************************!*\
   !*** ../node_modules/core-js/modules/_redefine.js ***!
   \****************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11356,7 +11356,7 @@ __webpack_require__(/*! ./_core */ 62).inspectSource = function(it){
 /*!***********************************************!*\
   !*** ../node_modules/core-js/modules/_has.js ***!
   \***********************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -11370,7 +11370,7 @@ module.exports = function(it, key){
 /*!***********************************************!*\
   !*** ../node_modules/core-js/modules/_ctx.js ***!
   \***********************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11400,7 +11400,7 @@ module.exports = function(fn, that, length){
 /*!******************************************************!*\
   !*** ../node_modules/core-js/modules/_a-function.js ***!
   \******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -11414,7 +11414,7 @@ module.exports = function(it){
 /*!**********************************************************!*\
   !*** ../node_modules/core-js/modules/_string-context.js ***!
   \**********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11432,7 +11432,7 @@ module.exports = function(that, searchString, NAME){
 /*!*****************************************************!*\
   !*** ../node_modules/core-js/modules/_is-regexp.js ***!
   \*****************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11450,7 +11450,7 @@ module.exports = function(it){
 /*!***********************************************!*\
   !*** ../node_modules/core-js/modules/_cof.js ***!
   \***********************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -11465,7 +11465,7 @@ module.exports = function(it){
 /*!**************************************************!*\
   !*** ../node_modules/core-js/modules/_shared.js ***!
   \**************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11481,7 +11481,7 @@ module.exports = function(key){
 /*!***************************************************!*\
   !*** ../node_modules/core-js/modules/_defined.js ***!
   \***************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -11496,7 +11496,7 @@ module.exports = function(it){
 /*!***********************************************************!*\
   !*** ../node_modules/core-js/modules/_fails-is-regexp.js ***!
   \***********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11518,7 +11518,7 @@ module.exports = function(KEY){
 /*!******************************************!*\
   !*** ./runtime/browser/Layout/Layout.js ***!
   \******************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11559,25 +11559,25 @@ var ACTIVE_WINDOW_DIV_ID = 'active-window-container';
 var TABBED_LAYOUT_DIV_ID = 'tabbed-layout-container';
 var TAB_LIST_CONTAINER_ID = 'layout-tabs-list-container';
 var TAB_LIST_ID = 'layout-tabs-list';
-var TAB_DIV_HEIGHT = '25px'; // Can be overwritten by developer. 
+var TAB_DIV_HEIGHT = '25px'; // Can be overwritten by developer.
 
 /**
  * A Layout class, used to create a layout of {@link Window} objects.
- * 
+ *
  * <h5>Example:</h5>
  * ```javascript
  * // Create window(s).
  * let state = {
- *       width: 400, 
+ *       width: 400,
  *       height: 400,
  *       url: 'child.html',
  *       title: 'Window X',
- *       frame: false 
+ *       frame: false
  *   };
- * 
+ *
  * // Make an array of windows.
  * let configs = [state, state, state];
- * 
+ *
  * // Create the layout.
  * let layout = new windowmanager.Layout('tabbed', 'layout-div', configs);
  * ```
@@ -11586,7 +11586,7 @@ var TAB_DIV_HEIGHT = '25px'; // Can be overwritten by developer.
 var Layout = function () {
     /**
      * Constructor for the layout class.
-     * 
+     *
      * <h5>Example:</h5>
      * ```javascript
      * // Create the layout.
@@ -11657,7 +11657,7 @@ var Layout = function () {
 
     /**
      * Function to retrieve all windows being managed.
-     * 
+     *
      * @returns {Array.Window}
      */
 
@@ -11670,9 +11670,9 @@ var Layout = function () {
 
         /**
          * Method to get a window by its id.
-         * 
+         *
          * @param {string} id - the id of the window to find.
-         * 
+         *
          * @returns {Window}
          */
 
@@ -11699,7 +11699,7 @@ var Layout = function () {
         /**
          * Function to add a window to the layout scheme.
          * @param {Object} config - The configuration object for the window
-         * 
+         *
          * @returns {Windowlo}
          */
 
@@ -11961,7 +11961,7 @@ var Layout = function () {
 
         /**
          * Method for creating a tab in the tabbed layout.
-         * 
+         *
          * @param {string} title - The title of the window being created to display in the tab's text
          * @param {string} id - The id of the window being created
          */
@@ -11991,7 +11991,7 @@ var Layout = function () {
 
         /**
          * Method for changing the active window.
-         * 
+         *
          * @param {string} id - The id of the window to show
          */
 

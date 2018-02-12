@@ -9,25 +9,25 @@ let ACTIVE_WINDOW_DIV_ID = 'active-window-container';
 const TABBED_LAYOUT_DIV_ID = 'tabbed-layout-container';
 const TAB_LIST_CONTAINER_ID = 'layout-tabs-list-container';
 const TAB_LIST_ID = 'layout-tabs-list';
-let TAB_DIV_HEIGHT = '25px'; // Can be overwritten by developer. 
+let TAB_DIV_HEIGHT = '25px'; // Can be overwritten by developer.
 
 /**
  * A Layout class, used to create a layout of {@link Window} objects.
- * 
+ *
  * <h5>Example:</h5>
  * ```javascript
  * // Create window(s).
  * let state = {
- *       width: 400, 
+ *       width: 400,
  *       height: 400,
  *       url: 'child.html',
  *       title: 'Window X',
- *       frame: false 
+ *       frame: false
  *   };
- * 
+ *
  * // Make an array of windows.
  * let configs = [state, state, state];
- * 
+ *
  * // Create the layout.
  * let layout = new windowmanager.Layout('tabbed', 'layout-div', configs);
  * ```
@@ -35,7 +35,7 @@ let TAB_DIV_HEIGHT = '25px'; // Can be overwritten by developer.
 class Layout {
     /**
      * Constructor for the layout class.
-     * 
+     *
      * <h5>Example:</h5>
      * ```javascript
      * // Create the layout.
@@ -105,7 +105,7 @@ class Layout {
 
     /**
      * Function to retrieve all windows being managed.
-     * 
+     *
      * @returns {Array.Window}
      */
     getWindows() {
@@ -114,9 +114,9 @@ class Layout {
 
     /**
      * Method to get a window by its id.
-     * 
+     *
      * @param {string} id - the id of the window to find.
-     * 
+     *
      * @returns {Window}
      */
     getWindow(id) {
@@ -140,7 +140,7 @@ class Layout {
     /**
      * Function to add a window to the layout scheme.
      * @param {Object} config - The configuration object for the window
-     * 
+     *
      * @returns {Windowlo}
      */
     addWindow(config) {
@@ -412,7 +412,7 @@ class Layout {
 
     /**
      * Method for creating a tab in the tabbed layout.
-     * 
+     *
      * @param {string} title - The title of the window being created to display in the tab's text
      * @param {string} id - The id of the window being created
      */
@@ -437,7 +437,7 @@ class Layout {
 
     /**
      * Method for changing the active window.
-     * 
+     *
      * @param {string} id - The id of the window to show
      */
     _changeActiveWindow(id) {
